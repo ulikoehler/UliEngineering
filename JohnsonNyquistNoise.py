@@ -54,7 +54,7 @@ def johnson_nyquist_noise_current(r, delta_f, T):
     The result is given in volts
     """
     if isinstance(r, str):
-        r = normalizeEngineerInput(r)
+        r, _ = normalizeEngineerInput(r)
     if isinstance(delta_f, str):
         delta_f, _ = normalizeEngineerInput(delta_f)
     t_kelvin = normalize_temperature(T)
