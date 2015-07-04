@@ -2,6 +2,7 @@
 from Resistors import *
 import scipy.constants
 from EngineerIO import *
+import math
 
 class ConversionException(Exception):
     pass
@@ -46,7 +47,7 @@ def normalize_temperature(t, default_unit="°C"):
     else:
         raise ConversionException("Unknown temperature unit: '%s'" % unit)
 
-def _johnson_nyquist_noise_current(r, delta_f, T):
+def johnson_nyquist_noise_current(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.
@@ -56,10 +57,11 @@ def _johnson_nyquist_noise_current(r, delta_f, T):
         r = normalizeEngineerInput(r)
     if isinstance(delta_f, str):
         delta_f, _ = normalizeEngineerInput(delta_f)
+    t_kelvin = normalize_temperature(T)
     #Support celsius and kelvin inputs
-    return sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
+    return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
 
-def _johnson_nyquist_noise_voltage(r, delta_f, T):
+def johnson_nyquist_noise_voltage(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.
@@ -67,10 +69,10 @@ def _johnson_nyquist_noise_voltage(r, delta_f, T):
     """
     #TODO
     t_kelvin = celsius_to_kelvin(T)
-    return sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
+    return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
     # Usage example
-    #print(formatValue(johnson_nyquist_noise_current("2"), "A"))
+    print(formatValue(johnson_nyquist_noise_current("1 kΩ", 1000, 25), "A"))

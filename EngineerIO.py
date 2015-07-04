@@ -16,6 +16,7 @@ Examples of valid notations include:
 Originally published at techoverflow.net.
 """
 import re
+import math
 
 __author__ = "Uli Koehler"
 __license__ = "CC0 1.0 Universal"
@@ -26,8 +27,11 @@ siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
               ["k"], ["M"], ["G"], ["T"]]
 siSuffixMult = -15  # The multiplier for the first suffix
 
-# Valid unit designators. Ensure no suffix is added here
+# Valid unit designators. Ensure no SI suffix is added here
 units = ["F", "A", "Ω", "W", "H", "C", "F", "K"]
+
+# (Not implemented yet) Allowable Unit prefixes
+unitPrefixes = ["Δ", "°"]
 
 def getSuffixMultiplier(suffix):
     """
