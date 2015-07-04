@@ -27,7 +27,7 @@ siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
 siSuffixMult = -15  # The multiplier for the first suffix
 
 # Valid unit designators. Ensure no suffix is added here
-units = ["F", "A", "Ω", "W", "H"]
+units = ["F", "A", "Ω", "W", "H", "C", "F", "K"]
 
 def getSuffixMultiplier(suffix):
     """
@@ -231,13 +231,76 @@ def normalizeEngineerInput(s):
     Converts an engineer's input of a wide variety of formats to a numeric
     value.
 
-    Returns a pair (numb)
+    Returns a pair (number, unit)
 
     See splitSuffixSeparator() for further details on supported formats
     """
     (num, suffix, unit) = splitSuffixSeparator(s)
     val = float(num) * (10 ** getSuffixMultiplier(suffix))
     return (val, unit)
+
+
+def _formatWithSuffix(v, suffix):
+    """
+    Format a given value with a given suffix.
+    This helper function formats the value to 3 visible digits.
+    v must be pre-multiplied by the factor implied by the suffix
+
+    >>> _formatWithSuffix(1.01, "A")
+    '1.01 A'
+    >>> _formatWithSuffix(1, "A")
+    '1.00 A'
+    >>> _formatWithSuffix(101, "A")
+    '101 A'
+    >>> _formatWithSuffix(99.9, "A")
+    '99.9 A'
+    """
+    if v < 10:
+        res = "%.2f" % v
+    elif v < 100:
+        res = "%.1f" % v
+    else:  # Should only happen if v < 1000
+        res = "%d" % int(v)
+    #Avoid appending whitespace if there is no suffix
+    if suffix:
+        return "%s %s" % (res, suffix)
+    else:
+        return res
+
+def formatValue(v, unit=""):
+    """
+    Format v using SI suffices with optional units.
+    Produces a string with 3 visible digits.
+
+    >>> formatValue(1.0e-15, "V")
+    '1.00 fV'
+    >>> formatValue(234.6789e-3, "V")
+    '234 mV'
+    >>> formatValue(234.6789, "V")
+    '234 V'
+    >>> formatValue(2345.6789, "V")
+    '2.35 kV'
+    >>> formatValue(2345.6789e6, "V")
+    '2.35 GV'
+    >>> formatValue(2345.6789e12, "V")
+    '2.35 EV'
+    """
+    suffixMap = {
+        -5: "f", -4: "p", -3: "n", -2: "μ", -1: "m",
+        0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E"
+    }
+    #Suffix map is indexed by one third of the decadic logarithm.
+    exp = 0 if v == 0.0 else math.log(v, 10.0)
+    suffixMapIdx = int(math.floor(exp / 3.0))
+    #Ensure we're in range
+    if suffixMapIdx < -5:
+        suffixMapIdx = -5
+    elif suffixMapIdx > 5:
+        suffixMapIdx = 5
+    #Pre-multiply the value
+    v = v * (10.0 ** -(suffixMapIdx * 3))
+    #Delegate the rest of the task to the helper
+    return _formatWithSuffix(v, suffixMap[suffixMapIdx] + unit)
 
 if __name__ == "__main__":
     import doctest
