@@ -67,12 +67,16 @@ def johnson_nyquist_noise_voltage(r, delta_f, T):
     T must be given in °C whereas r must be given in Ohms.
     The result is given in volts
     """
-    #TODO
+    if isinstance(r, str):
+        r, _ = normalizeEngineerInput(r)
+    if isinstance(delta_f, str):
+        delta_f, _ = normalizeEngineerInput(delta_f)
     t_kelvin = celsius_to_kelvin(T)
-    return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
+    return math.sqrt(4 * scipy.constants.k * t_kelvin * delta_f * r)
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
     # Usage example
-    print(formatValue(johnson_nyquist_noise_current("1 kΩ", 1000, 25), "A"))
+    print(formatValue(johnson_nyquist_noise_current("20 MΩ", 1000, 25), "A"))
+    print(formatValue(johnson_nyquist_noise_voltage("10 MΩ", 1000, 25), "V"))
