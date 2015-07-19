@@ -17,10 +17,16 @@ Originally published at techoverflow.net.
 """
 import re
 import math
+import sys
 
 __author__ = "Uli Koehler"
 __license__ = "CC0 1.0 Universal"
 __version__ = "1.0"
+
+# This script will NOT work properly with Python 2.x!
+if sys.version_info[0] < 3:
+    print("This script requires Python version 3.x")
+    sys.exit(1)
 
 # Suffices handled by the library
 siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
@@ -28,7 +34,7 @@ siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
 siSuffixMult = -15  # The multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
-units = ["F", "A", "Ω", "W", "H", "C", "F", "K"]
+units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz"])
 
 # (Not implemented yet) Allowable Unit prefixes
 unitPrefixes = ["Δ", "°"]
@@ -180,6 +186,8 @@ def splitSuffixSeparator(s):
     ('1e-3', 'k', 'Ω')
     >>> splitSuffixSeparator("-4e6nA")
     ('-4e6', 'n', 'A')
+    >>> splitSuffixSeparator("3.2 MHz")
+    ('3.2', 'M', 'Hz')
     >>> splitSuffixSeparator("1,234.56kfA")
     >>> splitSuffixSeparator("1.23k45A")
     >>> splitSuffixSeparator("")
@@ -193,13 +201,18 @@ def splitSuffixSeparator(s):
     # Ensure we have at least one character
     if not s:
         return None
-    # If there is a unit, it MUST be a suffix and 1 char only
-    unit = s[-1] if s[-1] in units else ""
-    if unit:  # Remove unit from current string
-        s = s[:-1]
-        # The stripped string must be non-empty
-        if not s:
-            return None
+    # Handle 2-character units (MUST be a suffix)
+    if len(s) > 2 and s[-2:] in units:
+        unit = s[-2:]
+        s = s[:-2]
+    else: #Handle 1-char units
+        # If this is executed, the unit MUST be a suffix and 1 char only
+        unit = s[-1] if s[-1] in units else ""
+        if unit: # Strip unit from string
+            s = s[:-1]
+    # The string with possibly the unit removed must be non-empty
+    if not s:
+        return None
     # Try to find SI suffix at the end or in the middle
     if isValidSuffix(s[-1]):
         suffix = s[-1]
