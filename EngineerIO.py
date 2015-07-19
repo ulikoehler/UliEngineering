@@ -36,8 +36,9 @@ siSuffixMult = -15  # The multiplier for the first suffix
 # Valid unit designators. Ensure no SI suffix is added here
 units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz"])
 
-# (Not implemented yet) Allowable Unit prefixes
-unitPrefixes = ["Δ", "°"]
+# Allowable Unit prefixes
+# Constraint: unitPrefixes ∩ siSuffices == ∅
+unitPrefixes = frozenset(["Δ", "°"])
 
 def getSuffixMultiplier(suffix):
     """
@@ -188,6 +189,15 @@ def splitSuffixSeparator(s):
     ('-4e6', 'n', 'A')
     >>> splitSuffixSeparator("3.2 MHz")
     ('3.2', 'M', 'Hz')
+    >>> splitSuffixSeparator("3.2 °C")
+    ('3.2', '', 'C')
+    >>> splitSuffixSeparator("3k2 °C")
+    ('3.2', 'k', 'C')
+    >>> splitSuffixSeparator("3.2 ΔMHz")
+    ('3.2', 'M', 'Hz')
+    >>> splitSuffixSeparator("3.2 ΔHz")
+    ('3.2', '', 'Hz')
+    >>> splitSuffixSeparator("Δ3.2 MHz")
     >>> splitSuffixSeparator("1,234.56kfA")
     >>> splitSuffixSeparator("1.23k45A")
     >>> splitSuffixSeparator("")
@@ -235,13 +245,15 @@ def splitSuffixSeparator(s):
                 return None
             suffix = s[suffixIndex]
             s = s.replace(suffix, ".")
+    # Handle unit prefix (if any). Not allowable if no unit is present
+    if unit and s[-1] in unitPrefixes:
+        s = s[:-1]
     # Final check: Is there any number left and is it valid?
     if not s:
         return None
     if not all([ch.isdigit() or ch in [".", "-", "e"] for ch in s]):
         return None
     return (s, suffix, unit)
-
 
 def normalizeEngineerInput(s):
     """
