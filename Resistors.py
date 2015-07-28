@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 A python script to calculate E96 resistor values
+... and do other useful things with resistors, e.g.
+connect them in parallel and serial fashions.
 
 Originally published at techoverflow.net
 """
@@ -45,7 +47,42 @@ def findNearestResistor(value, sequence=e96):
     return min(getStandardResistors(sequence=sequence), key=lambda r: abs(value - r))
 
 def formatResistorValue(v):
+    """
+    Shortcut for formatting resistor values in Ohms.
+    """
     return formatValue(v, unit="Ω")
+
+def parallelResistors(r1, r2):
+    """
+    Compute the total resistance of two parallel resistors and return
+    the value in Ohms.
+
+    >>> parallelResistors(1000.0, 1000.0)
+    500.0
+    >>> parallelResistors("1kΩ", "1kΩ")
+    500.0
+    """
+    if isinstance(r1, str):
+        r1, _ = normalizeEngineerInput(r1)
+    if isinstance(r2, str):
+        r2, _ = normalizeEngineerInput(r2)
+    return (r1 * r2) / (r1 + r2)
+
+def serialResistors(r1, r2):
+    """
+    Compute the total resistance of two parallel resistors and return
+    the value in Ohms.
+
+    >>> serialResistors(1000.0, 1000.0)
+    2000.0
+    >>> serialResistors("1kΩ", "1kΩ")
+    2000.0
+    """
+    if isinstance(r1, str):
+        r1, _ = normalizeEngineerInput(r1)
+    if isinstance(r2, str):
+        r2, _ = normalizeEngineerInput(r2)
+    return (r1 + r2)
 
 # Usage example: Find and print the E48 resistor closest to 5 kOhm
 if __name__ == "__main__":
