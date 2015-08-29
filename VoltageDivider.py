@@ -40,6 +40,36 @@ def loadedVoltageDividerRatio(r1, r2, rl):
         rl, _ = normalizeEngineerInput(rl)
     return r1 / (r1 + parallelResistors(r2, rl))
 
+
+def computeTopResistor(rbottom, ratio):
+    """
+    Compute the bottom resistor of a voltage divider given the top resistor value
+    and the division ration
+
+    >>> computeTopResistor(1000.0, 0.5)
+    1000.0
+    """
+    if isinstance(rbottom, str):
+        rbottom, _ = normalizeEngineerInput(rbottom)
+    if isinstance(ratio, str):
+        ratio, _ = normalizeEngineerInput(ratio)
+    return -(rbottom * ratio) / (ratio - 1)
+
+
+def computeBottomResistor(rtop, ratio):
+    """
+    Compute the bottom resistor of a voltage divider given the top resistor value
+    and the division ration
+
+    >>> computeBottomResistor(1000.0, 0.5)
+    1000.0
+    """
+    if isinstance(rtop, str):
+        rtop, _ = normalizeEngineerInput(rtop)
+    if isinstance(ratio, str):
+        ratio, _ = normalizeEngineerInput(ratio)
+    return rtop * (1 / ratio - 1)
+
 # Usage example: Find and print the E48 resistor closest to 5 kOhm
 if __name__ == "__main__":
     import doctest
