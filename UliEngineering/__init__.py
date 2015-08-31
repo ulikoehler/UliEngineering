@@ -3,4 +3,4 @@ from .Reactance import *
 from .VoltageDivider import *
 from .JohnsonNyquistNoise import *
 from .EngineerIO import *
-from .Resistors.py import *
+from .Resistors import *

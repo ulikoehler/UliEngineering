@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from Resistors import *
 import scipy.constants
-from EngineerIO import *
+from .Resistors import *
+from .EngineerIO import *
 import math
 
 class ConversionException(Exception):

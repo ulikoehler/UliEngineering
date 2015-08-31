@@ -9,7 +9,7 @@ Originally published at techoverflow.net
 """
 import itertools
 import math
-from EngineerIO import *
+from .EngineerIO import *
 
 __author__ = "Uli Koehler"
 __license__ = "CC0 1.0 Universal"

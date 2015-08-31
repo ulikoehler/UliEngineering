@@ -5,8 +5,8 @@ Utilities for computing different aspects and complexities of voltage dividers
 """
 import itertools
 import math
-from EngineerIO import *
-from Resistors import *
+from .EngineerIO import *
+from .Resistors import *
 
 def unloadedVoltageDividerRatio(r1, r2):
     """

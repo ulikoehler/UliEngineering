@@ -9,7 +9,7 @@ setup(name='UliEngineering',
       author_email='ukoehler@techoverflow.net',
       url='http://techoverflow.net/',
       packages=['UliEngineering'],
-      requires=['numpy (>= 1.5)'],
+      requires=['numpy (>= 1.5)', 'scipy (>= 0.5)'],
       test_suite="tests",
       classifiers = [
         'Development Status :: 3 - Alpha',
