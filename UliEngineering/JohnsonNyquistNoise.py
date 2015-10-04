@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Johnson Nyquist noise utilities for both voltage and current noise
+"""
 import scipy.constants
 from .Resistors import *
 from .EngineerIO import *

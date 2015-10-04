@@ -34,7 +34,7 @@ siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
 siSuffixMult = -15  # The multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
-units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz"])
+units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 
 # Allowable Unit prefixes
 # Constraint: unitPrefixes ∩ siSuffices == ∅
@@ -195,6 +195,8 @@ def splitSuffixSeparator(s):
     ('3.2', 'k', 'C')
     >>> splitSuffixSeparator("3.2 ΔMHz")
     ('3.2', 'M', 'Hz')
+    >>> splitSuffixSeparator("100 mV")
+    ('100', 'm', 'V')
     >>> splitSuffixSeparator("3.2 ΔHz")
     ('3.2', '', 'Hz')
     >>> splitSuffixSeparator("Δ3.2 MHz")
