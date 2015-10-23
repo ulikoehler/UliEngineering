@@ -61,6 +61,8 @@ def johnson_nyquist_noise_current(r, delta_f, T):
         r, _ = normalizeEngineerInput(r)
     if isinstance(delta_f, str):
         delta_f, _ = normalizeEngineerInput(delta_f)
+    if isinstance(T, str):
+        T, _ = normalizeEngineerInput(T)
     t_kelvin = normalize_temperature(T)
     #Support celsius and kelvin inputs
     return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
@@ -75,6 +77,8 @@ def johnson_nyquist_noise_voltage(r, delta_f, T):
         r, _ = normalizeEngineerInput(r)
     if isinstance(delta_f, str):
         delta_f, _ = normalizeEngineerInput(delta_f)
+    if isinstance(T, str):
+        T, _ = normalizeEngineerInput(T)
     t_kelvin = celsius_to_kelvin(T)
     return math.sqrt(4 * scipy.constants.k * t_kelvin * delta_f * r)
 
