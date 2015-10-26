@@ -17,10 +17,8 @@ def capacitorEnergy(capacitance, voltage):
     >>> capacitorEnergy("1.5 F", "0.0 V")
     0.0
     """
-    if isinstance(capacitance, str):
-        capacitance, _ = normalizeEngineerInput(capacitance)
-    if isinstance(voltage, str):
-        voltage, _ = normalizeEngineerInput(voltage)
+    capacitance, _ = normalizeEngineerInputIfStr(capacitance)
+    voltage, _ = normalizeEngineerInputIfStr(voltage)
     return 0.5 * capacitance * np.square(voltage)
 
 def capacitorCharge(capacitance, voltage):
@@ -35,10 +33,8 @@ def capacitorCharge(capacitance, voltage):
     >>> capacitorCharge("1.5 F", "0.0 V")
     0.0
     """
-    if isinstance(capacitance, str):
-        capacitance, _ = normalizeEngineerInput(capacitance)
-    if isinstance(voltage, str):
-        voltage, _ = normalizeEngineerInput(voltage)
+    capacitance, _ = normalizeEngineerInputIfStr(capacitance)
+    voltage, _ = normalizeEngineerInputIfStr(voltage)
     return capacitance * voltage
 
 if __name__ == "__main__":

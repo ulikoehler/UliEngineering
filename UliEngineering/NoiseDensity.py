@@ -16,10 +16,8 @@ def actualNoise(density, bandwith):
     >>> formatValue(actualNoise("100 µV", "100 Hz"), "V")
     '1.00 mV'
     """
-    if isinstance(density, str):
-        density, _ = normalizeEngineerInput(density)
-    if isinstance(bandwith, str):
-        bandwith, _ = normalizeEngineerInput(bandwith)
+    density, _ = normalizeEngineerInputIfStr(density)
+    bandwith, _ = normalizeEngineerInputIfStr(bandwith)
     return np.sqrt(bandwith) * density
 
 def noiseDensity(actual_noise, bandwith):
@@ -31,10 +29,8 @@ def noiseDensity(actual_noise, bandwith):
     >>> formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz")
     '100 μV/√Hz'
     """
-    if isinstance(actual_noise, str):
-        actual_noise, _ = normalizeEngineerInput(actual_noise)
-    if isinstance(bandwith, str):
-        bandwith, _ = normalizeEngineerInput(bandwith)
+    actual_noise, _ = normalizeEngineerInputIfStr(actual_noise)
+    bandwith, _ = normalizeEngineerInputIfStr(bandwith)
     return actual_noise / np.sqrt(bandwith)
 
 if __name__ == "__main__":
