@@ -5,3 +5,4 @@ from .JohnsonNyquistNoise import *
 from .EngineerIO import *
 from .NoiseDensity import *
 from .Resistors import *
+from .OpAmp import *
