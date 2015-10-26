@@ -17,20 +17,16 @@ def capacitive_reactance(c, f=1000.0):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
-    if isinstance(c, str):
-        c, _ = normalizeEngineerInput(c)
-    if isinstance(f, str):
-        f, _ = normalizeEngineerInput(f)
+    c, _ = normalizeEngineerInputIfStr(c)
+    f, _ = normalizeEngineerInputIfStr(f)
     return 1.0/(2*math.pi*f*c)
 
 def inductive_reactance(l, f=1000.0):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """
-    if isinstance(l, str):
-        l, _ = normalizeEngineerInput(l)
-    if isinstance(f, str):
-        f, _ = normalizeEngineerInput(f)
+    l, _ = normalizeEngineerInputIfStr(l)
+    f, _ = normalizeEngineerInputIfStr(f)
     return 2*math.pi*f*l
 
 if __name__ == "__main__":

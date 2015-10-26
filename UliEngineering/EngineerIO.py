@@ -333,6 +333,12 @@ def formatValue(v, unit=""):
     #Delegate the rest of the task to the helper
     return _formatWithSuffix(v, suffixMap[suffixMapIdx] + unit)
 
+def normalizeEngineerInputIfStr(v):
+    "Return v, None if v is not a string or normalizeEngineerInput(v) else"
+    if isinstance(v, str):
+        return normalizeEngineerInput(v)
+    return v, None
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
