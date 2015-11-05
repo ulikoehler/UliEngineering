@@ -8,7 +8,7 @@ setup(name='UliEngineering',
       author='Uli Köhler',
       author_email='ukoehler@techoverflow.net',
       url='http://techoverflow.net/',
-      packages=['UliEngineering'],
+      packages=['UliEngineering', 'UliEngineering.Visualization'],
       requires=['numpy (>= 1.5)', 'scipy (>= 0.5)'],
       test_suite="tests",
       classifiers = [
