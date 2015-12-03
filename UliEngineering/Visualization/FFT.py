@@ -41,3 +41,11 @@ def cutFFTDCArtifats(fx, fy):
 		lastVal = y
 	# No mimum found. We can't remove DC offset, so return something non-empty (= consistent)
 	return (fx, fy)
+
+def selectFrequenciesByThreshold(fx, fy, thresh):
+	"""
+	Select frequencies where a specific absolute threshold applies
+	Returns an array of frequencies
+	"""
+	return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
+
