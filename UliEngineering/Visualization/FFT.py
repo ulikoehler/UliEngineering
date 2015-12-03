@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Utilities for FFT computation and visualization
 """
@@ -49,3 +50,15 @@ def selectFrequenciesByThreshold(fx, fy, thresh):
 	"""
 	return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
 
+def showFrequencyMark(ax, fx, fy, freq):
+    """
+    Show a vertical mark with a label
+    """
+    # Render line
+    ax.axvline(x)
+    # Render text
+    textY = min(val + 0.15 * globalMagnitude, .95 * globalMax)
+    plt.text(freq, textY,
+             '$%.3f\ \\mathrm{Hz}$' % freq,
+             bbox=dict(boxstyle='round', facecolor='wheat'),
+             verticalalignment='bottom', fontsize = 18, rotation=30)
