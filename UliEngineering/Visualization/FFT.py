@@ -14,6 +14,7 @@ __fft_windows = {
 	"hamming": np.hamming,
 	"hanning": np.hanning,
 	"kaiser": lambda sz: np.kaiser(sz, 2.0),
+    "none": np.ones
 }
 
 def computeFFT(y, samplerate, window="blackman"):
