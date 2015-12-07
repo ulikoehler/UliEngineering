@@ -63,3 +63,7 @@ def showFrequencyMark(ax, fx, fy, freq):
              '$%.3f\ \\mathrm{Hz}$' % freq,
              bbox=dict(boxstyle='round', facecolor='wheat'),
              verticalalignment='bottom', fontsize = 18, rotation=30)
+
+def dominantFrequency(x, y):
+    "Return the frequency with the largest amplitude in a FFT spectrum"
+    return x[np.argmax(y)]
