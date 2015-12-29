@@ -16,8 +16,6 @@ def normalize_temperature(t, default_unit="°C"):
     Normalize a temperature to kelvin.
     If it is a number or it has no unit, assume it is a default unit
     Else, evaluate the unit(K, °C, °F, C, F)
-
-    TODO: Support degree sign
     """
     unit = ""
     if isinstance(t, str):
@@ -25,11 +23,11 @@ def normalize_temperature(t, default_unit="°C"):
     if not unit:
         unit = default_unit
     # Evaluate unit
-    if unit == "°C" or unit == "C":
+    if unit in ["°C", "C"]:
         return celsius_to_kelvin(t)
-    elif unit == "°K" or unit == "K":
+    elif unit in ["°K", "K"]:
         return t
-    elif unit == "F" or unit == "°F":
+    elif unit in ["°F", "F"]:
         return fahrenheit_to_kelvin(t)
     else:
         raise ConversionException("Unknown temperature unit: '%s'" % unit)
