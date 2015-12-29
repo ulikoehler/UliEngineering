@@ -4,12 +4,13 @@
 Utilities regarding temperatures
 """
 from UliEngineering.EngineerIO import normalizeEngineerInput
+from UliEngineering.Exceptions import InvalidUnitException, ConversionException
 
 def celsius_to_kelvin(c):
     return c + 273.15
 
 def fahrenheit_to_kelvin(f):
-    return (f + 459.67) * 5.0/9.0
+    return (f + 459.67) * 5.0 / 9.0
 
 def normalize_temperature(t, default_unit="°C"):
     """
@@ -19,7 +20,10 @@ def normalize_temperature(t, default_unit="°C"):
     """
     unit = ""
     if isinstance(t, str):
-        t, unit = normalizeEngineerInput(t)
+        res = normalizeEngineerInput(t)
+        if res is None:
+            raise ConversionException("Invalid temperature string: {0}".format(t))
+        t, unit = res
     if not unit:
         unit = default_unit
     # Evaluate unit
@@ -30,4 +34,4 @@ def normalize_temperature(t, default_unit="°C"):
     elif unit in ["°F", "F"]:
         return fahrenheit_to_kelvin(t)
     else:
-        raise ConversionException("Unknown temperature unit: '%s'" % unit)
+        raise InvalidUnitException("Unknown temperature unit: '{0}'".format(unit))

@@ -197,11 +197,13 @@ def normalizeEngineerInput(s):
     Converts an engineer's input of a wide variety of formats to a numeric
     value.
 
-    Returns a pair (number, unit)
+    Returns a pair (number, unit) or None if the conversion could not be performed.
 
     See splitSuffixSeparator() for further details on supported formats
     """
-    (num, suffix, unit) = splitSuffixSeparator(s)
+    res = splitSuffixSeparator(s)
+    if res is None: return None
+    (num, suffix, unit) = res
     val = float(num) * (10 ** getSuffixMultiplier(suffix))
     return (val, unit)
 

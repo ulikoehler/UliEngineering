@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from numpy.testing import assert_approx_equal
+from nose.tools import raises
 from UliEngineering.Physics.Temperature import *
+from UliEngineering.Exceptions import *
 
 class TestTemperature(object):
     def testNormalizeTemperature(self):
@@ -18,3 +20,9 @@ class TestTemperature(object):
         # Signs
         assert_approx_equal(normalize_temperature("-1°C"), 272.15)
         assert_approx_equal(normalize_temperature("-200°C"), 73.15)
+    @raises(InvalidUnitException)
+    def testWrongUnit(self):
+        normalize_temperature("150V")
+    @raises(ConversionException)
+    def testInvalidUnit(self):
+        normalize_temperature("150°G")

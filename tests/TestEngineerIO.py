@@ -44,3 +44,6 @@ class TestEngineerIO(object):
         assert_is_none(splitSuffixSeparator("foobar"))
         assert_is_none(splitSuffixSeparator(None))
         assert_is_none(splitSuffixSeparator(""))
+    def testNormalizeEngineerInput(self):
+        assert_is_none(normalizeEngineerInput("3.2°G"))
+

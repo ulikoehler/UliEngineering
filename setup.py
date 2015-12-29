@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-from setuptools import setup
+import sys
+from setuptools import setup, find_packages
+
+if sys.version_info < (3, 0):
+    print('ERROR: UliEngineering currently requires at least Python 3.0 to run.')
+    sys.exit(1)
 
 setup(name='UliEngineering',
       version='0.1',
@@ -8,10 +13,14 @@ setup(name='UliEngineering',
       author='Uli Köhler',
       author_email='ukoehler@techoverflow.net',
       url='http://techoverflow.net/',
-      packages=['UliEngineering', 'UliEngineering.Physics', 'UliEngineering.SignalProcessing'],
+      license='Apache License v2.0',
+      packages=find_packages(exclude=['tests*']),
+      include_package_data=True,
       requires=['numpy (>= 1.5)', 'scipy (>= 0.5)'],
       test_suite='nose.collector',
-      setup_requires=['nose', 'coverage', 'mock'],
+      tests_require=['nose', 'coverage', 'mock'],
+      setup_requires=['nose>=1.0'],
+      platforms="any",
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
