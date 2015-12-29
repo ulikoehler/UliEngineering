@@ -4,7 +4,7 @@
 Utilities for computations related to noise density
 """
 from .Resistors import *
-from .EngineerIO import *
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
 import numpy as np
 
 def actualNoise(density, bandwith):
@@ -32,7 +32,3 @@ def noiseDensity(actual_noise, bandwith):
     actual_noise, _ = normalizeEngineerInputIfStr(actual_noise)
     bandwith, _ = normalizeEngineerInputIfStr(bandwith)
     return actual_noise / np.sqrt(bandwith)
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

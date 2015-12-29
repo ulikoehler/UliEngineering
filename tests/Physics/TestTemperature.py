@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import numpy as np
 from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.Temperature import *
 

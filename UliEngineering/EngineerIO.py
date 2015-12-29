@@ -98,19 +98,6 @@ def normalizeCommaToPoint(s):
 
     Only points and commata are potentially modified.
     Other characters and digits are not handled.
-
-    >>> normalizeCommaToPoint("1234")
-    '1234'
-    >>> normalizeCommaToPoint("123.4")
-    '123.4'
-    >>> normalizeCommaToPoint("123,4")
-    '123.4'
-    >>> normalizeCommaToPoint("1,234.5")
-    '1234.5'
-    >>> normalizeCommaToPoint("1.234,5")
-    '1234.5'
-    >>> normalizeCommaToPoint("1.234,5k")
-    '1234.5k'
     """
     foundComma = False
     foundPoint = False
@@ -153,59 +140,7 @@ def splitSuffixSeparator(s):
     Thousands separators and suffix-as-decimal-separators may NOT
     be mixed. Whitespace is removed automatically.
 
-    >>> splitSuffixSeparator("1234")
-    ('1234', '', '')
-    >>> splitSuffixSeparator("1234k")
-    ('1234', 'k', '')
-    >>> splitSuffixSeparator("1234kΩ")
-    ('1234', 'k', 'Ω')
-    >>> splitSuffixSeparator("1.234kΩ")
-    ('1.234', 'k', 'Ω')
-    >>> splitSuffixSeparator("1,234kΩ")
-    ('1.234', 'k', 'Ω')
-    >>> splitSuffixSeparator("1,234.56kΩ")
-    ('1234.56', 'k', 'Ω')
-    >>> splitSuffixSeparator("1k234")
-    ('1.234', 'k', '')
-    >>> splitSuffixSeparator("1k234Ω")
-    ('1.234', 'k', 'Ω')
-    >>> splitSuffixSeparator("1,234.56Ω")
-    ('1234.56', '', 'Ω')
-    >>> splitSuffixSeparator("1A")
-    ('1', '', 'A')
-    >>> splitSuffixSeparator("1")
-    ('1', '', '')
-    >>> splitSuffixSeparator("1k234 Ω")
-    ('1.234', 'k', 'Ω')
-    >>> splitSuffixSeparator("1")
-    ('1', '', '')
-    >>> splitSuffixSeparator("-1,234.56kΩ")
-    ('-1234.56', 'k', 'Ω')
-    >>> splitSuffixSeparator("-1e3kΩ")
-    ('-1e3', 'k', 'Ω')
-    >>> splitSuffixSeparator("1e-3kΩ")
-    ('1e-3', 'k', 'Ω')
-    >>> splitSuffixSeparator("-4e6nA")
-    ('-4e6', 'n', 'A')
-    >>> splitSuffixSeparator("3.2 MHz")
-    ('3.2', 'M', 'Hz')
-    >>> splitSuffixSeparator("3.2 °C")
-    ('3.2', '', 'C')
-    >>> splitSuffixSeparator("3k2 °C")
-    ('3.2', 'k', 'C')
-    >>> splitSuffixSeparator("3.2 ΔMHz")
-    ('3.2', 'M', 'Hz')
-    >>> splitSuffixSeparator("100 mV")
-    ('100', 'm', 'V')
-    >>> splitSuffixSeparator("3.2 ΔHz")
-    ('3.2', '', 'Hz')
-    >>> splitSuffixSeparator("Δ3.2 MHz")
-    >>> splitSuffixSeparator("1,234.56kfA")
-    >>> splitSuffixSeparator("1.23k45A")
-    >>> splitSuffixSeparator("")
-    >>> splitSuffixSeparator("1,234k56Ω")
-    >>> splitSuffixSeparator("foobar")
-    >>> splitSuffixSeparator(None)
+    
     """
     if not s:
         return None
@@ -217,7 +152,7 @@ def splitSuffixSeparator(s):
     if len(s) > 2 and s[-2:] in units:
         unit = s[-2:]
         s = s[:-2]
-    else: #Handle 1-char units
+    else:  #Handle 1-char units
         # If this is executed, the unit MUST be a suffix and 1 char only
         unit = s[-1] if s[-1] in units else ""
         if unit: # Strip unit from string

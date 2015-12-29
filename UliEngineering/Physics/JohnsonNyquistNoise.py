@@ -8,9 +8,6 @@ from .Resistors import *
 from .EngineerIO import *
 import math
 
-class ConversionException(Exception):
-    pass
-
 def johnson_nyquist_noise_current(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise current in amperes
