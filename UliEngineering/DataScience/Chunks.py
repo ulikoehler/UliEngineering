@@ -17,7 +17,6 @@ def evaluateGeneratorFunction(tp, as_list=False):
     gen = (g(i) for i in range(n))
     return list(gen) if as_list else gen
 
-
 def __fixedSizeChunkGenerator(ofsTable, chunksize, y, perform_copy, i):
     """Worker for fixedSizeChunkGenerator()"""
     yofs = ofsTable[i]

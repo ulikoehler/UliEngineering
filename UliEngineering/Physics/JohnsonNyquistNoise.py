@@ -11,46 +11,6 @@ import math
 class ConversionException(Exception):
     pass
 
-def celsius_to_kelvin(c):
-    return c + 273.15
-
-def fahrenheit_to_kelvin(f):
-    return (f + 459.67) * 5.0/9.0
-
-def normalize_temperature(t, default_unit="°C"):
-    """
-    Normalize a temperature to kelvin.
-    If it is a number or it has no unit, assume it is a default unit
-    Else, evaluate the unit(K, °C, °F, C, F)
-
-    TODO: Support degree sign
-
-    >>> normalize_temperature("0")
-    273.15
-    >>> normalize_temperature("1")
-    274.15
-    >>> normalize_temperature("1 C")
-    274.15
-    >>> normalize_temperature("1 K")
-    1.0
-    >>> "%.2f" % normalize_temperature("60 F")
-    '288.71'
-    """
-    unit = ""
-    if isinstance(t, str):
-        t, unit = normalizeEngineerInput(t)
-    if not unit:
-        unit = default_unit
-    #Evaluate unit
-    if unit == "°C" or unit == "C":
-        return celsius_to_kelvin(t)
-    elif unit == "°K" or unit == "K":
-        return t
-    elif unit == "F" or unit == "°F":
-        return fahrenheit_to_kelvin(t)
-    else:
-        raise ConversionException("Unknown temperature unit: '%s'" % unit)
-
 def johnson_nyquist_noise_current(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise current in amperes

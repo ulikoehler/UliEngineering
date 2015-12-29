@@ -8,10 +8,11 @@ setup(name='UliEngineering',
       author='Uli Köhler',
       author_email='ukoehler@techoverflow.net',
       url='http://techoverflow.net/',
-      packages=['UliEngineering', 'UliEngineering.DataScience'],
+      packages=['UliEngineering', 'UliEngineering.Physics', 'UliEngineering.DataScience'],
       requires=['numpy (>= 1.5)', 'scipy (>= 0.5)'],
-      test_suite = 'nose.collector',
-      classifiers = [
+      test_suite='nose.collector',
+      setup_requires=['nose', 'coverage', 'mock'],
+      classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
@@ -25,4 +26,4 @@ setup(name='UliEngineering',
         'Topic :: Scientific/Engineering :: Physics',
         'Topic :: Scientific/Engineering :: Information Analysis'
       ]
-     )
+)
