@@ -24,50 +24,46 @@ def computeFFT(y, samplerate, window="blackman"):
     windowArr = __fft_windows[window](n)
     w = scipy.fftpack.fft(y * windowArr)
     w = 2.0 * np.abs(w[:n / 2]) / samplerate # Perform amplitude normalization
-    x = np.linspace(0.0, samplerate/2, n/2) 
+    x = np.linspace(0.0, samplerate/2, n/2)
     return (x, w)
 
-def __chunkedFFTWork(y, yofs, samplerate, fftsize, windowArr, removeDC):
-    yslice = y[yofs:yofs + fftsize].copy()
+def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
+    yslice = y(c)
     # If enabled, remove DC
     if removeDC:
         yslice -= np.mean(yslice)
     # Compute FFT
     w = scipy.fftpack.fft(yslice * windowArr)
     # Perform amplitude normalization
-    return 2.0 * np.abs(w[:fftsize / 2]) / samplerate
+    return np.abs(w[:fftsize / 2])
 
-def chunkedFFTSum(y, samplerate, fftsize, shiftsize=None, removeDC=False, threads=8, window="blackman"):
+def parallelFFTSum(executor, y, samplerate, numChunks, removeDC=False, window="blackman"):
     """
     Perform multiple FFTs on a single dataset, returning the sum of all FFTs.
     Supports optional per-chunk DC offset removal (set removeDC=True).
 
-    Exploits
+    Allows flexible y value selection by passing a function that gets the nth FFT chunk.
+    Therefore, y must be a unary function that gets passed arguments from range(numChunks).
+    This function must be reentrant and must return a writable version (i.e. if you have
+        overlapping chunks or the original array must not be modified for some reason,
+        you must return a copy).
     """
-    if shiftsize is None:
-        shiftsize = int(fftsize / 2)
     # Compute common parameters
     windowArr = __fft_windows[window](fftsize)
     fftSum = np.zeros(fftsize / 2)
-    numSlices = 0
     # Initialize threadpool
-    with concurrent.futures.ThreadPoolExecutor(threads) as executor:
-        futures = []
-        for ofs in range(0, y.shape[0], shiftsize):
-            # Skip last (non-full) block
-            if ofs + fftsize > y.shape[0]:
-                break
-            numSlices += 1
-            futures.append(
-                executor.submit(__chunkedFFTWork, y, ofs, samplerate,
-                                fftsize, windowArr, removeDC))
-        # Sum up
-        fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
+    futures = [
+        executor.submit(__chunkedFFTWorker, y, i,
+                        fftsize, windowArr, removeDC)
+        for i in range(numChunks)
+    ]
+    # Sum up
+    fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
-    return x, (fftSum / numSlices)
+    # Perform normalization once
+    return x, 2.0 * (fftSum / numChunks) / samplerate
 
-
-def cutFFTDCArtifats(fx, fy):
+def cutFFTDCArtifacts(fx, fy):
 	"""
 	If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
 	this function can be used to remove this area from the FFT value set.
