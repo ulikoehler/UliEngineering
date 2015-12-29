@@ -51,18 +51,18 @@ def chunkedFFTSum(y, samplerate, fftsize, shiftsize=None, removeDC=False, thread
     fftSum = np.zeros(fftsize / 2)
     numSlices = 0
     # Initialize threadpool
-    executor = concurrent.futures.ThreadPoolExecutor(threads)
-    futures = []
-    for ofs in range(0, y.shape[0], shiftsize):
-        # Skip last (non-full) block
-        if ofs + fftsize > y.shape[0]:
-            break
-        numSlices += 1
-        futures.append(
-            executor.submit(__chunkedFFTWork, y, ofs, samplerate,
-                            fftsize, windowArr, removeDC))
-    # Sum up
-    fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
+    with concurrent.futures.ThreadPoolExecutor(threads) as executor:
+        futures = []
+        for ofs in range(0, y.shape[0], shiftsize):
+            # Skip last (non-full) block
+            if ofs + fftsize > y.shape[0]:
+                break
+            numSlices += 1
+            futures.append(
+                executor.submit(__chunkedFFTWork, y, ofs, samplerate,
+                                fftsize, windowArr, removeDC))
+        # Sum up
+        fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
     return x, (fftSum / numSlices)
 
