@@ -2,7 +2,7 @@
 import numpy as np
 from nose.tools import assert_equal, assert_true, raises
 from numpy.testing import assert_array_equal, assert_array_less
-from UliEngineering.DataScience.Chunks import fixedSizeChunkGenerator, evaluateGeneratorFunction
+from UliEngineering.SignalProcessing.Chunks import fixedSizeChunkGenerator, evaluateGeneratorFunction
 
 class TestChunkGeneration(object):
     def __init__(self):
