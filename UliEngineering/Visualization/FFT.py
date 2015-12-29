@@ -7,6 +7,7 @@ import scipy.fftpack
 import numpy as np
 import numpy.fft
 import functools
+import concurrent.futures
 
 __fft_windows = {
 	"blackman": np.blackman,
@@ -19,12 +20,52 @@ __fft_windows = {
 
 def computeFFT(y, samplerate, window="blackman"):
     "Compute the real FFT of a dataset and return (x, y) which can directly be visualized using matplotlib etc"
-    windowArr = __fft_windows[window]
     n = len(y)
-    w =  scipy.fftpack.fft(y)
-    w  = 2.0 * np.abs(w[:n / 2]) / samplerate # Perform amplitude normalization
+    windowArr = __fft_windows[window](n)
+    w = scipy.fftpack.fft(y * windowArr)
+    w = 2.0 * np.abs(w[:n / 2]) / samplerate # Perform amplitude normalization
     x = np.linspace(0.0, samplerate/2, n/2) 
     return (x, w)
+
+def __chunkedFFTWork(y, yofs, samplerate, fftsize, windowArr, removeDC):
+    yslice = y[yofs:yofs + fftsize].copy()
+    # If enabled, remove DC
+    if removeDC:
+        yslice -= np.mean(yslice)
+    # Compute FFT
+    w = scipy.fftpack.fft(yslice * windowArr)
+    # Perform amplitude normalization
+    return 2.0 * np.abs(w[:fftsize / 2]) / samplerate
+
+def chunkedFFTSum(y, samplerate, fftsize, shiftsize=None, removeDC=False, threads=8, window="blackman"):
+    """
+    Perform multiple FFTs on a single dataset, returning the sum of all FFTs.
+    Supports optional per-chunk DC offset removal (set removeDC=True).
+
+    Exploits
+    """
+    if shiftsize is None:
+        shiftsize = int(fftsize / 2)
+    # Compute common parameters
+    windowArr = __fft_windows[window](fftsize)
+    fftSum = np.zeros(fftsize / 2)
+    numSlices = 0
+    # Initialize threadpool
+    executor = concurrent.futures.ThreadPoolExecutor(threads)
+    futures = []
+    for ofs in range(0, y.shape[0], shiftsize):
+        # Skip last (non-full) block
+        if ofs + fftsize > y.shape[0]:
+            break
+        numSlices += 1
+        futures.append(
+            executor.submit(__chunkedFFTWork, y, ofs, samplerate,
+                            fftsize, windowArr, removeDC))
+    # Sum up
+    fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
+    x = np.linspace(0.0, samplerate / 2, fftsize / 2)
+    return x, (fftSum / numSlices)
+
 
 def cutFFTDCArtifats(fx, fy):
 	"""
