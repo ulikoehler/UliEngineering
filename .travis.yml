@@ -1,0 +1,8 @@
+language: python
+    - "3.4"
+    - "3.5"
+install:
+    pip3 install codecov
+script: python3 setup.py install
+after_success:
+    codecov
