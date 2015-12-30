@@ -13,6 +13,10 @@ Examples of valid notations include:
     4e6A
     4e6nA
 
+Usage example:
+    >>> print(normalizeEngineerInput("1µ234 Ω"))
+    (1.234e-6, 'Ω')
+
 Originally published at techoverflow.net.
 """
 import re
@@ -220,7 +224,3 @@ def normalizeEngineerInputIfStr(v):
     if isinstance(v, str):
         return normalizeEngineerInput(v)
     return v, None
-
-if __name__ == "__main__":
-    # Usage example
-    print(normalizeEngineerInput("1µ234 Ω"))
