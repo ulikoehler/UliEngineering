@@ -13,4 +13,4 @@ class TestNoiseDensity(object):
     def testNoiseDensity(self):
         assert_approx_equal(noiseDensity("1.0 mV", "100 Hz"), 1e-4)
         assert_approx_equal(noiseDensity(1e-3, 100), 1e-4)
-        assert_equal(formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz"), '100 μV/√Hz')
+        assert_equal(formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz"), '100 µV/√Hz')

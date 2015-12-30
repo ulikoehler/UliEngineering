@@ -23,15 +23,14 @@ __author__ = "Uli Koehler"
 __license__ = "CC0 1.0 Universal"
 __version__ = "1.0"
 
-# This script will NOT work properly with Python 2.x!
-if sys.version_info[0] < 3:
-    print("This script requires Python version 3.x")
-    sys.exit(1)
-
 # Suffices handled by the library
 siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
               ["k"], ["M"], ["G"], ["T"]]
 siSuffixMult = -15  # The multiplier for the first suffix
+siSuffixMap = {
+    -5: "f", -4: "p", -3: "n", -2: "µ", -1: "m",
+    0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E"
+}
 
 # Valid unit designators. Ensure no SI suffix is added here
 units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
@@ -45,19 +44,6 @@ def getSuffixMultiplier(suffix):
     For a given character, get either the multiplier or None if not found.
     The multiplier is returned as base-10 exponent integral. This avoids
     IEEE754 inaccuracies.
-
-    >>> getSuffixMultiplier("f")
-    -15
-    >>> getSuffixMultiplier("k")
-    3
-    >>> getSuffixMultiplier("u")
-    -6
-    >>> getSuffixMultiplier("µ")
-    -6
-    >>> getSuffixMultiplier("T")
-    12
-    >>> getSuffixMultiplier("")
-    0
     """
     if not suffix:
         return 0
@@ -71,20 +57,7 @@ def getSuffixMultiplier(suffix):
 
 
 def isValidSuffix(suffix):
-    """
-    Check if the given character is a valid suffix
-
-    >>> isValidSuffix("f")
-    True
-    >>> isValidSuffix("k")
-    True
-    >>> isValidSuffix("T")
-    True
-    >>> isValidSuffix("µ")
-    True
-    >>> isValidSuffix("B")
-    False
-    """
+    """Check if the given character(s) represent a valid suffix"""
     return getSuffixMultiplier(suffix) is not None
 
 
@@ -139,8 +112,6 @@ def splitSuffixSeparator(s):
 
     Thousands separators and suffix-as-decimal-separators may NOT
     be mixed. Whitespace is removed automatically.
-
-    
     """
     if not s:
         return None
@@ -152,16 +123,16 @@ def splitSuffixSeparator(s):
     if len(s) > 2 and s[-2:] in units:
         unit = s[-2:]
         s = s[:-2]
-    else:  #Handle 1-char units
+    else:  # Handle 1-char units
         # If this is executed, the unit MUST be a suffix and 1 char only
         unit = s[-1] if s[-1] in units else ""
-        if unit: # Strip unit from string
+        if unit:  # Strip unit from string
             s = s[:-1]
     # The string with possibly the unit removed must be non-empty
     if not s:
         return None
     # Try to find SI suffix at the end or in the middle
-    if isValidSuffix(s[-1]):
+    if isValidSuffix(s[-1]): # At the end
         suffix = s[-1]
         s = s[:-1]
     else:  # Try to find unit anywhere
@@ -213,15 +184,6 @@ def _formatWithSuffix(v, suffix):
     Format a given value with a given suffix.
     This helper function formats the value to 3 visible digits.
     v must be pre-multiplied by the factor implied by the suffix
-
-    >>> _formatWithSuffix(1.01, "A")
-    '1.01 A'
-    >>> _formatWithSuffix(1, "A")
-    '1.00 A'
-    >>> _formatWithSuffix(101, "A")
-    '101 A'
-    >>> _formatWithSuffix(99.9, "A")
-    '99.9 A'
     """
     if v < 10:
         res = "%.2f" % v
@@ -239,24 +201,7 @@ def formatValue(v, unit=""):
     """
     Format v using SI suffices with optional units.
     Produces a string with 3 visible digits.
-
-    >>> formatValue(1.0e-15, "V")
-    '1.00 fV'
-    >>> formatValue(234.6789e-3, "V")
-    '234 mV'
-    >>> formatValue(234.6789, "V")
-    '234 V'
-    >>> formatValue(2345.6789, "V")
-    '2.35 kV'
-    >>> formatValue(2345.6789e6, "V")
-    '2.35 GV'
-    >>> formatValue(2345.6789e12, "V")
-    '2.35 EV'
     """
-    suffixMap = {
-        -5: "f", -4: "p", -3: "n", -2: "μ", -1: "m",
-        0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E"
-    }
     #Suffix map is indexed by one third of the decadic logarithm.
     exp = 0 if v == 0.0 else math.log(v, 10.0)
     suffixMapIdx = int(math.floor(exp / 3.0))
@@ -268,7 +213,7 @@ def formatValue(v, unit=""):
     #Pre-multiply the value
     v = v * (10.0 ** -(suffixMapIdx * 3))
     #Delegate the rest of the task to the helper
-    return _formatWithSuffix(v, suffixMap[suffixMapIdx] + unit)
+    return _formatWithSuffix(v, siSuffixMap[suffixMapIdx] + unit)
 
 def normalizeEngineerInputIfStr(v):
     "Return v, None if v is not a string or normalizeEngineerInput(v) else"
@@ -277,7 +222,5 @@ def normalizeEngineerInputIfStr(v):
     return v, None
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
     # Usage example
     print(normalizeEngineerInput("1µ234 Ω"))

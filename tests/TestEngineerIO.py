@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_tuple_equal, assert_is_none
+from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false
 from UliEngineering.EngineerIO import *
+from UliEngineering.EngineerIO import _formatWithSuffix
 
 class TestEngineerIO(object):
     def testNormalizeCommaToPoint(self):
@@ -43,7 +44,36 @@ class TestEngineerIO(object):
         assert_is_none(splitSuffixSeparator("1,234.56kfA"))
         assert_is_none(splitSuffixSeparator("foobar"))
         assert_is_none(splitSuffixSeparator(None))
+        assert_is_none(splitSuffixSeparator("1.2kkA"))
+        assert_is_none(splitSuffixSeparator("1k2kA"))
         assert_is_none(splitSuffixSeparator(""))
     def testNormalizeEngineerInput(self):
         assert_is_none(normalizeEngineerInput("3.2°G"))
-
+        assert_tuple_equal(normalizeEngineerInput("100 kΩ"), (1e5, "Ω"))
+    def test_formatWithSuffix(self):
+        assert_equal(_formatWithSuffix(1.01, "A"), '1.01 A')
+        assert_equal(_formatWithSuffix(1, "A"), '1.00 A')
+        assert_equal(_formatWithSuffix(101, "A"), '101 A')
+        assert_equal(_formatWithSuffix(99.9, "A"), '99.9 A')
+    def testFormatValue(self):
+        assert_equal(formatValue(1.0e-15, "V"), '1.00 fV')
+        assert_equal(formatValue(234.6789e-3, "V"), '234 mV')
+        assert_equal(formatValue(234.6789, "V"), '234 V')
+        assert_equal(formatValue(2345.6789, "V"), '2.35 kV')
+        assert_equal(formatValue(2345.6789e6, "V"), '2.35 GV')
+        assert_equal(formatValue(2345.6789e12, "V"), '2.35 EV')
+        assert_equal(formatValue(2.3456789e-6, "V"), '2.35 µV')
+        assert_equal(formatValue(2.3456789e-6, "°C"), '2.35 µ°C')
+    def testIsValidSuffix(self):
+        assert_true(isValidSuffix("f"))
+        assert_true(isValidSuffix("k"))
+        assert_true(isValidSuffix("T"))
+        assert_true(isValidSuffix("µ"))
+        assert_false(isValidSuffix("B"))
+    def testGetSuffixMultiplier(self):
+        assert_equal(getSuffixMultiplier("f"), -15)
+        assert_equal(getSuffixMultiplier("k"), 3)
+        assert_equal(getSuffixMultiplier("u"), -6)
+        assert_equal(getSuffixMultiplier("µ"), -6)
+        assert_equal(getSuffixMultiplier("T"), 12)
+        assert_equal(getSuffixMultiplier(""), 0)
