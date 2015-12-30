@@ -4,7 +4,7 @@ language: python
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq python3-pip python3-numpy python3-scipy
-    - sudo pip3 install codecov rednose
+    - sudo pip3 install codecov rednose nose coverage --upgrade
 script: python3 setup.py test
 after_success:
     codecov
