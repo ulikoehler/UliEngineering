@@ -17,7 +17,7 @@ def evaluateGeneratorFunction(tp, as_list=False):
     gen = (g(i) for i in range(n))
     return list(gen) if as_list else gen
 
-def __fixedSizeChunkGenerator(ofsTable, chunksize, y, perform_copy, i):
+def __fixedSizeChunkGeneratorWorker(ofsTable, chunksize, y, perform_copy, i):
     """Worker for fixedSizeChunkGenerator()"""
     yofs = ofsTable[i]
     yslice = y[yofs:yofs + chunksize]
@@ -41,4 +41,4 @@ def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
     """
     # Precompute offset table
     offsets = [ofs for ofs in range(0, y.shape[0] - (chunksize - 1), shiftsize)]
-    return len(offsets), functools.partial(__fixedSizeChunkGenerator, offsets, chunksize, y, perform_copy)
+    return len(offsets), functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy)

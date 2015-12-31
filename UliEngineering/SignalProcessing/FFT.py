@@ -37,7 +37,7 @@ def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
     # Perform amplitude normalization
     return np.abs(w[:fftsize / 2])
 
-def parallelFFTSum(executor, y, samplerate, numChunks, removeDC=False, window="blackman"):
+def parallelFFTSum(executor, y, numChunks, samplerate, fftsize, removeDC=False, window="blackman"):
     """
     Perform multiple FFTs on a single dataset, returning the sum of all FFTs.
     Supports optional per-chunk DC offset removal (set removeDC=True).
