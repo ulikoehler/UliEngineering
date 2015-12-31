@@ -1,2 +1,2 @@
 #!/usr/bin/env python3
-from .Temp import AutoDeleteTempfileGenerator
+from .Temporary import AutoDeleteTempfileGenerator
