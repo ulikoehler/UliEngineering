@@ -7,7 +7,7 @@ import json
 import base64
 import numpy as np
 
-class NumpyEncoder(json.JSONEncoder):
+class NumPyEncoder(json.JSONEncoder):
     """
     A JSON encoder that is capable of encoding NumPy ndarray objects.
     """
