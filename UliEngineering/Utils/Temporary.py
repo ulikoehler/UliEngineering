@@ -3,7 +3,7 @@
 """
 Utilities regarding temporary storage
 """
-import temp
+import tempfile
 import shutil
 import os
 
