@@ -6,6 +6,8 @@ Utilities regarding temperatures
 from UliEngineering.EngineerIO import normalizeEngineerInput
 from UliEngineering.Exceptions import InvalidUnitException, ConversionException
 
+zero_point_celsius = 273.15
+
 def celsius_to_kelvin(c):
     return c + 273.15
 
