@@ -226,4 +226,4 @@ def normalizeEngineerInputIfStr(v):
         v = v.decode("utf-8")
     if isinstance(v, six.text_type):
         return normalizeEngineerInput(v)
-    return v, None
+    return v, ''

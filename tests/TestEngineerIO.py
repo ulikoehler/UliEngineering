@@ -77,3 +77,10 @@ class TestEngineerIO(object):
         assert_equal(getSuffixMultiplier("µ"), -6)
         assert_equal(getSuffixMultiplier("T"), 12)
         assert_equal(getSuffixMultiplier(""), 0)
+    def testNormalizeEngineerInputIfStr(self):
+        assert_equal(normalizeEngineerInputIfStr(1.25), (1.25, ''))
+        assert_equal(normalizeEngineerInputIfStr("1.25"), (1.25, ''))
+        assert_equal(normalizeEngineerInputIfStr("1.25 V"), (1.25, "V"))
+        assert_equal(normalizeEngineerInputIfStr("1k25 V"), (1250.0, "V"))
+        assert_equal(normalizeEngineerInputIfStr(b"1.25 V"), (1.25, "V"))
+
