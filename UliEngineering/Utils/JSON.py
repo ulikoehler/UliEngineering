@@ -3,8 +3,9 @@
 """
 Utilities for JSON encoding and decoding
 """
-import json
+from bottle import install
 import base64
+import json
 import numpy as np
 
 class NumPyEncoder(json.JSONEncoder):
