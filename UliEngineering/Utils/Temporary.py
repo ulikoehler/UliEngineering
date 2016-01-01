@@ -36,7 +36,7 @@ class AutoDeleteTempfileGenerator(object):
     def mkdtemp(self, suffix='', prefix='tmp', dir=None):
         """Same as tempfile.mkdtemp(), but creates a file managed by this class instance"""
         fname = tempfile.mkdtemp(suffix, prefix, dir)
-        self.tempfiles.append(fname)
+        self.tempdirs.append(fname)
         return fname
 
     def delete_all(self):
