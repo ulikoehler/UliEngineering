@@ -27,11 +27,11 @@ class AutoDeleteTempfileGenerator(object):
     def __del__(self):
         self.delete_all()
 
-    def mktemp(self, suffix='', prefix='tmp', dir=None):
+    def mkstemp(self, suffix='', prefix='tmp', dir=None):
         """Same as tempfile.mktemp(), but creates a file managed by this class instance"""
-        fname = tempfile.mktemp(suffix, prefix, dir)
+        handle, fname = tempfile.mkstemp(suffix, prefix, dir)
         self.tempfiles.append(fname)
-        return fname
+        return (handle, fname)
 
     def mkdtemp(self, suffix='', prefix='tmp', dir=None):
         """Same as tempfile.mkdtemp(), but creates a file managed by this class instance"""
