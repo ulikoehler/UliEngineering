@@ -221,6 +221,8 @@ def formatValue(v, unit=""):
 
 def normalizeEngineerInputIfStr(v):
     "Return v, None if v is not a string or normalizeEngineerInput(v) else"
-    if isinstance(v, str):
+    if isinstance(v, six.binary_type):
+        v = v.decode("utf-8")
+    if isinstance(v, six.text_type):
         return normalizeEngineerInput(v)
     return v, None
