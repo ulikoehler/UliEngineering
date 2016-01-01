@@ -22,6 +22,7 @@ Originally published at techoverflow.net.
 import re
 import math
 import sys
+import six
 
 __author__ = "Uli Koehler"
 __license__ = "CC0 1.0 Universal"
