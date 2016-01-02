@@ -1,8 +1,36 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Utilities regarding RTDs, e.g. PT100 or PT1000.
 
-    
+=====
+PT1000 Rationale
+
+This section explains the rationale of the ptx_temperature_precise() function
+
+The exact equation for r(t) is:
+r(t) = r0 * (1.0 + At + Bt² + C * (t - 100.0) * t³)
+
+This can be expanded to
+r(t) = r0 + r0 * At + r0 * Bt² + r0 * C * (t - 100.0) * t³
+
+We define new constants A' = A * r0; B'= B * r0 and C' = C * r0 and resolve to
+r(t) = r0 + A't + B't² + C' * (t - 100.0) * t³
+
+Further expansion leads to
+r(t) = r0 + A't + B't² + C' * t⁴ + 100C't³
+
+The standard tells us that if t < 0°C, C := 0 => C' := 0
+Therefore, the standard solution is exact for t >= 0, with the error term
+r(t) = C' * t⁴ + 100 * C' * t³
+
+This equation can't be solved easily. As all terms are constant except of C',
+the most negative temperature yields the largest error term (C' is ), with PT1000 error
+being greater than the PT100 error.
+
+The error is (for C from ITS90 and r0 := 1000.0):
+1000.0*-4.1830E-12*(-200**4) + 1000.0*-4.1830E-12*(-200**3) = 6.73 °C
+
 """
 from UliEngineering.Physics.Temperature import zero_point_celsius, normalize_temperature_celsius
 from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
@@ -16,6 +44,12 @@ PTCoefficientStandard = namedtuple("PTCoefficientStandard", ["a", "b", "c"])
 ptxIPTS68 = PTCoefficientStandard(+3.90802e-03, -5.80195e-07, -4.27350e-12)
 ptxITS90 = PTCoefficientStandard(+3.9083E-03, -5.7750E-07, -4.1830E-12)
 
+noCorrection = np.poly1d([])
+pt1000Correction = np.poly1d([1.51892983e-15, -2.85842067e-12, -5.34227299e-09,
+                              1.80282972e-05, -1.61875985e-02, 4.84112370e+00])
+pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
+                             1.80282972e-03, -1.61875985e-01, 4.84112370e+00])
+
 def ptx_resistance(r0, t, standard=ptxITS90):
     """
     Compute the PTx resistance at a given temperature.
@@ -24,23 +58,65 @@ def ptx_resistance(r0, t, standard=ptxITS90):
     See http://www.thermometricscorp.com/pt1000 for reference
     """
     t = normalize_temperature_celsius(t)
-    if t < -200 or t > 850:
-        raise ValueError("RTD value not defined outside (-200 °C, +850 °C)")
     A, B = standard.a, standard.b
-    C = standard.c if t <= 0 else 0.0
+    # C := 0 for t > 0, else std.c. This also works for numpy arrays
+    C = np.piecewise(t, [t < 0, t >= 0], [standard.c, 0])
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
-def ptx_temperature(r0, r, standard=ptxITS90):
+def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
     """
     Compute the PTx temperature at a given temperature.
+
+    Accepts an additive correction polynomial that is applied to the 
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
     r, _ = normalizeEngineerInputIfStr(r)
     A, B = standard.a, standard.b
-    # C = standard.c if t < zero_point_celsius else 0
-    return ((-r0 * A + np.sqrt(r0 * r0 * A * A - 4 * r0 * B * (r0 - r))) /
-            (2.0 * r0 * B))
+    # Select
+    if poly is None:
+        if r0 == 1000.0: poly = pt1000Correction
+        elif r0 == 100.0: poly = pt100Correction
+        else: poly = noCorrection
+
+    t = ((-r0 * A + np.sqrt(r0 * r0 * A * A - 4 * r0 * B * (r0 - r))) /
+         (2.0 * r0 * B))
+    # For subzero-temperature refine the computation by the correction polynomial
+    t += poly(r) * np.piecewise(t, [r < r0, r >= r0], [1.0, 0.0])
+    return t
+
+
+def checkCorrectionPolynomialQuality(r0, reftemp, poly):
+    """
+    Get a difference array for a given correction polynomial.
+    Return (resistances, diffarray, peak-to-peak scalar)
+    """
+    # Compute reftemp -> resistance -> computed temp
+    resistances = ptx_resistance(r0, reftemp)
+    temperatures = ptx_temperature(r0, resistances, poly=poly)
+    tempdiff = reftemp - temperatures
+    return (resistances, tempdiff, tempdiff.max() - tempdiff.min())
+
+def computeCorrectionPolynomial(r0, order=5):
+    """
+    Compute a correction polynomial that can be applied to the resistance
+    to get an additive correction coefficient that approximately corrects
+    for errors induced by the C * (t - 100) * t³ term in the formula which
+    can't be easily solved.
+    
+    This module contains several precomputed polynomials:
+        - noCorrection
+        - pt1000Correction
+        - pt100Correction
+    
+    It is recommended to use order=5 for this problem.
+    """
+    # Compute values with no correct
+    reftemp = np.linspace(-200.0, 0.0, 1000000)
+    
+    resistances, tempdiff, _ = checkCorrectionPolynomialQuality(r0, reftemp, poly=noCorrection)
+    # Compute best polynomial
+    return np.poly1d(np.polyfit(resistances, tempdiff, order))
 
 # Short definitions for commonly used functions.
 pt100_resistance = functools.partial(ptx_resistance, 100.0)

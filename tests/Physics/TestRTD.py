@@ -9,8 +9,12 @@ pt1000_resistance
 class test(object):
     def test_ptx_resistance(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
+        # Other reference values (4 significant digits): http://grundpraktikum.physik.uni-saarland.de/scripts/Platin_Widerstandsthermometer.pdf
         ptassert = functools.partial(assert_approx_equal, significant=6)
+        ptassert4 = functools.partial(assert_approx_equal, significant=5)
         # Test PT1000
+        ptassert4(pt1000_resistance("-200 °C"), 185.2)
+        ptassert4(pt1000_resistance("-100 °C"), 602.55)
         ptassert(pt1000_resistance("-50 °C"), 803.063)
         ptassert(pt1000_resistance("-20 °C"), 921.599)
         ptassert(pt1000_resistance("0 °C"), 1000.000)
@@ -53,8 +57,10 @@ class test(object):
 
     def test_ptx_temperature(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
-        tempassert = functools.partial(assert_approx_equal, significant=3)
+        tempassert = functools.partial(assert_approx_equal, significant=4)
         # Test PT1000
+        tempassert(pt1000_temperature("185.2 Ω"), -200.0)
+        tempassert(pt1000_temperature("602.55 Ω"), -100.0)
         tempassert(pt1000_temperature("803.063 Ω"), -50.0)
         tempassert(pt1000_temperature("921.599 Ω"), -20.0)
         tempassert(pt1000_temperature("1000.000 Ω"), 0.0)
@@ -75,6 +81,8 @@ class test(object):
         tempassert(pt1000_temperature("2809.775 Ω"), 500.0)
         tempassert(pt1000_temperature("3137.080 Ω"), 600.0)
         # Test PT100
+        tempassert(pt100_temperature("18.52 Ω"), -200.0)
+        tempassert(pt100_temperature("60.255 Ω"), -100.0)
         tempassert(pt100_temperature("80.3063 Ω"), -50.0)
         tempassert(pt100_temperature("92.1599 Ω"), -20.0)
         tempassert(pt100_temperature("100.0000 Ω"), 0.0)
