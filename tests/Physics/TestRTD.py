@@ -57,7 +57,7 @@ class test(object):
 
     def test_ptx_temperature(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
-        tempassert = functools.partial(assert_approx_equal, significant=4)
+        tempassert = functools.partial(assert_approx_equal, significant=5)
         # Test PT1000
         tempassert(pt1000_temperature("185.2 Ω"), -200.0)
         tempassert(pt1000_temperature("602.55 Ω"), -100.0)
