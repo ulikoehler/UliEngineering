@@ -46,7 +46,12 @@ class AutoDeleteTempfileGenerator(object):
         """
         # 
         for filename in self.tempfiles:
-            os.remove(filename)
+            if os.path.isfile(filename):
+                os.remove(filename)
         # Remove directories via shutil
         for tempdir in self.tempdirs:
-            shutil.rmtree(tempdir)
+            if os.path.isdir(tempdir) or os.path.isfile(tempdir):
+                shutil.rmtree(tempdir)
+        # Remove files from list
+        self.tempfiles = []
+        self.tempdirs = []
