@@ -29,6 +29,6 @@ class TestNumpyEncoder(object):
         assert_equal(json.dumps("gaa", cls=NumPyEncoder), '"gaa"')
         assert_equal(json.dumps(None, cls=NumPyEncoder), 'null')
 
-    @raises
-    def test_invalid_encoding():
-        assert_equal(json.dumps(self, cls=NumPyEncoder), 'null')
+    @raises(TypeError)
+    def test_invalid_encoding(self):
+        json.dumps(set([1,2,3]), cls=NumPyEncoder)
