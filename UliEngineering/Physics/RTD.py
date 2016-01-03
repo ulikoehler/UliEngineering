@@ -37,6 +37,7 @@ from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
 import functools
 from collections import namedtuple
 import numpy as np
+import numbers
 
 PTCoefficientStandard = namedtuple("PTCoefficientStandard", ["a", "b", "c"])
 
@@ -60,7 +61,10 @@ def ptx_resistance(r0, t, standard=ptxITS90):
     t = normalize_temperature_celsius(t)
     A, B = standard.a, standard.b
     # C := 0 for t > 0, else std.c. This also works for numpy arrays
-    C = np.piecewise(t, [t < 0, t >= 0], [standard.c, 0])
+    if isinstance(t, numbers.Number):
+        C = standard.c if t < 0.0 else 0
+    else:
+        C = np.piecewise(t, [t < 0, t >= 0], [standard.c, 0])
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
 def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
@@ -82,7 +86,12 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
     t = ((-r0 * A + np.sqrt(r0 * r0 * A * A - 4 * r0 * B * (r0 - r))) /
          (2.0 * r0 * B))
     # For subzero-temperature refine the computation by the correction polynomial
-    t += poly(r) * np.piecewise(t, [r < r0, r >= r0], [1.0, 0.0])
+    import sys
+    if isinstance(r, numbers.Number):
+        if r < r0:
+            t += poly(r)
+    else:  # Treated like a numpy array
+        t += poly(r) * np.piecewise(r, [r < r0, r >= r0], [1.0, 0.0])
     return t
 
 
@@ -95,7 +104,8 @@ def checkCorrectionPolynomialQuality(r0, reftemp, poly):
     resistances = ptx_resistance(r0, reftemp)
     temperatures = ptx_temperature(r0, resistances, poly=poly)
     tempdiff = reftemp - temperatures
-    return (resistances, tempdiff, tempdiff.max() - tempdiff.min())
+    quality = np.max([np.abs(tempdiff.max()), np.abs(tempdiff.min())])
+    return (resistances, tempdiff, quality)
 
 def computeCorrectionPolynomial(r0, order=5):
     """
@@ -113,7 +123,6 @@ def computeCorrectionPolynomial(r0, order=5):
     """
     # Compute values with no correct
     reftemp = np.linspace(-200.0, 0.0, 1000000)
-    
     resistances, tempdiff, _ = checkCorrectionPolynomialQuality(r0, reftemp, poly=noCorrection)
     # Compute best polynomial
     return np.poly1d(np.polyfit(resistances, tempdiff, order))

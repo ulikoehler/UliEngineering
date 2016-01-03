@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
+from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import raises
 from UliEngineering.Physics.RTD import *
 from UliEngineering.Exceptions import *
 import functools
-pt1000_resistance
+
+
 class test(object):
     def test_ptx_resistance(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
@@ -102,3 +103,14 @@ class test(object):
         tempassert(pt100_temperature("247.0920 Ω"), 400.0)
         tempassert(pt100_temperature("280.9775 Ω"), 500.0)
         tempassert(pt100_temperature("313.7080 Ω"), 600.0)
+    def test_temperature_numpy_array(self):
+        tempassert = functools.partial(assert_allclose, rtol=1e-3)
+        data = np.asarray([602.55, 1000.000, 1385.055])
+        expected = np.asarray([-100.0, 0.0, 100.0])
+        tempassert(pt1000_temperature(data), expected)
+    def test_resistane_numpy_array(self):
+        tempassert = functools.partial(assert_allclose, rtol=1e-3)
+        data = np.asarray([-100.0, 0.0, 100.0])
+        expected = np.asarray([602.55, 1000.000, 1385.055])
+        tempassert(pt1000_resistance(data), expected)
+
