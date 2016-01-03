@@ -71,11 +71,10 @@ class TestEngineerIO(object):
         assert_equal(formatValue(2.3456789e-6, "°C"), '2.35 µ°C')
 
     def testIsValidSuffix(self):
-        assert_true(isValidSuffix("f"))
-        assert_true(isValidSuffix("k"))
-        assert_true(isValidSuffix("T"))
-        assert_true(isValidSuffix("µ"))
-        assert_false(isValidSuffix("B"))
+        for c in "fpnuµmkMGT":
+            assert_true(isValidSuffix(c))
+        assert_true(isValidSuffix(""))
+        assert_true(isValidSuffix(None))
 
     def testGetSuffixMultiplier(self):
         assert_equal(getSuffixMultiplier("f"), -15)
