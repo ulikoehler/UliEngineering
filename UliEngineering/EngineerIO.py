@@ -22,19 +22,20 @@ Originally published at techoverflow.net.
 import re
 import math
 import itertools
-import six
+from collections import namedtuple
 
-__author__ = "Uli Koehler"
-__license__ = "CC0 1.0 Universal"
-__version__ = "1.0"
+Quantity = namedtuple("Quantity", ["unit"])
+
+class UnannotatedReturnValueError(Exception):
+    pass
 
 # Suffices handled by the library
-siSuffices = [["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
-              ["k"], ["M"], ["G"], ["T"]]
-siSuffixMult = -15  # The multiplier for the first suffix
+siSuffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
+              ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
+siSuffixMult = -24  # The exponential multiplier for the first suffix
 siSuffixMap = {
-    -5: "f", -4: "p", -3: "n", -2: "µ", -1: "m",
-    0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E"
+    -8: "y", -7: "z", -6: "a", -5: "f", -4: "p", -3: "n", -2: "µ", -1: "m",
+    0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E", 6: "Z", 7: "Y"
 }
 
 # Valid unit designators. Ensure no SI suffix is added here
@@ -217,7 +218,7 @@ def formatValue(v, unit=""):
     exp = 0 if v == 0.0 else math.log(v, 10.0)
     suffixMapIdx = int(math.floor(exp / 3.0))
     #Ensure we're in range
-    if suffixMapIdx < -5 or suffixMapIdx > 5:
+    if not -8 < suffixMapIdx < 7:
         return None
     #Pre-multiply the value
     v = v * (10.0 ** -(suffixMapIdx * 3))
@@ -226,8 +227,21 @@ def formatValue(v, unit=""):
 
 def normalizeEngineerInputIfStr(v):
     "Return v, None if v is not a string or normalizeEngineerInput(v) else"
-    if isinstance(v, six.binary_type):
+    if isinstance(v, bytes):
         v = v.decode("utf-8")
-    if isinstance(v, six.text_type):
+    if isinstance(v, str):
         return normalizeEngineerInput(v)
     return v, ''
+
+def autoFormatValue(fn, *args, **kwargs):
+    """
+    Auto-format a value by leveraging function annotations.
+    The function's return value is expected to a be annotated with a Quantity() value.
+    """
+    if not callable(fn):
+        raise ValueError("fn must be callable")
+    try:
+        qty = fn.__annotations__["return"]
+    except KeyError:
+        raise UnannotatedReturnValueError("Function {0} does not have an annotated return value")
+    return formatValue(fn(*args, **kwargs), qty.unit)

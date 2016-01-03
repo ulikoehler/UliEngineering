@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import scipy.constants
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, formatValue
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
 import numpy as np
 
-def capacitor_energy(capacitance, voltage):
+def capacitor_energy(capacitance, voltage) -> Quantity("J"):
     """
     Compute the total energy stored in a capacitor given:
     - The capacitance in farads
@@ -15,7 +15,7 @@ def capacitor_energy(capacitance, voltage):
     voltage, _ = normalizeEngineerInputIfStr(voltage)
     return 0.5 * capacitance * np.square(voltage)
 
-def capacitor_charge(capacitance, voltage):
+def capacitor_charge(capacitance, voltage) -> Quantity("C"):
     """
     Compute the total charge stored in a capacitor given:
     - The capacitance in farads
@@ -25,4 +25,3 @@ def capacitor_charge(capacitance, voltage):
     capacitance, _ = normalizeEngineerInputIfStr(capacitance)
     voltage, _ = normalizeEngineerInputIfStr(voltage)
     return capacitance * voltage
-

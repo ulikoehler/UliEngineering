@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false
+from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO import _formatWithSuffix
 
@@ -94,3 +94,12 @@ class TestEngineerIO(object):
         assert_equal(normalizeEngineerInputIfStr("1k25 V"), (1250.0, "V"))
         assert_equal(normalizeEngineerInputIfStr(b"1.25 V"), (1.25, "V"))
 
+    # Just basic tests for autoFormatValue. Specific tests in other modules that have annotated functions
+
+    @raises(UnannotatedReturnValueError)
+    def testAutoFormatValueInvalid1(self):
+        autoFormatValue(autoFormatValue)
+
+    @raises(ValueError)
+    def testAutoFormatValueInvalid2(self):
+        autoFormatValue(None)
