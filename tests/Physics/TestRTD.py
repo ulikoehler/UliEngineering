@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import raises
+from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
+from nose.tools import raises, assert_true, assert_equal
 from UliEngineering.Physics.RTD import *
 from UliEngineering.Exceptions import *
 import functools
+import numpy as np
 
-
-class test(object):
+class TestRTD(object):
     def test_ptx_resistance(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
         # Other reference values (4 significant digits): http://grundpraktikum.physik.uni-saarland.de/scripts/Platin_Widerstandsthermometer.pdf
@@ -114,3 +114,19 @@ class test(object):
         expected = np.asarray([602.55, 1000.000, 1385.055])
         tempassert(pt1000_resistance(data), expected)
 
+class TestRTDPolynomialComputation(object):
+    def test_optimize_check_polynomial(self):
+        # Basically the code from techoverflow.net without matplotlib
+        temp = np.linspace(-200.0, 0.0, 1000000)
+        x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=noCorrection)
+        assert_equal(x.shape, temp.shape)
+        assert_equal(y.shape, temp.shape)
+        # Peak deviation w/o correction should be around 2.4 .. 2.5 °C
+        assert_allclose(pkdev, 2.45, rtol=0.05)
+        # Correct
+        mypoly = computeCorrectionPolynomial(1000.0)
+        assert_true(isinstance(mypoly, np.poly1d))
+        x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=mypoly)
+        # pkdev should not exceed 0.1 m°C
+        assert_array_less([pkdev], [1e-4])
+        assert_array_less(y, np.full(y.shape, 1e-4))
