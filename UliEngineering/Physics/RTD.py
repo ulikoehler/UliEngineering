@@ -6,31 +6,14 @@ Utilities regarding RTDs, e.g. PT100 or PT1000.
 =====
 PT1000 Rationale
 
-This section explains the rationale of the ptx_temperature_precise() function
+This module implements a polynomial-fit based correction to obtain mathematically accurate
+temperature values (down to < 58.6 µ°C) for PT100/PT1000 given a measured resistance.
 
-The exact equation for r(t) is:
-r(t) = r0 * (1.0 + At + Bt² + C * (t - 100.0) * t³)
+The correction polynomial is precalculated and automatically applied if r0==100.0 or r0==1000.0.
+For other r0 values, you can precalculate the polynomial.
 
-This can be expanded to
-r(t) = r0 + r0 * At + r0 * Bt² + r0 * C * (t - 100.0) * t³
-
-We define new constants A' = A * r0; B'= B * r0 and C' = C * r0 and resolve to
-r(t) = r0 + A't + B't² + C' * (t - 100.0) * t³
-
-Further expansion leads to
-r(t) = r0 + A't + B't² + C' * t⁴ + 100C't³
-
-The standard tells us that if t < 0°C, C := 0 => C' := 0
-Therefore, the standard solution is exact for t >= 0, with the error term
-r(t) = C' * t⁴ + 100 * C' * t³
-
-This equation can't be solved easily. As all terms are constant except of C',
-the most negative temperature yields the largest error term (C' is ), with PT1000 error
-being greater than the PT100 error.
-
-The error is (for C from ITS90 and r0 := 1000.0):
-1000.0*-4.1830E-12*(-200**4) + 1000.0*-4.1830E-12*(-200**3) = 6.73 °C
-
+For details read:
+https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
 from UliEngineering.Physics.Temperature import zero_point_celsius, normalize_temperature_celsius
 from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
@@ -71,7 +54,10 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
     """
     Compute the PTx temperature at a given temperature.
 
-    Accepts an additive correction polynomial that is applied to the 
+    Accepts an additive correction polynomial that is applied to the resistance.
+    If the poly kwarg is None, the polynom is automatically selected.
+    noCorrection is used for other r0 values. In this case, use a
+    custom polynomial (numpy poly1d object) as the poly kwarg.
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
@@ -79,14 +65,13 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
     A, B = standard.a, standard.b
     # Select
     if poly is None:
-        if r0 == 1000.0: poly = pt1000Correction
-        elif r0 == 100.0: poly = pt100Correction
+        if abs(r0 - 1000.0) < 1e-3: poly = pt1000Correction
+        elif abs(r0 - 100.0) < 1e-3: poly = pt100Correction
         else: poly = noCorrection
 
     t = ((-r0 * A + np.sqrt(r0 * r0 * A * A - 4 * r0 * B * (r0 - r))) /
          (2.0 * r0 * B))
     # For subzero-temperature refine the computation by the correction polynomial
-    import sys
     if isinstance(r, numbers.Number):
         if r < r0:
             t += poly(r)
