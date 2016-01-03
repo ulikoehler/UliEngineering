@@ -8,12 +8,8 @@ connect them in parallel and serial fashions.
 Originally published at techoverflow.net
 """
 import itertools
-import math
-from UliEngineering.EngineerIO import normalizeEngineerInput
-
-__author__ = "Uli Koehler"
-__license__ = "CC0 1.0 Universal"
-__version__ = "1.1"
+import functools
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, formatValue
 
 # Standard resistor sequences
 e96 = [1.00, 1.02, 1.05, 1.07, 1.10, 1.13, 1.15, 1.18, 1.21, 1.24, 1.27, 1.30, 1.33, 1.37, 1.40,
@@ -34,58 +30,38 @@ e12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2]
 
 def getResistorRange(multiplicator, sequence=e96):
     "Get a single E96 range of resistors, e.g. for 1k use multiplicator = 1000"
-    return [val*multiplicator for val in sequence]
+    return [val * multiplicator for val in sequence]
 
 def getStandardResistors(minExp=-1, maxExp=9, sequence=e96):
-    "Get a list of all standard resistor values from 100mOhm up to 976 MOhm in Ohms"
-    exponents = list(itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp))
-    multiplicators = [10**x for x in exponents]
-    return itertools.chain(*[getResistorRange(r, sequence=sequence) for r in multiplicators])
+    """
+    Get a list of all standard resistor values from 100mOhm up to 976 MOhm in Ohms"""
+    exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
+    multiplicators = [10 ** x for x in exponents]
+    return itertools.chain(*(getResistorRange(r, sequence=sequence) for r in multiplicators))
 
 def findNearestResistor(value, sequence=e96):
-    "Find the standard reistor value with the minimal difference to the given value"
+    """
+    Find the standard reistor value with the minimal difference to the given value
+    """
     return min(getStandardResistors(sequence=sequence), key=lambda r: abs(value - r))
 
-def formatResistorValue(v):
-    """
-    Shortcut for formatting resistor values in Ohms.
-    """
-    return formatValue(v, unit="Ω")
+"""Shortcut for formatting resistor values in Ohms."""
+formatResistorValue = functools.partial(formatValue, unit="Ω")
 
 def parallelResistors(r1, r2):
     """
     Compute the total resistance of two parallel resistors and return
     the value in Ohms.
-
-    >>> parallelResistors(1000.0, 1000.0)
-    500.0
-    >>> parallelResistors("1kΩ", "1kΩ")
-    500.0
     """
-    if isinstance(r1, str):
-        r1, _ = normalizeEngineerInput(r1)
-    if isinstance(r2, str):
-        r2, _ = normalizeEngineerInput(r2)
+    r1, _ = normalizeEngineerInputIfStr(r1)
+    r2, _ = normalizeEngineerInputIfStr(r2)
     return (r1 * r2) / (r1 + r2)
 
 def serialResistors(r1, r2):
     """
     Compute the total resistance of two parallel resistors and return
     the value in Ohms.
-
-    >>> serialResistors(1000.0, 1000.0)
-    2000.0
-    >>> serialResistors("1kΩ", "1kΩ")
-    2000.0
     """
-    if isinstance(r1, str):
-        r1, _ = normalizeEngineerInput(r1)
-    if isinstance(r2, str):
-        r2, _ = normalizeEngineerInput(r2)
+    r1, _ = normalizeEngineerInputIfStr(r1)
+    r2, _ = normalizeEngineerInputIfStr(r2)
     return (r1 + r2)
-
-# Usage example: Find and print the E48 resistor closest to 5 kOhm
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
-    print(formatResistorValue(findNearestResistor(5000, sequence=e48)))
