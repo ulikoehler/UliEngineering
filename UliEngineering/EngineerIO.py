@@ -155,7 +155,7 @@ def splitSuffixSeparator(s):
     else:  # Try to find unit anywhere
         isSuffixList = [isValidSuffixMultiplier(ch) for ch in s]
         # Ensure only ONE unit occurs in the string
-        suffixCount = isSuffixList.count(True)
+        suffixCount = sum(isSuffixList)
         if suffixCount > 1:
             return None
         elif suffixCount == 0:
