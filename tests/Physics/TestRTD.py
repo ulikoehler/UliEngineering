@@ -103,11 +103,13 @@ class TestRTD(object):
         tempassert(pt100_temperature("247.0920 Ω"), 400.0)
         tempassert(pt100_temperature("280.9775 Ω"), 500.0)
         tempassert(pt100_temperature("313.7080 Ω"), 600.0)
+
     def test_temperature_numpy_array(self):
         tempassert = functools.partial(assert_allclose, rtol=1e-3)
         data = np.asarray([602.55, 1000.000, 1385.055])
         expected = np.asarray([-100.0, 0.0, 100.0])
         tempassert(pt1000_temperature(data), expected)
+        
     def test_resistane_numpy_array(self):
         tempassert = functools.partial(assert_allclose, rtol=1e-3)
         data = np.asarray([-100.0, 0.0, 100.0])
@@ -130,3 +132,7 @@ class TestRTDPolynomialComputation(object):
         # pkdev should not exceed 0.1 m°C
         assert_array_less([pkdev], [1e-4])
         assert_array_less(y, np.full(y.shape, 1e-4))
+
+    def test_nonstandard_r0(self):
+        # Check if ptx_temperature() runs correctly with poly=None with nonstandard r0
+        ptx_temperature(1234.0, 1155.1) 
