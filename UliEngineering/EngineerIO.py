@@ -21,7 +21,7 @@ Originally published at techoverflow.net.
 """
 import re
 import math
-import sys
+import itertools
 import six
 
 __author__ = "Uli Koehler"
@@ -43,6 +43,18 @@ units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 # Allowable Unit prefixes
 # Constraint: unitPrefixes ∩ siSuffices == ∅
 unitPrefixes = frozenset(["Δ", "°"])
+
+
+def isValidSuffixMultiplier(suffix):
+    """
+    Check if a given string is valid when used in getSuffixMultiplier()
+    """
+    if not suffix:  # 0 multiplier
+        return True
+    for sfx in itertools.chain(*siSuffices):
+        if suffix == sfx:
+            return True
+    return False
 
 def getSuffixMultiplier(suffix):
     """
@@ -141,7 +153,7 @@ def splitSuffixSeparator(s):
         suffix = s[-1]
         s = s[:-1]
     else:  # Try to find unit anywhere
-        isSuffixList = [isValidSuffix(ch) for ch in s]
+        isSuffixList = [isValidSuffixMultiplier(ch) for ch in s]
         # Ensure only ONE unit occurs in the string
         suffixCount = isSuffixList.count(True)
         if suffixCount > 1:
