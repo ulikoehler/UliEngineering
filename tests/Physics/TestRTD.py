@@ -119,7 +119,7 @@ class TestRTD(object):
 class TestRTDPolynomialComputation(object):
     def test_optimize_check_polynomial(self):
         # Basically the code from techoverflow.net without matplotlib
-        temp = np.linspace(-200.0, 0.0, 1000000)
+        temp = np.linspace(-200.0, 0.0, 10000)
         x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=noCorrection)
         assert_equal(x.shape, temp.shape)
         assert_equal(y.shape, temp.shape)
