@@ -45,7 +45,7 @@ units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 unitPrefixes = frozenset(["Δ", "°"])
 
 
-def isValidSuffixMultiplier(suffix):
+def isValidSuffix(suffix):
     """
     Check if a given string is valid when used in getSuffixMultiplier()
     """
@@ -71,12 +71,6 @@ def getSuffixMultiplier(suffix):
                 return multiplier
         multiplier += 3
     return None
-
-
-def isValidSuffix(suffix):
-    """Check if the given character(s) represent a valid suffix"""
-    return getSuffixMultiplier(suffix) is not None
-
 
 def normalizeCommaToPoint(s):
     """
@@ -153,7 +147,7 @@ def splitSuffixSeparator(s):
         suffix = s[-1]
         s = s[:-1]
     else:  # Try to find unit anywhere
-        isSuffixList = [isValidSuffixMultiplier(ch) for ch in s]
+        isSuffixList = [isValidSuffix(ch) for ch in s]
         # Ensure only ONE unit occurs in the string
         suffixCount = sum(isSuffixList)
         if suffixCount > 1:
@@ -223,10 +217,8 @@ def formatValue(v, unit=""):
     exp = 0 if v == 0.0 else math.log(v, 10.0)
     suffixMapIdx = int(math.floor(exp / 3.0))
     #Ensure we're in range
-    if suffixMapIdx < -5:
-        suffixMapIdx = -5
-    elif suffixMapIdx > 5:
-        suffixMapIdx = 5
+    if suffixMapIdx < -5 or suffixMapIdx > 5:
+        return None
     #Pre-multiply the value
     v = v * (10.0 ** -(suffixMapIdx * 3))
     #Delegate the rest of the task to the helper

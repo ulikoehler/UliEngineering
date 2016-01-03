@@ -60,9 +60,11 @@ class TestEngineerIO(object):
         assert_equal(_formatWithSuffix(1, "A"), '1.00 A')
         assert_equal(_formatWithSuffix(101, "A"), '101 A')
         assert_equal(_formatWithSuffix(99.9, "A"), '99.9 A')
+        assert_equal(_formatWithSuffix(1000.0, ""), '1000')
 
     def testFormatValue(self):
         assert_equal(formatValue(1.0e-15, "V"), '1.00 fV')
+        assert_equal(formatValue(1.0e-25, "V"), None)
         assert_equal(formatValue(234.6789e-3, "V"), '234 mV')
         assert_equal(formatValue(234.6789, "V"), '234 V')
         assert_equal(formatValue(2345.6789, "V"), '2.35 kV')
