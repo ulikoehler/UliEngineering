@@ -13,9 +13,8 @@ class NumPyEncoder(json.JSONEncoder):
     """
     def default(self, obj):
         if isinstance(obj, np.ndarray):
-            print(obj.tolist())
             return obj.tolist()
-        elif isinstance(obj, np.generic): # Generic scalars
+        elif isinstance(obj, np.generic):  # Generic scalars
             return obj.item()
         # Let the base class default method raise the TypeError
         return obj
