@@ -91,19 +91,6 @@ def selectFrequenciesByThreshold(fx, fy, thresh):
     """
     return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
 
-def showFrequencyMark(ax, fx, fy, freq):
-    """
-    Show a vertical mark with a label
-    """
-    # Render line
-    ax.axvline(x)
-    # Render text
-    textY = min(val + 0.15 * globalMagnitude, .95 * globalMax)
-    plt.text(freq, textY,
-             '$%.3f\ \\mathrm{Hz}$' % freq,
-             bbox=dict(boxstyle='round', facecolor='wheat'),
-             verticalalignment='bottom', fontsize = 18, rotation=30)
-
 def dominantFrequency(x, y=None):
     "Return the frequency with the largest amplitude in a FFT spectrum"
     if y is None: # So we can pass in a FFT result tuple directly
