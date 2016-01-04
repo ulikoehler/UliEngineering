@@ -35,6 +35,12 @@ class TestFilter(object):
         d2 = filt(self.d)
         assert_equal(self.d.shape, d2.shape)
 
+    def testFrequencyResponse(self):
+        filt = SignalFilter(100.0, [1.0, 2.0])
+        filt.iir(order=3)
+        filt.frequency_response()
+
+
     @raises(NotComputedException)
     def testUninitializedFilter1(self):
         filt = SignalFilter(100.0, 1.0)
