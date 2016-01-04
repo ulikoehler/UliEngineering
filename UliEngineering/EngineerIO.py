@@ -243,7 +243,7 @@ def autoFormat(fn, *args, **kwargs):
         raise ValueError("fn must be callable")
     # Access innermost function inside possibly nested partials
     annotatedFN = fn
-    if isinstance(annotatedFN, functools.partial):
+    while isinstance(annotatedFN, functools.partial):
         annotatedFN = annotatedFN.func
     try:
         qty = annotatedFN.__annotations__["return"]

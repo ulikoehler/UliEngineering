@@ -102,6 +102,17 @@ class TestEngineerIO(object):
 
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 
+    def testAutoFormatValid(self):
+        def testfn(n=1.0) -> Quantity("V"): return n
+        assert_equal(autoFormat(testfn), "1.00 V")
+        # Test functools.partial() behaviour
+        testfn2 = functools.partial(testfn, n=2.0)
+        assert_equal(autoFormat(testfn2), "2.00 V")
+        # Test nested functools.partial() behaviour
+        testfn3 = functools.partial(testfn2, n=3.0)
+        assert_equal(autoFormat(testfn3), "3.00 V")
+
+
     @raises(UnannotatedReturnValueError)
     def testAutoFormatInvalid1(self):
         autoFormat(autoFormat)
