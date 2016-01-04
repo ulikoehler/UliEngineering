@@ -48,7 +48,10 @@ class TestEngineerIO(object):
         assert_is_none(splitSuffixSeparator("1.2kkA"))
         assert_is_none(splitSuffixSeparator("1k2kA"))
         assert_is_none(splitSuffixSeparator("A"))
+        assert_is_none(splitSuffixSeparator("k"))
+        assert_is_none(splitSuffixSeparator("ky"))
         assert_is_none(splitSuffixSeparator("kA"))
+        assert_is_none(splitSuffixSeparator("kfA"))
         assert_is_none(splitSuffixSeparator("AA"))
         assert_is_none(splitSuffixSeparator(" "))
 
