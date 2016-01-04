@@ -104,6 +104,8 @@ def showFrequencyMark(ax, fx, fy, freq):
              bbox=dict(boxstyle='round', facecolor='wheat'),
              verticalalignment='bottom', fontsize = 18, rotation=30)
 
-def dominantFrequency(x, y):
+def dominantFrequency(x, y=None):
     "Return the frequency with the largest amplitude in a FFT spectrum"
+    if y is None: # So we can pass in a FFT result tuple directly
+        x, y = x
     return x[np.argmax(y)]

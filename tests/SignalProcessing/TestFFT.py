@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
+from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal, assert_true, raises, assert_less
 from UliEngineering.SignalProcessing.FFT import *
 import numpy as np
@@ -14,5 +14,19 @@ class TestFFT(object):
         assert_equal(x.shape, y.shape)
         # Test if artifacts can be cut
         origLength = x.shape[0]
-        x, y = cutFFTDCArtifacts(x, y)
-        assert_less(x.shape[0], origLength)
+        x2, y2 = cutFFTDCArtifacts(x, y)
+        assert_less(x2.shape[0], origLength)
+        # Check if we can also pass a tuple
+        x3, y3 = cutFFTDCArtifacts((x, y))
+        assert_allclose(x2, x3)
+        assert_allclose(y2, y3)
+
+
+    def testDominantFrequency(self):
+        x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
+        y = np.random.random(100)
+        # Insert artificial peak
+        y[32] = 8.0
+        assert_equal(dominantFrequency(x, y), 132)
+        # Check if we can also pass a tuple
+        assert_equal(dominantFrequency((x, y)), 132)
