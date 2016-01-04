@@ -51,12 +51,15 @@ class SignalFilter(object):
     def iir(self, order, btype="bandpass", ftype="butter", rp=0.01, rs=100.0):
         """
         Generate filter coefficients for an arbitrary IIR filter
+
+        Returns the current instance so it can be chained inline
         """
         self.b, self.a = signal.iirfilter(order, self.freqs, btype=btype,
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
             raise FilterUnstableError()
+        return self
 
     def frequency_response(self, n=10000):
         """
@@ -67,4 +70,6 @@ class SignalFilter(object):
         return (0.5 * self.fs * w / np.pi, np.abs(h))
 
     def __call__(self, d):
+        if self.a is None:
+            raise NotComputedException()
         return signal.filtfilt(self.b, self.a, d)
