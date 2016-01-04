@@ -57,7 +57,7 @@ def parallelResistors(*args) -> Quantity("Ω"):
 
 def serialResistors(*args) -> Quantity("Ω"):
     """
-    Compute the total resistance of two parallel resistors and return
+    Compute the total resistance of n parallel resistors and return
     the value in Ohms.
     """
     resistors = list(map(autoNormalizeEngineerInputNoUnit, args))
