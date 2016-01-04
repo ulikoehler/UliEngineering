@@ -31,7 +31,7 @@ e12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2]
 
 
 def getResistorRange(multiplicator, sequence=e96):
-    "Get a single E96 range of resistors, e.g. for 1k use multiplicator = 1000"
+    "Get a single E96 range of resistors, e.g. for 1k to <10k use multiplicator = 1000"
     return [val * multiplicator for val in sequence]
 
 def getStandardResistors(minExp=-1, maxExp=9, sequence=e96):
@@ -41,7 +41,7 @@ def getStandardResistors(minExp=-1, maxExp=9, sequence=e96):
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(getResistorRange(r, sequence=sequence) for r in multiplicators))
 
-def findNearestResistor(value, sequence=e96):
+def findNearestResistor(value, sequence=e96) -> Quantity("Ω"):
     """
     Find the standard reistor value with the minimal difference to the given value
     """
