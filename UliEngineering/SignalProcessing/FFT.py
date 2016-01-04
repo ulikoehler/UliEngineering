@@ -11,10 +11,10 @@ import concurrent.futures
 
 __fft_windows = {
 	"blackman": np.blackman,
-	"bartlett": np.bartlett,
-	"hamming": np.hamming,
-	"hanning": np.hanning,
-	"kaiser": lambda sz: np.kaiser(sz, 2.0),
+    "bartlett": np.bartlett,
+    "hamming": np.hamming,
+    "hanning": np.hanning,
+    "kaiser": lambda sz: np.kaiser(sz, 2.0),
     "none": np.ones
 }
 
