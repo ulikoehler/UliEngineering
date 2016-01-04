@@ -57,9 +57,9 @@ def parallelFFTSum(executor, y, numChunks, samplerate, fftsize, removeDC=False, 
                         fftsize, windowArr, removeDC)
         for i in range(numChunks)
     ]
-    # Sum up
-    fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
+    # Sum up the results
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
+    fftSum = sum((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
     return x, 2.0 * (fftSum / numChunks) / samplerate
 

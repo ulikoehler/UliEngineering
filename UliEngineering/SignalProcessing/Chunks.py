@@ -13,7 +13,7 @@ def evaluateGeneratorFunction(tp, as_list=False):
 
     By default, returns a generator. Can also return a list if as_list=True
     """
-    n, g = tp
+    g, n = tp
     gen = (g(i) for i in range(n))
     return list(gen) if as_list else gen
 
@@ -36,9 +36,9 @@ def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
 
     This is a lazy function, it generates copies only on-demand.
 
-    Returns (n, g) where g is a unary generator function (which takes the chunk
+    Returns (g, n) where g is a unary generator function (which takes the chunk
         number as an argument) and n is the number of chunks.
     """
     # Precompute offset table
     offsets = [ofs for ofs in range(0, y.shape[0] - (chunksize - 1), shiftsize)]
-    return len(offsets), functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy)
+    return functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy), len(offsets)
