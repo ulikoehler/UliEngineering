@@ -4,6 +4,7 @@ from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal, assert_true, raises, assert_less
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *
+from nose_parameterized import parameterized
 import concurrent.futures
 import numpy as np
 

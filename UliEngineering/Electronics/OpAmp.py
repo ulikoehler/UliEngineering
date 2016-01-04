@@ -12,9 +12,9 @@ Usage example:
 """
 import itertools
 import math
-from UliEngineering.EngineerIO import autoNormalizeEngineerInput
+from UliEngineering.EngineerIO import autoNormalizeEngineerInput, Quantity
 
-def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
+def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Quantity("V"):
     """
     Computes the output voltage of a non-inverting summing amplifier:
     V1 connected via R1 to IN+
