@@ -169,6 +169,8 @@ def splitSuffixSeparator(s):
             suffix = s[suffixIndex]
             s = s.replace(suffix, ".")
     # Handle unit prefix (if any). Not allowable if no unit is present
+    if not s:
+        return None
     if unit and s[-1] in unitPrefixes:
         s = s[:-1]
     # Final check: Is there any number left and is it valid?
