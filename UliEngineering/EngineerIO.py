@@ -23,6 +23,8 @@ import re
 import math
 import itertools
 import functools
+import operator
+import toolz.functoolz
 from collections import namedtuple
 
 Quantity = namedtuple("Quantity", ["unit"])
@@ -40,11 +42,11 @@ siSuffixMap = {
 }
 
 # Valid unit designators. Ensure no SI suffix is added here
-units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
+units = set(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 
 # Allowable Unit prefixes
 # Constraint: unitPrefixes ∩ siSuffices == ∅
-unitPrefixes = frozenset(["Δ", "°"])
+unitPrefixes = set(["Δ", "°"])
 
 
 def isValidSuffix(suffix):
@@ -226,13 +228,16 @@ def formatValue(v, unit=""):
     #Delegate the rest of the task to the helper
     return _formatWithSuffix(v, siSuffixMap[suffixMapIdx] + unit)
 
-def normalizeEngineerInputIfStr(v):
+def autoNormalizeEngineerInput(v, encoding="utf-8"):
     "Return v, None if v is not a string or normalizeEngineerInput(v) else"
     if isinstance(v, bytes):
-        v = v.decode("utf-8")
+        v = v.decode(encoding)
     if isinstance(v, str):
         return normalizeEngineerInput(v)
     return v, ''
+
+autoNormalizeEngineerInputNoUnit = \
+    toolz.functoolz.compose(operator.itemgetter(0), autoNormalizeEngineerInput)
 
 def autoFormat(fn, *args, **kwargs):
     """

@@ -12,7 +12,7 @@ Usage example:
 """
 import itertools
 import math
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
+from UliEngineering.EngineerIO import autoNormalizeEngineerInput
 
 def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
     """
@@ -22,10 +22,10 @@ def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
     IN- connected via RFB1 to GND
     IN- connected via RFB2 to VOut
     """
-    v1, _ = normalizeEngineerInputIfStr(v1)
-    v2, _ = normalizeEngineerInputIfStr(v2)
-    r1, _ = normalizeEngineerInputIfStr(r1)
-    r2, _ = normalizeEngineerInputIfStr(r2)
-    rfb1, _ = normalizeEngineerInputIfStr(rfb1)
-    rfb2, _ = normalizeEngineerInputIfStr(rfb2)
+    v1, _ = autoNormalizeEngineerInput(v1)
+    v2, _ = autoNormalizeEngineerInput(v2)
+    r1, _ = autoNormalizeEngineerInput(r1)
+    r2, _ = autoNormalizeEngineerInput(r2)
+    rfb1, _ = autoNormalizeEngineerInput(rfb1)
+    rfb2, _ = autoNormalizeEngineerInput(rfb2)
     return (1.0 + rfb2 / rfb1) * (v1 * (r2 / (r1 + r2)) + v2 * (r1 / (r1 + r2)))

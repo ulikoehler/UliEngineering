@@ -93,12 +93,19 @@ class TestEngineerIO(object):
         assert_equal(getSuffixMultiplier("T"), 12)
         assert_equal(getSuffixMultiplier(""), 0)
 
-    def testNormalizeEngineerInputIfStr(self):
-        assert_equal(normalizeEngineerInputIfStr(1.25), (1.25, ''))
-        assert_equal(normalizeEngineerInputIfStr("1.25"), (1.25, ''))
-        assert_equal(normalizeEngineerInputIfStr("1.25 V"), (1.25, "V"))
-        assert_equal(normalizeEngineerInputIfStr("1k25 V"), (1250.0, "V"))
-        assert_equal(normalizeEngineerInputIfStr(b"1.25 V"), (1.25, "V"))
+    def testAutoNormalizeEngineerInput(self):
+        assert_equal(autoNormalizeEngineerInput(1.25), (1.25, ''))
+        assert_equal(autoNormalizeEngineerInput("1.25"), (1.25, ''))
+        assert_equal(autoNormalizeEngineerInput("1.25 V"), (1.25, "V"))
+        assert_equal(autoNormalizeEngineerInput("1k25 V"), (1250.0, "V"))
+        assert_equal(autoNormalizeEngineerInput(b"1.25 V"), (1.25, "V"))
+
+    def testAutoNormalizeEngineerInputIgnoreUnit(self):
+        assert_equal(autoNormalizeEngineerInputNoUnit(1.25), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnit("1.25"), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnit("1.25 V"), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnit("1k25 V"), 1250.0)
+        assert_equal(autoNormalizeEngineerInputNoUnit(b"1.25 V"), 1.25)
 
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 

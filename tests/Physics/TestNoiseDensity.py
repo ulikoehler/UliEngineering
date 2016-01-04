@@ -11,7 +11,6 @@ class TestNoiseDensity(object):
         assert_approx_equal(actualNoise(1e-4, 100), 1e-3)
         assert_equal(autoFormat(actualNoise, "100 µV", "100 Hz"), '1.00 mV')
 
-
     def testNoiseDensity(self):
         assert_approx_equal(noiseDensity("1.0 mV", "100 Hz"), 1e-4)
         assert_approx_equal(noiseDensity(1e-3, 100), 1e-4)

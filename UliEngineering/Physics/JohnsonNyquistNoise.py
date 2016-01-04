@@ -12,7 +12,7 @@ Johnson Nyquist noise utilities for both voltage and current noise
 import scipy.constants
 from .Resistors import *
 from .Temperature import normalize_temperature, celsius_to_kelvin
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
+from UliEngineering.EngineerIO import autoNormalizeEngineerInput, Quantity
 import math
 
 def johnson_nyquist_noise_current(r, delta_f, T) -> Quantity("A"):
@@ -21,8 +21,8 @@ def johnson_nyquist_noise_current(r, delta_f, T) -> Quantity("A"):
     T must be given in °C whereas r must be given in Ohms.
     The result is given in volts
     """
-    r, _ = normalizeEngineerInputIfStr(r)
-    delta_f, _ = normalizeEngineerInputIfStr(delta_f)
+    r, _ = autoNormalizeEngineerInput(r)
+    delta_f, _ = autoNormalizeEngineerInput(delta_f)
     t_kelvin = normalize_temperature(T)
     # Support celsius and kelvin inputs
     return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
@@ -33,7 +33,7 @@ def johnson_nyquist_noise_voltage(r, delta_f, T) -> Quantity("V"):
     T must be given in °C whereas r must be given in Ohms.
     The result is given in volts
     """
-    r, _ = normalizeEngineerInputIfStr(r)
-    delta_f, _ = normalizeEngineerInputIfStr(delta_f)
+    r, _ = autoNormalizeEngineerInput(r)
+    delta_f, _ = autoNormalizeEngineerInput(delta_f)
     t_kelvin = normalize_temperature(T)
     return math.sqrt(4 * scipy.constants.k * t_kelvin * delta_f * r)

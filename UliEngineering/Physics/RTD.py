@@ -16,7 +16,7 @@ For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
 from UliEngineering.Physics.Temperature import zero_point_celsius, normalize_temperature_celsius
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
+from UliEngineering.EngineerIO import autoNormalizeEngineerInput, Quantity
 import functools
 from collections import namedtuple
 import numpy as np
@@ -61,7 +61,7 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Quantity("°C"):
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
-    r, _ = normalizeEngineerInputIfStr(r)
+    r, _ = autoNormalizeEngineerInput(r)
     A, B = standard.a, standard.b
     # Select
     if poly is None:

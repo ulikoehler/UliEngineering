@@ -9,7 +9,9 @@ Originally published at techoverflow.net
 """
 import itertools
 import functools
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, formatValue
+import operator
+import numpy as np
+from UliEngineering.EngineerIO import autoNormalizeEngineerInput, autoNormalizeEngineerInputNoUnit, Quantity
 
 # Standard resistor sequences
 e96 = [1.00, 1.02, 1.05, 1.07, 1.10, 1.13, 1.15, 1.18, 1.21, 1.24, 1.27, 1.30, 1.33, 1.37, 1.40,
@@ -34,7 +36,7 @@ def getResistorRange(multiplicator, sequence=e96):
 
 def getStandardResistors(minExp=-1, maxExp=9, sequence=e96):
     """
-    Get a list of all standard resistor values from 100mOhm up to 976 MOhm in Ohms"""
+    Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
     exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(getResistorRange(r, sequence=sequence) for r in multiplicators))
@@ -45,23 +47,18 @@ def findNearestResistor(value, sequence=e96):
     """
     return min(getStandardResistors(sequence=sequence), key=lambda r: abs(value - r))
 
-"""Shortcut for formatting resistor values in Ohms."""
-formatResistorValue = functools.partial(formatValue, unit="Ω")
+def parallelResistors(*args) -> Quantity("Ω"):
+    """
+    Compute the total resistance of n parallel resistors and return
+    the value in Ohms.
+    """
+    resistors = np.asarray(list(map(autoNormalizeEngineerInputNoUnit, args)))
+    return 1.0 / np.sum(np.reciprocal(resistors))
 
-def parallelResistors(r1, r2):
+def serialResistors(*args) -> Quantity("Ω"):
     """
     Compute the total resistance of two parallel resistors and return
     the value in Ohms.
     """
-    r1, _ = normalizeEngineerInputIfStr(r1)
-    r2, _ = normalizeEngineerInputIfStr(r2)
-    return (r1 * r2) / (r1 + r2)
-
-def serialResistors(r1, r2):
-    """
-    Compute the total resistance of two parallel resistors and return
-    the value in Ohms.
-    """
-    r1, _ = normalizeEngineerInputIfStr(r1)
-    r2, _ = normalizeEngineerInputIfStr(r2)
-    return (r1 + r2)
+    resistors = list(map(autoNormalizeEngineerInputNoUnit, args))
+    return sum(resistors)
