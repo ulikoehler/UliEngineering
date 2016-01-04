@@ -112,7 +112,6 @@ class TestEngineerIO(object):
         testfn3 = functools.partial(testfn2, n=3.0)
         assert_equal(autoFormat(testfn3), "3.00 V")
 
-
     @raises(UnannotatedReturnValueError)
     def testAutoFormatInvalid1(self):
         autoFormat(autoFormat)

@@ -4,23 +4,23 @@
 Utilities for computations related to noise density
 """
 from .Resistors import *
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
 import numpy as np
 
-def actualNoise(density, bandwith):
+def actualNoise(density, bandwith) -> Quantity("V"):
     """
     Compute the actual noise given:
      - A noise density in x/√Hz where x is any unit
      - A bandwith in ΔHz
 
-    >>> formatValue(actualNoise("100 µV", "100 Hz"), "V")
+    >>> autoFormat(actualNoise("100 µV", "100 Hz"), "V")
     '1.00 mV'
     """
     density, _ = normalizeEngineerInputIfStr(density)
     bandwith, _ = normalizeEngineerInputIfStr(bandwith)
     return np.sqrt(bandwith) * density
 
-def noiseDensity(actual_noise, bandwith):
+def noiseDensity(actual_noise, bandwith) -> Quantity("V/√Hz"):
     """
     Compute the noise density given:
      - A noise density in x/√Hz where x is any unit
