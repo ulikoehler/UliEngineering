@@ -63,12 +63,14 @@ def parallelFFTSum(executor, y, numChunks, samplerate, fftsize, removeDC=False, 
     # Perform normalization once
     return x, 2.0 * (fftSum / numChunks) / samplerate
 
-def cutFFTDCArtifacts(fx, fy=None):
+def cutFFTDCArtifacts(fx, fy=None, return_idx=False):
     """
     If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
     this function can be used to remove this area from the FFT value set.
     This function cuts every value up to (but not including the) first local minimum.
     It returns a tuple (x, y)
+
+    Use return_idx=True to return the start index instead of slices
     """
     # Unpack tuple if directly called on the value of
     if fy is None:
@@ -78,11 +80,22 @@ def cutFFTDCArtifacts(fx, fy=None):
     # Loop until first local minimum
     for y in fy:
         if y > lastVal:
+            if return_idx:
+                return idx
             return (fx[idx:], fy[idx:])
         idx += 1
         lastVal = y
     # No minimum found. We can't remove DC offset, so return something non-empty (= consistent)
+    if return_idx:
+        return 0
     return (fx, fy)
+
+def cutFFTDCArtifactsMulti(fx, fys, return_idx=False):
+    """Remove FFT artifacts for a list of numpy arrays. Resizes all arrays to the same size"""
+    idx = max(cutFFTDCArtifacts(None, fy, return_idx=True) for fy in fys)
+    if return_idx:
+        return idx
+    return fx[idx:], [fy[idx:] for fy in fys]
 
 def selectFrequenciesByThreshold(fx, fy, thresh):
     """
