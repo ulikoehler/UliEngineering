@@ -81,7 +81,7 @@ def cutFFTDCArtifacts(fx, fy=None):
             return (fx[idx:], fy[idx:])
         idx += 1
         lastVal = y
-    # No mimum found. We can't remove DC offset, so return something non-empty (= consistent)
+    # No minimum found. We can't remove DC offset, so return something non-empty (= consistent)
     return (fx, fy)
 
 def selectFrequenciesByThreshold(fx, fy, thresh):
@@ -89,7 +89,7 @@ def selectFrequenciesByThreshold(fx, fy, thresh):
     Select frequencies where a specific absolute threshold applies
     Returns an array of frequencies
     """
-    return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
+    return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] >= thresh])
 
 def dominantFrequency(x, y=None):
     "Return the frequency with the largest amplitude in a FFT spectrum"

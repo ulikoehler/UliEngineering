@@ -26,6 +26,14 @@ class TestFFT(object):
         assert_allclose(x2, x3)
         assert_allclose(y2, y3)
 
+    def testCutDCArtifactsNoMinimum(self):
+        # No minimum --> should return original array
+        x = np.linspace(100, 1, 100)
+        y = np.linspace(500, 5, 100)
+        x2, y2 = cutFFTDCArtifacts(x, y)
+        assert_allclose(x2, x)
+        assert_allclose(y2, y)
+
 
     def testDominantFrequency(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
@@ -35,10 +43,19 @@ class TestFFT(object):
         assert_equal(dominantFrequency(x, y), 132)
         # Check if we can also pass a tuple
         assert_equal(dominantFrequency((x, y)), 132)
+        # Also check by threshold
+
+    def testSelectFrequenciesByThreshold(self):
+        x = np.linspace(100, 199, 100)
+        y = np.random.random(100)
+        y[32] = 8.0
+        y[92] = 5.5
+        y[98] = 4.5
+        assert_allclose(selectFrequenciesByThreshold(x, y, 5.0), [132, 192])
 
     @parameterized.expand([
         ("With DC", False),
-        ("Without DC", False),
+        ("Without DC", True),
     ])
     def testParallelFFTSum(self, name, removeDC):
         d = np.random.random(1000)
