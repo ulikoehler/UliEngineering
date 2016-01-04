@@ -89,7 +89,7 @@ def selectFrequenciesByThreshold(fx, fy, thresh):
     Select frequencies where a specific absolute threshold applies
     Returns an array of frequencies
     """
-    return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] >= thresh])
+    return fx[np.where(fy >= thresh)]
 
 def dominantFrequency(x, y=None):
     "Return the frequency with the largest amplitude in a FFT spectrum"
