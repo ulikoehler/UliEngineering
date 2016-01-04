@@ -3,20 +3,19 @@
 """
 Johnson Nyquist noise utilities for both voltage and current noise
 
-
 # Usage example
 >>> from UliEngineering.Physics.JohnsonNyquistNoise import *
->>> from UliEngineering.EngineerIO import formatValue
->>> print(formatValue(johnson_nyquist_noise_current("20 MΩ", 1000, "20 °C"), "A"))
->>> print(formatValue(johnson_nyquist_noise_voltage("10 MΩ", 1000, 25), "V"))
+>>> from UliEngineering.EngineerIO import autoFormat
+>>> print(autoFormat(johnson_nyquist_noise_current, "20 MΩ", 1000, "20 °C"))
+>>> print(autoFormat(johnson_nyquist_noise_voltage, "10 MΩ", 1000, 25))
 """
 import scipy.constants
 from .Resistors import *
 from .Temperature import normalize_temperature, celsius_to_kelvin
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
 import math
 
-def johnson_nyquist_noise_current(r, delta_f, T):
+def johnson_nyquist_noise_current(r, delta_f, T) -> Quantity("A"):
     """
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.
@@ -28,7 +27,7 @@ def johnson_nyquist_noise_current(r, delta_f, T):
     # Support celsius and kelvin inputs
     return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
 
-def johnson_nyquist_noise_voltage(r, delta_f, T):
+def johnson_nyquist_noise_voltage(r, delta_f, T) -> Quantity("V"):
     """
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.

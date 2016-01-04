@@ -216,7 +216,7 @@ def formatValue(v, unit=""):
     Produces a string with 3 visible digits.
     """
     #Suffix map is indexed by one third of the decadic logarithm.
-    exp = 0 if v == 0.0 else math.log(v, 10.0)
+    exp = 0 if v == 0.0 else math.log(abs(v), 10.0)
     suffixMapIdx = int(math.floor(exp / 3.0))
     #Ensure we're in range
     if not -8 < suffixMapIdx < 7:

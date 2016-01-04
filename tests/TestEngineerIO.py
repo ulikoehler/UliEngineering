@@ -72,6 +72,7 @@ class TestEngineerIO(object):
         assert_equal(formatValue(2345.6789e12, "V"), '2.35 EV')
         assert_equal(formatValue(2.3456789e-6, "V"), '2.35 µV')
         assert_equal(formatValue(2.3456789e-6, "°C"), '2.35 µ°C')
+        assert_equal(formatValue(-2.3456789e-6, "°C"), '-2.35 µ°C')
 
     def testIsValidSuffix(self):
         for c in "fpnuµmkMGT":
