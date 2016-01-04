@@ -198,15 +198,15 @@ def _formatWithSuffix(v, suffix):
     This helper function formats the value to 3 visible digits.
     v must be pre-multiplied by the factor implied by the suffix
     """
-    if v < 10:
-        res = "%.2f" % v
-    elif v < 100:
-        res = "%.1f" % v
+    if v < 10.0:
+        res = "{:.2f}".format(v)
+    elif v < 100.0:
+        res = "{:.1f}".format(v)
     else:  # Should only happen if v < 1000
-        res = "%d" % int(v)
+        res = str(int(round(v)))
     #Avoid appending whitespace if there is no suffix
     if suffix:
-        return "%s %s" % (res, suffix)
+        return "{0} {1}".format(res, suffix)
     else:
         return res
 

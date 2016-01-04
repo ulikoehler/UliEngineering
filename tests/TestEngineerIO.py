@@ -65,14 +65,19 @@ class TestEngineerIO(object):
     def testFormatValue(self):
         assert_equal(formatValue(1.0e-15, "V"), '1.00 fV')
         assert_equal(formatValue(1.0e-25, "V"), None)
-        assert_equal(formatValue(234.6789e-3, "V"), '234 mV')
-        assert_equal(formatValue(234.6789, "V"), '234 V')
+        assert_equal(formatValue(234.6789e-3, "V"), '235 mV')
+        assert_equal(formatValue(234.6789, "V"), '235 V')
         assert_equal(formatValue(2345.6789, "V"), '2.35 kV')
         assert_equal(formatValue(2345.6789e6, "V"), '2.35 GV')
         assert_equal(formatValue(2345.6789e12, "V"), '2.35 EV')
         assert_equal(formatValue(2.3456789e-6, "V"), '2.35 µV')
         assert_equal(formatValue(2.3456789e-6, "°C"), '2.35 µ°C')
         assert_equal(formatValue(-2.3456789e-6, "°C"), '-2.35 µ°C')
+
+    def testRounding(self):
+        assert_equal(formatValue(1.999999, ""), '2.00')
+        assert_equal(formatValue(19.99999, ""), '20.0')
+        assert_equal(formatValue(199.9999, ""), '200')
 
     def testIsValidSuffix(self):
         for c in "fpnuµmkMGT":

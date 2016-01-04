@@ -3,6 +3,7 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal
 from UliEngineering.Physics.VoltageDivider import *
+from UliEngineering.EngineerIO import autoFormat
 
 class TestNoiseDensity(object):
     def test_unloadedVoltageDividerRatio(self):
@@ -15,8 +16,12 @@ class TestNoiseDensity(object):
 
     def test_computeTopResistor(self):
         assert_approx_equal(computeTopResistor(1000.0, 0.5), 1000.0)
+        assert_approx_equal(computeTopResistor(200.0, 5/6.0), 1000.0)
+        assert_equal(autoFormat(computeTopResistor, 1000.0, 0.5), "1000 Ω")
+        assert_equal(autoFormat(computeTopResistor, 400.0, 5/6.0), "2.00 kΩ")
 
     def test_computeBottomResistor(self):
         assert_approx_equal(computeBottomResistor(1000.0, 0.5), 1000.0)
-
-
+        assert_approx_equal(computeBottomResistor(1000.0, 5/6.0), 200.0)
+        assert_equal(autoFormat(computeBottomResistor, 1000.0, 0.5), "1000 Ω")
+        assert_equal(autoFormat(computeBottomResistor, 1000.0, 5/6.0), "200 Ω")
