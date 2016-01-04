@@ -10,7 +10,7 @@ import functools
 import concurrent.futures
 
 __fft_windows = {
-	"blackman": np.blackman,
+    "blackman": np.blackman,
     "bartlett": np.bartlett,
     "hamming": np.hamming,
     "hanning": np.hanning,
@@ -63,30 +63,33 @@ def parallelFFTSum(executor, y, numChunks, samplerate, fftsize, removeDC=False, 
     # Perform normalization once
     return x, 2.0 * (fftSum / numChunks) / samplerate
 
-def cutFFTDCArtifacts(fx, fy):
-	"""
-	If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
-	this function can be used to remove this area from the FFT value set.
-	This function cuts every value up to (but not including the) first local minimum.
-	It returns a tuple (x, y)
-	"""
-	lastVal = fy[0]
-	idx = 0
-	# Loop until first local minimum
-	for y in fy:
-		if y > lastVal:
-			return (fx[idx:], fy[idx:])
-		idx += 1
-		lastVal = y
-	# No mimum found. We can't remove DC offset, so return something non-empty (= consistent)
-	return (fx, fy)
+def cutFFTDCArtifacts(fx, fy=None):
+    """
+    If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
+    this function can be used to remove this area from the FFT value set.
+    This function cuts every value up to (but not including the) first local minimum.
+    It returns a tuple (x, y)
+    """
+    # Unpack tuple if directly called on the value of
+    if fy is None:
+        fx, fy = fx
+    lastVal = fy[0]
+    idx = 0
+    # Loop until first local minimum
+    for y in fy:
+        if y > lastVal:
+            return (fx[idx:], fy[idx:])
+        idx += 1
+        lastVal = y
+    # No mimum found. We can't remove DC offset, so return something non-empty (= consistent)
+    return (fx, fy)
 
 def selectFrequenciesByThreshold(fx, fy, thresh):
-	"""
-	Select frequencies where a specific absolute threshold applies
-	Returns an array of frequencies
-	"""
-	return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
+    """
+    Select frequencies where a specific absolute threshold applies
+    Returns an array of frequencies
+    """
+    return np.asarray([fx[idx] for idx in range(len(fy)) if fy[idx] > thresh])
 
 def showFrequencyMark(ax, fx, fy, freq):
     """
