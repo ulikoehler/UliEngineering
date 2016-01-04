@@ -104,6 +104,8 @@ class TestEngineerIO(object):
         assert_equal(getSuffixMultiplier("µ"), -6)
         assert_equal(getSuffixMultiplier("T"), 12)
         assert_equal(getSuffixMultiplier(""), 0)
+        # Invalid suffix
+        assert_is_none(getSuffixMultiplier("B"))
 
     def testAutoNormalizeEngineerInput(self):
         assert_equal(autoNormalizeEngineerInput(1.25), (1.25, ''))
