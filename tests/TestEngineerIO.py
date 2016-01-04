@@ -55,7 +55,13 @@ class TestEngineerIO(object):
         assert_is_none(splitSuffixSeparator("kA"))
         assert_is_none(splitSuffixSeparator("kfA"))
         assert_is_none(splitSuffixSeparator("AA"))
+        assert_is_none(splitSuffixSeparator("kΔ"))
+        assert_is_none(splitSuffixSeparator("Δ"))
+        assert_is_none(splitSuffixSeparator("AΔ"))
+        assert_is_none(splitSuffixSeparator("ΔA"))
+        assert_is_none(splitSuffixSeparator("ΔAΔ"))
         assert_is_none(splitSuffixSeparator(" "))
+        assert_is_none(splitSuffixSeparator(""))
 
     def testNormalizeEngineerInput(self):
         assert_is_none(normalizeEngineerInput("3.2°G"))
