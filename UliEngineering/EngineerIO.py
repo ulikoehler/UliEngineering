@@ -22,6 +22,7 @@ Originally published at techoverflow.net.
 import re
 import math
 import itertools
+import functools
 from collections import namedtuple
 
 Quantity = namedtuple("Quantity", ["unit"])
@@ -233,15 +234,19 @@ def normalizeEngineerInputIfStr(v):
         return normalizeEngineerInput(v)
     return v, ''
 
-def autoFormatValue(fn, *args, **kwargs):
+def autoFormat(fn, *args, **kwargs):
     """
     Auto-format a value by leveraging function annotations.
     The function's return value is expected to a be annotated with a Quantity() value.
     """
     if not callable(fn):
         raise ValueError("fn must be callable")
+    # Access innermost function inside possibly nested partials
+    annotatedFN = fn
+    if isinstance(annotatedFN, functools.partial):
+        annotatedFN = annotatedFN.func
     try:
-        qty = fn.__annotations__["return"]
+        qty = annotatedFN.__annotations__["return"]
     except KeyError:
         raise UnannotatedReturnValueError("Function {0} does not have an annotated return value")
     return formatValue(fn(*args, **kwargs), qty.unit)

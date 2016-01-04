@@ -3,16 +3,20 @@
 from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal
 from UliEngineering.Physics.Reactance import *
+from UliEngineering.EngineerIO import autoFormat
 import numpy as np
 
 class TestNoiseDensity(object):
     def test_capacitive_reactance(self):
         assert_approx_equal(capacitive_reactance("100 pF", "3.2 MHz"), 497.3592)
         assert_approx_equal(capacitive_reactance(100e-12, 3.2e6), 497.3592)
+        assert_approx_equal(capacitive_reactance(100e-12, 3.2e6), 497.3592)
+        assert_equal(autoFormat(capacitive_reactance, "100 pF", "3.2 MHz"), "497 Ω")
 
     def test_inductive_reactance(self):
         assert_approx_equal(inductive_reactance("100 µH", "3.2 MHz"), 2010.619)
         assert_approx_equal(inductive_reactance(100e-6, 3.2e6), 2010.619)
+        assert_equal(autoFormat(inductive_reactance, "100 µH", "3.2 MHz"), "2.01 kΩ")
 
     def test_numpy_arrays(self):
         l = np.asarray([100e-6, 200e-6])

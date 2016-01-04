@@ -94,12 +94,12 @@ class TestEngineerIO(object):
         assert_equal(normalizeEngineerInputIfStr("1k25 V"), (1250.0, "V"))
         assert_equal(normalizeEngineerInputIfStr(b"1.25 V"), (1.25, "V"))
 
-    # Just basic tests for autoFormatValue. Specific tests in other modules that have annotated functions
+    # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 
     @raises(UnannotatedReturnValueError)
-    def testAutoFormatValueInvalid1(self):
-        autoFormatValue(autoFormatValue)
+    def testAutoFormatInvalid1(self):
+        autoFormat(autoFormat)
 
     @raises(ValueError)
-    def testAutoFormatValueInvalid2(self):
-        autoFormatValue(None)
+    def testAutoFormatInvalid2(self):
+        autoFormat(None)

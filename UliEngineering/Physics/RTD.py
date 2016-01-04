@@ -16,7 +16,7 @@ For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
 from UliEngineering.Physics.Temperature import zero_point_celsius, normalize_temperature_celsius
-from UliEngineering.EngineerIO import normalizeEngineerInputIfStr
+from UliEngineering.EngineerIO import normalizeEngineerInputIfStr, Quantity
 import functools
 from collections import namedtuple
 import numpy as np
@@ -34,7 +34,7 @@ pt1000Correction = np.poly1d([1.51892983e-15, -2.85842067e-12, -5.34227299e-09,
 pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
                              1.80282972e-03, -1.61875985e-01, 4.84112370e+00])
 
-def ptx_resistance(r0, t, standard=ptxITS90):
+def ptx_resistance(r0, t, standard=ptxITS90) -> Quantity("Ω"):
     """
     Compute the PTx resistance at a given temperature.
     The reference for the test code is a DIN PT1000.
@@ -50,7 +50,7 @@ def ptx_resistance(r0, t, standard=ptxITS90):
         C = np.piecewise(t, [t < 0, t >= 0], [standard.c, 0])
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
-def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
+def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Quantity("°C"):
     """
     Compute the PTx temperature at a given temperature.
 
