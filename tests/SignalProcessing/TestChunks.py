@@ -2,7 +2,7 @@
 import numpy as np
 from nose.tools import assert_equal, assert_true, raises
 from numpy.testing import assert_array_equal, assert_array_less
-from UliEngineering.SignalProcessing.Chunks import fixedSizeChunkGenerator, evaluateGeneratorFunction
+from UliEngineering.SignalProcessing.Chunks import *
 
 class TestChunkGeneration(object):
     def __init__(self):
@@ -44,3 +44,20 @@ class TestChunkGeneration(object):
     @raises
     def test_fixedSizeChunkGenerator_invalid3(self):
         fixedSizeChunkGenerator(self.data1, 0, 3)
+
+class TestReshapedChunks(object):
+    def test_reshaped_chunks(self):
+        arr = np.arange(10)
+        # 1
+        chunks = reshapedChunks(arr, 2)
+        assert_equal(chunks.shape, (5, 2))
+        assert_array_equal(chunks, np.asarray([[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]))
+        # 2
+        chunks = reshapedChunks(arr, 4)
+        assert_equal(chunks.shape, (2, 4))
+        assert_array_equal(chunks, np.asarray([[0, 1, 2, 3], [4, 5, 6, 7]]))
+
+    def test_empty(self):
+        empty = np.asarray([])
+        assert_array_equal(reshapedChunks(empty, 4), empty)
+

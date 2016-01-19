@@ -42,3 +42,18 @@ def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
     # Precompute offset table
     offsets = [ofs for ofs in range(0, y.shape[0] - (chunksize - 1), shiftsize)]
     return functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy), len(offsets)
+
+def reshapedChunks(arr, chunksize):
+    """
+    Generates virtual chunks of a numpy array by reshaping a view of the original array.
+    Works really well with huge, mmapped arrays as no part of the array is copied.
+
+    Automatically handles odd-sized arrays. Works only with 1D arrays.
+    """
+    if arr.shape[0] == 0:
+        return arr
+    # We might need to cut off some records for odd-shaped arrays
+    end = arr.shape[0] - (arr.shape[0] % chunksize)
+    v = arr[:end].view()
+    v.shape = (-1, chunksize)
+    return v
