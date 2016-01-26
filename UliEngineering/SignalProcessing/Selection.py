@@ -154,7 +154,8 @@ def shrinkRanges(ranges, y, method="maxy"):
     fn = __shrinkRangeMethodLUT[method]
     for i, (start, end) in enumerate(ranges):
         # Skip calculation for ranges which already are 1 wide
-        if start == end:
+        if end - start == 1:
             ret[i] = start
         else:
             ret[i] = fn(start, end, y[start:end])
+    return ret

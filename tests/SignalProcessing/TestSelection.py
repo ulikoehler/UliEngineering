@@ -137,9 +137,10 @@ class TestShrinkRanges(object):
         x[5] = 2.0
         x[14:21] = 1.0
         x[20] = 3.0
+        x[22] = 4.0
         ranges = findTrueRuns(x > 0.5)
         # Run shrinker
-        shrinkRanges(ranges, x, )
+        assert_allclose(shrinkRanges(ranges, x), [5, 20, 22])
 
     @raises(KeyError)
     def testInvalidFunction(self):
