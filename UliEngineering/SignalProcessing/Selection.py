@@ -9,7 +9,7 @@ import scipy.signal
 from bisect import bisect_left
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
-           "selectByThreshold", "findTrueRuns"]
+           "selectByThreshold", "findTrueRuns", "shrinkRanges"]
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -112,7 +112,7 @@ def selectByThreshold(fx, fy, thresh, comparator=np.greater):
     Select values where a specific absolute threshold applies
     Returns a (n, 2)-shaped array where
     ret[i] = (x, y) contains the x and y values
-    and the array is sorted in descending order by absolute y values
+    and the array is sorted in descending order by absolute y values.
     """
     if comparator != np.greater and comparator != np.less:
         raise ValueError("Comparator may only be np.greater or np.less")
@@ -122,11 +122,39 @@ def selectByThreshold(fx, fy, thresh, comparator=np.greater):
 def findTrueRuns(arr):
     """
     Find runs of True values in a boolean array.
-    This function is not intended to be used with arrays other than Booleans
-    Return a (n, 2)-shaped array where the 2nd dimension contain start and end values
+    This function is not intended to be used with arrays other than Booleans.
+    The end element of the ranges is inclusive.
+    Return a (n, 2)-shaped array where the 2nd dimension contain start and end indices.
     """
-    # Ensure the ends don't cause issues
-    diffs = np.diff(np.concatenate(([False], arr, [False])))
-    starts = np.where(diffs == 1)
-    ends = np.where(diffs == -1)
+    # Ensure the ends don't cause issues and we are calculating in int-space
+    oneZero = np.zeros(1)
+    cated = np.concatenate((oneZero, arr, oneZero)).view(dtype=np.int)
+    diffs = np.diff(cated)
+    starts = np.where(diffs >= 1)
+    ends = np.where(diffs <= -1)
     return np.vstack((starts, ends)).T
+
+__shrinkRangeMethodLUT = {
+    "maxy": lambda start, _, yslice: start + np.argmax(yslice),
+    "median": lambda start, end, _: (start + end) // 2
+}
+
+def shrinkRanges(ranges, y, method="maxy"):
+    """
+    Take a (n, 2)-shaped range list like the one returned by findTrueRuns()
+    and shrink the ranges so the are only 1 wide.
+
+    Currently supported shrinking methods are:
+        - maxy: Selects the maximum y value along the slice
+        - mean: Selects the index (start+end) // 2
+
+    Return a 1d array of indices which are
+    """
+    ret = np.empty(ranges.shape[0])
+    fn = __shrinkRangeMethodLUT[method]
+    for i, (start, end) in enumerate(ranges):
+        # Skip calculation for ranges which already are 1 wide
+        if start == end:
+            ret[i] = start
+        else:
+            ret[i] = fn(start, end, y[start:end])
