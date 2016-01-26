@@ -7,7 +7,7 @@ import numpy as np
 import datetime
 from bisect import bisect_left
 
-__all__ = ["selectByDatetime"]
+__all__ = ["selectByDatetime", "selectFrequencyRange"]
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -52,3 +52,22 @@ def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
         return idx
     else:  # Return range
         return (idx - around, idx + around)
+
+def __computeFrequencyRangeIndices(x, lowFreq, highFreq):
+    """
+    Compute (startidx, endidx) for a given frequency array (e.g. fro FFT)
+    """
+    startidx = np.searchsorted(x >= lowFreq, True)
+    endidx = np.searchsorted(x >= highFreq, True)
+    return (startidx, endidx)
+
+def selectFrequencyRange(x, y, lowFreq=1.0, highFreq=10.0):
+    """
+    From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
+    Use computeFrequencyRangeIndices() to get the indices.
+
+    This function is designed to be inlined with a FFT call
+    """
+    startidx, endidx = __computeFrequencyRangeIndices(x, lowFreq, highFreq)
+    # Remove everything except the selected frequency range
+    return (x[startidx:endidx], y[startidx:endidx])

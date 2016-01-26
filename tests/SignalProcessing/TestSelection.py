@@ -10,8 +10,8 @@ import datetime
 
 executor = concurrent.futures.ThreadPoolExecutor(4)
 
-class TestSelection(object):
-    def testSelectByDatetime(self):
+class TestSelectByDatetime(object):
+    def testGeneric(self):
         now = datetime.datetime.now()
         # Test out of range
         assert_equal(selectByDatetime(np.arange(10), now), 10)
@@ -46,3 +46,10 @@ class TestSelection(object):
     @raises
     def testNoneTimestamp(self, str):
         selectByDatetime(np.arange(10), None)
+
+class TestSelectFrequencyRange(object):
+    def testGeneric(self):
+        arr = np.arange(0.0, 10.0)
+        result = selectFrequencyRange(arr, arr + 1.0, 1.0, 5.5)
+        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
+        assert_allclose(result, (desired - 1.0, desired))
