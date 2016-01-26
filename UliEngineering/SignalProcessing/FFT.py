@@ -42,7 +42,7 @@ def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
     # Perform amplitude normalization
     return np.abs(w[:fftsize / 2])
 
-def parallelFFTReduce(executor, y, numChunks, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=False):
+def parallelFFTReduce(executor, y, numChunks, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
