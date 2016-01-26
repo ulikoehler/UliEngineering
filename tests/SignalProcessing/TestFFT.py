@@ -86,14 +86,21 @@ class TestFFT(object):
         ("With DC", False),
         ("Without DC", True),
     ])
-    def testParallelFFTSum(self, name, removeDC):
+    def testParallelFFTReduce(self, name, removeDC):
         d = np.random.random(1000)
         y, nchunks = fixedSizeChunkGenerator(d, 100, 5)
         # Just test if it actually runs
-        x, y = parallelFFTSum(executor, y, nchunks, 10.0, 100, removeDC=removeDC)
+        x, y = parallelFFTReduce(executor, y, nchunks, 10.0, 100, removeDC=removeDC)
         if removeDC:
             assert_equal(x.shape[0], y.shape[0])
-        else: # With DC
+        else:  # With DC
             assert_equal(x.shape[0], 50)
             assert_equal(y.shape[0], 50)
         assert_equal(x.shape, y.shape)
+
+    def testSimpleParallelFFTReduce(self):
+        d = np.random.random(1000)
+        # Just test if it actually runs
+        x, y = simpleParallelFFTReduce(d, 100.0, 100)
+        assert_equal(x.shape[0], 50)
+        assert_equal(y.shape[0], 50)
