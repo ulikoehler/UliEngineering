@@ -62,13 +62,16 @@ def __computeFrequencyRangeIndices(x, lowFreq, highFreq):
     endidx = np.searchsorted(x >= highFreq, True)
     return (startidx, endidx)
 
-def selectFrequencyRange(x, y, lowFreq=1.0, highFreq=10.0):
+def selectFrequencyRange(x, y=None, lowFreq=1.0, highFreq=10.0):
     """
     From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
     Use computeFrequencyRangeIndices() to get the indices.
 
-    This function is designed to be inlined with a FFT call
+    This function is designed to be inlined with a FFT call. In this case,
+    x is a tuple (x, y)
     """
+    if y is None:
+        x, y = x
     startidx, endidx = __computeFrequencyRangeIndices(x, lowFreq, highFreq)
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])

@@ -54,6 +54,13 @@ class TestSelectFrequencyRange(object):
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result, (desired - 1.0, desired))
 
+    def testTupleUnpacking(self):
+        "Test tuple unpacking for FFT inlining"
+        arr = np.arange(0.0, 10.0)
+        result = selectFrequencyRange((arr, arr + 1.0), lowFreq=1.0, highFreq=5.5)
+        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
+        assert_allclose(result, (desired - 1.0, desired))
+
 class TestFindSortedExtrema(object):
     def testGreater(self):
         x = np.arange(10)
