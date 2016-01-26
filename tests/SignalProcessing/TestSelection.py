@@ -96,3 +96,23 @@ class TestSelectByThreshold(object):
     @raises(ValueError)
     def testInvalidComparator(self):
         selectByThreshold(None, None, 1.0, comparator=map)
+
+
+class TestFindTrueRuns(object):
+    def testSimple(self):
+        x = np.full(25, False)
+        x[4:9] = True
+        x[14:21] = True
+        assert_allclose(findTrueRuns(x), [[4, 9], [14, 21]])
+    def testEdges(self):
+        x = np.full(25, False)
+        x[0:9] = True
+        x[14:24] = True
+        assert_allclose(findTrueRuns(x), [[0, 9], [14, 24]])
+    def testNone(self):
+        x = np.full(25, False)
+        assert_allclose(findTrueRuns(x), np.zeros((0, 2)))
+    def testEmpty(self):
+        x = np.full(0, False)
+        assert_allclose(findTrueRuns(x), np.zeros((0, 2)))
+

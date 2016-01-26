@@ -9,7 +9,7 @@ import scipy.signal
 from bisect import bisect_left
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
-           "selectByThreshold"]
+           "selectByThreshold", "findTrueRuns"]
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -88,10 +88,7 @@ def __mapAndSortIndices(x, y, idxs, sort_descending=True):
     if sort_descending:
         idxs = np.flipud(idxs)
     # Copy x/y values to new array
-    ret = np.empty((xvals.shape[0], 2))
-    ret[:, 0] = xvals[idxs]
-    ret[:, 1] = yvals[idxs]
-    return ret
+    return np.column_stack((xvals[idxs], yvals[idxs]))
 
 def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
     """
@@ -121,3 +118,15 @@ def selectByThreshold(fx, fy, thresh, comparator=np.greater):
         raise ValueError("Comparator may only be np.greater or np.less")
     idxs = np.where(comparator(fy, thresh))
     return __mapAndSortIndices(fx, fy, idxs, comparator == np.greater)
+
+def findTrueRuns(arr):
+    """
+    Find runs of True values in a boolean array.
+    This function is not intended to be used with arrays other than Booleans
+    Return a (n, 2)-shaped array where the 2nd dimension contain start and end values
+    """
+    # Ensure the ends don't cause issues
+    diffs = np.diff(np.concatenate(([False], arr, [False])))
+    starts = np.where(diffs == 1)
+    ends = np.where(diffs == -1)
+    return np.vstack((starts, ends)).T
