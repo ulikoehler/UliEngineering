@@ -5,9 +5,10 @@ Utilities for selecting and finding specific attributes in datasets
 """
 import numpy as np
 import datetime
+import scipy.signal
 from bisect import bisect_left
 
-__all__ = ["selectByDatetime", "selectFrequencyRange"]
+__all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema"]
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -71,3 +72,29 @@ def selectFrequencyRange(x, y, lowFreq=1.0, highFreq=10.0):
     startidx, endidx = __computeFrequencyRangeIndices(x, lowFreq, highFreq)
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])
+
+def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
+    """
+    Find extrema using the given method and parameters, order them by y value and
+    return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
+    x and y value, with the 1st dimension being sorted in descending order.
+
+    The comparator may be either np.greater or np.less.
+
+    This means that ret[0] contains the x, y coordinate of the most significant extremum
+    (where the significancy is determined by the comparator)
+    """
+    # Determine extrema and x/y values at those indices
+    if comparator != np.greater and comparator != np.less:
+        raise ValueError("Comparator may only be np.greater or np.less")
+    extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
+    xvals = x[extrema]
+    yvals = y[extrema]
+    idxs = np.argsort(yvals)
+    if comparator == np.greater:
+        idxs = np.flipud(idxs)
+    # Copy x/y values to new array
+    ret = np.empty((xvals.shape[0], 2))
+    ret[:, 0] = xvals[idxs]
+    ret[:, 1] = yvals[idxs]
+    return ret

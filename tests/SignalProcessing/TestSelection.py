@@ -53,3 +53,25 @@ class TestSelectFrequencyRange(object):
         result = selectFrequencyRange(arr, arr + 1.0, 1.0, 5.5)
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result, (desired - 1.0, desired))
+
+class TestFindSortedExtrema(object):
+    def testGreater(self):
+        x = np.arange(10)
+        y = np.zeros(10)
+        y[2] = 1.0  # Not the largest maximum
+        y[6] = 5.0
+
+        assert_allclose(findSortedExtrema(x, y), [[6.0, 5.0], [2.0, 1.0]])
+
+    def testLess(self):
+        x = np.arange(10)
+        y = np.zeros(10)
+        y[2] = -1.0  # Not the largest maximum
+        y[6] = -5.0
+
+        assert_allclose(findSortedExtrema(x, y, comparator=np.less),
+                        [[6.0, -5.0], [2.0, -1.0]])
+
+    @raises(ValueError)
+    def testInvalidComparator(self):
+        findSortedExtrema(None, None, comparator=map)
