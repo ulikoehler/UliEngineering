@@ -9,6 +9,9 @@ import numpy.fft
 import functools
 import concurrent.futures
 
+__all__ = ["computeFFT", "parallelFFTSum", "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
+           "selectFrequenciesByThreshold", "dominantFrequency"]
+
 __fft_windows = {
     "blackman": np.blackman,
     "bartlett": np.bartlett,

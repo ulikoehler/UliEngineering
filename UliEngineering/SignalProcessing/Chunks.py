@@ -6,6 +6,9 @@ Utilities for generating chunks from datasets
 import numpy as np
 import functools
 
+__all__ = ["evaluateGeneratorFunction", "fixedSizeChunkGenerator",
+           "reshapedChunks"]
+
 def evaluateGeneratorFunction(tp, as_list=False):
     """
     Given a tuple (n, g) returned by one of the generator functions,

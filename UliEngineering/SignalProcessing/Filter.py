@@ -7,6 +7,8 @@ from scipy import signal
 import numpy as np
 import numbers
 
+__all__ = ["NotComputedException", "FilterUnstableError", "SignalFilter"]
+
 
 class NotComputedException(Exception):
     "The filter has not been computed yet"
