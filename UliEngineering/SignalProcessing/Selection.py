@@ -8,7 +8,8 @@ import datetime
 import scipy.signal
 from bisect import bisect_left
 
-__all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema"]
+__all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
+           "selectByThreshold"]
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -76,6 +77,22 @@ def selectFrequencyRange(x, y=None, lowFreq=1.0, highFreq=10.0):
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])
 
+def __mapAndSortIndices(x, y, idxs, sort_descending=True):
+    """
+    Map a list of indices to a y array and sort it by y.
+    This is used in multiple selectByX() functions.
+    """
+    xvals = x[idxs]
+    yvals = y[idxs]
+    idxs = np.argsort(yvals)
+    if sort_descending:
+        idxs = np.flipud(idxs)
+    # Copy x/y values to new array
+    ret = np.empty((xvals.shape[0], 2))
+    ret[:, 0] = xvals[idxs]
+    ret[:, 1] = yvals[idxs]
+    return ret
+
 def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
     """
     Find extrema using the given method and parameters, order them by y value and
@@ -91,13 +108,16 @@ def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
     if comparator != np.greater and comparator != np.less:
         raise ValueError("Comparator may only be np.greater or np.less")
     extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
-    xvals = x[extrema]
-    yvals = y[extrema]
-    idxs = np.argsort(yvals)
-    if comparator == np.greater:
-        idxs = np.flipud(idxs)
-    # Copy x/y values to new array
-    ret = np.empty((xvals.shape[0], 2))
-    ret[:, 0] = xvals[idxs]
-    ret[:, 1] = yvals[idxs]
-    return ret
+    return __mapAndSortIndices(x, y, extrema, comparator == np.greater)
+
+def selectByThreshold(fx, fy, thresh, comparator=np.greater):
+    """
+    Select values where a specific absolute threshold applies
+    Returns a (n, 2)-shaped array where
+    ret[i] = (x, y) contains the x and y values
+    and the array is sorted in descending order by absolute y values
+    """
+    if comparator != np.greater and comparator != np.less:
+        raise ValueError("Comparator may only be np.greater or np.less")
+    idxs = np.where(comparator(fy, thresh))
+    return __mapAndSortIndices(fx, fy, idxs, comparator == np.greater)

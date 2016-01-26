@@ -82,3 +82,17 @@ class TestFindSortedExtrema(object):
     @raises(ValueError)
     def testInvalidComparator(self):
         findSortedExtrema(None, None, comparator=map)
+
+class TestSelectByThreshold(object):
+
+    def testGreater(self):
+        x = np.linspace(100, 199, 100)
+        y = np.random.random(100)
+        y[32] = 8.0
+        y[92] = 5.5
+        y[98] = 4.5
+        assert_allclose(selectByThreshold(x, y, 5.0), [[132., 8.], [192., 5.5]])
+
+    @raises(ValueError)
+    def testInvalidComparator(self):
+        selectByThreshold(None, None, 1.0, comparator=map)

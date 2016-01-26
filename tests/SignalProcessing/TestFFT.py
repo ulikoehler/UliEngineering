@@ -74,14 +74,6 @@ class TestFFT(object):
         assert_equal(dominantFrequency((x, y)), 132)
         # Also check by threshold
 
-    def testSelectFrequenciesByThreshold(self):
-        x = np.linspace(100, 199, 100)
-        y = np.random.random(100)
-        y[32] = 8.0
-        y[92] = 5.5
-        y[98] = 4.5
-        assert_allclose(selectFrequenciesByThreshold(x, y, 5.0), [132, 192])
-
     @parameterized.expand([
         ("With DC", False),
         ("Without DC", True),

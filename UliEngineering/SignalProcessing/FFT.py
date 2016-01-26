@@ -11,8 +11,8 @@ from .Chunks import fixedSizeChunkGenerator
 import concurrent.futures
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
-            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
-           "selectFrequenciesByThreshold", "dominantFrequency"]
+           "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
+           "dominantFrequency"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -122,15 +122,8 @@ def cutFFTDCArtifactsMulti(fx, fys, return_idx=False):
         return idx
     return fx[idx:], [fy[idx:] for fy in fys]
 
-def selectFrequenciesByThreshold(fx, fy, thresh):
-    """
-    Select frequencies where a specific absolute threshold applies
-    Returns an array of frequencies
-    """
-    return fx[np.where(fy >= thresh)]
-
 def dominantFrequency(x, y=None):
     "Return the frequency with the largest amplitude in a FFT spectrum"
-    if y is None: # So we can pass in a FFT result tuple directly
+    if y is None:  # So we can pass in a FFT result tuple directly
         x, y = x
     return x[np.argmax(y)]
