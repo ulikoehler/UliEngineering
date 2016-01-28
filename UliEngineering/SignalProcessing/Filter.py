@@ -68,8 +68,6 @@ class SignalFilter(object):
         if isinstance(freqs, str):
             __freqs_orig = freqs
             freqs = autoNormalizeEngineerInputNoUnitRaise(freqs)
-            if freqs is None:
-                raise ValueError("Can'")
         self.freqs = self._filtfreq(freqs)
         # Check & store pass type
         if btype == "lowpass" or btype == "highpass":
