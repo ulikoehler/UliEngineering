@@ -23,8 +23,6 @@ import re
 import math
 import itertools
 import functools
-import operator
-import toolz.functoolz
 from collections import namedtuple
 
 Quantity = namedtuple("Quantity", ["unit"])
@@ -238,8 +236,11 @@ def autoNormalizeEngineerInput(v, encoding="utf-8"):
         return normalizeEngineerInput(v)
     return v, ''
 
-autoNormalizeEngineerInputNoUnit = \
-    toolz.functoolz.compose(operator.itemgetter(0), autoNormalizeEngineerInput)
+def autoNormalizeEngineerInputNoUnit(s):
+    v = autoNormalizeEngineerInput(s)
+    if v is None:
+        return None
+    return v[0]
 
 def autoFormat(fn, *args, **kwargs):
     """
