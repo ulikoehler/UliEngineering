@@ -22,6 +22,24 @@ class TestFilter(object):
         d2 = filt(self.d)
         assert_equal(self.d.shape, d2.shape)
 
+
+    @parameterized([
+        ("lowpass", 1.0),
+        ("highpass", 1.0),
+        ("bandpass", [1.0, 2.0]),
+        ("bandstop", [1.0, 2.0]),
+    ])
+    def testChainedFilter(self, btype, frequencies):
+        filt = SignalFilter(100.0, frequencies).iir(order=3, btype=btype)
+        cfilt = ChainedFilter([filt, filt])
+        d2 = cfilt(self.d)
+        assert_equal(self.d.shape, d2.shape)
+        # Check repeat
+        cfilt = ChainedFilter(filt, repeat=4)
+        d2 = cfilt(self.d)
+        assert_equal(self.d.shape, d2.shape)
+        assert_true(cfilt.is_stable())
+
     @parameterized([
         ("butter",),
         ("cheby1",),

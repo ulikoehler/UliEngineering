@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Utilities for filter visualization
+A high-level API for digital filters:
+
+Features include:
+    - Automatic detection of numerical instability
+    - Single-line filter generation and application
+    - Supports lowpass, highpass, bandpass and bandstop filter types
+    - Supports any filter characteristic available in scipy
+    - Lets you enter the corner frequencies as Hz,
+    - Direct frequency response generation
+    - Filters implent __call__ for direct filtfilt application
+    - Chainable filter to deal with complex characteristics or unstable high-order filters
 """
 from scipy import signal
 import numpy as np
 import numbers
+from toolz import functoolz
 
-__all__ = ["NotComputedException", "FilterUnstableError", "SignalFilter"]
+__all__ = ["NotComputedException", "FilterUnstableError", "SignalFilter",
+           "ChainedFilter"]
 
 
 class NotComputedException(Exception):
@@ -75,3 +87,27 @@ class SignalFilter(object):
         if self.a is None:
             raise NotComputedException()
         return signal.filtfilt(self.b, self.a, d)
+
+class ChainedFilter(object):
+    """
+    Chained filter object that applies a number of filters in series.
+    This can be used to deal with numerically unstable filters.
+
+    filtfilt is used to avoid phase issues by repeated application.
+
+    Frequency response plotting is currently unsupported.
+    """
+    def __init__(self, filters, repeat=1):
+        "The first filter in the filters list is applied first"
+        if isinstance(filters, SignalFilter):
+            filters = [filters]
+        self.filters = filters
+        self.unique_filters = filters  # Will not contain repeat duplicates
+        if repeat > 1:
+            self.filters *= repeat
+
+    def __call__(self, d):
+        return functoolz.pipe(d, *self.filters)
+
+    def is_stable(self):
+        return all([f.is_stable() for f in self.filters])
