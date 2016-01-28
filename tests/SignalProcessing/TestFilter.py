@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 from nose.tools import assert_equal, assert_true, raises
-from numpy.testing import assert_array_equal, assert_array_less
+from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from nose_parameterized import parameterized
 
@@ -124,6 +124,27 @@ class TestChainedFilter(TestFilter):
         d2 = cfilt(self.d)
         assert_equal(len(cfilt), len1 + 1)
         assert_equal(self.d.shape, d2.shape)
+
+    def testFrequencyResponse(self):
+        testFilter = SignalFilter(400.0, 100.0, btype="lowpass").iir(1, ftype="butter")
+        fx0, fy0 = testFilter.frequency_response()
+        fx1, fy1 = ChainedFilter(testFilter, repeat=1).frequency_response()
+        fx2, fy2 = ChainedFilter(testFilter, repeat=2).frequency_response()
+        # Shapes should all match
+        assert_equal(fx0.shape, fy0.shape)
+        assert_equal(fx1.shape, fy1.shape)
+        assert_equal(fx2.shape, fy2.shape)
+        assert_equal(fx0.shape, fx1.shape)
+        assert_equal(fx1.shape, fx2.shape)
+        assert_equal(fy0.shape, fy1.shape)
+        assert_equal(fy1.shape, fy2.shape)
+        # X should be all equal
+        assert_allclose(fx0, fx1)
+        assert_allclose(fx1, fx2)
+        # Y with repeat=1 should be equal
+        assert_allclose(fy0, fy1)
+        # fy2 filters more -> should be less
+        assert_array_less(fy2, fy1)
 
 
 class TestSumFilter(TestFilter):

@@ -21,7 +21,6 @@ from UliEngineering.EngineerIO import autoNormalizeEngineerInputNoUnitRaise
 from scipy import signal
 import numpy as np
 import numbers
-import operator
 import collections
 from toolz import functoolz
 
@@ -160,14 +159,19 @@ class ChainedFilter(object):
         return functoolz.pipe(d, *self.filters)
 
     def frequency_response(self, n=10000):
-        return reduce(operator.mul, (f.frequency_response(n) for f in self.filters))
+        if not self.filters:
+            raise NotComputedException("Filter list is empty")
+        fx, _ = self.filters[0].frequency_response(n)
+        print(np.asarray([f.frequency_response(n)[1] for f in self.filters]).shape)
+        fy = np.product(np.asarray([f.frequency_response(n)[1] for f in self.filters]), axis=0)
+        return fx, fy
 
     def is_stable(self):
         # Performance not considered important here. User will usually call this once
         return all(f.is_stable() for f in self.filters)
 
 
-class SumFilter(object):
+class SumFilter(ChainedFilter):
     """
     Chained filter object that applies a number of filters and sums the results.
     This can be used to combine multiple bandpass filters for multiple passbands.
@@ -180,16 +184,5 @@ class SumFilter(object):
             filters = [filters]
         self.filters = filters
 
-    def __iadd__(self, f):
-        "Add a filter to the end of the chain"
-        self.filters.append(f)
-        return self
-
-    def __len__(self):
-        return len(self.filters)
-
     def __call__(self, d):
         return sum(filt(d) for filt in self.filters)
-
-    def is_stable(self):
-        return all(f.is_stable() for f in self.filters)
