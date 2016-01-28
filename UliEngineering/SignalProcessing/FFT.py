@@ -7,6 +7,7 @@ import scipy.fftpack
 import numpy as np
 import numpy.fft
 import functools
+from .Selection import selectFrequencyRange
 from .Chunks import fixedSizeChunkGenerator
 import concurrent.futures
 
@@ -122,8 +123,14 @@ def cutFFTDCArtifactsMulti(fx, fys, return_idx=False):
         return idx
     return fx[idx:], [fy[idx:] for fy in fys]
 
-def dominantFrequency(x, y=None):
-    "Return the frequency with the largest amplitude in a FFT spectrum"
+def dominantFrequency(x, y=None, low=None, high=None):
+    """
+    Return the frequency with the largest amplitude in a FFT spectrum
+    Optionally, a frequency range may be given
+    """
     if y is None:  # So we can pass in a FFT result tuple directly
         x, y = x
+    # Apply frequency range
+    if low is not None or high is not None:
+        x, y = selectFrequencyRange(x, y, low=low, high=high)
     return x[np.argmax(y)]

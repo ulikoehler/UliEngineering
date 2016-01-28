@@ -72,7 +72,8 @@ class TestFFT(object):
         assert_equal(dominantFrequency(x, y), 132)
         # Check if we can also pass a tuple
         assert_equal(dominantFrequency((x, y)), 132)
-        # Also check by threshold
+        # Check with frequency range
+        assert_equal(dominantFrequency(x, y, low=100.0, high=140.0), 132)
 
     @parameterized.expand([
         ("With DC", False),

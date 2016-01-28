@@ -133,25 +133,28 @@ def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     else:  # Return range
         return IntInterval(idx - around, idx + around)
 
-def __computeFrequencyRangeIndices(x, lowFreq, highFreq):
+def __computeFrequencyRangeIndices(x, low, high):
     """
     Compute (startidx, endidx) for a given frequency array (e.g. fro FFT)
     """
-    startidx = np.searchsorted(x >= lowFreq, True)
-    endidx = np.searchsorted(x >= highFreq, True)
+    startidx = np.searchsorted(x >= low, True) if low is not None else None
+    endidx = np.searchsorted(x >= high, True) if high is not None else None
     return (startidx, endidx)
 
-def selectFrequencyRange(x, y=None, lowFreq=1.0, highFreq=10.0):
+def selectFrequencyRange(x, y=None, low=None, high=None):
     """
     From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
     Use computeFrequencyRangeIndices() to get the indices.
 
     This function is designed to be inlined with a FFT call. In this case,
-    x is a tuple (x, y)
+    x is a tuple (x, y) and y is None (default).
+
+    The low and/or high frequencies can be set to None to include the full
+    frequency range, starting from or ending at a specific frequency.
     """
     if y is None:
         x, y = x
-    startidx, endidx = __computeFrequencyRangeIndices(x, lowFreq, highFreq)
+    startidx, endidx = __computeFrequencyRangeIndices(x, low, high)
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])
 
