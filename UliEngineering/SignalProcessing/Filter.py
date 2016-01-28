@@ -111,7 +111,7 @@ class SignalFilter(object):
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
-            raise FilterUnstableError()
+            raise FilterUnstableError("The filter is numerically unstable. Use a lower order or a wider frequency range. You can use ChainFilter to chain multiple filters of lower order to avoid this issue.")
         return self
 
     def frequency_response(self, n=10000):
