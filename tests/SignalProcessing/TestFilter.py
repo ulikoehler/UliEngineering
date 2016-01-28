@@ -76,6 +76,7 @@ class TestFilter(object):
         ("highpass", [1.0, 2.0, 3.0]),
         ("bandpass", [1.0, 2.0, 3.0]),
         ("bandstop", [1.0, 2.0, 3.0]),
+        ("bandstop", []),
         ("lowpass", "foobar"),
         ("highpass", "foobar"),
         ("bandpass", "foobar"),

@@ -5,9 +5,10 @@ Utilities for generating chunks from datasets
 """
 import numpy as np
 import functools
+import random
 
 __all__ = ["evaluateGeneratorFunction", "fixedSizeChunkGenerator",
-           "reshapedChunks"]
+           "reshapedChunks", "randomSampleChunkGenerator"]
 
 def evaluateGeneratorFunction(tp, as_list=False):
     """
@@ -20,15 +21,17 @@ def evaluateGeneratorFunction(tp, as_list=False):
     gen = (g(i) for i in range(n))
     return list(gen) if as_list else gen
 
+
 def __fixedSizeChunkGeneratorWorker(ofsTable, chunksize, y, perform_copy, i):
     """Worker for fixedSizeChunkGenerator()"""
     yofs = ofsTable[i]
     yslice = y[yofs:yofs + chunksize]
     return yslice.copy() if perform_copy else yslice
 
+
 def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
     """
-    A chunk-generating function that can be used for parallelFFTSum().
+    A chunk-generating function that can be used for parallelFFTReduce().
     Generates only full chunks with variable chunk / shift size.
 
     If perform_copy=False, the chunk is not copied in the generator function.
@@ -43,8 +46,21 @@ def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
         number as an argument) and n is the number of chunks.
     """
     # Precompute offset table
-    offsets = [ofs for ofs in range(0, y.shape[0] - (chunksize - 1), shiftsize)]
+    offsets = np.asarray([ofs for ofs in
+        range(0, y.shape[0] - (chunksize - 1), shiftsize)])
     return functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy), len(offsets)
+
+
+def randomSampleChunkGenerator(arr, chunksize, numSamples):
+    """
+    A chunk-generating function that can be used for parallelFFTReduce().
+    This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
+    as a basis and randomly selects a fraction of those chunks.
+    """
+    arr2d = reshapedChunks(arr, chunksize)
+    indices = random.sample(range(arr2d.shape[0]), numSamples)
+    return lambda i: arr2d[indices[i]], numSamples
+
 
 def reshapedChunks(arr, chunksize):
     """
