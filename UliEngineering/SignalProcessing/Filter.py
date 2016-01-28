@@ -135,8 +135,6 @@ class ChainedFilter(object):
 
     filtfilt is used to avoid phase issues by repeated application.
 
-    Frequency response plotting is currently unsupported.
-
     Filters can be added to the end of the chain via +=
     """
     def __init__(self, filters, repeat=1):
@@ -162,7 +160,6 @@ class ChainedFilter(object):
         if not self.filters:
             raise NotComputedException("Filter list is empty")
         fx, _ = self.filters[0].frequency_response(n)
-        print(np.asarray([f.frequency_response(n)[1] for f in self.filters]).shape)
         fy = np.product(np.asarray([f.frequency_response(n)[1] for f in self.filters]), axis=0)
         return fx, fy
 
