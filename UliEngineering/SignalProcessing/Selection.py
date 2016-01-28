@@ -12,7 +12,7 @@ from collections import namedtuple
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
-           "selectRandomSlice", "findNearestIdx"]
+           "selectRandomSlice", "findNearestIdx", "resample_discard"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = namedtuple("Interval", ["start", "end"])
@@ -262,3 +262,10 @@ def selectRandomSlice(arr, size):
         return IntInterval(0, alen)
     r = np.random.randint(0, alen - size)
     return IntInterval(r, r + size)
+
+
+def resample_discard(arr, divisor, ofs=0):
+    """
+    Resample with an integral divisor, discarding all other samples
+    """
+    return arr[ofs::divisor]

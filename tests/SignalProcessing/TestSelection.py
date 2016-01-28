@@ -214,3 +214,10 @@ class TestFindNearestIdx(object):
         assert_equal(findNearestIdx(np.arange(3, 13), 5.5), 2)
         assert_equal(findNearestIdx(np.arange(3, 13), 5.500001), 3)
         assert_equal(findNearestIdx(np.arange(3, 13), 5.6), 3)
+
+
+class TestResampling(object):
+    def testDiscard(self):
+        x = np.arange(10)
+        assert_allclose(resample_discard(x, 2), [0, 2, 4, 6, 8])
+        assert_allclose(resample_discard(x, 3), [0, 3, 6, 9])
