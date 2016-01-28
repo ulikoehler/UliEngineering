@@ -11,16 +11,17 @@ Features include:
     - Lets you enter the corner frequencies as Hz,
     - Direct frequency response generation
     - Filters implent __call__ for direct filtfilt application
-    - ChainFilter to deal with complex characteristics or unstable high-order filters
+    - ChainedFilter to deal with complex characteristics or unstable high-order filters
     - SumFilter that add the components of multiple individual filters to easily combine multiple
       bandpass filters
-    - SumFilter and ChainFilter are arbitrarily combinable
+    - SumFilter and ChainedFilter are arbitrarily combinable
     - Intuitive, readable error messages for non-mathematicians
 """
 from UliEngineering.EngineerIO import autoNormalizeEngineerInputNoUnitRaise
 from scipy import signal
 import numpy as np
 import numbers
+import operator
 import collections
 from toolz import functoolz
 
@@ -111,7 +112,7 @@ class SignalFilter(object):
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
-            raise FilterUnstableError("The filter is numerically unstable. Use a lower order or a wider frequency range. You can use ChainFilter to chain multiple filters of lower order to avoid this issue.")
+            raise FilterUnstableError("The filter is numerically unstable. Use a lower order or a wider frequency range. You can use ChainedFilter to chain multiple filters of lower order to avoid this issue.")
         return self
 
     def frequency_response(self, n=10000):
@@ -157,6 +158,9 @@ class ChainedFilter(object):
 
     def __call__(self, d):
         return functoolz.pipe(d, *self.filters)
+
+    def frequency_response(self, n=10000):
+        return reduce(operator.mul, (f.frequency_response(n) for f in self.filters))
 
     def is_stable(self):
         # Performance not considered important here. User will usually call this once
