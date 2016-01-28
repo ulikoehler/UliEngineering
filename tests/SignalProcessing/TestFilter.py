@@ -35,6 +35,10 @@ class TestFilter(object):
         d2 = filt(self.d)
         assert_equal(self.d.shape, d2.shape)
 
+    @raises(ValueError)
+    def testInvalidPassType(self):
+        filt = SignalFilter(100.0, [1.0, 2.0], btype="foobar")
+
     def testFrequencyResponse(self):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.iir(order=3)
@@ -134,6 +138,7 @@ class TestSumFilter(TestFilter):
         sfilt = SumFilter([filt, filt])
         d2 = sfilt(self.d)
         assert_equal(self.d.shape, d2.shape)
+        assert_true(sfilt.is_stable())
         # Check +=
         len1 = len(sfilt)
         sfilt += filt
