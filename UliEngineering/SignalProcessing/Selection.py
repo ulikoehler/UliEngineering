@@ -58,8 +58,12 @@ class IntInterval(__Interval):
             raise ValueError("Can only substract integers from an interval")
         return IntInterval(self.start - i, self.end - i)
 
-    def __call__(self, arr):
-        return arr[self.start:self.end]
+    def __call__(self, *args):
+        if not args:
+            raise ValueError("Use one or multiple arrays to produce a slice of them")
+        if len(args) == 1:
+            return args[0][self.start:self.end]
+        return tuple([arr[self.start:self.end] for arr in args])
 
     def __len__(self):
         return self.end - self.start

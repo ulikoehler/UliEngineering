@@ -40,9 +40,16 @@ class TestIntInterval(object):
     def testCall(self):
         x = np.arange(100)
         assert_allclose(IntInterval(6, 15)(x), np.arange(6, 15))
+        # Multiple args
+        y = np.arange(1, 100)
+        assert_allclose(IntInterval(6, 15)(x, y), (np.arange(6, 15), np.arange(7, 16)))
+
+    @raises(ValueError)
+    def testCallNoArgs(self):
+        IntInterval(6, 15)()
 
     def testLen(self):
-        assert_equal(len(IntInterval(6, 15)), 15-6)
+        assert_equal(len(IntInterval(6, 15)), 15 - 6)
 
     @raises
     def testInvalidAdd(self):
