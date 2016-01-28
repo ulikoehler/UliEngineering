@@ -204,3 +204,13 @@ class TestRandomSelection(object):
         "Test if arrays which are too small are handled correctly"
         selectRandomSlice(arr, 10)
 
+
+class TestFindNearestIdx(object):
+    def testBasic(self):
+        assert_equal(findNearestIdx(np.arange(10), 5.0), 5)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.0), 2)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.2), 2)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.4), 2)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.5), 2)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.500001), 3)
+        assert_equal(findNearestIdx(np.arange(3, 13), 5.6), 3)

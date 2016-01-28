@@ -12,7 +12,7 @@ from collections import namedtuple
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
-           "selectRandomSlice"]
+           "selectRandomSlice", "findNearestIdx"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = namedtuple("Interval", ["start", "end"])
@@ -234,6 +234,13 @@ def shrinkRanges(ranges, y, method="maxy"):
             ret[i] = fn(start, end, y[start:end])
     return ret
 
+def findNearestIdx(arr, v):
+    """
+    Find the index in the array which refers to the value with the least
+    absolute difference from v.
+    """
+    # Original idea by unutbu @SO: http://stackoverflow.com/a/2566508/2597135
+    return (np.abs(arr - v)).argmin()
 
 def selectRandomSlice(arr, size):
     """
