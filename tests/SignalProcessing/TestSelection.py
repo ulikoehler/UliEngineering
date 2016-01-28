@@ -196,11 +196,11 @@ class TestRandomSelection(object):
         selectRandomSlice(np.arange(10), 10)
 
     @parameterized.expand([
-        ("number", False),
-        ("numpy array", True)
+        ("number", 5),
+        ("numpy array", np.arange(5))
     ])
     @raises(ValueError)
-    def testTooSmall(self, _, numpy):
+    def testTooSmall(self, _, arr):
         "Test if arrays which are too small are handled correctly"
-        selectRandomSlice(np.arange(5) if numpy else 5, 10)
+        selectRandomSlice(arr, 10)
 
