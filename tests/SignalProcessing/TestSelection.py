@@ -11,14 +11,21 @@ import datetime
 executor = concurrent.futures.ThreadPoolExecutor(4)
 
 class TestIntInterval(object):
-    def testIntIntervalAdd(self):
+    def testAdd(self):
         assert_equal(IntInterval(1, 10) + 5, (6, 15))
         assert_equal(5 + IntInterval(1, 10), (6, 15))
 
 
-    def testIntIntervalSub(self):
+    def testSub(self):
         assert_equal(IntInterval(6, 15) - 5, (1, 10))
         assert_equal(5 - IntInterval(6, 15), (-1, -10))
+
+    def testCall(self):
+        x = np.arange(100)
+        assert_allclose(IntInterval(6, 15)(x), np.arange(6, 15))
+
+    def testLen(self):
+        assert_equal(len(IntInterval(6, 15)), 15-6)
 
     @raises
     def testInvalidAdd(self):
@@ -161,3 +168,22 @@ class TestShrinkRanges(object):
     @raises(KeyError)
     def testInvalidFunction(self):
         shrinkRanges(np.zeros(5), None, "foobar")
+
+
+class TestRandomSelection(object):
+    def testBasic(self):
+        # Just test if it does not raise
+        selectRandomSlice(100, 10)
+        selectRandomSlice(np.arange(100), 10)
+        # Test array which is just large enough
+        selectRandomSlice(np.arange(10), 10)
+
+    @parameterized.expand([
+        ("number", False),
+        ("numpy array", True)
+    ])
+    @raises(ValueError)
+    def testTooSmall(self, _, numpy):
+        "Test if arrays which are too small are handled correctly"
+        selectRandomSlice(np.arange(5) if numpy else 5, 10)
+

@@ -11,7 +11,8 @@ from bisect import bisect_left
 from collections import namedtuple
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
-           "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval"]
+           "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
+           "selectRandomSlice"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = namedtuple("Interval", ["start", "end"])
@@ -20,8 +21,13 @@ __Interval = namedtuple("Interval", ["start", "end"])
 class IntInterval(__Interval):
     """
     Tuple-like type that represents an integral interval (or a slice) inside an
-    integral space. This class allows easy ofsetting by e.g. adding a scalar and
+    integral space.
+
+    This class:
+        - allows easy ofsetting by e.g. adding a scalar and
     other convenience operations.
+        - overrides __call__() for convenient slicing.
+        - override __len__() for size determination
     """
     def __radd__(self, i):
         if not isinstance(i, numbers.Integral):
@@ -41,6 +47,11 @@ class IntInterval(__Interval):
             raise ValueError("Can only substract integers from an interval")
         return IntInterval(self.start - i, self.end - i)
 
+    def __call__(self, arr):
+        return arr[self.start:self.end]
+
+    def __len__(self):
+        return self.end - self.start
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -84,7 +95,7 @@ def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     if around is None:
         return idx
     else:  # Return range
-        return (idx - around, idx + around)
+        return IntInterval(idx - around, idx + around)
 
 def __computeFrequencyRangeIndices(x, lowFreq, highFreq):
     """
@@ -190,3 +201,25 @@ def shrinkRanges(ranges, y, method="maxy"):
         else:
             ret[i] = fn(start, end, y[start:end])
     return ret
+
+
+def selectRandomSlice(arr, size):
+    """
+    Select a uniformly random slice of exactly a given size from the given array.
+
+    Array may be a 1D numpy array or an integral which represents the array size.
+
+    Return an IntInterval instance or raise if the array is not large enough
+    """
+    if isinstance(arr, numbers.Integral):
+        alen = arr
+    else:  # Assume numpy-like
+        alen = arr.shape[0]
+    if alen < size:
+        msg = "Array of size {0} is not large enough to hold interval of size {1}"\
+              .format(alen, size)
+        raise ValueError(msg)
+    elif alen == size:
+        return IntInterval(0, alen)
+    r = np.random.randint(0, alen - size)
+    return IntInterval(r, r + size)
