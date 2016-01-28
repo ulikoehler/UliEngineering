@@ -10,6 +10,22 @@ import datetime
 
 executor = concurrent.futures.ThreadPoolExecutor(4)
 
+class TestIntInterval(object):
+    def testIntIntervalAdd(self):
+        assert_equal(IntInterval(1, 10) + 5, (6, 15))
+        assert_equal(5 + IntInterval(1, 10), (6, 15))
+
+
+    def testIntIntervalSub(self):
+        assert_equal(IntInterval(6, 15) - 5, (1, 10))
+        assert_equal(5 - IntInterval(6, 15), (-1, -10))
+
+    @raises
+    def testInvalidAdd(self):
+        IntInterval(1, 10) + self
+
+
+
 class TestSelectByDatetime(object):
     def testGeneric(self):
         now = datetime.datetime.now()

@@ -5,11 +5,42 @@ Utilities for selecting and finding specific attributes in datasets
 """
 import numpy as np
 import datetime
+import numbers
 import scipy.signal
 from bisect import bisect_left
+from collections import namedtuple
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
-           "selectByThreshold", "findTrueRuns", "shrinkRanges"]
+           "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval"]
+
+# Define interval class and override to obtain operator overridability
+__Interval = namedtuple("Interval", ["start", "end"])
+
+
+class IntInterval(__Interval):
+    """
+    Tuple-like type that represents an integral interval (or a slice) inside an
+    integral space. This class allows easy ofsetting by e.g. adding a scalar and
+    other convenience operations.
+    """
+    def __radd__(self, i):
+        if not isinstance(i, numbers.Integral):
+            raise ValueError("Can only add integers to an interval")
+        return IntInterval(self.start + i, self.end + i)
+
+    def __add__(self, i):
+        return self.__radd__(i)
+
+    def __rsub__(self, i):
+        if not isinstance(i, numbers.Integral):
+            raise ValueError("Can only substract integers from an interval")
+        return IntInterval(i - self.start, i - self.end)
+
+    def __sub__(self, i):
+        if not isinstance(i, numbers.Integral):
+            raise ValueError("Can only substract integers from an interval")
+        return IntInterval(self.start - i, self.end - i)
+
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
