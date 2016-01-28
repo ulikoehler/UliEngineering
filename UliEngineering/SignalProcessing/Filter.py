@@ -17,7 +17,7 @@ Features include:
     - SumFilter and ChainFilter are arbitrarily combinable
     - Intuitive, readable error messages for non-mathematicians
 """
-from UliEngineering.EngineerIO import autoNormalizeEngineerInputNoUnit
+from UliEngineering.EngineerIO import autoNormalizeEngineerInputNoUnitRaise
 from scipy import signal
 import numpy as np
 import numbers
@@ -51,20 +51,25 @@ class SignalFilter(object):
             freqs: The frequency (for lopass/hipass) or a list of two frequencies
         """
         self.nyq = fs * 0.5
-        self.fs = autoNormalizeEngineerInputNoUnit(fs)
+        self.fs = autoNormalizeEngineerInputNoUnitRaise(fs)
         self.b = None
         self.a = None
         # Normalize freqs: Allow [1.0] instead of 1.0
+        if freqs is None:
+            raise ValueError("Critical frequencies may not be none")
         if isinstance(freqs, collections.Iterable) and not isinstance(freqs, str):
             if len(freqs) == 1:
                 freqs = freqs[0]
             elif len(freqs) == 0:
                 raise ValueError("Empty frequency list")
             elif isinstance(freqs[0], str):
-                freqs = [autoNormalizeEngineerInputNoUnit(f) for f in freqs]
+                freqs = [autoNormalizeEngineerInputNoUnitRaise(f) for f in freqs]
         # Allow "4.5 kHz" etc
         if isinstance(freqs, str):
-            freqs = autoNormalizeEngineerInputNoUnit
+            __freqs_orig = freqs
+            freqs = autoNormalizeEngineerInputNoUnitRaise(freqs)
+            if freqs is None:
+                raise ValueError("Can'")
         self.freqs = self._filtfreq(freqs)
         # Check & store pass type
         if btype == "lowpass" or btype == "highpass":

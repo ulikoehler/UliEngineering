@@ -60,6 +60,10 @@ class TestFilter(object):
         SignalFilter(100.0, freqs, btype)
 
     @parameterized([
+        ("lowpass", None),
+        ("highpass", None),
+        ("bandpass", None),
+        ("bandstop", None),
         ("lowpass", [1.0, 2.0]),
         ("highpass", [1.0, 2.0]),
         ("bandpass", 1.0),

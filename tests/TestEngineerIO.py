@@ -119,7 +119,17 @@ class TestEngineerIO(object):
         assert_equal(autoNormalizeEngineerInputNoUnit("1.25"), 1.25)
         assert_equal(autoNormalizeEngineerInputNoUnit("1.25 V"), 1.25)
         assert_equal(autoNormalizeEngineerInputNoUnit("1k25 V"), 1250.0)
-        assert_equal(autoNormalizeEngineerInputNoUnit(b"1.25 V"), 1.25)
+        assert_is_none(autoNormalizeEngineerInputNoUnit(b"foobar"))
+
+    def testAutoNormalizeEngineerInputIgnoreUnitRaise(self):
+        assert_equal(autoNormalizeEngineerInputNoUnitRaise(1.25), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1.25"), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1.25 V"), 1.25)
+        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1k25 V"), 1250.0)
+
+    @raises(ValueError)
+    def testAutoNormalizeEngineerInputIgnoreUnitRaiseFail(self):
+        autoNormalizeEngineerInputNoUnitRaise(b"foobar")
 
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 

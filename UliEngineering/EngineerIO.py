@@ -237,10 +237,25 @@ def autoNormalizeEngineerInput(v, encoding="utf-8"):
     return v, ''
 
 def autoNormalizeEngineerInputNoUnit(s):
+    """
+    Returns the only the value (not the unit) when parsing
+    via autoNormalizeEngineerInput(). Returns None on failure.
+    """
     v = autoNormalizeEngineerInput(s)
     if v is None:
         return None
     return v[0]
+
+def autoNormalizeEngineerInputNoUnitRaise(s):
+    """
+    Returns the only the value (not the unit) when parsing
+    via autoNormalizeEngineerInput(). Raises ValueError() on failure
+    """
+    v = autoNormalizeEngineerInput(s)
+    if v is None:
+        raise ValueError("Could not parse value from '{0}'".format(s))
+    return v[0]
+
 
 def autoFormat(fn, *args, **kwargs):
     """
