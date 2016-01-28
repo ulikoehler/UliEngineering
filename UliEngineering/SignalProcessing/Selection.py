@@ -28,6 +28,17 @@ class IntInterval(__Interval):
     other convenience operations.
         - overrides __call__() for convenient slicing.
         - override __len__() for size determination
+        - override __mul__ in a center-preserving manner
+
+    Multiplying preserves the center of the interval (might be offset by one
+        due to integral properties).
+    Multiplying by 1.0 does not perform any change. Multiplication by 0.5
+    halves the interval while multiplication by 4 quadruples its size.
+    Multiplication doe not use 0-bounded arithmetic to allow multiply-then-add
+    offsetting. If the multiplication factor is less than 1 but > 0,
+    the interval will maintain a size of at least one.
+
+    Multiplication by zero results in a zero-sized interval.
     """
     def __radd__(self, i):
         if not isinstance(i, numbers.Integral):
@@ -52,6 +63,27 @@ class IntInterval(__Interval):
 
     def __len__(self):
         return self.end - self.start
+
+    def __mul__(self, n):
+        if n == 1:
+            return self
+        elif n == 0:  # Return size-0 interval
+            center = (self.end + self.start) // 2
+            return IntInterval(center, center)
+        elif n < 1:  # Shrink
+            # Compute what to remove at each end
+            toRemove = int(round(len(self) * (1.0 - n) / 2))
+            return IntInterval(self.start + toRemove, self.end - toRemove)
+        else:  # n > 1: Expand
+            # Compute what to remove at each end
+            toAdd = int(round(len(self) * (n - 1.0) / 2))
+            return IntInterval(self.start - toAdd, self.end + toAdd)
+
+    def __rmul__(self, n):
+        return self.__mul__(n)
+
+    def __truediv__(self, n):
+        return self.__mul__(1.0 / n)
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """

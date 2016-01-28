@@ -15,10 +15,27 @@ class TestIntInterval(object):
         assert_equal(IntInterval(1, 10) + 5, (6, 15))
         assert_equal(5 + IntInterval(1, 10), (6, 15))
 
-
     def testSub(self):
         assert_equal(IntInterval(6, 15) - 5, (1, 10))
         assert_equal(5 - IntInterval(6, 15), (-1, -10))
+
+    def testMultiplyDivide(self):
+        # == 1
+        assert_equal(IntInterval(1, 10) * 1, (1, 10))
+        assert_equal(IntInterval(1, 10) * 1.0, (1, 10))
+        # > 1
+        assert_equal(IntInterval(5, 10) * 2, (3, 12))
+        assert_equal(IntInterval(5, 10) * 3, (0, 15))
+        assert_equal(IntInterval(5, 10) * 5, (-5, 20))
+        assert_equal(IntInterval(5, 10) * 3.0, (0, 15))
+        # < 1
+        assert_equal(IntInterval(5, 10) * 0.5, (6, 9))
+        assert_equal(IntInterval(5, 10) * 0.1, (7, 8))
+        assert_equal(IntInterval(5, 10) * 1e-6, (7, 8))
+        # == 0
+        assert_equal(IntInterval(5, 10) * 0.0, (7, 7))
+        # Division, assumed to be implemented via multiplication
+        assert_equal(IntInterval(5, 10) / (1. / 3.), (0, 15))
 
     def testCall(self):
         x = np.arange(100)
