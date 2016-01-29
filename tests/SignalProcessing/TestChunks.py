@@ -22,6 +22,13 @@ class TestChunkGeneration(object):
         vals = evaluateGeneratorFunction(fixedSizeChunkGenerator(self.data2, 25, 3), as_list=True)
         expected = np.asarray([])
         assert_array_equal(vals, expected)
+        # Test apply function
+        cg = fixedSizeChunkGenerator(self.data1, 3, 3)
+        cg = applyToChunks(np.square, cg)
+        vals = evaluateGeneratorFunction(cg, as_list=True)
+        expected = np.square(np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))
+        assert_array_equal(vals, expected)
+
 
     def test_fixedSizeChunkGenerator_perform_copy(self):
         d1 = self.data1.copy()

@@ -5,14 +5,15 @@ Utilities for generating chunks from datasets
 """
 import numpy as np
 import functools
+from toolz.functoolz import compose
 import random
 
 __all__ = ["evaluateGeneratorFunction", "fixedSizeChunkGenerator",
-           "reshapedChunks", "randomSampleChunkGenerator"]
+           "reshapedChunks", "randomSampleChunkGenerator", "applyToChunks"]
 
 def evaluateGeneratorFunction(tp, as_list=False):
     """
-    Given a tuple (n, g) returned by one of the generator functions,
+    Given a tuple (g, n) returned by one of the generator functions,
     evaluate the generator at all values.
 
     By default, returns a generator. Can also return a list if as_list=True
@@ -21,6 +22,16 @@ def evaluateGeneratorFunction(tp, as_list=False):
     gen = (g(i) for i in range(n))
     return list(gen) if as_list else gen
 
+
+def applyToChunks(fn, tp):
+    """
+    Lazily apply an arbitrary function to a chunk generator.
+    Calling this does not actually modify the chunk generator
+    but wraps in in an outer function call that applies the function
+    whenever a chunk is requested
+    """
+    g, n = tp
+    return compose(fn, g), n
 
 def __fixedSizeChunkGeneratorWorker(ofsTable, chunksize, y, perform_copy, i):
     """Worker for fixedSizeChunkGenerator()"""
