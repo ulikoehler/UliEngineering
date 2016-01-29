@@ -25,6 +25,7 @@ __fft_windows = {
     "none": np.ones
 }
 
+
 def computeFFT(y, samplerate, window="blackman"):
     "Compute the real FFT of a dataset and return (x, y) which can directly be visualized using matplotlib etc"
     n = len(y)
@@ -33,6 +34,7 @@ def computeFFT(y, samplerate, window="blackman"):
     w = 2.0 * np.abs(w[:n / 2]) / samplerate # Perform amplitude normalization
     x = np.linspace(0.0, samplerate/2, n/2)
     return (x, w)
+
 
 def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
     yslice = y(c)
@@ -77,7 +79,7 @@ def parallelFFTReduce(y, numChunks, samplerate, fftsize, removeDC=False, window=
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
     fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
-    return x, 2.0 * (fftSum / numChunks) / samplerate if normalize else fftSum
+    return (x, 2.0 * (fftSum / numChunks) / samplerate) if normalize else fftSum
 
 
 def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None,
