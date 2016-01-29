@@ -7,6 +7,7 @@ import scipy.fftpack
 import numpy as np
 import numpy.fft
 import functools
+import os
 from .Selection import selectFrequencyRange
 from .Chunks import fixedSizeChunkGenerator
 import concurrent.futures
@@ -43,7 +44,7 @@ def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
     # Perform amplitude normalization
     return np.abs(w[:fftsize / 2])
 
-def parallelFFTReduce(executor, y, numChunks, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True):
+def parallelFFTReduce(y, numChunks, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
@@ -55,7 +56,14 @@ def parallelFFTReduce(executor, y, numChunks, samplerate, fftsize, removeDC=Fals
     This function must be reentrant and must return a writable version (i.e. if you have
         overlapping chunks or the original array must not be modified for some reason,
         you must return a copy).
+
+    It is recommended to use a shared executor instance. If the executor is set to None,
+    a new ThreadPoolExecutor() is used automatically. Using a process-based executor
+    is not required as scipy/numpy unlock the GIL during the computationally expensive
+    operations.
     """
+    if executor is None:
+        executor = concurrent.futures.ThreadPoolExecutor(os.cpu_count() or 1)
     # Compute common parameters
     windowArr = __fft_windows[window](fftsize)
     fftSum = np.zeros(fftsize / 2)
@@ -72,8 +80,8 @@ def parallelFFTReduce(executor, y, numChunks, samplerate, fftsize, removeDC=Fals
     return x, 2.0 * (fftSum / numChunks) / samplerate if normalize else fftSum
 
 
-def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None, executor=None,
-                         nthreads=4, **kwargs):
+def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None,
+                            nthreads=4, **kwargs):
     """
     Easier interface to parallelFFTSum that automatically initializes a fixed size chunk generator
     and automatically initializes the executor if no executor is given.
@@ -81,13 +89,13 @@ def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None, executor=Non
     The shift size is automatically set to fftsize // 4 to account for window function
     masks if no specific value is given.
     """
-    if executor is None:
-        executor = concurrent.futures.ThreadPoolExecutor(nthreads)
     if shiftsize is None:
         shiftsize = fftsize // 4
     g, n = fixedSizeChunkGenerator(y, fftsize, shiftsize, perform_copy=True)
-    return parallelFFTReduce(executor, g, n, samplerate, fftsize, **kwargs)
+    return parallelFFTReduce(g, n, samplerate, fftsize, **kwargs)
 
+parallelFFTReduceAllResults = \
+    functools.partial(parallelFFTReduce, normalize=False, reducer=id)
 
 def cutFFTDCArtifacts(fx, fy=None, return_idx=False):
     """

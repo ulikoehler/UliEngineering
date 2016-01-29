@@ -8,8 +8,6 @@ from nose_parameterized import parameterized
 import concurrent.futures
 import numpy as np
 
-executor = concurrent.futures.ThreadPoolExecutor(4)
-
 class TestFFT(object):
     def testBasicFFT(self):
         rand = np.random.random(1000) * 5.0 + 1.0 # +1: Artifical DC artifacts
@@ -83,7 +81,7 @@ class TestFFT(object):
         d = np.random.random(1000)
         y, nchunks = fixedSizeChunkGenerator(d, 100, 5)
         # Just test if it actually runs
-        x, y = parallelFFTReduce(executor, y, nchunks, 10.0, 100, removeDC=removeDC)
+        x, y = parallelFFTReduce(y, nchunks, 10.0, 100, removeDC=removeDC)
         if removeDC:
             assert_equal(x.shape[0], y.shape[0])
         else:  # With DC
