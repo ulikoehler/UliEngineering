@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none
+from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
 from nose_parameterized import parameterized
 import concurrent.futures
@@ -36,6 +36,19 @@ class TestIntInterval(object):
         assert_equal(IntInterval(5, 10) * 0.0, (7, 7))
         # Division, assumed to be implemented via multiplication
         assert_equal(IntInterval(5, 10) / (1. / 3.), (0, 15))
+
+    @parameterized([
+        (lambda iv: 'b' - iv,),
+        (lambda iv: iv + 'b',),
+        (lambda iv: 'b' + iv,),
+        (lambda iv: iv * 'b',),
+        (lambda iv: 'b' * iv,),
+        (lambda iv: iv / 'b',),
+    ])
+    @raises(ValueError)
+    def testInvalidArithmetic(self, lamb):
+        iv = IntInterval(5, 10)
+        lamb(iv)
 
     def testCall(self):
         x = np.arange(100)

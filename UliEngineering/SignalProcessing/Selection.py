@@ -70,6 +70,8 @@ class IntInterval(__Interval):
         return self.end - self.start
 
     def __mul__(self, n):
+        if not isinstance(n, numbers.Number):
+            raise ValueError("Intervals can only be multiplied by numbers")
         if n == 1:
             return self
         elif n == 0:  # Return size-0 interval
@@ -88,6 +90,8 @@ class IntInterval(__Interval):
         return self.__mul__(n)
 
     def __truediv__(self, n):
+        if not isinstance(n, numbers.Number):
+            raise ValueError("Intervals can only be divided by numbers")
         return self.__mul__(1.0 / n)
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
