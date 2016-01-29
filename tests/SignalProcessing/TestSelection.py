@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import assert_equal, assert_true, raises, assert_less
+from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none
 from UliEngineering.SignalProcessing.Selection import *
 from nose_parameterized import parameterized
 import concurrent.futures
@@ -242,10 +242,35 @@ class TestResampling(object):
 
 
 class TestGeneratorCount(object):
-    def testBasic(self):
+    @parameterized([
+        (True,), (False,)
+    ])
+    def testBasic(self, generator):
         lst = np.arange(5)
-        gc = GeneratorCounter((i for i in lst))
+        gc = GeneratorCounter((i for i in lst) if generator else lst)
         assert_equal(len(gc), 0)  # No iterations yet
         assert_equal(list(gc), [0, 1, 2, 3, 4])
-        assert_equal(len(gc), len(lst))  # No iterations yet
+        assert_equal(len(gc), len(lst))
+        # Test reiter
+        if not generator:
+            gc.reiter(reset_count=False)
+            assert_equal(len(gc), len(lst))
+            assert_equal(list(gc), list(lst))
+            assert_equal(len(gc), len(lst) * 2)
+            # With count reset
+            gc.reiter(reset_count=True)
+            assert_equal(len(gc), 0)
+            assert_equal(list(gc), list(lst))
+            assert_equal(len(gc), len(lst))
 
+
+
+
+class TestMajorityVote(object):
+    def testBasic(self):
+        lst = [1, 2, 3, 3]
+        res = majority_vote_all(lst)
+        # Check mv_all
+        assert_true(res == [(3, 0.5), (2, 0.25), (1, 0.25)] or res == [(3, 0.5), (1, 0.25), (2, 0.25)])
+        assert_equal(majority_vote(lst), 3)
+        assert_is_none(majority_vote([]))
