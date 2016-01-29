@@ -14,7 +14,7 @@ import concurrent.futures
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
-           "dominantFrequency"]
+           "dominantFrequency", "parallelFFTReduceAllResults"]
 
 __fft_windows = {
     "blackman": np.blackman,
