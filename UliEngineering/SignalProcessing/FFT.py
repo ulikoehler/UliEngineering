@@ -8,6 +8,7 @@ import numpy as np
 import numpy.fft
 import functools
 import os
+from toolz import functoolz
 from .Selection import selectFrequencyRange
 from .Chunks import fixedSizeChunkGenerator
 import concurrent.futures
@@ -97,7 +98,7 @@ def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None,
     return parallelFFTReduce(g, n, samplerate, fftsize, **kwargs)
 
 parallelFFTReduceAllResults = \
-    functools.partial(parallelFFTReduce, normalize=False, reducer=id)
+    functools.partial(parallelFFTReduce, normalize=False, reducer=functoolz.identity)
 
 def cutFFTDCArtifacts(fx, fy=None, return_idx=False):
     """
