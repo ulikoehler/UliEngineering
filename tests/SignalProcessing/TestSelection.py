@@ -234,9 +234,18 @@ class TestFindNearestIdx(object):
         assert_equal(findNearestIdx(np.arange(3, 13), 5.500001), 3)
         assert_equal(findNearestIdx(np.arange(3, 13), 5.6), 3)
 
-
 class TestResampling(object):
     def testDiscard(self):
         x = np.arange(10)
         assert_allclose(resample_discard(x, 2), [0, 2, 4, 6, 8])
         assert_allclose(resample_discard(x, 3), [0, 3, 6, 9])
+
+
+class TestGeneratorCount(object):
+    def testBasic(self):
+        lst = np.arange(5)
+        gc = GeneratorCounter((i for i in lst))
+        assert_equal(len(gc), 0)  # No iterations yet
+        assert_equal(list(gc), [0, 1, 2, 3, 4])
+        assert_equal(len(gc), len(lst))  # No iterations yet
+

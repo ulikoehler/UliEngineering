@@ -12,7 +12,8 @@ from collections import namedtuple
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
-           "selectRandomSlice", "findNearestIdx", "resample_discard"]
+           "selectRandomSlice", "findNearestIdx", "resample_discard",
+           "GeneratorCounter"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = namedtuple("Interval", ["start", "end"])
@@ -269,6 +270,54 @@ def selectRandomSlice(arr, size):
         return IntInterval(0, alen)
     r = np.random.randint(0, alen - size)
     return IntInterval(r, r + size)
+
+
+class GeneratorCounter(object):
+    """
+    Utility class that provides zero-overhead counting for generators.
+    At any point in time, len(...) of this class provides the number of
+    items iterated so far
+
+    Usage example:
+
+        mycountinggen = CountingTee(mygen)
+        myfunc(mycountinggen) # Same result as myfunc(mygen)
+        print(len(mycountinggen))
+    """
+    def __init__(self, gen):
+        self.gen = gen
+        self.count = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        result = next(self.gen)  # raises if no next value
+        self.count += 1
+        return result
+
+    def __len__(self):
+        return self.count
+
+
+def majority_vote_all(arr):
+    """
+    Perform a majority vote on the value in an array.
+    The values are required to be quantized, i.e. if no values are equal
+    but only close together, this method won't work. This algorithm is fast,
+    however, and is well suited, for example, for analyzing FFT outputs
+    (as FFT generates quantized outputs).
+
+    majority_vote_all() return a list [(v, f)] which is ordered
+    by descending commonness (equally common values are not ordered).
+    f is the fraction of the total size of arr
+
+    arr maybe any array-like structure or generator.
+    """
+    c = collections.Counter()
+    c.update(arr)
+    csize = sum(c.values())
+    most_common = c.most_common()
 
 
 def resample_discard(arr, divisor, ofs=0):
