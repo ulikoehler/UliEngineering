@@ -25,7 +25,7 @@ class BSplineResampler(object):
 
     @property
     def samplerate_stddev(self):
-        "Get the variance of the differential sample rate"
+        "Get the variance of the differential source sample rate"
         return np.stddev(np.diff(self.fx))
 
     @property
@@ -91,7 +91,7 @@ class ResampledFilteredView(ResampledFilteredXYView):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            _, y = super(self.__class__, self).getslice(start, stop, step)
+            _, y = super(self.__class__, self)[key.start:key.stop:key.step]
             return y
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
