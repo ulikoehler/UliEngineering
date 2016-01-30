@@ -15,7 +15,7 @@ class BSplineResampler(object):
     """
     def __init__(self, fx, fy, time_factor=1e6, prefilt=None):
         if prefilt is not None:
-            fy = filt(fy)
+            fy = prefilt(fy)
         self.fx = fx
         self.fy = fy
         self.time_factor = time_factor

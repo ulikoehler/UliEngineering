@@ -10,7 +10,7 @@ import functools
 import os
 from toolz import functoolz
 from .Selection import selectFrequencyRange
-from .Chunks import fixedSizeChunkGenerator
+from .Chunks import overlapping_chunks
 import concurrent.futures
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
@@ -37,24 +37,24 @@ def computeFFT(y, samplerate, window="blackman"):
     return (x, w)
 
 
-def __chunkedFFTWorker(y, c, fftsize, windowArr, removeDC):
-    yslice = y(c)
+def __fft_reduce_worker(chunkgen, i, windowArr, removeDC):
+    yslice = chunkgen(i)
     # If enabled, remove DC
     if removeDC:
-        yslice -= np.mean(yslice)
+        yslice = yslice - np.mean(yslice)
     # Compute FFT
-    w = scipy.fftpack.fft(yslice * windowArr)
+    fftresult = scipy.fftpack.fft(yslice * windowArr)
     # Perform amplitude normalization
-    return np.abs(w[:fftsize / 2])
+    return np.abs(fftresult[:fftresult.size / 2])
 
-def parallelFFTReduce(y, numChunks, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
+def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
     returns a numeric type that may be normalized (or normalize is set to False).
     Supports optional per-chunk DC offset removal (set removeDC=True).
 
-    Allows flexible y value selection by passing a function that gets the nth FFT chunk.
+    Allows flexible y value selection by passing a chunk generator function
     Therefore, y must be a unary function that gets passed arguments from range(numChunks).
     This function must be reentrant and must return a writable version (i.e. if you have
         overlapping chunks or the original array must not be modified for some reason,
@@ -72,30 +72,27 @@ def parallelFFTReduce(y, numChunks, samplerate, fftsize, removeDC=False, window=
     fftSum = np.zeros(fftsize / 2)
     # Initialize threadpool
     futures = [
-        executor.submit(__chunkedFFTWorker, y, i,
-                        fftsize, windowArr, removeDC)
-        for i in range(numChunks)
+        executor.submit(__fft_reduce_worker, chunkgen, i, windowArr, removeDC)
+        for i in range(chunkgen.num_chunks)
     ]
     # Sum up the results
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
     fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
-    return (x, 2.0 * (fftSum / numChunks) / samplerate) if normalize else fftSum
+    return (x, 2.0 * (fftSum / (chunkgen.num_chunks * samplerate))) if normalize else fftSum
 
 
-def simpleParallelFFTReduce(y, samplerate, fftsize, shiftsize=None,
-                            nthreads=4, **kwargs):
+def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, chunkfunc=None, **kwargs):
     """
     Easier interface to parallelFFTSum that automatically initializes a fixed size chunk generator
     and automatically initializes the executor if no executor is given.
 
     The shift size is automatically set to fftsize // 4 to account for window function
-    masks if no specific value is given.
+    masking if no specific value is given.
     """
-    if shiftsize is None:
-        shiftsize = fftsize // 4
-    g, n = fixedSizeChunkGenerator(y, fftsize, shiftsize, perform_copy=True)
-    return parallelFFTReduce(g, n, samplerate, fftsize, **kwargs)
+    shiftsize = fftsize // 4 if shiftsize is None else shiftsize
+    chunkgen = overlapping_chunks(arr, fftsize, shiftsize)
+    return parallelFFTReduce(chunkgen, samplerate, fftsize, **kwargs)
 
 parallelFFTReduceAllResults = \
     functools.partial(parallelFFTReduce, normalize=False, reducer=functoolz.identity)

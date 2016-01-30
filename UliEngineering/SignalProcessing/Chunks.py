@@ -5,80 +5,97 @@ Utilities for generating chunks from datasets
 """
 import numpy as np
 import functools
-from toolz.functoolz import compose
+from toolz import functoolz
 import random
+import collections
 
-__all__ = ["evaluateGeneratorFunction", "fixedSizeChunkGenerator",
-           "reshapedChunks", "randomSampleChunkGenerator", "applyToChunks"]
+__all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks"]
 
-def evaluateGeneratorFunction(tp, as_list=False):
+
+class ChunkGenerator(object):
     """
-    Given a tuple (g, n) returned by one of the generator functions,
-    evaluate the generator at all values.
-
-    By default, returns a generator. Can also return a list if as_list=True
+    Chunk generator objects can lazily generate arbitrary chunks from arbitary data.
+    They are based around an unary generator function that takes a chunk index
+    and a predefined number of chunks.
     """
-    g, n = tp
-    gen = (g(i) for i in range(n))
-    return list(gen) if as_list else gen
+    def __init__(self, generator, num_chunks, func=None):
+        self.generator = generator
+        self.num_chunks = num_chunks
+        self.func = functoolz.identity
+
+    def __iter__(self):
+        return (self.func(self.generator(i)) for i in range(self.num_chunks))
+
+    def __call__(self, i):
+        return self.func(self.generator(i))
+
+    def __len__(self):
+        return self.num_chunks
+
+    def apply(self, fn):
+        """
+        Add a function to the current list of functions. The given function
+        will be executed last in the list of functions.
+        """
+        if self.func == functoolz.identity:
+            self.func = fn
+        elif isinstance(self.func, functoolz.Compose):
+            self.func.funcs.append(fn)
+        else:
+            self.func = functoolz.compose(fn, self.func)
+
+    def as_list(self):
+        return list(self)
+
+    def as_array(self):
+        return np.asarray(self.as_list())
+
+def __overlapping_chunks_worker(offsets, chunksize, arr, copy, i):
+    ofs = offsets[i]
+    arrslice = arr[ofs:ofs + chunksize]
+    return arrslice.copy() if copy else arrslice
 
 
-def applyToChunks(fn, tp):
-    """
-    Lazily apply an arbitrary function to a chunk generator.
-    Calling this does not actually modify the chunk generator
-    but wraps in in an outer function call that applies the function
-    whenever a chunk is requested
-    """
-    g, n = tp
-    return compose(fn, g), n
-
-def __fixedSizeChunkGeneratorWorker(ofsTable, chunksize, y, perform_copy, i):
-    """Worker for fixedSizeChunkGenerator()"""
-    yofs = ofsTable[i]
-    yslice = y[yofs:yofs + chunksize]
-    return yslice.copy() if perform_copy else yslice
-
-
-def fixedSizeChunkGenerator(y, chunksize, shiftsize, perform_copy=True):
+def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
     """
     A chunk-generating function that can be used for parallelFFTReduce().
     Generates only full chunks with variable chunk / shift size.
 
-    If perform_copy=False, the chunk is not copied in the generator function.
+    If copy=False, the chunk is not copied in the generator function.
     Functions like parallelFFTSum() modify the data which might lead to
-    undesired overwriting of data. However, setting perform_copy=False might
+    undesired overwriting of data. However, setting copy=False might
     improve the performance significantly if the downstream function does
-    not require copies.
+    not require copies and the arrays are large.
 
-    This is a lazy function, it generates copies only on-demand.
+    This is a lazy function, it generates chunks only on-demand.
 
     Returns (g, n) where g is a unary generator function (which takes the chunk
         number as an argument) and n is the number of chunks.
     """
     # Precompute offset table
-    offsets = np.asarray([ofs for ofs in
-        range(0, y.shape[0] - (chunksize - 1), shiftsize)])
-    return functools.partial(__fixedSizeChunkGeneratorWorker, offsets, chunksize, y, perform_copy), len(offsets)
+    offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))
+    gen = functools.partial(__overlapping_chunks_worker, offsets, chunksize, arr, copy)
+    return ChunkGenerator(gen, offsets.size)
 
 
-def randomSampleChunkGenerator(arr, chunksize, numSamples):
+def random_sample_chunks(arr, chunksize, num_samples):
     """
     A chunk-generating function that can be used for parallelFFTReduce().
     This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
     as a basis and randomly selects a fraction of those chunks.
     """
-    arr2d = reshapedChunks(arr, chunksize)
-    indices = random.sample(range(arr2d.shape[0]), numSamples)
-    return lambda i: arr2d[indices[i]], numSamples
+    arr2d = reshaped_chunks(arr, chunksize)
+    indices = random.sample(range(arr2d.shape[0]), num_samples)
+    return ChunkGenerator(lambda i: arr2d[indices[i]], num_samples)
 
 
-def reshapedChunks(arr, chunksize):
+def reshaped_chunks(arr, chunksize):
     """
     Generates virtual chunks of a numpy array by reshaping a view of the original array.
     Works really well with huge, mmapped arrays as no part of the array is copied.
 
-    Automatically handles odd-sized arrays. Works only with 1D arrays.
+    Automatically handles odd-sized arrays by discarding extra values.
+    Works only with 1D arrays.
     """
     if arr.shape[0] == 0:
         return arr

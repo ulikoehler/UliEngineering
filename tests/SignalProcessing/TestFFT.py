@@ -79,9 +79,9 @@ class TestFFT(object):
     ])
     def testParallelFFTReduce(self, name, removeDC):
         d = np.random.random(1000)
-        y, nchunks = fixedSizeChunkGenerator(d, 100, 5)
+        chunkgen = overlapping_chunks(d, 100, 5)
         # Just test if it actually runs
-        x, y = parallelFFTReduce(y, nchunks, 10.0, 100, removeDC=removeDC)
+        x, y = parallelFFTReduce(chunkgen, 10.0, 100, removeDC=removeDC)
         if removeDC:
             assert_equal(x.shape[0], y.shape[0])
         else:  # With DC

@@ -270,8 +270,6 @@ class TestGeneratorCount(object):
             assert_equal(len(gc), len(lst))
 
 
-
-
 class TestMajorityVote(object):
     def testBasic(self):
         lst = [1, 2, 3, 3]
