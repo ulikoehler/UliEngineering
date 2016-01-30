@@ -6,7 +6,8 @@ Utilities for selecting and finding specific attributes in datasets
 import numpy as np
 from scipy.interpolate import splrep, splev
 
-__all__ = ["resample_discard", "BSplineResampler"]
+__all__ = ["resample_discard", "BSplineResampler", "ResampledFilteredXYView",
+           "ResampledFilteredView", "ResampledFilteredViewYOnlyDecorator"]
 
 
 class BSplineResampler(object):
@@ -44,6 +45,57 @@ class BSplineResampler(object):
 
 def resample_discard(arr, divisor, ofs=0):
     """
-    Resample with an integral divisor, discarding all other samples
+    Resample with an integral divisor, discarding all other samples.
+    Returns a view of the data.
     """
     return arr[ofs::divisor]
+
+
+class ResampledFilteredXYView(object):
+    """
+    Lazy resampling 1D array view that can be used e.g. as input for a chunk generator.
+    Note that this class will return an ill-sized slice in most cases, as
+    the.
+    The user must therefore ensure that downstream functions appropriately deal with those slices.
+    One way of doing that is to oversize the slices requested by the caller and ensure they are properly
+    trimmed downstream.
+    
+    This class returns (xslice, yslice) on slice. See ResampledFilteredView for a wrapper that only
+    returns the Y view.
+    """
+    def __init__(self, fx, fy, target_samplerate, time_factor=1e6, filt=None):
+        self.fx = fx
+        self.fy = fy
+        self.samplerate = target_samplerate
+        self.filt = filt
+        self.time_factor = time_factor
+
+    def getslice(self, start, stop, step):
+        xslice = self.fx[start:stop:step]
+        yslice = self.fy[start:stop:step]
+        return BSplineResampler(xslice, yslice, time_factor=time_factor,
+                                prefile=self.filt).resample_to(self.target_samplerate)
+
+
+class ResampledFilteredView(ResampledFilteredXYView):
+    "Like ResampledFilteredXYView, but only returns y values on slice"
+    def getslice(self, start, stop, step):
+        _, y = super(self.__class__, self).getslice(start, stop, step)
+        return y
+
+
+class ResampledFilteredViewYOnlyDecorator(object):
+    """
+    Like ResampledFilteredXYView, but only returns y values on slice.
+    Decorator version of ResampledFilteredView.
+
+    Usage example:
+        rv = ResampledFilteredXYView(...)
+        rv_yonly = ResampledFilteredViewYOnlyDecorator(rv)
+    """
+    def __init__(self, other):
+        self.other = other
+
+    def getslice(self, start, stop, step):
+        _, y = self.other.getslice(start, stop, step)
+        return y
