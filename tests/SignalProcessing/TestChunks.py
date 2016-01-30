@@ -55,7 +55,7 @@ class TestChunkGeneration(object):
 
     @parameterized([(3,), (3.0,)])
     def test_randomSampleChunkGeneratorNonoverlapping(self, chunksize):
-        vals = random_sample_chunks_nonverlapping(self.data1, chunksize, 2).as_array()
+        vals = random_sample_chunks_nonoverlapping(self.data1, chunksize, 2).as_array()
         assert_equal(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())

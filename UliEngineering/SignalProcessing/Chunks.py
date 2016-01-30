@@ -10,7 +10,7 @@ import random
 import collections
 
 __all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks",
-           "random_sample_chunks_nonverlapping"]
+           "random_sample_chunks_nonoverlapping"]
 
 
 class ChunkGenerator(object):
@@ -80,7 +80,7 @@ def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
     return ChunkGenerator(gen, offsets.size)
 
 
-def random_sample_chunks_nonverlapping(arr, chunksize, num_samples):
+def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples):
     """
     A chunk-generating function that randomly selects n non-overlapping chunks.
     This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
