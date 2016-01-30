@@ -9,7 +9,8 @@ from toolz import functoolz
 import random
 import collections
 
-__all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks"]
+__all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks",
+           "random_sample_chunks_nonverlapping"]
 
 
 class ChunkGenerator(object):

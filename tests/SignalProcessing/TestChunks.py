@@ -48,7 +48,13 @@ class TestChunkGeneration(object):
     def test_randomSampleChunkGenerator(self):
         vals = random_sample_chunks(self.data1, 3, 2).as_array()
         assert_equal(vals.shape, (2, 3))
-        assert_true((vals < 10).all())
+        assert_true((vals <= 10).all())
+        assert_true((vals >= 0).all())
+
+    def test_randomSampleChunkGeneratorNonoverlapping(self):
+        vals = random_sample_chunks_nonverlapping(self.data1, 3, 2).as_array()
+        assert_equal(vals.shape, (2, 3))
+        assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
     @raises
