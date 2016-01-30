@@ -73,6 +73,11 @@ class TestFFT(object):
         # Check with frequency range
         assert_equal(dominantFrequency(x, y, low=100.0, high=140.0), 132)
 
+    @raises(ValueError)
+    def test_fft_empty_chunks(self):
+        cg = ChunkGenerator(lambda _: [], 0)
+        parallelFFTReduce(cg, None, None)
+
     @parameterized.expand([
         ("With DC", False),
         ("Without DC", True),
