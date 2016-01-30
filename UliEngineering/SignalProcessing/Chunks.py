@@ -51,6 +51,7 @@ class ChunkGenerator(object):
     def as_array(self):
         return np.asarray(self.as_list())
 
+
 def __overlapping_chunks_worker(offsets, chunksize, arr, copy, i):
     ofs = offsets[i]
     arrslice = arr[ofs:ofs + chunksize]

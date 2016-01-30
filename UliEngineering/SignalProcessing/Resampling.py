@@ -59,7 +59,7 @@ class ResampledFilteredXYView(object):
     The user must therefore ensure that downstream functions appropriately deal with those slices.
     One way of doing that is to oversize the slices requested by the caller and ensure they are properly
     trimmed downstream.
-    
+
     This class returns (xslice, yslice) on slice. See ResampledFilteredView for a wrapper that only
     returns the Y view.
     """
@@ -70,18 +70,33 @@ class ResampledFilteredXYView(object):
         self.filt = filt
         self.time_factor = time_factor
 
-    def getslice(self, start, stop, step):
-        xslice = self.fx[start:stop:step]
-        yslice = self.fy[start:stop:step]
-        return BSplineResampler(xslice, yslice, time_factor=time_factor,
-                                prefile=self.filt).resample_to(self.target_samplerate)
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            xslice = self.fx[key.start:key.stop:key.step]
+            yslice = self.fy[key.start:key.stop:key.step]
+            return BSplineResampler(xslice, yslice, time_factor=time_factor,
+                                    prefile=self.filt).resample_to(self.target_samplerate)
+        elif isinstance(key, int):
+            raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
+
+    @property
+    def shape(self):
+        return self.fy.shape
 
 
 class ResampledFilteredView(ResampledFilteredXYView):
     "Like ResampledFilteredXYView, but only returns y values on slice"
-    def getslice(self, start, stop, step):
-        _, y = super(self.__class__, self).getslice(start, stop, step)
-        return y
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            _, y = super(self.__class__, self).getslice(start, stop, step)
+            return y
+        elif isinstance(key, int):
+            raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
 
 
 class ResampledFilteredViewYOnlyDecorator(object):
@@ -96,6 +111,11 @@ class ResampledFilteredViewYOnlyDecorator(object):
     def __init__(self, other):
         self.other = other
 
-    def getslice(self, start, stop, step):
-        _, y = self.other.getslice(start, stop, step)
-        return y
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            _, y = self.other[start:stop:step]
+            return y
+        elif isinstance(key, int):
+            raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
