@@ -37,15 +37,18 @@ def computeFFT(y, samplerate, window="blackman"):
     return (x, w)
 
 
-def __fft_reduce_worker(chunkgen, i, windowArr, removeDC):
-    yslice = chunkgen(i)
+def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
+    chunk = chunkgen(i)
+    if chunk.size < fftsize:
+        raise ValueError("Chunk too small: FFT size {0}, chunk size {1}".format(fftsize, chunk.size))
+    yslice = chunk[:fftsize]
     # If enabled, remove DC
     if removeDC:
         yslice = yslice - np.mean(yslice)
     # Compute FFT
-    fftresult = scipy.fftpack.fft(yslice * windowArr)
+    fftresult = scipy.fftpack.fft(yslice * window)
     # Perform amplitude normalization
-    return np.abs(fftresult[:fftresult.size / 2])
+    return np.abs(fftresult[:fftsize / 2])
 
 def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
     """
@@ -59,27 +62,30 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     This function must be reentrant and must return a writable version (i.e. if you have
         overlapping chunks or the original array must not be modified for some reason,
         you must return a copy).
+    The 
 
     It is recommended to use a shared executor instance. If the executor is set to None,
     a new ThreadPoolExecutor() is used automatically. Using a process-based executor
     is not required as scipy/numpy unlock the GIL during the computationally expensive
     operations.
     """
+    if len(chunkgen) == 0:
+        raise ValueError("Can't perform FFT on empty chunk generator")
     if executor is None:
         executor = concurrent.futures.ThreadPoolExecutor(os.cpu_count() or 1)
     # Compute common parameters
-    windowArr = __fft_windows[window](fftsize)
+    window = __fft_windows[window](fftsize)
     fftSum = np.zeros(fftsize / 2)
     # Initialize threadpool
     futures = [
-        executor.submit(__fft_reduce_worker, chunkgen, i, windowArr, removeDC)
-        for i in range(chunkgen.num_chunks)
+        executor.submit(__fft_reduce_worker, chunkgen, i, window, fftsize, removeDC)
+        for i in range(len(chunkgen))
     ]
     # Sum up the results
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
     fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
-    return (x, 2.0 * (fftSum / (chunkgen.num_chunks * samplerate))) if normalize else fftSum
+    return (x, 2.0 * (fftSum / (len(chunkgen) * samplerate))) if normalize else fftSum
 
 
 def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, chunkfunc=None, **kwargs):
