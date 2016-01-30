@@ -78,15 +78,26 @@ def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
     return ChunkGenerator(gen, offsets.size)
 
 
-def random_sample_chunks(arr, chunksize, num_samples):
+def random_sample_chunks_nonverlapping(arr, chunksize, num_samples):
     """
-    A chunk-generating function that can be used for parallelFFTReduce().
+    A chunk-generating function that randomly selects n non-overlapping chunks.
     This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
     as a basis and randomly selects a fraction of those chunks.
+    This means that only start chunk number is randomized while the chunk phase
+    is always the same.
     """
     arr2d = reshaped_chunks(arr, chunksize)
     indices = random.sample(range(arr2d.shape[0]), num_samples)
     return ChunkGenerator(lambda i: arr2d[indices[i]], num_samples)
+
+
+def random_sample_chunks(arr, chunksize, num_samples):
+    """
+    A chunk-generating function that can be used for parallelFFTReduce().
+    """
+    start_idxs = range(arr.shape[0] - (chunksize - 1))
+    indices = random.sample(start_idxs, num_samples)
+    return ChunkGenerator(lambda i: arr[indices[i]:indices[i] + chunksize], num_samples)
 
 
 def reshaped_chunks(arr, chunksize):
@@ -99,6 +110,7 @@ def reshaped_chunks(arr, chunksize):
     """
     if arr.shape[0] == 0:
         return arr
+    chunksize = int(chunksize)
     # We might need to cut off some records for odd-shaped arrays
     end = arr.shape[0] - (arr.shape[0] % chunksize)
     v = arr[:end].view()
