@@ -74,6 +74,7 @@ def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
         number as an argument) and n is the number of chunks.
     """
     # Precompute offset table
+    chunksize = int(chunksize)
     offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))
     gen = functools.partial(__overlapping_chunks_worker, offsets, chunksize, arr, copy)
     return ChunkGenerator(gen, offsets.size)
@@ -87,6 +88,7 @@ def random_sample_chunks_nonverlapping(arr, chunksize, num_samples):
     This means that only start chunk number is randomized while the chunk phase
     is always the same.
     """
+    chunksize = int(chunksize)
     arr2d = reshaped_chunks(arr, chunksize)
     indices = random.sample(range(arr2d.shape[0]), num_samples)
     return ChunkGenerator(lambda i: arr2d[indices[i]], num_samples)
@@ -96,6 +98,7 @@ def random_sample_chunks(arr, chunksize, num_samples):
     """
     A chunk-generating function that can be used for parallelFFTReduce().
     """
+    chunksize = int(chunksize)
     start_idxs = range(arr.shape[0] - (chunksize - 1))
     indices = random.sample(start_idxs, num_samples)
     return ChunkGenerator(lambda i: arr[indices[i]:indices[i] + chunksize], num_samples)

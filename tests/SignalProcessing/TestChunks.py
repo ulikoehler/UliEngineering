@@ -4,6 +4,7 @@ from toolz import functoolz
 from nose.tools import assert_equal, assert_true, raises
 from numpy.testing import assert_array_equal, assert_allclose
 from UliEngineering.SignalProcessing.Chunks import *
+from nose_parameterized import parameterized
 
 class TestChunkGeneration(object):
     def __init__(self):
@@ -45,14 +46,16 @@ class TestChunkGeneration(object):
         d2[0] = -1000  # Should make d2 equal to d1
         assert_array_equal(d1, d2)  # ... should have had an effect
 
-    def test_randomSampleChunkGenerator(self):
-        vals = random_sample_chunks(self.data1, 3, 2).as_array()
+    @parameterized([(3,), (3.0,)])
+    def test_randomSampleChunkGenerator(self, chunksize):
+        vals = random_sample_chunks(self.data1, chunksize, 2).as_array()
         assert_equal(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
-    def test_randomSampleChunkGeneratorNonoverlapping(self):
-        vals = random_sample_chunks_nonverlapping(self.data1, 3, 2).as_array()
+    @parameterized([(3,), (3.0,)])
+    def test_randomSampleChunkGeneratorNonoverlapping(self, chunksize):
+        vals = random_sample_chunks_nonverlapping(self.data1, chunksize, 2).as_array()
         assert_equal(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
