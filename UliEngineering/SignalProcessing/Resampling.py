@@ -94,7 +94,7 @@ class ResampledFilteredView(ResampledFilteredXYView):
             _, y = super(self.__class__, self)[key.start:key.stop:key.step]
             return y
         elif isinstance(key, int):
-            raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
+            raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
 
@@ -116,6 +116,6 @@ class ResampledFilteredViewYOnlyDecorator(object):
             _, y = self.other[start:stop:step]
             return y
         elif isinstance(key, int):
-            raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
+            raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 

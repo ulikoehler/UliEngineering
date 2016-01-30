@@ -45,7 +45,7 @@ class TestIntInterval(object):
         (lambda iv: 'b' * iv,),
         (lambda iv: iv / 'b',),
     ])
-    @raises(ValueError)
+    @raises(TypeError)
     def testInvalidArithmetic(self, lamb):
         iv = IntInterval(5, 10)
         lamb(iv)
@@ -57,7 +57,7 @@ class TestIntInterval(object):
         y = np.arange(1, 100)
         assert_allclose(IntInterval(6, 15)(x, y), (np.arange(6, 15), np.arange(7, 16)))
 
-    @raises(ValueError)
+    @raises(TypeError)
     def testCallNoArgs(self):
         IntInterval(6, 15)()
 

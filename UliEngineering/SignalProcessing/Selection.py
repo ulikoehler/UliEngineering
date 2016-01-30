@@ -43,7 +43,7 @@ class IntInterval(__Interval):
     """
     def __radd__(self, i):
         if not isinstance(i, numbers.Integral):
-            raise ValueError("Can only add integers to an interval")
+            raise TypeError("Can only add integers to an interval")
         return IntInterval(self.start + i, self.end + i)
 
     def __add__(self, i):
@@ -51,17 +51,17 @@ class IntInterval(__Interval):
 
     def __rsub__(self, i):
         if not isinstance(i, numbers.Integral):
-            raise ValueError("Can only substract integers from an interval")
+            raise TypeError("Can only substract integers from an interval")
         return IntInterval(i - self.start, i - self.end)
 
     def __sub__(self, i):
         if not isinstance(i, numbers.Integral):
-            raise ValueError("Can only substract integers from an interval")
+            raise TypeError("Can only substract integers from an interval")
         return IntInterval(self.start - i, self.end - i)
 
     def __call__(self, *args):
         if not args:
-            raise ValueError("Use one or multiple arrays to produce a slice of them")
+            raise TypeError("Use one or multiple arrays to produce a slice of them")
         if len(args) == 1:
             return args[0][self.start:self.end]
         return tuple([arr[self.start:self.end] for arr in args])
@@ -71,7 +71,7 @@ class IntInterval(__Interval):
 
     def __mul__(self, n):
         if not isinstance(n, numbers.Number):
-            raise ValueError("Intervals can only be multiplied by numbers")
+            raise TypeError("Intervals can only be multiplied by numbers")
         if n == 1:
             return self
         elif n == 0:  # Return size-0 interval
@@ -91,8 +91,9 @@ class IntInterval(__Interval):
 
     def __truediv__(self, n):
         if not isinstance(n, numbers.Number):
-            raise ValueError("Intervals can only be divided by numbers")
+            raise TypeError("Intervals can only be divided by numbers")
         return self.__mul__(1.0 / n)
+
 
 def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     """
@@ -246,6 +247,7 @@ def shrinkRanges(ranges, y, method="maxy"):
             ret[i] = fn(start, end, y[start:end])
     return ret
 
+
 def findNearestIdx(arr, v):
     """
     Find the index in the array which refers to the value with the least
@@ -253,6 +255,7 @@ def findNearestIdx(arr, v):
     """
     # Original idea by unutbu @SO: http://stackoverflow.com/a/2566508/2597135
     return (np.abs(arr - v)).argmin()
+
 
 def selectRandomSlice(arr, size):
     """
