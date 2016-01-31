@@ -30,7 +30,7 @@ class ChunkGenerator(object):
     def __getitem__(self, i):
         return self.func(self.generator(i))
 
-    def __call__(self, i):
+    def __call__(self, i):  # Compatibility only. Slicing recommended
         return self.__getitem__(i)
 
     def __len__(self):

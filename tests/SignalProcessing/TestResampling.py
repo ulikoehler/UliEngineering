@@ -26,3 +26,10 @@ class TestResampling(object):
         y = np.square(x)
         # TODO improve test
         y2 = ResampledFilteredView(x, y, 1.0, 1.0)[30:50]
+
+    def testResampledFilteredView(self):
+        x = np.arange(100)
+        y = np.square(x)
+        # TODO improve test
+        y2 = ResampledFilteredView(x, y, 1.0, 1.0)[30:50]
+        
