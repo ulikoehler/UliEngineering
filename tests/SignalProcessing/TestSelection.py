@@ -69,7 +69,6 @@ class TestIntInterval(object):
         IntInterval(1, 10) + self
 
 
-
 class TestSelectByDatetime(object):
     def testGeneric(self):
         now = datetime.datetime.now()
@@ -278,3 +277,13 @@ class TestMajorityVote(object):
         assert_true(res == [(3, 0.5), (2, 0.25), (1, 0.25)] or res == [(3, 0.5), (1, 0.25), (2, 0.25)])
         assert_equal(majority_vote(lst), 3)
         assert_is_none(majority_vote([]))
+
+
+class TestExtractByReference(object):
+    def testBasic(self):
+        fx = np.arange(100)
+        fy = np.square(fx)
+        ref = np.linspace(20.0, 50.0, 1000)
+        resX, resY = extract_by_reference(fx, fy, ref)
+        assert_allclose(resX, fx[20:50])
+        assert_allclose(resY, fy[20:50])

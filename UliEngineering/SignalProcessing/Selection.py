@@ -7,13 +7,14 @@ import numpy as np
 import datetime
 import numbers
 import scipy.signal
-from bisect import bisect_left
+from bisect import bisect_left, bisect_right
 import collections
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
-           "GeneratorCounter", "majority_vote_all", "majority_vote"]
+           "GeneratorCounter", "majority_vote_all", "majority_vote",
+           "extract_by_reference"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -358,3 +359,25 @@ def resample_discard(arr, divisor, ofs=0):
     Resample with an integral divisor, discarding all other samples
     """
     return arr[ofs::divisor]
+
+
+def extract_by_reference(fx, fy, ref):
+    """
+    When ref is an array of arbitrary timestamp-like values,
+    extracts a range from fx, fy so that the range represented by
+    ref matches the range represented by the return value as close as possible.
+
+    Basically, when you have a time range, this function selects the same
+    time range from another dataset, even if fx, fy and ref have different
+    time resolution and time shifts.
+
+    Returns (fx_new, fy_ne) so that fx_new[0] <= ref[0] and
+    fx_new[-1] >= ref[-1] unless fx is too small.
+
+    It is required that fx is sorted and ref[0] > ref[-1].
+    A tuple (start, end) can be used instead of ref
+    """
+    start, end = ref[0], ref[-1]
+    idx1 = bisect_left(fx, start)
+    idx2 = bisect_left(fx, end)
+    return fx[idx1:idx2], fy[idx1:idx2]
