@@ -27,8 +27,11 @@ class ChunkGenerator(object):
     def __iter__(self):
         return (self.func(self.generator(i)) for i in range(self.num_chunks))
 
-    def __call__(self, i):
+    def __getitem__(self, i):
         return self.func(self.generator(i))
+
+    def __call__(self, i):
+        return self.__getitem__(i)
 
     def __len__(self):
         return self.num_chunks

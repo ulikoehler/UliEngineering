@@ -38,7 +38,7 @@ def computeFFT(y, samplerate, window="blackman"):
 
 
 def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
-    chunk = chunkgen(i)
+    chunk = chunkgen[i]
     if chunk.size < fftsize:
         raise ValueError("Chunk too small: FFT size {0}, chunk size {1}".format(fftsize, chunk.size))
     yslice = chunk[:fftsize]
@@ -146,5 +146,7 @@ def dominantFrequency(x, y=None, low=None, high=None):
         x, y = x
     # Apply frequency range
     if low is not None or high is not None:
-        x, y = selectFrequencyRange(x, y, low=low, high=high)
-    return x[np.argmax(y)]
+        xv, yv = selectFrequencyRange(x, y, low=low, high=high)
+    else:
+        xv, yv = x, y
+    return xv[np.argmax(yv)]
