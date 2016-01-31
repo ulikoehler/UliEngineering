@@ -62,7 +62,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     This function must be reentrant and must return a writable version (i.e. if you have
         overlapping chunks or the original array must not be modified for some reason,
         you must return a copy).
-    The 
+    The reducer must not expect to receive the values in any particular order.
 
     It is recommended to use a shared executor instance. If the executor is set to None,
     a new ThreadPoolExecutor() is used automatically. Using a process-based executor
