@@ -7,7 +7,6 @@ import scipy.fftpack
 import numpy as np
 import numpy.fft
 import functools
-import os
 from toolz import functoolz
 from .Selection import selectFrequencyRange
 from .Chunks import overlapping_chunks
