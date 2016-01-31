@@ -28,7 +28,13 @@ class ChunkGenerator(object):
         return (self.func(self.generator(i)) for i in range(self.num_chunks))
 
     def __getitem__(self, i):
-        return self.func(self.generator(i))
+        if isinstance(key, slice):
+            return [self[i] for i in range(key.start, key.stop, key.step)]
+        elif isinstance(key, int):
+            return self.func(self.generator(i))
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
+
 
     def __call__(self, i):  # Compatibility only. Slicing recommended
         return self.__getitem__(i)
