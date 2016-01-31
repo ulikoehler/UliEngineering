@@ -12,6 +12,7 @@ from toolz import functoolz
 from .Selection import selectFrequencyRange
 from .Chunks import overlapping_chunks
 import concurrent.futures
+from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
@@ -72,7 +73,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
     if executor is None:
-        executor = concurrent.futures.ThreadPoolExecutor(os.cpu_count() or 1)
+        executor = new_thread_executor()
     # Compute common parameters
     window = __fft_windows[window](fftsize)
     fftSum = np.zeros(fftsize / 2)
