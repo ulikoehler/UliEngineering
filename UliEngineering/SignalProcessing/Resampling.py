@@ -39,8 +39,8 @@ class BSplineResampler(object):
 
     def resample_to(self, samplerate):
         "Resample to a specific samplerate. Returns fx, fy"
-        numSamples = (self.fx[-1] - self.fx[0]) * samplerate / self.time_factor
-        return self.resample(np.linspace(self.fx[0], self.fx[-1], numSamples))
+        num_samples = (self.fx[-1] - self.fx[0]) * samplerate / self.time_factor
+        return self.resample(np.linspace(self.fx[0], self.fx[-1], num_samples))
 
 
 def resample_discard(arr, divisor, ofs=0):
@@ -74,8 +74,9 @@ class ResampledFilteredXYView(object):
         if isinstance(key, slice):
             xslice = self.fx[key.start:key.stop:key.step]
             yslice = self.fy[key.start:key.stop:key.step]
-            return BSplineResampler(xslice, yslice, time_factor=time_factor,
-                                    prefile=self.filt).resample_to(self.target_samplerate)
+            resampler = BSplineResampler(xslice, yslice, time_factor=self.time_factor,
+                                         prefilt=self.filt)
+            return resampler.resample_to(self.samplerate)
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredXYView can only be sliced with slice indices, not single numbers")
         else:
@@ -91,7 +92,7 @@ class ResampledFilteredView(ResampledFilteredXYView):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            _, y = super(self.__class__, self)[key.start:key.stop:key.step]
+            _, y = super(self.__class__, self).__getitem__(key)
             return y
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")

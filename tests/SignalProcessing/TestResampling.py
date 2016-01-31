@@ -14,3 +14,15 @@ class TestResampling(object):
         x = np.arange(100)
         y = np.square(x)
         y2 = BSplineResampler(x, y, time_factor=1).resample_to(1)
+
+    def testResampledFilteredXYView(self):
+        x = np.arange(100)
+        y = np.square(x)
+        # TODO improve test
+        y2 = ResampledFilteredXYView(x, y, 1.0, 1.0)[30:80]
+
+    def testResampledFilteredView(self):
+        x = np.arange(100)
+        y = np.square(x)
+        # TODO improve test
+        y2 = ResampledFilteredView(x, y, 1.0, 1.0)[30:50]
