@@ -68,6 +68,17 @@ class TestIntInterval(object):
     def testInvalidAdd(self):
         IntInterval(1, 10) + self
 
+    def testRangeArrayToIntIntervals(self):
+        arr = np.asarray([[41, 60], [0, 30]])
+        res = rangeArrayToIntIntervals(arr)
+        assert_equal(res, [IntInterval(41, 60), IntInterval(0, 30)])
+
+
+    def testIntIntervalsToRangeArray(self):
+        arr = np.asarray([[41, 60], [0, 30]])
+        intervals = [IntInterval(41, 60), IntInterval(0, 30)]
+        assert_allclose(intIntervalsToRangeArray(intervals), arr)
+
 
 class TestSelectByDatetime(object):
     def testGeneric(self):

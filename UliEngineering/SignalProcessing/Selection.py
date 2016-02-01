@@ -14,7 +14,8 @@ __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
-           "extract_by_reference"]
+           "extract_by_reference", "rangeArrayToIntIntervals",
+           "intIntervalsToRangeArray"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -247,6 +248,23 @@ def shrinkRanges(ranges, y, method="maxy"):
         else:
             ret[i] = fn(start, end, y[start:end])
     return ret
+
+
+def rangeArrayToIntIntervals(ranges):
+    """
+    Convert a 2d range array, like the one returned by findTrueRuns(),
+    to a list of int ranges).
+    """
+    return [IntInterval(r[0], r[1]) for r in ranges]
+
+
+def intIntervalsToRangeArray(intervals):
+    """
+    Converts a list of IntIntervals to a 2d range array,
+    like the one returned by findTrueRuns(),
+    """
+    return np.asarray([(interval[0], interval[1]) for interval in intervals])
+
 
 
 def findNearestIdx(arr, v):
