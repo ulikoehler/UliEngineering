@@ -100,3 +100,9 @@ class TestFFT(object):
         x, y = simpleParallelFFTReduce(d, 100.0, 100)
         assert_equal(x.shape[0], 50)
         assert_equal(y.shape[0], 50)
+
+    def testGenerateSinewave(self):
+        sw = generate_sinewave(25., 400.0, 1.0, 10.)
+        fftx, ffty = computeFFT(sw, 400.)
+        df = dominantFrequency(fftx, ffty)
+        assert_true(abs(df - 25.0) < 0.1)

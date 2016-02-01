@@ -14,7 +14,7 @@ import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
-           "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti",
+           "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
            "dominantFrequency", "parallelFFTReduceAllResults"]
 
 __fft_windows = {
@@ -150,3 +150,9 @@ def dominantFrequency(x, y=None, low=None, high=None):
     else:
         xv, yv = x, y
     return xv[np.argmax(yv)]
+
+
+def generate_sinewave(frequency, samplerate, amplitude, length):
+    """Generate a test sinewave of a specific frequency of a specific length in seconds"""
+    x = np.arange(length * samplerate)
+    return amplitude * np.sin(frequency * (2. * np.pi) * x / samplerate)
