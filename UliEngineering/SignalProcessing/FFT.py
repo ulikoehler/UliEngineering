@@ -32,7 +32,7 @@ def computeFFT(y, samplerate, window="blackman"):
     n = len(y)
     windowArr = __fft_windows[window](n)
     w = scipy.fftpack.fft(y * windowArr)
-    w = 2.0 * np.abs(w[:n / 2]) / (samplerate * n) # Perform amplitude normalization
+    w = 2.0 * np.abs(w[:n / 2]) / n  # Perform amplitude normalization
     x = np.linspace(0.0, samplerate / 2, n / 2)
     return (x, w)
 
@@ -85,7 +85,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     x = np.linspace(0.0, samplerate / 2, fftsize / 2)
     fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
-    return (x, 2.0 * (fftSum / (len(chunkgen) * samplerate * fftsize))) if normalize else fftSum
+    return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
 
 
 def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, chunkfunc=None, **kwargs):

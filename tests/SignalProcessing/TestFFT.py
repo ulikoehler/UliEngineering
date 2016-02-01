@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import assert_equal, assert_true, raises, assert_less
+from nose.tools import assert_equal, assert_true, raises, assert_less, assert_almost_equal
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *
 from nose_parameterized import parameterized
@@ -72,6 +72,19 @@ class TestFFT(object):
         assert_equal(dominantFrequency((x, y)), 132)
         # Check with frequency range
         assert_equal(dominantFrequency(x, y, low=100.0, high=140.0), 132)
+
+    @parameterized.expand([
+        (1.,),
+        (10.234,),
+        (0.01,),
+        (10000.,),
+    ])
+    def testFFTAmplitudeIntegral(self, amplitude):
+        """FFT amplitude integral should be equal to ptp value of a sine wave"""
+        sine = generate_sinewave(10.0, 100.0, amplitude, 2000)
+        fftx, ffty = computeFFT(sine, 100.0)
+        # Number of decimals must depend on value, so we need to divide here
+        assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 3)
 
     @raises(ValueError)
     def test_fft_empty_chunks(self):
