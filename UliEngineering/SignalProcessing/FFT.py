@@ -147,7 +147,6 @@ def dominantFrequency(x, y=None, low=None, high=None):
     # Apply frequency range
     if low is not None or high is not None:
         x, y = selectFrequencyRange(x, y, low=low, high=high)
-        xv, yv = x, y
     return x[np.argmax(y)]
 
 
