@@ -74,17 +74,21 @@ class TestFFT(object):
         assert_equal(dominantFrequency(x, y, low=100.0, high=140.0), 132)
 
     @parameterized.expand([
-        (1.,),
-        (10.234,),
-        (0.01,),
-        (10000.,),
+        (1., 1.0),
+        (10.234, 1.0),
+        (0.01, 1.0),
+        (10000., 1.0),
+        (1., 30.0),
+        (10.234, 30.0),
+        (0.01, 30.0),
+        (10000., 30.0),
     ])
-    def testFFTAmplitudeIntegral(self, amplitude):
+    def testFFTAmplitudeIntegral(self, amplitude, length):
         """FFT amplitude integral should be equal to ptp value of a sine wave"""
-        sine = generate_sinewave(10.0, 100.0, amplitude, 2000)
+        sine = generate_sinewave(10.0, 100.0, amplitude, length)
         fftx, ffty = computeFFT(sine, 100.0)
         # Number of decimals must depend on value, so we need to divide here
-        assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 3)
+        assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 2)
 
     @raises(ValueError)
     def test_fft_empty_chunks(self):
