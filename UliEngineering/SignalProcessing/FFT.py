@@ -146,10 +146,9 @@ def dominantFrequency(x, y=None, low=None, high=None):
         x, y = x
     # Apply frequency range
     if low is not None or high is not None:
-        xv, yv = selectFrequencyRange(x, y, low=low, high=high)
-    else:
+        x, y = selectFrequencyRange(x, y, low=low, high=high)
         xv, yv = x, y
-    return xv[np.argmax(yv)]
+    return x[np.argmax(y)]
 
 
 def generate_sinewave(frequency, samplerate, amplitude, length):
