@@ -20,15 +20,15 @@ class TestResampling(object):
 
     def testResampledFilteredXYView(self):
         # TODO improve test
-        y2 = ResampledFilteredXYView(self.x, self.y, 1.0, 1.0)[30:80]
+        y2 = ResampledFilteredXYView(self.x, self.y, 1.0, 1.0)
+        y2[30:80]
+        assert_equal(y2.shape, self.y.shape)
 
     def testResampledFilteredView(self):
         # TODO improve test
-        y2 = ResampledFilteredView(self.x, self.y, 1.0, 1.0)[30:50]
-
-    def testResampledFilteredView(self):
-        # TODO improve test
-        y2 = ResampledFilteredView(self.x, self.y, 1.0, 1.0)[30:50]
+        y2 = ResampledFilteredView(self.x, self.y, 1.0, 1.0)
+        y2[30:50]
+        assert_equal(y2.shape, self.y.shape)
 
     @raises(TypeError)
     def testResampledFilteredXYViewInvalidArgs(self):
