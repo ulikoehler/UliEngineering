@@ -185,7 +185,9 @@ class TestFindTrueRuns(object):
         x = np.full(25, False)
         x[4:9] = True
         x[14:21] = True
-        assert_allclose(findTrueRuns(x), [[4, 9], [14, 21]])
+        result = findTrueRuns(x)
+        assert_allclose(result, [[4, 9], [14, 21]])
+        assert_equal(result.dtype, np.int)
 
     def testNumericComparator(self):
         # Generate test data
@@ -222,7 +224,9 @@ class TestShrinkRanges(object):
         x[22] = 4.0
         ranges = findTrueRuns(x > 0.5)
         # Run shrinker
-        assert_allclose(shrinkRanges(ranges, x), [5, 20, 22])
+        result = shrinkRanges(ranges, x)
+        assert_allclose(result, [5, 20, 22])
+        assert_equal(result.dtype, np.int)
 
     @raises(KeyError)
     def testInvalidFunction(self):

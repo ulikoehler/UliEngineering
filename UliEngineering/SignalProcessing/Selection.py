@@ -239,7 +239,7 @@ def shrinkRanges(ranges, y=None, method="maxy"):
 
     Return a 1d array of indices of the remaining shrinked index.
     """
-    ret = np.empty(ranges.shape[0])
+    ret = np.empty(ranges.shape[0], dtype=np.int)
     fn = __shrinkRangeMethodLUT[method]
     needY = method != "median"
     if needY and y is None:
