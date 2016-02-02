@@ -130,3 +130,10 @@ def reshaped_chunks(arr, chunksize):
     v = arr[:end].view()
     v.shape = (-1, chunksize)
     return v
+
+def array_to_chunkgen(arr):
+    """
+    Convert a potentially multidimensional NumPy array-like
+    to a ChunkGenerator(), using the values along the first axis.
+    """
+    return ChunkGenerator(lambda i: arr[i], arr.shape[axis])
