@@ -137,4 +137,4 @@ def array_to_chunkgen(arr):
     Convert a potentially multidimensional NumPy array-like
     to a ChunkGenerator(), using the values along the first axis.
     """
-    return ChunkGenerator(lambda i: arr[i], arr.shape[axis])
+    return ChunkGenerator(lambda i: arr[i], arr.shape[0])

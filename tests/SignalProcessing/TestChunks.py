@@ -31,7 +31,10 @@ class TestChunkGeneration(object):
         cg.apply(np.square)
         expected = np.square(np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))
         assert_array_equal(cg.as_array(), expected)
-
+        # Apply composability
+        cg.apply(np.square)
+        expected = np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) ** 4
+        assert_array_equal(cg.as_array(), expected)
 
     def test_overlapping_chunks_copy(self):
         d1 = self.data1.copy()
@@ -71,6 +74,8 @@ class TestChunkGeneration(object):
         overlapping_chunks(self.data1, 0, 3)
 
 
+
+
 class TestReshapedChunks(object):
     def test_reshaped_chunks(self):
         arr = np.arange(10)
@@ -87,3 +92,7 @@ class TestReshapedChunks(object):
         empty = np.asarray([])
         assert_array_equal(reshaped_chunks(empty, 4), empty)
 
+    def test_array_to_chunkgen(self):
+        arr = np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        vals = array_to_chunkgen(arr)
+        assert_array_equal(vals.as_array(), arr)
