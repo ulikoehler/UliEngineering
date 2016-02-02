@@ -21,6 +21,7 @@ class TestChunkGeneration(object):
         vals = overlapping_chunks(self.data2, 3, 3)
         assert_equal(len(vals), 4)
         assert_array_equal(vals.as_array(), [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        assert_array_equal(vals[1:3], [[4, 5, 6], [7, 8, 9]])
         # Array which is too long
         vals = overlapping_chunks(self.data2, 25, 3)
         assert_array_equal(vals.as_array(), [])

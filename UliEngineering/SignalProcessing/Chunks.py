@@ -29,7 +29,8 @@ class ChunkGenerator(object):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            return [self[i] for i in range(key.start, key.stop, key.step)]
+            start, stop, step = key.indices(len(self))
+            return [self[i] for i in range(start, stop, step)]
         elif isinstance(key, int):
             return self.func(self.generator(key))
         else:

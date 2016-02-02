@@ -72,8 +72,8 @@ class ResampledFilteredXYView(object):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            xslice = self.fx[key.start:key.stop:key.step]
-            yslice = self.fy[key.start:key.stop:key.step]
+            xslice = self.fx.__getitem__(key)
+            yslice = self.fy.__getitem__(key)
             resampler = BSplineResampler(xslice, yslice, time_factor=self.time_factor,
                                          prefilt=self.filt)
             return resampler.resample_to(self.samplerate)
@@ -114,7 +114,7 @@ class ResampledFilteredViewYOnlyDecorator(object):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            _, y = self.other[key.start:key.stop:key.step]
+            _, y = self.other.__getitem__(key)
             return y
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")
