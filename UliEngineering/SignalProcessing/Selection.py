@@ -237,7 +237,7 @@ def shrinkRanges(ranges, y=None, method="maxy"):
         - maxy: Selects the maximum y value along the slice
         - mean: Selects the index (start+end) // 2. y may be None.
 
-    Return a 1d array of indices which are
+    Return a 1d array of indices of the remaining shrinked index.
     """
     ret = np.empty(ranges.shape[0])
     fn = __shrinkRangeMethodLUT[method]
