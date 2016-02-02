@@ -15,7 +15,7 @@ __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "rangeArrayToIntIntervals",
-           "intIntervalsToRangeArray"]
+           "intIntervalsToRangeArray", "applyRangesToArray"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -228,26 +228,42 @@ __shrinkRangeMethodLUT = {
     "median": lambda start, end, _: (start + end) // 2
 }
 
-def shrinkRanges(ranges, y, method="maxy"):
+def shrinkRanges(ranges, y=None, method="maxy"):
     """
     Take a (n, 2)-shaped range list like the one returned by findTrueRuns()
     and shrink the ranges so the are only 1 wide.
 
     Currently supported shrinking methods are:
         - maxy: Selects the maximum y value along the slice
-        - mean: Selects the index (start+end) // 2
+        - mean: Selects the index (start+end) // 2. y may be None.
 
     Return a 1d array of indices which are
     """
     ret = np.empty(ranges.shape[0])
     fn = __shrinkRangeMethodLUT[method]
+    needY = method != "median"
+    if needY and y is None:
+        raise TypeError("Y is required if method != median, but y is None")
     for i, (start, end) in enumerate(ranges):
         # Skip calculation for ranges which already are 1 wide
         if end - start == 1:
             ret[i] = start
         else:
-            ret[i] = fn(start, end, y[start:end])
+            ret[i] = fn(start, end, y[start:end] if needY else  None)
     return ret
+
+
+def applyRangesToArray(ranges, arr):
+    """
+    Apply a range array like the one returned by findTrueRuns().
+    Yields each value
+    :param ranges: The (n, 2) range array
+    :param arr: The array to apply the ranges to
+    """
+    if ranges.shape[1] != 2:
+        raise ValueError("ranges.shape[1] must be 2 instead of {0} - this does not look like a range array".format(ranges.shape[1]))
+    for range in ranges:
+        yield arr[range[0]:range[1]]
 
 
 def rangeArrayToIntIntervals(ranges):

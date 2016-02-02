@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
 from nose_parameterized import parameterized
@@ -298,3 +298,12 @@ class TestExtractByReference(object):
         resX, resY = extract_by_reference(fx, fy, ref)
         assert_allclose(resX, fx[20:50])
         assert_allclose(resY, fy[20:50])
+
+
+class TestApplyRangesToArray(object):
+    def testBasic(self):
+        arr = np.arange(10)
+        ranges = np.asarray([[3,5], [7,8]])
+        result = list(applyRangesToArray(ranges, arr))
+        assert_array_equal(result[0], [3, 4])
+        assert_array_equal(result[1], [7])
