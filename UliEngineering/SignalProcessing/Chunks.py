@@ -10,7 +10,7 @@ import random
 import collections
 
 __all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks",
-           "random_sample_chunks_nonoverlapping"]
+           "random_sample_chunks_nonoverlapping", "array_to_chunkgen"]
 
 
 class ChunkGenerator(object):
@@ -130,6 +130,7 @@ def reshaped_chunks(arr, chunksize):
     v = arr[:end].view()
     v.shape = (-1, chunksize)
     return v
+
 
 def array_to_chunkgen(arr):
     """
