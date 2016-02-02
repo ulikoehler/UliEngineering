@@ -114,9 +114,13 @@ class ResampledFilteredViewYOnlyDecorator(object):
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            _, y = self.other[start:stop:step]
+            _, y = self.other[key.start:key.stop:key.step]
             return y
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")
         else:
-            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
+
+    @property
+    def shape(self):
+        return self.other.shape
