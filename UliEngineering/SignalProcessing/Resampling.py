@@ -86,13 +86,30 @@ class ResampledFilteredXYView(object):
     def shape(self):
         return self.fy.shape
 
+class _XViewDecorator(object):
+    "This class is used in ResampledFilteredView to provide the time object"
+    def __init__(self, delegate):
+        self.delegate = delegate
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            x, _ = ResampledFilteredXYView.__getitem__(self.delegate, key)
+            return x
+        elif isinstance(key, int):
+            raise TypeError("ResampledFilteredView.time can only be sliced with slice indices, not single numbers")
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
 
 class ResampledFilteredView(ResampledFilteredXYView):
     "Like ResampledFilteredXYView, but only returns y values on slice"
 
+    @property
+    def time(self):
+        return _XViewDecorator(self)
+
     def __getitem__(self, key):
         if isinstance(key, slice):
-            _, y = super(self.__class__, self).__getitem__(key)
+            _, y = super().__getitem__(key)
             return y
         elif isinstance(key, int):
             raise TypeError("ResampledFilteredView can only be sliced with slice indices, not single numbers")

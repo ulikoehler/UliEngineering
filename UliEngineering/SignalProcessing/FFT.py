@@ -7,6 +7,7 @@ import scipy.fftpack
 import numpy as np
 import numpy.fft
 import functools
+import operator
 from toolz import functoolz
 from .Selection import selectFrequencyRange
 from .Chunks import overlapping_chunks
@@ -52,10 +53,14 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     # Compute FFT
     fftresult = scipy.fftpack.fft(yslice * window)
     # Perform amplitude normalization
-    return np.abs(fftresult[:fftsize / 2])
+    return i, np.abs(fftresult[:fftsize / 2])
 
 
-def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
+def sum_reducer(gen):
+    "The standard FFT reducer. Sums up all FFT y values."
+    return sum(y for _, y in gen)
+
+def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
