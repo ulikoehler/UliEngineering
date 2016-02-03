@@ -15,7 +15,7 @@ from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
-           "dominantFrequency", "parallelFFTReduceAllResults"]
+           "dominantFrequency", "parallelFFTReduceAllResults", "fft_frequencies"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -26,6 +26,10 @@ __fft_windows = {
     "none": np.ones
 }
 
+def fft_frequencies(fftsize, samplerate):
+    """Return the frequencies associated to a real-onl FFT array"""
+    return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
+
 
 def computeFFT(y, samplerate, window="blackman"):
     "Compute the real FFT of a dataset and return (x, y) which can directly be visualized using matplotlib etc"
@@ -33,7 +37,7 @@ def computeFFT(y, samplerate, window="blackman"):
     windowArr = __fft_windows[window](n)
     w = scipy.fftpack.fft(y * windowArr)
     w = 2.0 * np.abs(w[:n / 2]) / n  # Perform amplitude normalization
-    x = np.linspace(0.0, samplerate / 2, n / 2)
+    x = fft_frequencies(n, samplerate)
     return (x, w)
 
 
@@ -49,6 +53,7 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     fftresult = scipy.fftpack.fft(yslice * window)
     # Perform amplitude normalization
     return np.abs(fftresult[:fftsize / 2])
+
 
 def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum, normalize=True, executor=None):
     """
@@ -82,7 +87,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
         for i in range(len(chunkgen))
     ]
     # Sum up the results
-    x = np.linspace(0.0, samplerate / 2, fftsize / 2)
+    x = fft_frequencies(fftsize, samplerate)
     fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
     return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
