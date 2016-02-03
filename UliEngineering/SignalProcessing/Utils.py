@@ -112,11 +112,12 @@ class LinRange(object):
     def __len__(self):
         return self.size
 
-    def view(self, start, stop, step):
+    def view(self, start, stop, step=1):
         """Return a slice of this LinRange as a view, not as a numpy array"""
-        return LinRange(self.start + start * self.step,
-                        self.start + stop * self.step,
-                        self.step * step)
+        istart, istop, istep = slice(start, stop, step).indices(self.size)
+        return LinRange(self[istart],
+                        self[istop - 1],
+                        (istop - istart)  / istep)
 
     def __getitem__(self, key):
         if isinstance(key, slice):

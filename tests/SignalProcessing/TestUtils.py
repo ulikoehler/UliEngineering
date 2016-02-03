@@ -90,6 +90,7 @@ class TestLinSpace(object):
         (0.0, 100.0, 202),
         (0.0, 100.0, 735),
         (0.0, 200.0, 101),
+        (12.5, 202.3, 101),
     ])
     def testBasic(self, start, end, n):
         params = (start, end, n)
@@ -101,5 +102,6 @@ class TestLinSpace(object):
         # Test some slice
         istart, iend = len(spc) // 3, len(spc) // 2
         assert_allclose(spc[istart:iend], linspc[istart:iend])
+        assert_allclose(spc.view(istart, iend)[:], linspc[istart:iend])
 
 
