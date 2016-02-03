@@ -225,7 +225,7 @@ def findTrueRuns(arr):
 
 __shrinkRangeMethodLUT = {
     "maxy": lambda start, _, yslice: start + np.argmax(yslice),
-    "median": lambda start, end, _: (start + end) // 2
+    "middle": lambda start, end, _: (start + end) // 2
 }
 
 def shrinkRanges(ranges, y=None, method="maxy"):
@@ -235,7 +235,7 @@ def shrinkRanges(ranges, y=None, method="maxy"):
 
     Currently supported shrinking methods are:
         - maxy: Selects the maximum y value along the slice
-        - mean: Selects the index (start+end) // 2. y may be None.
+        - middle: Selects the index (start+end) // 2. y may be None.
 
     Return a 1d array of indices of the remaining shrinked index.
     """
