@@ -70,3 +70,16 @@ class TestUnstair(object):
         assert_less(rx.size, sx.size)
         assert_less(ry.size, rsine.size)
 
+class TestOptimumPolyfit(object):
+    def testBasic(self):
+        x = np.linspace(-100., 100., 10000)
+        y = np.square(x)
+        poly, deg, score = optimum_polyfit(x, y)
+        assert_less(score, 1e-10)
+        assert_equal(np.max(np.abs(y - poly(x))), score)
+
+    def testRandom(self):
+        x = np.linspace(-100., 100., 1000)
+        y = np.random.random(x.size)
+        poly, deg, score = optimum_polyfit(x, y)
+
