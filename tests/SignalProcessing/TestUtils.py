@@ -83,3 +83,23 @@ class TestOptimumPolyfit(object):
         y = np.random.random(x.size)
         poly, deg, score = optimum_polyfit(x, y)
 
+
+class TestLinSpace(object):
+    @parameterized([
+        (0.0, 100.0, 101),
+        (0.0, 100.0, 202),
+        (0.0, 100.0, 735),
+        (0.0, 200.0, 101),
+    ])
+    def testBasic(self, start, end, n):
+        params = (start, end, n)
+        spc = LinRange(*params)
+        linspc = np.linspace(*params)
+        assert_equal(len(spc), params[2])
+        assert_equal(len(spc), linspc.size)
+        assert_allclose(spc[:], linspc)
+        # Test some slice
+        istart, iend = len(spc) // 3, len(spc) // 2
+        assert_allclose(spc[istart:iend], linspc[istart:iend])
+
+

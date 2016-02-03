@@ -26,7 +26,7 @@ class BSplineResampler(object):
     @property
     def samplerate_stddev(self):
         "Get the variance of the differential source sample rate"
-        return np.stddev(np.diff(self.fx))
+        return np.stddev(np.reciprocate(np.diff(self.fx)))
 
     @property
     def actual_samplerate(self):
@@ -34,7 +34,7 @@ class BSplineResampler(object):
 
     def resample(self, samples):
         "Resample with a specific sample array. Alle samples must lie within the original samplespace"
-        y = splev(samples, self.tck)
+        y = splev(samples, self.tck, ext=2) # ext: raise ValueError on out of bounds access
         return samples, y
 
     def resample_to(self, samplerate):

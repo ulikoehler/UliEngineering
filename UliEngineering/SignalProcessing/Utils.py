@@ -5,10 +5,12 @@ Unsorted signal processing utilities
 """
 import numpy as np
 from toolz import functoolz
+import numbers
+import math
 import warnings
 from .Selection import shrinkRanges, findTrueRuns
 
-__all__ = ["unstair", "optimum_polyfit"]
+__all__ = ["unstair", "optimum_polyfit", "LinRange"]
 
 
 _unstep_reduction_methods = {
@@ -86,3 +88,46 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
     # Compute polyfit for that degreet
     poly = np.poly1d(np.polyfit(x, y, deg))
     return poly, deg, np.min(scores)
+
+
+class LinRange(object):
+    """
+    Combines the properties of numpy.linspace and Python3's range by providing
+    a floating-point capable lazy range generator that does not keep the entire array
+    in memory (but calculates slices on the fly
+    """
+    def __init__(self, start, stop, n, endpoint=True):
+        "Create a new LinRange object using a numpy.linspace-like constructor"
+        self.start = start
+        self.stop = stop
+        n = int(n)
+        self.step = (stop - start) / (n - 1 if endpoint else n)
+        self.size = n
+
+    @staticmethod
+    def range(start, stop, step):
+        "Create a new LinRange object using a range()-like constructor"
+        return LinRange(start, stop, int((stop - start) / step))
+
+    def __len__(self):
+        return self.size
+
+    def view(self, start, stop, step):
+        """Return a slice of this LinRange as a view, not as a numpy array"""
+        return LinRange(self.start + start * self.step,
+                        self.start + stop * self.step,
+                        self.step * step)
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            istart, istop, istep = key.indices(self.size)
+            print(istart, istop, istep)
+            start = self[istart]
+            stop = self[istop - 1]
+            n = (istop - istart) / istep
+            return np.linspace(start, stop, n)
+        elif isinstance(key, numbers.Number):
+            return self.start + self.step * key
+        else:
+            raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
+
