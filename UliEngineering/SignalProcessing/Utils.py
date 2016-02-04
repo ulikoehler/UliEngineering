@@ -122,7 +122,6 @@ class LinRange(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)
-            print(istart, istop, istep)
             start = self[istart]
             stop = self[istop - 1]
             n = (istop - istart) / istep
