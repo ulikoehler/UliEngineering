@@ -132,6 +132,8 @@ class LinRange(object):
             n = (istop - istart) / istep
             return np.linspace(start, stop, n)
         elif isinstance(key, numbers.Number):
+            if key < 0:
+                key = len(self) + key
             return self.start + self.step * key
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
