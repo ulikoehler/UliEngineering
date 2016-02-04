@@ -117,7 +117,12 @@ class LinRange(object):
         istart, istop, istep = slice(start, stop, step).indices(self.size)
         return LinRange(self[istart],
                         self[istop - 1],
-                        (istop - istart)  / istep)
+                        (istop - istart) / istep)
+
+    @property
+    def mid(self):
+        "Return the middle of the current interval as a floating point value"
+        return (self.start + self.stop) / 2.
 
     def __getitem__(self, key):
         if isinstance(key, slice):
@@ -130,4 +135,3 @@ class LinRange(object):
             return self.start + self.step * key
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
-

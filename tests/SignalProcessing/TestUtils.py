@@ -103,5 +103,7 @@ class TestLinSpace(object):
         istart, iend = len(spc) // 3, len(spc) // 2
         assert_allclose(spc[istart:iend], linspc[istart:iend])
         assert_allclose(spc.view(istart, iend)[:], linspc[istart:iend])
-
-
+        # Test negative indices
+        assert_allclose(spc[-istart:-iend], linspc[-istart:-iend])
+        # Test mid
+        assert_equal(spc.mid, (start + end) / 2.)
