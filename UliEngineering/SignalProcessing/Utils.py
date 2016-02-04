@@ -124,6 +124,10 @@ class LinRange(object):
         "Return the middle of the current interval as a floating point value"
         return (self.start + self.stop) / 2.
 
+    @property
+    def shape(self):
+        return (self.size,)
+
     def __getitem__(self, key):
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)

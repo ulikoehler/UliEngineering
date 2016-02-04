@@ -98,6 +98,7 @@ class TestLinSpace(object):
         linspc = np.linspace(*params)
         assert_equal(len(spc), params[2])
         assert_equal(len(spc), linspc.size)
+        assert_equal((len(spc),), linspc.shape)
         assert_allclose(spc[:], linspc)
         # Test some slice
         istart, iend = len(spc) // 3, len(spc) // 2
