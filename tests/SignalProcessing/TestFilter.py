@@ -101,6 +101,19 @@ class TestFilter(object):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.iir(order=100, rp=1e-12)
 
+    def testAsSamplerate(self):
+        # TODO improve test
+        filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
+        filt.iir(order=2, rp=1)
+        filt.as_samplerate(100.)
+
+    @raises(NotComputedException)
+    def testAsSamplerateNotComputed(self):
+        # TODO improve test
+        filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
+        filt.as_samplerate(100.)
+
+
 class TestChainedFilter(TestFilter):
 
     @parameterized([

@@ -50,10 +50,18 @@ class SignalFilter(object):
             fs: The sampling rate
             freqs: The frequency (for lopass/hipass) or a list of two frequencies
         """
+        self.samplerate = fs
         self.nyq = fs * 0.5
+        self.btype = btype
+        self.freqs = freqs
         self.fs = autoNormalizeEngineerInputNoUnitRaise(fs)
         self.b = None
         self.a = None
+        # These will be initialized in iir()
+        self.order = None
+        self.rp = None
+        self.rs = None
+        self.ftype = None
         # Normalize freqs: Allow [1.0] instead of 1.0
         if freqs is None:
             raise ValueError("Critical frequencies may not be none")
@@ -105,12 +113,31 @@ class SignalFilter(object):
 
         Returns the current instance so it can be chained inline
         """
+        # Save attributes
+        self._type = "iir"
+        self.ftype = ftype
+        self.order = order
+        self.rp = rp
+        self.rs = rs
+        self.ftype = ftype
+        # Compute filter coefficients
         self.b, self.a = signal.iirfilter(order, self.freqs, btype=self.btype,
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
             raise FilterUnstableError("The filter is numerically unstable. Use a lower order or a wider frequency range. You can use ChainedFilter to chain multiple filters of lower order to avoid this issue.")
         return self
+
+    def as_samplerate(self, samplerate):
+        """
+        Convert this filter to a filter with the same frequency response.
+        Returns a new filter instance.
+        """
+        if self.a is None:
+            raise NotComputedException()
+        filt = SignalFilter(samplerate, self.freqs, self.btype)
+        filt.iir(self.order, self.ftype, self.rp, self.rs)
+        return filt
 
     def frequency_response(self, n=10000):
         """
