@@ -67,11 +67,11 @@ class TestFFT(object):
         y = np.random.random(100)
         # Insert artificial peak
         y[32] = 8.0
-        assert_equal(dominantFrequency(x, y), 132)
+        assert_equal(dominant_frequency(x, y), 132)
         # Check if we can also pass a tuple
-        assert_equal(dominantFrequency((x, y)), 132)
+        assert_equal(dominant_frequency((x, y)), 132)
         # Check with frequency range
-        assert_equal(dominantFrequency(x, y, low=100.0, high=140.0), 132)
+        assert_equal(dominant_frequency(x, y, low=100.0, high=140.0), 132)
 
     @parameterized.expand([
         (1., 1.0),
@@ -121,7 +121,7 @@ class TestFFT(object):
     def testGenerateSinewave(self):
         sw = generate_sinewave(25., 400.0, 1.0, 10.)
         fftx, ffty = computeFFT(sw, 400.)
-        df = dominantFrequency(fftx, ffty)
+        df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
 
     def testAmplitudeIntegral(self):

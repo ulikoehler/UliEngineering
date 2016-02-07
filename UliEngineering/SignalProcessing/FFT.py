@@ -16,7 +16,7 @@ from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
-           "dominantFrequency", "parallelFFTReduceAllResults", "fft_frequencies",
+           "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
            "amplitude_integral"]
 
 __fft_windows = {
@@ -148,7 +148,7 @@ def cutFFTDCArtifactsMulti(fx, fys, return_idx=False):
         return idx
     return fx[idx:], [fy[idx:] for fy in fys]
 
-def dominantFrequency(x, y=None, low=None, high=None):
+def dominant_frequency(x, y=None, low=None, high=None):
     """
     Return the frequency with the largest amplitude in a FFT spectrum
     Optionally, a frequency range may be given
