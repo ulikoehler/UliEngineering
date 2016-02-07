@@ -123,3 +123,9 @@ class TestFFT(object):
         fftx, ffty = computeFFT(sw, 400.)
         df = dominantFrequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
+
+    def testAmplitudeIntegral(self):
+        fx = np.arange(4)
+        fy = np.asarray([2, 3, 4, 5])
+        assert_almost_equal(amplitude_integral(fx, fy), sum(fy) / 3.)
+        assert_almost_equal(amplitude_integral(fx, fy, low=1., high=2.01), 3 + 4)

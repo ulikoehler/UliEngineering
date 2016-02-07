@@ -16,7 +16,8 @@ from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
-           "dominantFrequency", "parallelFFTReduceAllResults", "fft_frequencies"]
+           "dominantFrequency", "parallelFFTReduceAllResults", "fft_frequencies",
+           "amplitude_integral"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -166,3 +167,18 @@ def generate_sinewave(frequency, samplerate, amplitude, length):
     return amplitude * np.sin(frequency * (2. * np.pi) * x / samplerate)
 
 
+def amplitude_integral(fx, fy, low=None, high=None):
+    """
+    Return the amplitude integral of a frequency-domain signal.
+    Optionally, the signal can be filtered directly.
+    Call this on a (fx, fy) pair as returned by computeFFT.
+
+    The value at the low boundary is included in the range while the value
+    at the high boundary is not.
+
+    :return The amplitude integral value normalized as [amplitude unit] / Hz
+    """
+    fx, fy = selectFrequencyRange(fx, fy, low=low, high=high)
+    # Normalize to [amplitude unit] / Hz
+    hz = fx[-1] - fx[0]
+    return np.sum(fy) / hz
