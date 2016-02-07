@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-from nose.tools import assert_equal, assert_true, raises
+from nose.tools import assert_equal, assert_true, raises, assert_in, assert_not_in, assert_is_instance
 from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from nose_parameterized import parameterized
@@ -117,13 +117,13 @@ class TestFilter(object):
         filt.as_samplerate(100.)
 
     def testChain(self):
-        assert_true(isinstance(self.filt.chain(5), ChainedFilter))
-        assert_true(isinstance(self.filt.chain(1), SignalFilter))
+        assert_is_instance(self.filt.chain(5), ChainedFilter)
+        assert_is_instance(self.filt.chain(1), SignalFilter)
         # chain_with
-        assert_true(isinstance(self.filt.chain_with(self_repeat=1), SignalFilter))
-        assert_true(isinstance(self.filt.chain_with(self_repeat=2), ChainedFilter))
-        assert_true(isinstance(self.filt.chain_with(other=self.filt, 
-                               self_repeat=2, other_repeat=2), ChainedFilter))
+        assert_is_instance(self.filt.chain_with(self_repeat=1), SignalFilter)
+        assert_is_instance(self.filt.chain_with(self_repeat=2), ChainedFilter)
+        assert_is_instance(self.filt.chain_with(other=self.filt,
+                               self_repeat=2, other_repeat=2), ChainedFilter)
 
 
     @raises(ValueError)
@@ -225,3 +225,25 @@ class TestSumFilter(TestFilter):
     def testSingleFilterConstructor(self):
         filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
         SumFilter(filt)
+
+class TestFilterBank(object):
+    def testBasic(self):
+        filt1 = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=1)
+        filt2 = SignalFilter(100.0, 2.0, btype="lowpass").iir(order=1)
+        bank = FilterBank(100.)
+        bank["A"] = filt1
+        bank["B"] = filt2
+        # Check 100 Hz bank
+        assert_in("A", bank)
+        assert_in("B", bank)
+        assert_not_in(filt1, bank)
+        assert_not_in(bank, bank)
+        # Check fast path resampling to same samplerate
+        assert_true(bank.as_samplerate(100.) == bank)
+        # Check resampled bank
+        bank200 = bank.as_samplerate(200.)
+        assert_true(bank200 != bank)
+        assert_in("A", bank200)
+        assert_in("B", bank200)
+        assert_equal(bank200["A"].samplerate, 200.)
+        assert_equal(bank200["B"].samplerate, 200.)

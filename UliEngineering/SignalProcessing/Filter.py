@@ -22,10 +22,12 @@ from scipy import signal
 import numpy as np
 import numbers
 import collections
+import operator
 from toolz import functoolz
+from toolz.dicttoolz import valmap
 
 __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
-           "SignalFilter", "ChainedFilter", "SumFilter"]
+           "SignalFilter", "ChainedFilter", "SumFilter", "FilterBank"]
 
 
 class NotComputedException(Exception):
@@ -270,3 +272,42 @@ class SumFilter(ChainedFilter):
 
     def __call__(self, d):
         return sum(filt(d) for filt in self.filters)
+
+
+class FilterBank(object):
+    """
+    Represents a set of filters that can be accessed with arbitrary samplerates.
+    Utility class that eases the use of filters for multiple sampling rates.
+
+    One FilterBank instance represents a set of filters at a specific samplerate
+    that can be easily recomputed with a different samplerate.
+    """
+    def __init__(self, samplerate):
+        """
+        Initialize a new FilterBank() with a specified standard sampling rate.
+        Every filter that is added to the filter bank is recomputed with this sample rate.
+        """
+        self.filters = {}
+        self.samplerate = samplerate
+
+    def __setitem__(self, key, value):
+        self.filters[key] = value.as_samplerate(self.samplerate)
+
+    def __getitem__(self, key):
+        return self.filters[key]
+
+    def __contains__(self, key):
+        return key in self.filters
+
+    def as_samplerate(self, samplerate):
+        """
+        Returns a copy of the current filter bank with a different samplerate.
+        All filters are recomputed when calling this function.
+        """
+        # Fast path if samplerate has not changed
+        if samplerate == self.samplerate:
+            return self
+        # Create new bank with recomputed filters.
+        ret = FilterBank(samplerate)
+        ret.filters = valmap(operator.methodcaller("as_samplerate", samplerate), self.filters)
+        return ret
