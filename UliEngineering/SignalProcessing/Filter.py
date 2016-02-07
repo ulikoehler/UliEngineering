@@ -134,6 +134,7 @@ class SignalFilter(object):
         """
         if self.a is None:
             raise NotComputedException()
+        samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
         filt = SignalFilter(samplerate, self.freqs, self.btype)
         filt.iir(self.order, self.ftype, self.rp, self.rs)
         return filt
