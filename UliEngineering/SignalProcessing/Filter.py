@@ -42,19 +42,18 @@ class SignalFilter(object):
     """
     High-level abstraction of a digital signal filter.
     """
-    def __init__(self, fs, freqs, btype="lowpass"):
+    def __init__(self, samplerate, freqs, btype="lowpass"):
         """
         Initialize a new filter
 
         Keyword arguments:
-            fs: The sampling rate
+            samplerate: The sampling rate
             freqs: The frequency (for lopass/hipass) or a list of two frequencies
         """
-        self.samplerate = fs
-        self.nyq = fs * 0.5
+        self.nyq = samplerate * 0.5
         self.btype = btype
         self.freqs = freqs
-        self.fs = autoNormalizeEngineerInputNoUnitRaise(fs)
+        self.samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
         self.b = None
         self.a = None
         # These will be initialized in iir()
@@ -93,7 +92,7 @@ class SignalFilter(object):
         Normalize frequencies with respect to the sampling rate
         """
         if isinstance(f, numbers.Number):
-            return f / (0.5 * self.fs)
+            return f / (0.5 * self.samplerate)
         else:
             return [f[0] / self.nyq, f[1] / self.nyq]
 
@@ -145,7 +144,7 @@ class SignalFilter(object):
         Returns plottable (x, y) with respect to an actual sampling rate
         """
         w, h = signal.freqz(self.b, self.a, worN=n)
-        return (0.5 * self.fs * w / np.pi, np.abs(h))
+        return (0.5 * self.samplerate * w / np.pi, np.abs(h))
 
     def __call__(self, d):
         if self.a is None:
