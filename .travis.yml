@@ -8,5 +8,6 @@ before_install:
     - sudo pip3 install codecov rednose nose coverage six toolz nose-parameterized --upgrade
 cache: pip
 script: nosetests
+dist: trusty
 after_success:
     codecov
