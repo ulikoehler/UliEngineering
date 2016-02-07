@@ -166,6 +166,12 @@ class TestChainedFilter(TestFilter):
         assert_equal(ChainedFilter(testFilter, repeat=1).samplerate, 400.)
         assert_equal(ChainedFilter(testFilter, repeat=2).samplerate, 400.)
         assert_equal(ChainedFilter(testFilter, repeat=3).samplerate, 400.)
+        # Check as_samplerate (basic check)
+        cf = ChainedFilter(testFilter, repeat=1)
+        cf400 = cf.as_samplerate(400.)  # Same samplerate => shortcut
+        cf500 = cf.as_samplerate(500.)
+        assert_true(cf400 == cf)
+        assert_true(cf500 != cf)
 
     @raises(FilterInvalidError)
     def testDifferingSamplerateFilters(self):
@@ -174,6 +180,9 @@ class TestChainedFilter(TestFilter):
         testFilter3 = SignalFilter(100.0, 20.0, btype="lowpass").iir(1, ftype="butter")
         ChainedFilter([testFilter1, testFilter2, testFilter3])
 
+    @raises(ValueError)
+    def testEmptyList(self):
+        ChainedFilter([])
 
 
 class TestSumFilter(TestFilter):
@@ -195,3 +204,7 @@ class TestSumFilter(TestFilter):
         d2 = sfilt(self.d)
         assert_equal(len(sfilt), len1 + 1)
         assert_equal(self.d.shape, d2.shape)
+
+    def testSingleFilterConstructor(self):
+        filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
+        SumFilter(filt)

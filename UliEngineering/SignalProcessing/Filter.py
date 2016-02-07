@@ -203,8 +203,6 @@ class ChainedFilter(object):
         return functoolz.pipe(d, *self.filters)
 
     def frequency_response(self, n=10000):
-        if not self.filters:
-            raise NotComputedException("Filter list is empty")
         fx, _ = self.filters[0].frequency_response(n)
         fy = np.product(np.asarray([f.frequency_response(n)[1] for f in self.filters]), axis=0)
         return fx, fy
@@ -218,7 +216,7 @@ class ChainedFilter(object):
         # Do not copy if the filter already has the right samplerate
         if all(filt.samplerate == samplerate for filt in self.filters):
             return self
-        # 
+        # Return new filter with new samplerate
         return ChainedFilter([filt.as_samplerate(samplerate) for filt in self.filters])
 
 
