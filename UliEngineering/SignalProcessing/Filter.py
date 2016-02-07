@@ -24,8 +24,8 @@ import numbers
 import collections
 from toolz import functoolz
 
-__all__ = ["NotComputedException", "FilterUnstableError", "SignalFilter",
-           "ChainedFilter", "SumFilter"]
+__all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
+           "SignalFilter", "ChainedFilter", "SumFilter"]
 
 
 class NotComputedException(Exception):
@@ -34,6 +34,11 @@ class NotComputedException(Exception):
 
 
 class FilterUnstableError(Exception):
+    """The generated filter is numerically unstable and must not be used"""
+    pass
+
+
+class FilterInvalidError(Exception):
     """The generated filter is numerically unstable and must not be used"""
     pass
 
@@ -50,7 +55,6 @@ class SignalFilter(object):
             samplerate: The sampling rate
             freqs: The frequency (for lopass/hipass) or a list of two frequencies
         """
-        self.nyq = samplerate * 0.5
         self.btype = btype
         self.freqs = freqs
         self.samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
@@ -75,7 +79,7 @@ class SignalFilter(object):
         if isinstance(freqs, str):
             __freqs_orig = freqs
             freqs = autoNormalizeEngineerInputNoUnitRaise(freqs)
-        self.freqs = self._filtfreq(freqs)
+        self.filtfreqs = self._filtfreq(freqs)
         # Check & store pass type
         if btype == "lowpass" or btype == "highpass":
             if not isinstance(freqs, numbers.Number):
@@ -85,7 +89,6 @@ class SignalFilter(object):
                 raise ValueError("Pass-type {0} requires a two critical frequencies, not {1}".format(btype, freqs))
         else:
             raise ValueError("Invalid pass type '{0}': Use lowpass, highpass, bandpass or bandstop!".format(btype))
-        self.btype = btype
 
     def _filtfreq(self, f):
         """
@@ -94,7 +97,7 @@ class SignalFilter(object):
         if isinstance(f, numbers.Number):
             return f / (0.5 * self.samplerate)
         else:
-            return [f[0] / self.nyq, f[1] / self.nyq]
+            return [f[0] / (0.5 * self.samplerate), f[1] / (0.5 * self.samplerate)]
 
     def is_stable(self):
         """
@@ -120,7 +123,7 @@ class SignalFilter(object):
         self.rs = rs
         self.ftype = ftype
         # Compute filter coefficients
-        self.b, self.a = signal.iirfilter(order, self.freqs, btype=self.btype,
+        self.b, self.a = signal.iirfilter(order, self.filtfreqs, btype=self.btype,
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
@@ -135,6 +138,8 @@ class SignalFilter(object):
         if self.a is None:
             raise NotComputedException()
         samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
+        if samplerate == self.samplerate:
+            return self
         filt = SignalFilter(samplerate, self.freqs, self.btype)
         filt.iir(self.order, self.ftype, self.rp, self.rs)
         return filt
@@ -167,8 +172,24 @@ class ChainedFilter(object):
         if isinstance(filters, SignalFilter):
             filters = [filters]
         self.filters = filters
+        # This raises FilterInvalidError if not all filters have the same samplerate
+        self.samplerate
+        # Repeat filters
         if repeat > 1:
             self.filters *= repeat
+
+    @property
+    def samplerate(self):
+        """
+        Get the samplerate of the filter set or raise
+        This property is required for changing the samplerate of nested chained filters.
+        """
+        if not self.filters:
+            raise ValueError("Can't obtain sample rate of an empty filter set")
+        samplerates = set(filt.samplerate for filt in self.filters)
+        if len(samplerates) > 1:
+            raise FilterInvalidError("ChainedFilter instance contains filters with different samplerates")
+        return list(samplerates)[0]
 
     def __iadd__(self, f):
         "Add a filter to the end of the chain"
@@ -192,13 +213,20 @@ class ChainedFilter(object):
         # Performance not considered important here. User will usually call this once
         return all(f.is_stable() for f in self.filters)
 
+    def as_samplerate(self, samplerate):
+        """Return"""
+        # Do not copy if the filter already has the right samplerate
+        if all(filt.samplerate == samplerate for filt in self.filters):
+            return self
+        # 
+        return ChainedFilter([filt.as_samplerate(samplerate) for filt in self.filters])
+
 
 class SumFilter(ChainedFilter):
     """
     Chained filter object that applies a number of filters and sums the results.
-    This can be used to combine multiple bandpass filters for multiple passbands.
-
-    Filters can be added via +=
+    This can be used to combine multiple bandpass filters for multiband-bandpass.
+    Filters can be added via +=.
     """
     def __init__(self, filters):
         "The first filter in the filters list is applied first"

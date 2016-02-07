@@ -106,12 +106,15 @@ class TestFilter(object):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.iir(order=2, rp=1)
         filt.as_samplerate(100.)
+        filt.as_samplerate(200.)
+        filt.as_samplerate(50.)
 
     @raises(NotComputedException)
     def testAsSamplerateNotComputed(self):
         # TODO improve test
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.as_samplerate(100.)
+
 
 
 class TestChainedFilter(TestFilter):
@@ -159,6 +162,18 @@ class TestChainedFilter(TestFilter):
         assert_allclose(fy0, fy1)
         # fy2 filters more -> should be less
         assert_array_less(fy2, fy1)
+        # Check samplerate
+        assert_equal(ChainedFilter(testFilter, repeat=1).samplerate, 400.)
+        assert_equal(ChainedFilter(testFilter, repeat=2).samplerate, 400.)
+        assert_equal(ChainedFilter(testFilter, repeat=3).samplerate, 400.)
+
+    @raises(FilterInvalidError)
+    def testDifferingSamplerateFilters(self):
+        testFilter1 = SignalFilter(400.0, 100.0, btype="lowpass").iir(1, ftype="butter")
+        testFilter2 = SignalFilter(400.0, 10.0, btype="lowpass").iir(1, ftype="butter")
+        testFilter3 = SignalFilter(100.0, 20.0, btype="lowpass").iir(1, ftype="butter")
+        ChainedFilter([testFilter1, testFilter2, testFilter3])
+
 
 
 class TestSumFilter(TestFilter):
