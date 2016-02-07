@@ -157,6 +157,42 @@ class SignalFilter(object):
             raise NotComputedException()
         return signal.filtfilt(self.b, self.a, d)
 
+    def chain(self, repeat=2):
+        """
+        Create a ChainedFilter() instance that chains the current filter multiple times.
+
+        For more options, see chain_with()
+
+        :param repeat The total number of self instances in the resulting ChainedFilter
+        """
+        return self.chain_with(self_repeat=repeat)
+
+    def chain_with(self, other=None, self_repeat=1, other_repeat=1):
+        """
+        Create a ChainedFilter() by chaining this filter with another filter,
+        optionally repeating this filter and the other filter by different coefficients.
+
+        If other is None, only self is repeated self_repeat times.
+
+        Examples:
+            .chain_with(self_repeat=2) => ChainedFilter([self, self])
+            .chain_with(other=myFilter, other_repeat=2) => ChainedFilter([self, other, other])
+
+        :param other The other filter that is chained to self. Ignored if None.
+        :param self_repeat How many times to repeat self
+        :param other_repeat How many times to repeat other (if other is not None)
+        :return A ChainedFilter() instance
+        """
+        # Shortcut if chaining self once. Avoid additional overhead in this case
+        if other is None and self_repeat == 1:
+            return self
+        # Else: Need to build a ChainedFilter()
+        filters = [self] * self_repeat
+        if other is not None:
+            filters += [other] * other_repeat
+        return ChainedFilter(filters)
+
+
 
 class ChainedFilter(object):
     """

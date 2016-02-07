@@ -9,6 +9,9 @@ class TestFilter(object):
 
     def __init__(self):
         self.d = np.random.random(1000)
+        # Some rather random test filter
+        self.filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
+        self.filt.iir(order=2, rp=1)
 
     @parameterized([
         ("lowpass", 1.0),
@@ -103,17 +106,31 @@ class TestFilter(object):
 
     def testAsSamplerate(self):
         # TODO improve test
-        filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
-        filt.iir(order=2, rp=1)
-        filt.as_samplerate(100.)
-        filt.as_samplerate(200.)
-        filt.as_samplerate(50.)
+        self.filt.as_samplerate(100.)
+        self.filt.as_samplerate(200.)
+        self.filt.as_samplerate(50.)
 
     @raises(NotComputedException)
     def testAsSamplerateNotComputed(self):
         # TODO improve test
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.as_samplerate(100.)
+
+    def testChain(self):
+        assert_true(isinstance(self.filt.chain(5), ChainedFilter))
+        assert_true(isinstance(self.filt.chain(1), SignalFilter))
+        # chain_with
+        assert_true(isinstance(self.filt.chain_with(self_repeat=1), SignalFilter))
+        assert_true(isinstance(self.filt.chain_with(self_repeat=2), ChainedFilter))
+        assert_true(isinstance(self.filt.chain_with(other=self.filt, 
+                               self_repeat=2, other_repeat=2), ChainedFilter))
+
+
+    @raises(ValueError)
+    def testChain0(self):
+        "Test chain with repeat=0"
+        self.filt.chain(0)
+
 
 
 
