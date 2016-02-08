@@ -161,10 +161,19 @@ def dominant_frequency(x, y=None, low=None, high=None):
     return x[np.argmax(y)]
 
 
-def generate_sinewave(frequency, samplerate, amplitude, length):
-    """Generate a test sinewave of a specific frequency of a specific length in seconds"""
+def generate_sinewave(frequency, samplerate, amplitude, length, phaseshift=0):
+    """
+    Generate a test sinewave of a specific frequency of a specific length
+
+    :param frequency The frequency in Hz
+    :param samplerate The samplerate of the resulting array
+    :param amplitude The peak amplitude of the sinewave
+    :param length The length of the result in seconds
+    :param phaseshift The phaseshift in degrees
+    """
     x = np.arange(length * samplerate)
-    return amplitude * np.sin(frequency * (2. * np.pi) * x / samplerate)
+    phaseshift_add = phaseshift * 2 * np.pi * frequency / 360.
+    return amplitude * np.sin(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
 
 
 def amplitude_integral(fx, fy, low=None, high=None):
