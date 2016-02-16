@@ -14,7 +14,7 @@ from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
-__all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
+__all__ = ["computeFFT  ", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
            "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
            "amplitude_integral"]
@@ -54,7 +54,7 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     # Compute FFT
     fftresult = scipy.fftpack.fft(yslice * window)
     # Perform amplitude normalization
-    return i, np.abs(fftresult[:fftsize / 2])
+    return i, np.abs(fftresult[:fftsize // 2])
 
 
 def sum_reducer(gen):
