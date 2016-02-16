@@ -14,7 +14,7 @@ from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
-__all__ = ["computeFFT  ", "parallelFFTReduce", "simpleParallelFFTReduce",
+__all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
            "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
            "amplitude_integral"]
