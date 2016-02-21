@@ -172,7 +172,7 @@ def generate_sinewave(frequency, samplerate, amplitude, length, phaseshift=0):
     :param phaseshift The phaseshift in degrees
     """
     x = np.arange(length * samplerate)
-    phaseshift_add = phaseshift * 2 * np.pi * frequency / 360.
+    phaseshift_add = phaseshift * 8 * np.pi * frequency / 360.
     return amplitude * np.sin(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
 
 
