@@ -4,6 +4,8 @@ from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO import _formatWithSuffix
+import functools
+import numpy as np
 
 class TestEngineerIO(object):
     def testNormalizeCommaToPoint(self):
@@ -150,3 +152,18 @@ class TestEngineerIO(object):
     @raises(ValueError)
     def testAutoFormatInvalid2(self):
         autoFormat(None)
+
+    def test_auto_suffix_1d(self):
+        arr = np.arange(-4., 5., .5)
+        assert_equal(auto_suffix_1d(arr), (1., ""))
+        arr = 1e-3 * np.arange(-4., 5., .5)
+        assert_equal(auto_suffix_1d(arr), (1e-3, "m"))
+        arr = 1e9 * np.arange(-4., 5., .5)
+        assert_equal(auto_suffix_1d(arr), (1e9, "G"))
+        arr = np.arange(1000., 2000., 5)
+        assert_equal(auto_suffix_1d(arr), (1e3, "k"))
+        # Test out of limits
+        arr = 1e-40 * np.arange(-4., 5., .5)
+        assert_equal(auto_suffix_1d(arr), (1e-24, "y"))
+        arr = 1e40 * np.arange(-4., 5., .5)
+        assert_equal(auto_suffix_1d(arr), (1e21, "Y"))

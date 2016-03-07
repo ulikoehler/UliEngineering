@@ -24,6 +24,15 @@ import math
 import itertools
 import functools
 from collections import namedtuple
+import numpy as np
+
+__all__ = ["Quantity", "UnannotatedReturnValueError", "isValidSuffix",
+           "getSuffixMultiplier", "normalizeCommaToPoint",
+           "splitSuffixSeparator", "normalizeEngineerInput",
+           "formatValue", "autoNormalizeEngineerInput",
+           "autoNormalizeEngineerInputNoUnit",
+           "autoNormalizeEngineerInputNoUnitRaise", "autoFormat",
+           "auto_suffix_1d"]
 
 Quantity = namedtuple("Quantity", ["unit"])
 
@@ -34,6 +43,9 @@ class UnannotatedReturnValueError(Exception):
 siSuffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
               ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 siSuffixMult = -24  # The exponential multiplier for the first suffix
+
+siSuffixMapMin = -8
+siSuffixMapMax = 7
 siSuffixMap = {
     -8: "y", -7: "z", -6: "a", -5: "f", -4: "p", -3: "n", -2: "µ", -1: "m",
     0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E", 6: "Z", 7: "Y"
@@ -221,7 +233,7 @@ def formatValue(v, unit=""):
     exp = 0 if v == 0.0 else math.log(abs(v), 10.0)
     suffixMapIdx = int(math.floor(exp / 3.0))
     #Ensure we're in range
-    if not -8 < suffixMapIdx < 7:
+    if not siSuffixMapMin < suffixMapIdx < siSuffixMapMax:
         return None
     #Pre-multiply the value
     v = v * (10.0 ** -(suffixMapIdx * 3))
@@ -273,3 +285,25 @@ def autoFormat(fn, *args, **kwargs):
     except KeyError:
         raise UnannotatedReturnValueError("Function {0} does not have an annotated return value")
     return formatValue(fn(*args, **kwargs), qty.unit)
+
+def auto_suffix_1d(arr):
+    """
+    Takes an array of arbitrary values and determines
+    what is the best suffix (e.g. M, m, n, f) to represent
+    as many values as possible with as few powers of 10 as possible.
+
+    Returns a tuple (factor, unit) where the factor is a floating-point
+    value to multiply the array with to obtain value with "unit" suffix.
+    """
+    # Compute logarithmic magnitudes of data
+    arr_log = np.log10(np.abs(arr))
+    arr_log[np.isinf(arr_log)] = 0  # log(0) == inf
+    log_mean = arr_log.mean()
+    # Generate score matrix
+    suffix_idx = int(round(log_mean / 3))
+    # Ensure we're in range
+    suffix_idx = max(siSuffixMapMin, suffix_idx)
+    suffix_idx = min(siSuffixMapMax, suffix_idx)
+    # Pre-multiply the value
+    multiplier = 10.0 ** (suffix_idx * 3)
+    return multiplier, siSuffixMap[suffix_idx]
