@@ -305,5 +305,5 @@ def auto_suffix_1d(arr):
     suffix_idx = max(siSuffixMapMin, suffix_idx)
     suffix_idx = min(siSuffixMapMax, suffix_idx)
     # Pre-multiply the value
-    multiplier = 10.0 ** (suffix_idx * 3)
+    multiplier = 10.0 ** -(suffix_idx * 3)
     return multiplier, siSuffixMap[suffix_idx]
