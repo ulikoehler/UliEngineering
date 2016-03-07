@@ -292,8 +292,8 @@ def auto_suffix_1d(arr):
     what is the best suffix (e.g. M, m, n, f) to represent
     as many values as possible with as few powers of 10 as possible.
 
-    Returns a tuple (factor, unit) where the factor is a floating-point
-    value to multiply the array with to obtain value with "unit" suffix.
+    Returns a tuple (factor, suffix) where the factor is a floating-point
+    value to multiply the array with to obtain value with "suffix" suffix.
     """
     # Compute logarithmic magnitudes of data
     arr_log = np.log10(np.abs(arr))
