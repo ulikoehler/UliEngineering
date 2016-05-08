@@ -38,7 +38,7 @@ def computeFFT(y, samplerate, window="blackman"):
     n = len(y)
     windowArr = __fft_windows[window](n)
     w = scipy.fftpack.fft(y * windowArr)
-    w = 2.0 * np.abs(w[:n / 2]) / n  # Perform amplitude normalization
+    w = 2.0 * np.abs(w[:n // 2]) / n  # Perform amplitude normalization
     x = fft_frequencies(n, samplerate)
     return (x, w)
 
