@@ -2,10 +2,10 @@
 import numpy as np
 from nose.tools import assert_equal, assert_true, raises, assert_raises
 from numpy.testing import assert_allclose
-from UliEngineering.SignalProcessing.Resampling import *
+from UliEngineering.SignalProcessing.Resampling.BSpline import *
 
 
-class TestResampling(object):
+class TestBSplineResampling(object):
     def __init__(self):
         self.x = np.arange(100)
         self.y = np.square(self.x)
