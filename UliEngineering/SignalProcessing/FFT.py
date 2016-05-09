@@ -86,7 +86,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
         executor = new_thread_executor()
     # Compute common parameters
     window = __fft_windows[window](fftsize)
-    fftSum = np.zeros(fftsize / 2)
+    fftSum = np.zeros(fftsize // 2)
     # Initialize threadpool
     futures = [
         executor.submit(__fft_reduce_worker, chunkgen, i, window, fftsize, removeDC)
