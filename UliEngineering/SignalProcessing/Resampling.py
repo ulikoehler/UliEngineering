@@ -3,12 +3,17 @@
 """
 Utilities for selecting and finding specific attributes in datasets
 """
+import math
+import functools
 import numpy as np
-from scipy.interpolate import splrep, splev
+import bisect
+from scipy.interpolate import splrep, splev, UnivariateSpline
+from toolz.functoolz import identity
+from UliEngineering.Utils.Concurrency import new_thread_executor
+from .Utils import LinRange
 
 __all__ = ["resample_discard", "BSplineResampler", "ResampledFilteredXYView",
            "ResampledFilteredView", "ResampledFilteredViewYOnlyDecorator"]
-
 
 class BSplineResampler(object):
     """
@@ -54,8 +59,7 @@ def resample_discard(arr, divisor, ofs=0):
 class ResampledFilteredXYView(object):
     """
     Lazy resampling 1D array view that can be used e.g. as input for a chunk generator.
-    Note that this class will return an ill-sized slice in most cases, as
-    the.
+    Note that this class will generate an ill-sized last slice in most cases.
     The user must therefore ensure that downstream functions appropriately deal with those slices.
     One way of doing that is to oversize the slices requested by the caller and ensure they are properly
     trimmed downstream.
@@ -141,3 +145,98 @@ class ResampledFilteredViewYOnlyDecorator(object):
     @property
     def shape(self):
         return self.other.shape
+
+
+def computeResamplingShape(t, new_samplerate, assume_sorted=True, time_factor=1e6):
+    """
+    TODO
+    """
+    if len(t) == 0:
+        raise ValueError("Empty time array given - can not perform any resampling")
+    if len(t) == 1:
+        raise ValueError("Time array has only one value - can not perform any resampling")
+    # Compute time corners
+    sample_tdiff = time_factor / samplerate
+    startt, endt = t[0], t[-1] if assume_sorted else np.min(t), np.max(t)
+    tdelta = endt - startt
+    if tdelta < sample_tdiff:
+        raise ValueError("The time delta is smaller than a single sample - can not perform resampling")
+    return LinRange.range(startt, endt, time_factor / samplerate)
+
+
+def __parallel_resample_worker(torig, tnew, y, out, i, degree, chunksize, ovp_size, prefilter):
+    # Find the time range in the target time
+    t_target = tnew[i:i + chunksize]
+    # Find the time range in the source time
+    srcstart = bisect.bisect_left(torig, t_target[0])
+    srcend = bisect.bisect_right(torig, t_target[1])
+    # Compute start and end index with overprovisioning
+    # This might be out of range of the src array but bisect will ignore that
+    srcstart_ovp = max(0, srcstart - ovp_size)  # Must not get negative indices
+    srcend_ovp = srcend - ovp_size
+    # Compute source slices
+    tsrc_chunk = torig[srcstart_ovp:srcend_ovp]
+    ysrc_chunk = y[srcstart_ovp:srcend_ovp]
+
+    # Perform prefilter
+    if prefilter is not None:
+        tsrc_chunk, ysrc_chunk = prefilter(tsrc_chunk, ysrc_chunk)
+
+    # Compute interpolating spline (might also be piecewise linear)...
+    spline = UnivariateSpline(tsrc_chunk, ysrc_chunk, k=degree)
+    # ... and evaluate
+    out[i:i + chunksize] = spline(t_target)
+
+
+def parallelResample(t, y, new_samplerate, out=None, executor=None, time_factor=1e6,
+                     degree=1, chunksize=10000, overprovisioning_factor=0.01):
+    """
+    A resampler that uses scipy.interpolate.UnivariateSpline but splits the
+    input into chunks that can be processed. The chunksize is applied to the output timebase.
+
+    Applies an optional prefilter to the source data while resampling. If the timebase of
+    the source data is off significantly, this might produce unexpected results.
+    The prefilter must be a reentrant functor that takes (t, x) data and returns
+    a (t, x) tuple. The returned tuple can be of arbitrary size (assuming t and x
+    have the same length) but its t range must include the t range that is being interpolated.
+    Note that the prefilter is performed after overprovisioning, so setting a higher
+    overprovisioning factor (see below) might help dealing with prefilters that
+    return too small arrays, however at the start and the end of the source array,
+    no overprovisioning values can be added.
+
+    The input x array is assumed to be sorted. This function will also take mmapped input
+    and output arrays.
+    If the output array is not given, it is automatically allocated with the correct size.
+
+    The chunk workers are executed in parallel in a concurrent.futures thread pool.
+
+    In order to account for , an overprovisioning factor
+    can be provided so that a fraction of the chunksize is added at both ends of
+    the source chunk. This is used for higher-degree splines that perform better
+    when not interpolating right on the edges of the source value space.
+    A overprovisioning factor of 0.01 means that 1% of the chunksize is added on the left
+    and 1% is added on the right. At the borders, only what's available is added
+    to the array.
+
+    Return the output array.
+    """
+    new_t = computeResamplingShape(t, new_samplerate, time_factor=time_factor)
+    # Lazily compute the new timespan
+    if out is None:
+        out = np.zeros(len(new_t))
+    if executor is None:
+        executor = new_thread_executor()
+    ovp_size = int(math.floor(overprovisioning_factor * chunksize))
+    # How many chunks do we have to process?
+    numchunks = len(new_t) // chunksize
+
+    # Bind constant arguments
+    f = functools.partial(__parallel_resample_worker, torig=t, tnew=new_t,
+                          y=y, out=out, degree=degree, chunksize=chunksize,
+                          ovp_size=ovp_size, prefilter=prefilter)
+
+    futures = [executor.submit(f, i=i) for i in range(numchunks)]
+    # Wait for futures to finish
+    concurrent.futures.wait(futures)
+
+    return out

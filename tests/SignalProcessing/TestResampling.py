@@ -2,7 +2,7 @@
 import numpy as np
 from nose.tools import assert_equal, assert_true, raises, assert_raises
 from numpy.testing import assert_allclose
-from UliEngineering.SignalProcessing.Resampling.BSpline import *
+from UliEngineering.SignalProcessing.Resampling import *
 
 
 class TestBSplineResampling(object):
