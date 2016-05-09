@@ -7,13 +7,15 @@ import math
 import functools
 import numpy as np
 import bisect
+import concurrent.futures
 from scipy.interpolate import splrep, splev, UnivariateSpline
 from toolz.functoolz import identity
 from UliEngineering.Utils.Concurrency import new_thread_executor
 from .Utils import LinRange
 
 __all__ = ["resample_discard", "BSplineResampler", "ResampledFilteredXYView",
-           "ResampledFilteredView", "ResampledFilteredViewYOnlyDecorator"]
+           "ResampledFilteredView", "ResampledFilteredViewYOnlyDecorator",
+           "parallel_resample"]
 
 class BSplineResampler(object):
     """
@@ -147,21 +149,23 @@ class ResampledFilteredViewYOnlyDecorator(object):
         return self.other.shape
 
 
-def computeResamplingShape(t, new_samplerate, assume_sorted=True, time_factor=1e6):
+def __compute_new_samples(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     """
-    TODO
+    Compute a lazy LinRange of new sample times when resampling
+    a given time array with a new samplerate.
+    Also checks if the given time array is large enough for proper resampling.
     """
     if len(t) == 0:
         raise ValueError("Empty time array given - can not perform any resampling")
     if len(t) == 1:
         raise ValueError("Time array has only one value - can not perform any resampling")
     # Compute time corners
-    sample_tdiff = time_factor / samplerate
-    startt, endt = t[0], t[-1] if assume_sorted else np.min(t), np.max(t)
+    sample_tdelta = time_factor / new_samplerate
+    startt, endt = (t[0], t[-1]) if assume_sorted else (np.min(t), np.max(t))
     tdelta = endt - startt
-    if tdelta < sample_tdiff:
+    if tdelta < sample_tdelta:
         raise ValueError("The time delta is smaller than a single sample - can not perform resampling")
-    return LinRange.range(startt, endt, time_factor / samplerate)
+    return LinRange.range(startt, endt, sample_tdelta)
 
 
 def __parallel_resample_worker(torig, tnew, y, out, i, degree, chunksize, ovp_size, prefilter):
@@ -188,8 +192,9 @@ def __parallel_resample_worker(torig, tnew, y, out, i, degree, chunksize, ovp_si
     out[i:i + chunksize] = spline(t_target)
 
 
-def parallelResample(t, y, new_samplerate, out=None, executor=None, time_factor=1e6,
-                     degree=1, chunksize=10000, overprovisioning_factor=0.01):
+def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
+                      executor=None, time_factor=1e6, degree=1,
+                      chunksize=10000, overprovisioning_factor=0.01):
     """
     A resampler that uses scipy.interpolate.UnivariateSpline but splits the
     input into chunks that can be processed. The chunksize is applied to the output timebase.
@@ -220,7 +225,7 @@ def parallelResample(t, y, new_samplerate, out=None, executor=None, time_factor=
 
     Return the output array.
     """
-    new_t = computeResamplingShape(t, new_samplerate, time_factor=time_factor)
+    new_t = __compute_new_samples(t, new_samplerate, time_factor=time_factor)
     # Lazily compute the new timespan
     if out is None:
         out = np.zeros(len(new_t))
