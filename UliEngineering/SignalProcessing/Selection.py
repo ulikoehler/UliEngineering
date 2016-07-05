@@ -15,7 +15,8 @@ __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "rangeArrayToIntIntervals",
-           "intIntervalsToRangeArray", "applyRangesToArray"]
+           "intIntervalsToRangeArray", "applyRangesToArray",
+           "computeFrequencyRangeIndices"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -141,9 +142,9 @@ def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
     else:  # Return range
         return IntInterval(idx - around, idx + around)
 
-def __computeFrequencyRangeIndices(x, low, high):
+def computeFrequencyRangeIndices(x, low, high):
     """
-    Compute (startidx, endidx) for a given frequency array (e.g. fro FFT)
+    Compute (startidx, endidx) for a given frequency array (e.g. from FFT)
     """
     startidx = np.searchsorted(x >= low, True) if low is not None else None
     endidx = np.searchsorted(x >= high, True) if high is not None else None
@@ -162,7 +163,7 @@ def selectFrequencyRange(x, y=None, low=None, high=None):
     """
     if y is None:
         x, y = x
-    startidx, endidx = __computeFrequencyRangeIndices(x, low, high)
+    startidx, endidx = computeFrequencyRangeIndices(x, low, high)
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])
 
