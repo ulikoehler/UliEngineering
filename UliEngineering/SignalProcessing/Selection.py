@@ -98,7 +98,7 @@ class IntInterval(__Interval):
         return self.__mul__(1.0 / n)
 
 
-def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
+def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side="left"):
     """
     Find the index in a timestamp array that is closest to a given value.
     The timestamp array expected to be sorted in ascending order. It is
@@ -136,7 +136,8 @@ def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0):
             time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
         else:  # No microsecond part
             time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-    idx = bisect_left(timestamps, (time.timestamp() - ofs) * factor)
+    bisect_func = {"left": bisect_left, "right": bisect_right}[side]
+    idx = bisect_func(timestamps, (time.timestamp() - ofs) * factor)
     if around is None:
         return idx
     else:  # Return range
