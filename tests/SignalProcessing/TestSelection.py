@@ -70,14 +70,14 @@ class TestIntInterval(object):
 
     def testRangeArrayToIntIntervals(self):
         arr = np.asarray([[41, 60], [0, 30]])
-        res = rangeArrayToIntIntervals(arr)
+        res = IntInterval.from_ranges(arr)
         assert_equal(res, [IntInterval(41, 60), IntInterval(0, 30)])
 
 
     def testIntIntervalsToRangeArray(self):
         arr = np.asarray([[41, 60], [0, 30]])
         intervals = [IntInterval(41, 60), IntInterval(0, 30)]
-        assert_allclose(intIntervalsToRangeArray(intervals), arr)
+        assert_allclose(IntInterval.to_ranges(intervals), arr)
 
 
 class TestSelectByDatetime(object):
@@ -257,32 +257,58 @@ class TestFindRuns(object):
 
 
 class TestShrinkRanges(object):
+    def __init__(self):
+        self.x = np.zeros(25)
+        self.x[4:9] = 1.0
+        self.x[5] = 2.0
+        self.x[6] = 0.51
+        self.x[14:21] = 1.0
+        self.x[17] = 0.6
+        self.x[20] = 3.0
+        self.x[22] = 4.0
+
     def testSimple(self):
-        # Generate test data
-        x = np.zeros(25)
-        x[4:9] = 1.0
-        x[5] = 2.0
-        x[14:21] = 1.0
-        x[20] = 3.0
-        x[22] = 4.0
-        ranges = find_true_runs(x > 0.5)
-        # Run shrinker
-        result = shrink_ranges(ranges, x)
+        """Test simple (non data-aware) methods"""
+        # Generate test data. Tuned so there are definitive min/max values
+        ranges = find_true_runs(self.x > 0.5)
+        # Min selector
+        result = shrink_ranges(ranges, "min")
+        assert_allclose(result, [4, 14, 22])
+        assert_equal(result.dtype, np.int)
+        # Max selector
+        result = shrink_ranges(ranges, "max")
+        assert_allclose(result, [8, 20, 22])
+        assert_equal(result.dtype, np.int)
+        # Middle selector
+        result = shrink_ranges(ranges, "middle")
+        assert_allclose(result, [6, 17, 22])
+        assert_equal(result.dtype, np.int)
+
+    def testComplex(self):
+        """Test data-aware methods"""
+        # Test data is tuned to
+        ranges = find_true_runs(self.x > 0.5)
+        # Min Y selector
+        result = shrink_ranges(ranges, "miny", y=self.x)
+        assert_allclose(result, [6, 17, 22])
+        assert_equal(result.dtype, np.int)
+        # Max Y selector
+        result = shrink_ranges(ranges, "maxy", y=self.x)
         assert_allclose(result, [5, 20, 22])
         assert_equal(result.dtype, np.int)
 
     @raises(KeyError)
     def testInvalidFunction(self):
-        shrink_ranges(np.zeros(5), None, "foobar")
+        shrink_ranges(np.zeros(5), "foobar")
 
 
 class TestRandomSelection(object):
     def testBasic(self):
         # Just test if it does not raise
-        selectRandomSlice(100, 10)
-        selectRandomSlice(np.arange(100), 10)
+        random_slice(100, 10)
+        random_slice(np.arange(100), 10)
         # Test array which is just large enough
-        selectRandomSlice(np.arange(10), 10)
+        random_slice(np.arange(10), 10)
 
     @parameterized.expand([
         ("number", 5),
@@ -291,7 +317,7 @@ class TestRandomSelection(object):
     @raises(ValueError)
     def testTooSmall(self, _, arr):
         "Test if arrays which are too small are handled correctly"
-        selectRandomSlice(arr, 10)
+        random_slice(arr, 10)
 
 
 class TestFindNearestIdx(object):
@@ -347,10 +373,10 @@ class TestExtractByReference(object):
         assert_allclose(resY, fy[20:50])
 
 
-class TestApplyRangesToArray(object):
+class TestSelectRanges(object):
     def testBasic(self):
         arr = np.arange(10)
-        ranges = np.asarray([[3,5], [7,8]])
-        result = list(applyRangesToArray(ranges, arr))
+        ranges = np.asarray([[3, 5], [7, 8]])
+        result = list(select_ranges(ranges, arr))
         assert_array_equal(result[0], [3, 4])
         assert_array_equal(result[1], [7])

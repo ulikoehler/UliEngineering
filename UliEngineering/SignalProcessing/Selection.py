@@ -6,6 +6,7 @@ Utilities for selecting and finding specific attributes in datasets
 import numpy as np
 import datetime
 import numbers
+import functools
 import scipy.signal
 from bisect import bisect_left, bisect_right
 import collections
@@ -13,10 +14,9 @@ import collections
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
            "runs_ignore_borders", "shrink_ranges", "IntInterval",
-           "selectRandomSlice", "findNearestIdx", "resample_discard",
+           "random_slice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
-           "extract_by_reference", "rangeArrayToIntIntervals",
-           "intIntervalsToRangeArray", "applyRangesToArray",
+           "extract_by_reference", "select_ranges",
            "computeFrequencyRangeIndices"]
 
 # Define interval class and override to obtain operator overridability
@@ -45,6 +45,27 @@ class IntInterval(__Interval):
 
     Multiplication by zero results in a zero-sized interval.
     """
+    @staticmethod
+    def from_ranges(ranges):
+        """
+        Create a list of IntInterval instances from a range array
+
+        Parameters
+        ----------
+        ranges : array_like
+            A (n,2) array containing instances
+        """
+        return [IntInterval(r[0], r[1]) for r in ranges]
+
+    @staticmethod
+    def to_ranges(intervals):
+        """
+        Converts a list of IntInterval instances to a 2d range array,
+        like the one returned by find_true_runs(),
+        """
+        return np.asarray([(interval[0], interval[1]) for interval in intervals])
+
+
     def __radd__(self, i):
         if not isinstance(i, numbers.Integral):
             raise TypeError("Can only add integers to an interval")
@@ -239,8 +260,7 @@ def runs_ignore_borders(runs, size=-1, ignore_start=True, ignore_end=True):
     runs : array_like
         A (n,2) array such as returned by find_true_runs()
     size : int
-        The size of the original array. Must be set appropriately when the last
-        -1 
+        The size of the original array. Must be set appropriately when the end range shall be removed
     ignore_start : bool
         If true, the first run will be ignored if its start index is 0
     ignore_end : bool
@@ -253,11 +273,6 @@ def runs_ignore_borders(runs, size=-1, ignore_start=True, ignore_end=True):
     endidx = -1 if (runs.size and ignore_end and runs[-1,1] == size) else None
     return runs[startidx:endidx]
 
-
-__shrinkRangeMethodLUT = {
-    "maxy": lambda start, _, yslice: start + np.argmax(yslice),
-    "middle": lambda start, end, _: (start + end) // 2
-}
 
 def __run_size_filter(minsize, maxsize):
     """Return a run filter function that checks >= minsize && <= maxsize."""
@@ -273,59 +288,59 @@ def filter_runs(runs, minsize=2, maxsize=np.inf):
     """
     return np.asarray(list(filter(__run_size_filter(minsize, maxsize), runs)))
 
-def shrink_ranges(ranges, y=None, method="maxy"):
+def __select_y(ranges, y, selector):
+    """maxy selector for shrink_ranges"""
+    return np.asarray([start + selector(y[start:end + 1]) for start, end in ranges])
+
+__shrinkRangeMethodLUT = {
+    "min": lambda arr: arr[:, 0],
+    "max": lambda arr: arr[:, 1],
+    "middle": lambda arr: (arr[:, 0] + arr[:, 1]) // 2,
+    # Special
+    "miny": functools.partial(__select_y, selector=np.argmin),
+    "maxy": functools.partial(__select_y, selector=np.argmax),
+}
+
+def shrink_ranges(ranges, method="middle", **kwargs):
     """
     Take a (n, 2)-shaped range list like the one returned by find_true_runs()
-    and shrink the ranges so the are only 1 wide.
+    and shrink the ranges so they are only 1 wide. Returns a (n)-shaped array of indices.
 
     Currently supported shrinking methods are:
-        - maxy: Selects the maximum y value along the slice
-        - middle: Selects the index (start+end) // 2. y may be None.
+        - min: Selects the first index of the slice
+        - max: Selects the last index of the slice
+        - middle: Selects the index (start+end) / 2. y may be None.
 
-    Return a 1d array of indices of the remaining shrinked index.
+    There also some special reducers that require additional kwargs
+        - maxy Requires y=array_like kwarg. Selects the index where y is maximal in the range.
+        - miny Requires y=array_like kwarg. Selects the index where y is minimal in the range.
+
     """
-    ret = np.empty(ranges.shape[0], dtype=np.int)
-    fn = __shrinkRangeMethodLUT[method]
-    needY = method != "median"
-    if needY and y is None:
-        raise TypeError("Y is required if method != median, but y is None")
-    for i, (start, end) in enumerate(ranges):
-        # Skip calculation for ranges which already are 1 wide
-        if end - start == 1:
-            ret[i] = start
-        else:
-            ret[i] = fn(start, end, y[start:end] if needY else  None)
-    return ret
+    return __shrinkRangeMethodLUT[method](ranges, **kwargs)
 
 
-def applyRangesToArray(ranges, arr):
+def select_ranges(ranges, arr):
     """
     Apply a range array like the one returned by find_true_runs().
-    Yields each value
-    :param ranges: The (n, 2) range array
-    :param arr: The array to apply the ranges to
+    Yields each array slice in order
+
+    Parameters
+    ----------
+    ranges : array_like
+        The (n, 2) range array
+    arr : array_like
+        The array to apply the ranges to
     """
-    if ranges.shape[1] != 2:
-        raise ValueError("ranges.shape[1] must be 2 instead of {0} - this does not look like a range array".format(ranges.shape[1]))
     for range in ranges:
         yield arr[range[0]:range[1]]
 
 
-def rangeArrayToIntIntervals(ranges):
+
+def ranges_to_IntInterva(ranges):
     """
     Convert a 2d range array, like the one returned by find_true_runs(),
     to a list of int ranges).
     """
-    return [IntInterval(r[0], r[1]) for r in ranges]
-
-
-def intIntervalsToRangeArray(intervals):
-    """
-    Converts a list of IntIntervals to a 2d range array,
-    like the one returned by find_true_runs(),
-    """
-    return np.asarray([(interval[0], interval[1]) for interval in intervals])
-
 
 
 def findNearestIdx(arr, v):
@@ -337,13 +352,13 @@ def findNearestIdx(arr, v):
     return (np.abs(arr - v)).argmin()
 
 
-def selectRandomSlice(arr, size):
+def random_slice(arr, size):
     """
     Select a uniformly random slice of exactly a given size from the given array.
 
     Array may be a 1D numpy array or an integral which represents the array size.
 
-    Return an IntInterval instance or raise if the array is not large enough
+    Returns an IntInterval instance or raise if the array is not large enough
     """
     if isinstance(arr, numbers.Integral):
         alen = arr
