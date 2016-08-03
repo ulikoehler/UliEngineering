@@ -11,7 +11,8 @@ from bisect import bisect_left, bisect_right
 import collections
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
-           "selectByThreshold", "findTrueRuns", "shrinkRanges", "IntInterval",
+           "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
+           "runs_ignore_borders", "shrinkRanges", "IntInterval",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "rangeArrayToIntIntervals",
@@ -210,7 +211,7 @@ def selectByThreshold(fx, fy, thresh, comparator=np.greater):
     idxs = np.where(comparator(fy, thresh))
     return __mapAndSortIndices(fx, fy, idxs, comparator == np.greater)
 
-def findTrueRuns(arr):
+def find_true_runs(arr):
     """
     Find runs of True values in a boolean array.
     This function is not intended to be used with arrays other than Booleans.
@@ -225,14 +226,56 @@ def findTrueRuns(arr):
     ends = np.where(diffs <= -1)
     return np.vstack((starts, ends)).T
 
+def find_false_runs(arr):
+    """Alias for find_true_runs(np.logical_not(arr))"""
+    return find_true_runs(np.logical_not(arr))
+
+def runs_ignore_borders(runs, size=-1, ignore_start=True, ignore_end=True):
+    """
+    Ignore the first and/or the last run if they start at 0 or end at the array size respectively.
+    
+    Parameters
+    ----------
+    runs : array_like
+        A (n,2) array such as returned by find_true_runs()
+    size : int
+        The size of the original array. Must be set appropriately when the last
+        -1 
+    ignore_start : bool
+        If true, the first run will be ignored if its start index is 0
+    ignore_end : bool
+        If true, the first run will be ignored if its start index is 0.
+        The size parameter must be set correctly so it can be recognized
+        if the last run ends at the array end.
+        If size=-1, ignore_end is forced to False
+    """
+    startidx = 1 if (runs.size and ignore_start and runs[0,0] == 0) else None
+    endidx = -1 if (runs.size and ignore_end and runs[-1,1] == size) else None
+    return runs[startidx:endidx]
+
+
 __shrinkRangeMethodLUT = {
     "maxy": lambda start, _, yslice: start + np.argmax(yslice),
     "middle": lambda start, end, _: (start + end) // 2
 }
 
+def __run_size_filter(minsize, maxsize):
+    """Return a run filter function that checks >= minsize && <= maxsize."""
+    def _filt(run):
+        delta = run[1] - run[0] # It is assumed it's a correct run, i.e. run.size == 2 && b > a
+        return delta >= minsize and delta <= maxsize
+    return _filt
+
+def filter_runs(runs, minsize=2, maxsize=np.inf):
+    """
+    Given a (n,2) array such as returned by findTrueRuns(), returns a new
+    (n-x,2) run list that contains only runs at least minSize in size and
+    """
+    return np.asarray(list(filter(__run_size_filter(minsize, maxsize), runs)))
+
 def shrinkRanges(ranges, y=None, method="maxy"):
     """
-    Take a (n, 2)-shaped range list like the one returned by findTrueRuns()
+    Take a (n, 2)-shaped range list like the one returned by find_true_runs()
     and shrink the ranges so the are only 1 wide.
 
     Currently supported shrinking methods are:
@@ -257,7 +300,7 @@ def shrinkRanges(ranges, y=None, method="maxy"):
 
 def applyRangesToArray(ranges, arr):
     """
-    Apply a range array like the one returned by findTrueRuns().
+    Apply a range array like the one returned by find_true_runs().
     Yields each value
     :param ranges: The (n, 2) range array
     :param arr: The array to apply the ranges to
@@ -270,7 +313,7 @@ def applyRangesToArray(ranges, arr):
 
 def rangeArrayToIntIntervals(ranges):
     """
-    Convert a 2d range array, like the one returned by findTrueRuns(),
+    Convert a 2d range array, like the one returned by find_true_runs(),
     to a list of int ranges).
     """
     return [IntInterval(r[0], r[1]) for r in ranges]
@@ -279,7 +322,7 @@ def rangeArrayToIntIntervals(ranges):
 def intIntervalsToRangeArray(intervals):
     """
     Converts a list of IntIntervals to a 2d range array,
-    like the one returned by findTrueRuns(),
+    like the one returned by find_true_runs(),
     """
     return np.asarray([(interval[0], interval[1]) for interval in intervals])
 
