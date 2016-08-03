@@ -13,6 +13,21 @@ class TestTemporary(object):
         # Delete and check if file has vanished
         tgen.delete_all()
         assert_false(os.path.isfile(fname))
+
+
+    def testMkftemp(self):
+        tgen = AutoDeleteTempfileGenerator()
+        # Create file and check if it exists
+        (handle, fname) = tgen.mkftemp()
+        # Test if we can do stuff with the file as with any open()ed file
+        handle.write("foo")
+        handle.close()
+        # Should not be deleted on close
+        assert_true(os.path.isfile(fname))
+        # Delete and check if file has vanished
+        tgen.delete_all()
+        assert_false(os.path.isfile(fname))
+
     def testMkdtemp(self):
         tgen = AutoDeleteTempfileGenerator()
         # Create file and check if it exists

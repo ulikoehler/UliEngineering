@@ -33,6 +33,15 @@ class AutoDeleteTempfileGenerator(object):
         self.tempfiles.append(fname)
         return (handle, fname)
 
+    def mkftemp(self, suffix='', prefix='tmp', dir=None, mode='w'):
+        """
+        Wrapper for self.mkstemp() that opens the OS-level file handle
+        as a normal Python handle with the given mode
+        """
+        handle, fname = self.mkstemp(suffix, prefix, dir)
+        handle = os.fdopen(handle, mode)
+        return (handle, fname)
+
     def mkdtemp(self, suffix='', prefix='tmp', dir=None):
         """Same as tempfile.mkdtemp(), but creates a file managed by this class instance"""
         fname = tempfile.mkdtemp(suffix, prefix, dir)
