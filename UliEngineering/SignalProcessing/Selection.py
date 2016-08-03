@@ -12,7 +12,7 @@ import collections
 
 __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
-           "runs_ignore_borders", "shrinkRanges", "IntInterval",
+           "runs_ignore_borders", "shrink_ranges", "IntInterval",
            "selectRandomSlice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "rangeArrayToIntIntervals",
@@ -222,8 +222,8 @@ def find_true_runs(arr):
     oneZero = np.zeros(1)
     cated = np.concatenate((oneZero, arr, oneZero)).view(dtype=np.int)
     diffs = np.diff(cated)
-    starts = np.where(diffs >= 1)
-    ends = np.where(diffs <= -1)
+    starts = np.nonzero(diffs >= 1)[0]
+    ends = np.nonzero(diffs <= -1)[0] - 1
     return np.vstack((starts, ends)).T
 
 def find_false_runs(arr):
@@ -273,7 +273,7 @@ def filter_runs(runs, minsize=2, maxsize=np.inf):
     """
     return np.asarray(list(filter(__run_size_filter(minsize, maxsize), runs)))
 
-def shrinkRanges(ranges, y=None, method="maxy"):
+def shrink_ranges(ranges, y=None, method="maxy"):
     """
     Take a (n, 2)-shaped range list like the one returned by find_true_runs()
     and shrink the ranges so the are only 1 wide.

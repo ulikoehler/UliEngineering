@@ -8,7 +8,7 @@ from toolz import functoolz
 import numbers
 import math
 import warnings
-from .Selection import shrinkRanges, findTrueRuns
+from .Selection import find_true_runs
 
 __all__ = ["unstair", "optimum_polyfit", "LinRange"]
 
@@ -42,7 +42,8 @@ def unstair(x, y, method="diff", tolerance=1e-9):
     # Add first and last index. np.diff() returns idxs backshifted by one, so add 1 now
     normal_idxs = np.concatenate(([0, y.size - 1], normals.nonzero()[0] + 1))
     # Convert step sequences to ranges and remove some of their samples, depending on the method
-    zero_runs = findTrueRuns(stairs)
+    zero_runs = find_true_runs(stairs)
+    zero_runs[:,1] += 1 # End index must not be inclusive
     stair_idxs = _unstep_reduction_methods[method](zero_runs)
     # Return all normal values, plus the reduced step values
     idxs = np.concatenate((normal_idxs, stair_idxs))

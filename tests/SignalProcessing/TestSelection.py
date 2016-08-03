@@ -180,14 +180,50 @@ class TestSelectByThreshold(object):
         selectByThreshold(None, None, 1.0, comparator=map)
 
 
-class TestFindTrueRuns(object):
+class TestFindRuns(object):
     def testSimple(self):
-        x = np.full(25, False)
+        x = np.full(25, False, np.bool)
         x[4:9] = True
         x[14:21] = True
-        result = findTrueRuns(x)
-        assert_allclose(result, [[4, 9], [14, 21]])
+        # Test find_true_runs
+        result = find_true_runs(x)
+        assert_allclose(result, [[4, 8], [14, 20]])
         assert_equal(result.dtype, np.int)
+        # Test findFalseRuns
+        result = find_false_runs(x)
+        assert_allclose(result, [[0, 3], [9, 13], [21, 24]])
+        assert_equal(result.dtype, np.int)
+
+    def testSize1(self):
+        # Generate test data
+        x = np.zeros(25)
+        x[5] = 2.0
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[5, 5]])
+        # First element
+        x = np.zeros(25)
+        x[0] = 2.0
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[0, 0]])
+
+    def testStart(self):
+        # Generate test data
+        x = np.full(25, False, np.bool)
+        x[:3] = True
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[0, 2]])
+
+    def testEnd(self):
+        # Generate test data
+        x = np.full(25, False, np.bool)
+        # One
+        x[24] = True
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[24, 24]])
+        # Multiple
+        x[22:24] = True
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[22, 24]])
 
     def testNumericComparator(self):
         # Generate test data
@@ -196,22 +232,29 @@ class TestFindTrueRuns(object):
         x[5] = 2.0
         x[14:21] = 1.0
         x[20] = 3.0
-        ranges = findTrueRuns(x > 0.5)
-        assert_allclose(ranges, [[4, 9], [14, 21]])
+        ranges = find_true_runs(x > 0.5)
+        assert_allclose(ranges, [[4, 8], [14, 20]])
 
     def testEdges(self):
+        "Test range with both edges at once"
         x = np.full(25, False)
         x[0:9] = True
         x[14:24] = True
-        assert_allclose(findTrueRuns(x), [[0, 9], [14, 24]])
+        assert_allclose(find_true_runs(x), [[0, 8], [14, 23]])
+
+    def testFull(self):
+        "Test range with all elements True"
+        x = np.full(25, True)
+        assert_allclose(find_true_runs(x), [[0, 24]])
 
     def testNone(self):
         x = np.full(25, False)
-        assert_allclose(findTrueRuns(x), np.zeros((0, 2)))
+        assert_allclose(find_true_runs(x), np.zeros((0, 2)))
 
     def testEmpty(self):
         x = np.full(0, False)
-        assert_allclose(findTrueRuns(x), np.zeros((0, 2)))
+        assert_allclose(find_true_runs(x), np.zeros((0, 2)))
+
 
 class TestShrinkRanges(object):
     def testSimple(self):
@@ -222,15 +265,15 @@ class TestShrinkRanges(object):
         x[14:21] = 1.0
         x[20] = 3.0
         x[22] = 4.0
-        ranges = findTrueRuns(x > 0.5)
+        ranges = find_true_runs(x > 0.5)
         # Run shrinker
-        result = shrinkRanges(ranges, x)
+        result = shrink_ranges(ranges, x)
         assert_allclose(result, [5, 20, 22])
         assert_equal(result.dtype, np.int)
 
     @raises(KeyError)
     def testInvalidFunction(self):
-        shrinkRanges(np.zeros(5), None, "foobar")
+        shrink_ranges(np.zeros(5), None, "foobar")
 
 
 class TestRandomSelection(object):
