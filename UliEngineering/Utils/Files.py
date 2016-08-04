@@ -52,8 +52,7 @@ def extract_numeric_column(flo, isline=__standard_isline, postproc=functoolz.ide
         arr = numpy_resize_insert(arr, val, index, **kwargs)
         index += 1
     # Trim to size. Index is now [last written index ] + 1 which is the size of the array
-    np.resize(arr, index)
-    return arr
+    return np.resize(arr, index)
 
 
 def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,

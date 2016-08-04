@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import io
+from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from nose.tools import assert_equal, assert_true, assert_false
 from UliEngineering.Utils.Files import *
 from UliEngineering.Utils.Temporary import *
@@ -32,11 +33,19 @@ class TestFiles(object):
         assert_equal(3, count_lines(fname))
 
 class TestColumnExtraction(object):
-    def testExtractColumn(self):        
+    def testExtractColumn(self):
         tmp = AutoDeleteTempfileGenerator()
         handle, fname = tmp.mkftemp()
         handle.write("foo\nbar\n\na")
         handle.close()
         # Read back
         assert_equal(extract_column(fname), ["foo", "bar", "a"])
+
+    def testExtractNumericColumn(self):
+        tmp = AutoDeleteTempfileGenerator()
+        handle, fname = tmp.mkftemp()
+        handle.write("3.2\n2.4\n\n1.5")
+        handle.close()
+        # Read back
+        assert_allclose(extract_numeric_column(fname), [3.2, 2.4, 1.5])
 
