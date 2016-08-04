@@ -30,3 +30,13 @@ class TestFiles(object):
         handle.write("foo\r\n\r\n\r\n\na\r\na\n\n\n\r\n\r\r\n")
         handle.close()
         assert_equal(3, count_lines(fname))
+
+class TestColumnExtraction(object):
+    def testExtractColumn(self):        
+        tmp = AutoDeleteTempfileGenerator()
+        handle, fname = tmp.mkftemp()
+        handle.write("foo\nbar\n\na")
+        handle.close()
+        # Read back
+        assert_equal(extract_column(fname), ["foo", "bar", "a"])
+
