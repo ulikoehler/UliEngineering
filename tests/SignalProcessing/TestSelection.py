@@ -380,3 +380,17 @@ class TestSelectRanges(object):
         result = list(select_ranges(ranges, arr))
         assert_array_equal(result[0], [3, 4])
         assert_array_equal(result[1], [7])
+
+class TestListSelect(object):
+    def testBasic(self):
+        assert_equal([4, 2, 6], list_select([1, 2, 3, 4, 5, 6], [3, 1, 5]))
+
+    def testEmpty(self):
+        assert_equal([], list_select([], []))
+
+    def testShort(self):
+        assert_equal([1], list_select([1], [0]))
+
+    @raises(IndexError)
+    def testBadIdx(self):
+        assert_equal([1], list_select([1], [3]))

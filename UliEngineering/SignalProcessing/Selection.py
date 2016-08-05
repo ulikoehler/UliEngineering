@@ -17,7 +17,7 @@ __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "random_slice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "select_ranges",
-           "computeFrequencyRangeIndices"]
+           "computeFrequencyRangeIndices", "list_select"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -475,3 +475,18 @@ def extract_by_reference(fx, fy, ref):
     idx1 = bisect_left(fx, start)
     idx2 = bisect_left(fx, end)
     return fx[idx1:idx2], fy[idx1:idx2]
+
+
+def list_select(lst, indices):
+    """
+    Creates a new list from a list-like object, selecting only the indices
+    in the index list, in the specified order
+
+    This works like numpy indexing with an index array.
+
+    Examples
+    --------
+    >>> list_select([1,2,3,4,5,6], [3,1,5])
+    [4, 2, 6]
+    """
+    return [lst[indices[i]] for i in range(len(indices))]
