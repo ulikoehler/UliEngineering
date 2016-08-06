@@ -23,7 +23,11 @@ class TestDynamicArrayResize(object):
         assert_array_equal(arr, [1, 2, 3, 4])
 
 
+class TestInvertBijection(object):
+    def testSimple(self):
+        assert_allclose([0, 1, 2, 3], invert_bijection(np.arange(4)))
+        assert_allclose([2, 0, 1, 3], invert_bijection([1, 2, 0, 3]))
+        assert_allclose([1, 0, 2, 3], invert_bijection([1, 0, 2, 3]))
 
-
-
-
+    def testEmpty(self):
+        assert_equal((0,), invert_bijection([]).shape)
