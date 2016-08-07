@@ -8,6 +8,7 @@ import datetime
 import numbers
 import functools
 import scipy.signal
+from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
 
@@ -17,7 +18,7 @@ __all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
            "random_slice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "select_ranges",
-           "computeFrequencyRangeIndices", "list_select"]
+           "computeFrequencyRangeIndices", "multiselect"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -477,16 +478,28 @@ def extract_by_reference(fx, fy, ref):
     return fx[idx1:idx2], fy[idx1:idx2]
 
 
-def list_select(lst, indices):
+def multiselect(lst, indices, convert=functoolz.identity):
     """
     Creates a new list from a list-like object, selecting only the indices
-    in the index list, in the specified order
+    in the index list, in the specified order.
 
     This works like numpy indexing with an index array.
 
+    Parameters
+    ----------
+    lst : object with [] operator
+        An object where all indices as listed in indices
+        can be used
+    indices : iterable
+        The indices to use for selecting from lst.
+    convert : unary function
+        This function is called on indices[i] for every iteration.
+        This can be e.g. set to tuple if lst accepts tuple indices
+        but the indices argument consists of lists.
+
     Examples
     --------
-    >>> list_select([1,2,3,4,5,6], [3,1,5])
+    >>> multiselect([1,2,3,4,5,6], [3,1,5])
     [4, 2, 6]
     """
-    return [lst[indices[i]] for i in range(len(indices))]
+    return [lst[convert(indices[i])] for i in range(len(indices))]

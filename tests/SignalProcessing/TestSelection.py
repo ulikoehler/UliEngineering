@@ -381,16 +381,16 @@ class TestSelectRanges(object):
         assert_array_equal(result[0], [3, 4])
         assert_array_equal(result[1], [7])
 
-class TestListSelect(object):
+class TestMultiSelect(object):
     def testBasic(self):
-        assert_equal([4, 2, 6], list_select([1, 2, 3, 4, 5, 6], [3, 1, 5]))
+        assert_equal([4, 2, 6], multiselect([1, 2, 3, 4, 5, 6], [3, 1, 5]))
 
     def testEmpty(self):
-        assert_equal([], list_select([], []))
+        assert_equal([], multiselect([], []))
 
     def testShort(self):
-        assert_equal([1], list_select([1], [0]))
+        assert_equal([1], multiselect([1], [0]))
 
     @raises(IndexError)
     def testBadIdx(self):
-        assert_equal([1], list_select([1], [3]))
+        assert_equal([1], multiselect([1], [3]))
