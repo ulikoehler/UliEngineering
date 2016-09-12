@@ -16,8 +16,8 @@ def actualNoise(density, bandwith) -> Quantity("V"):
     >>> autoFormat(actualNoise, "100 µV", "100 Hz")
     '1.00 mV'
     """
-    density, _ = normalize_numeric(density)
-    bandwith, _ = normalize_numeric(bandwith)
+    density = normalize_numeric(density)
+    bandwith = normalize_numeric(bandwith)
     return np.sqrt(bandwith) * density
 
 def noiseDensity(actual_noise, bandwith) -> Quantity("V/√Hz"):
@@ -29,6 +29,6 @@ def noiseDensity(actual_noise, bandwith) -> Quantity("V/√Hz"):
     >>> formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz")
     '100 μV/√Hz'
     """
-    actual_noise, _ = normalize_numeric(actual_noise)
-    bandwith, _ = normalize_numeric(bandwith)
+    actual_noise = normalize_numeric(actual_noise)
+    bandwith = normalize_numeric(bandwith)
     return actual_noise / np.sqrt(bandwith)

@@ -4,6 +4,7 @@ from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO import _formatWithSuffix
+from nose_parameterized import parameterized
 import functools
 import numpy as np
 
@@ -21,7 +22,7 @@ class TestEngineerIO(object):
             assert_equal(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
         assert_equal(normalize_interpunctation(""), "")
 
-    def testSplitSuffixSeparator(self):
+    def test_split_input(self):
         assert_tuple_equal(self.io.split_input("1234"), ('1234', '', ''))
         assert_tuple_equal(self.io.split_input("1234k"), ('1234', 'k', ''))
         assert_tuple_equal(self.io.split_input("1234kΩ"), ('1234', 'k', 'Ω'))
@@ -44,31 +45,34 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("3.2 ΔMHz"), ('3.2', 'M', 'Hz'))
         assert_tuple_equal(self.io.split_input("100 mV"), ('100', 'm', 'V'))
         assert_tuple_equal(self.io.split_input("3.2 ΔHz"), ('3.2', '', 'Hz'))
+        assert_tuple_equal(self.io.split_input("Δ3.2 MHz"), ('3.2', 'M', 'Hz'))
 
-        assert_is_none(self.io.split_input("Δ3.2 MHz"))
-        assert_is_none(self.io.split_input("1,234.56kfA"))
-        assert_is_none(self.io.split_input("1.23k45A"))
-        assert_is_none(self.io.split_input("1,234.56kfA"))
-        assert_is_none(self.io.split_input("foobar"))
-        assert_is_none(self.io.split_input(None))
-        assert_is_none(self.io.split_input("1k2 MA"))
-        assert_is_none(self.io.split_input("1.2kkA"))
-        assert_is_none(self.io.split_input("1k2kA"))
-        assert_is_none(self.io.split_input("1k2.4"))
-        assert_is_none(self.io.split_input("k2"))
-        assert_is_none(self.io.split_input("A"))
-        assert_is_none(self.io.split_input("k"))
-        assert_is_none(self.io.split_input("ky"))
-        assert_is_none(self.io.split_input("kA"))
-        assert_is_none(self.io.split_input("kfA"))
-        assert_is_none(self.io.split_input("AA"))
-        assert_is_none(self.io.split_input("kΔ"))
-        assert_is_none(self.io.split_input("Δ"))
-        assert_is_none(self.io.split_input("AΔ"))
-        assert_is_none(self.io.split_input("ΔA"))
-        assert_is_none(self.io.split_input("ΔAΔ"))
-        assert_is_none(self.io.split_input(" "))
-        assert_is_none(self.io.split_input(""))
+    @raises(ValueError)
+    @parameterized([("1,234.56kfA",),
+                    ("1.23k45A",),
+                    ("1,234.56kfA",),
+                    ("foobar",),
+                    (None,),
+                    ("1k2 MA",),
+                    ("1.2kkA",),
+                    ("1k2kA",),
+                    ("1k2.4",),
+                    ("k2",),
+                    ("A",),
+                    ("k",),
+                    ("ky",),
+                    ("kA",),
+                    ("kfA",),
+                    ("AA",),
+                    ("kΔ",),
+                    ("Δ",),
+                    ("AΔ",),
+                    ("ΔA",),
+                    ("ΔAΔ",),
+                    (" ",),
+                    ("",)])
+    def test_split_input_invalid(self, s):
+        assert_is_none(self.io.split_input(s))
 
     def test_split_unit(self):
         assert_tuple_equal(self.io.split_unit("1234"), ('1234', ''))
@@ -97,7 +101,6 @@ class TestEngineerIO(object):
 
 
     def test_normalize(self):
-        assert_is_none(self.io.normalize("3.2°G"))
         assert_tuple_equal(self.io.normalize("100 kΩ"), (1e5, "Ω"))
         assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), (1e5, "Ω"))
 
@@ -110,7 +113,6 @@ class TestEngineerIO(object):
 
     def test_format(self):
         assert_equal(self.io.format(1.0e-15, "V"), '1.00 fV')
-        assert_equal(self.io.format(1.0e-25, "V"), None)
         assert_equal(self.io.format(234.6789e-3, "V"), '235 mV')
         assert_equal(self.io.format(234.6789, "V"), '235 V')
         assert_equal(self.io.format(2345.6789, "V"), '2.35 kV')
@@ -120,6 +122,10 @@ class TestEngineerIO(object):
         assert_equal(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
         assert_equal(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
 
+    @raises(ValueError)
+    def test_format_invalid(self):
+        self.io.format(1.0e-25, "V")
+
     def testRounding(self):
         assert_equal(self.io.format(1.999999, ""), '2.00')
         assert_equal(self.io.format(19.99999, ""), '20.0')
@@ -127,21 +133,25 @@ class TestEngineerIO(object):
 
     def testIsValidSuffix(self):
         for c in "fpnuµmkMGT":
-            assert_true(isValidSuffix(c))
-        assert_true(isValidSuffix(""))
-        assert_true(isValidSuffix(None))
+            assert_in(c, self.io.suffix_exp_map)
 
     def test_exp_suffix_map(self):
-        assert_equal(self.io.exp_suffix_map["f"], -15)
-        assert_equal(self.io.exp_suffix_map["k"], 3)
-        assert_equal(self.io.exp_suffix_map["u"], -6)
-        assert_equal(self.io.exp_suffix_map["µ"], -6)
-        assert_equal(self.io.exp_suffix_map["T"], 12)
-        assert_equal(self.io.exp_suffix_map[""], 0)
+        assert_equal(self.io.suffix_exp_map["f"], -15)
+        assert_equal(self.io.suffix_exp_map["k"], 3)
+        assert_equal(self.io.suffix_exp_map["u"], -6)
+        assert_equal(self.io.suffix_exp_map["µ"], -6)
+        assert_equal(self.io.suffix_exp_map["T"], 12)
+        assert_equal(self.io.suffix_exp_map[""], 0)
         # Check "in" operator
-        assert_in("k", self.io.exp_suffix_map)
-        # Invalid exp_suffix_map
-        assert_not_in("B", self.io.exp_suffix_map)
+        assert_in("k", self.io.suffix_exp_map)
+        # Invalid suffix_exp_map
+        assert_not_in("B", self.io.suffix_exp_map)
+
+    def test_exp_suffix_map(self):
+        assert_equal("", self.io.exp_suffix_map[0])
+        assert_equal("k", self.io.exp_suffix_map[1])
+        assert_equal("M", self.io.exp_suffix_map[2])
+        assert_equal("n", self.io.exp_suffix_map[-3])
 
     def test_normalize_numeric_safe(self):
         assert_equal(self.io.normalize_numeric_safe(1.25), 1.25)
@@ -167,15 +177,8 @@ class TestEngineerIO(object):
         self.io.normalize_numeric(["1.2 J", "foobar"])
 
     def test_safe_normalize(self):
-        assert_equal(self.io.test_safe_normalize(1.25), 1.25)
-        assert_equal(self.io.test_safe_normalize("1.25"), 1.25)
-        assert_equal(self.io.test_safe_normalize("1.25 V"), 1.25)
-        assert_equal(self.io.test_safe_normalize("1k25 V"), 1250.0)
-        assert_is_none(self.io.test_safe_normalize("1x25"))
-
-    @raises(ValueError)
-    def testAutoNormalizeEngineerInputIgnoreUnitRaiseFail(self):
-        autoNormalizeEngineerInputNoUnitRaise(b"foobar")
+        assert_tuple_equal(self.io.safe_normalize("1.25 kV"), (1250., "V"))
+        assert_is_none(self.io.safe_normalize("1x25"))
 
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 

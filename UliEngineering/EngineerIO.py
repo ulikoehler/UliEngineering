@@ -93,6 +93,7 @@ class EngineerIO(object):
             if not current_suffices: # No suffix to be used
                 # Do not self suffix exp map
                 self.exp_suffix_map[current_exp // 3] = ""
+                current_exp += 3
                 continue
             # Compute exponent -> suffix (only first suffix)
             self.exp_suffix_map[current_exp // 3] = current_suffices[0]
@@ -145,7 +146,7 @@ class EngineerIO(object):
                 suffix = s[suffixIndex]
                 s = s.replace(suffix, ".")
         # Handle unit prefix (if any). Not allowable if no unit is present
-        s = s.rstrip(self.strippable)
+        s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
             raise ValueError("Remainder of string is not purely numeric: {0}".format(s))
@@ -177,7 +178,7 @@ class EngineerIO(object):
 
         See splitSuffixSeparator() for further details on supported formats
         """
-        # Make sure it's a string
+        # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
         # Perform splitting
@@ -363,7 +364,7 @@ def normalizeEngineerInput(s, encoding="utf8"):
     __init_engineer_io_instance()
     return EngineerIO.instance.normalize(s)
 
-def normalizeEngineerInput(v, unit=""):
+def formatValue(v, unit=""):
     __init_engineer_io_instance()
     return EngineerIO.instance.normalize(v, unit)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import scipy.constants
-from UliEngineering.EngineerIO import autoNormalizeEngineerInput, Quantity
+from UliEngineering.EngineerIO import normalize_numeric, Quantity
 import numpy as np
 
 def capacitor_energy(capacitance, voltage) -> Quantity("J"):
@@ -11,8 +11,8 @@ def capacitor_energy(capacitance, voltage) -> Quantity("J"):
     - The voltage the capacitor is charged to
     The energy is returned as joules.
     """
-    capacitance, _ = autoNormalizeEngineerInput(capacitance)
-    voltage, _ = autoNormalizeEngineerInput(voltage)
+    capacitance = normalize_numeric(capacitance)
+    voltage = normalize_numeric(voltage)
     return 0.5 * capacitance * np.square(voltage)
 
 def capacitor_charge(capacitance, voltage) -> Quantity("C"):
@@ -22,6 +22,6 @@ def capacitor_charge(capacitance, voltage) -> Quantity("C"):
     - The voltage the capacitor is charged to
     The charge is returned in coulombs.
     """
-    capacitance, _ = autoNormalizeEngineerInput(capacitance)
-    voltage, _ = autoNormalizeEngineerInput(voltage)
+    capacitance = normalize_numeric(capacitance)
+    voltage = normalize_numeric(voltage)
     return capacitance * voltage

@@ -11,7 +11,7 @@ import itertools
 import functools
 import operator
 import numpy as np
-from UliEngineering.EngineerIO import Quantity
+from UliEngineering.EngineerIO import Quantity, normalize_numeric
 
 # Standard resistor sequences
 e96 = [1.00, 1.02, 1.05, 1.07, 1.10, 1.13, 1.15, 1.18, 1.21, 1.24, 1.27, 1.30, 1.33, 1.37, 1.40,
@@ -52,7 +52,7 @@ def parallelResistors(*args) -> Quantity("Ω"):
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
     """
-    resistors = np.asarray(list(map(normalizeEngineerInput, args)))
+    resistors = np.asarray(list(map(normalize_numeric, args)))
     return 1.0 / np.sum(np.reciprocal(resistors))
 
 def serialResistors(*args) -> Quantity("Ω"):
@@ -60,5 +60,5 @@ def serialResistors(*args) -> Quantity("Ω"):
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
     """
-    resistors = list(map(normalizeEngineerInput, args))
+    resistors = list(map(normalize_numeric, args))
     return sum(resistors)
