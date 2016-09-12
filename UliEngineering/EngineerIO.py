@@ -97,22 +97,16 @@ def normalizeCommaToPoint(s):
     Only points and commata are potentially modified.
     Other characters and digits are not handled.
     """
-    foundComma = False
-    foundPoint = False
     foundCommaFirst = False
-    for ch in s:
-        if ch == ",":
-            # Set flag if this is the first comma and no
-            # point has been encountered so far
-            if not (foundPoint or foundComma):
-                foundCommaFirst = True
-            foundComma = True
-        elif ch == ".":
-            foundPoint = True
+    commaIdx = s.find(",")
+    pointIdx = s.find(".")
+    foundComma = commaIdx is not None
+    foundPoint = pointIdx is not None
+    foundCommaFirst = commaIdx < pointIdx if foundComma and foundPoint else None
     # Found nothing or only point -> no modification required
     if not (foundComma or foundPoint) or (foundPoint and not foundComma):
         return s
-    # Only comma -> replace and exit339.photobucket.com/user/ulitronic/library
+    # Only comma -> replace and exit
     if foundComma and not foundPoint:
         return s.replace(",", ".")
     # foundComma and foundPoint
