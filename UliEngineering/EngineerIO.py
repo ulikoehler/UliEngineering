@@ -158,6 +158,9 @@ class EngineerIO(object):
         Only units in the units set are recognized
         unit may be "None" if no unit is recognized
         """
+        # Fallback for strings which are too short
+        if len(s) <= 1:
+            return s, ""
         # Handle 2-character units (e.g. 'Hz'), then 1-character unity (e.g. 'V')
         if s[-2:] in self.units: # Will also handle unit-only 1-char strings
             s, unit = s[:-2], s[-2:]
