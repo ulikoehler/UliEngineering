@@ -65,6 +65,31 @@ class TestEngineerIO(object):
         assert_is_none(splitSuffixSeparator(" "))
         assert_is_none(splitSuffixSeparator(""))
 
+    def test_split_unit(self):
+        assert_tuple_equal(split_unit("1234"), ('1234', ''))
+        assert_tuple_equal(split_unit("1234k"), ('1234k', ''))
+        assert_tuple_equal(split_unit("1234kΩ"), ('1234k', 'Ω'))
+        assert_tuple_equal(split_unit("1.234kΩ"), ('1.234k', 'Ω'))
+        assert_tuple_equal(split_unit("1,234kΩ"), ('1,234k', 'Ω'))
+        assert_tuple_equal(split_unit("1,234.56kΩ"), ('1,234.56k', 'Ω'))
+        assert_tuple_equal(split_unit("1k234"), ('1k234', ''))
+        assert_tuple_equal(split_unit("1k234Ω"), ('1k234',  'Ω'))
+        assert_tuple_equal(split_unit("1,234.56Ω"), ('1,234.56', 'Ω'))
+        assert_tuple_equal(split_unit("1A"), ('1', 'A'))
+        assert_tuple_equal(split_unit("1"), ('1', ''))
+        assert_tuple_equal(split_unit("1k234 Ω"), ('1k234', 'Ω'))
+        assert_tuple_equal(split_unit("-1,234.56kΩ"), ('-1,234.56k', 'Ω'))
+        assert_tuple_equal(split_unit("-1e3kΩ"), ('-1e3k', 'Ω'))
+        assert_tuple_equal(split_unit("1e-3kΩ"), ('1e-3k', 'Ω'))
+        assert_tuple_equal(split_unit("-4e6nA"), ('-4e6n', 'A'))
+        assert_tuple_equal(split_unit("3.2 MHz"), ('3.2 M', 'Hz'))
+        assert_tuple_equal(split_unit("3.2 °C"), ('3.2', 'C'))
+        assert_tuple_equal(split_unit("3k2 °C"), ('3k2', 'C'))
+        assert_tuple_equal(split_unit("3.2 ΔMHz"), ('3.2 ΔM', 'Hz'))
+        assert_tuple_equal(split_unit("100 mV"), ('100 m', 'V'))
+        assert_tuple_equal(split_unit("3.2 ΔHz"), ('3.2', 'Hz'))
+
+
     def testNormalizeEngineerInput(self):
         assert_is_none(normalizeEngineerInput("3.2°G"))
         assert_tuple_equal(normalizeEngineerInput("100 kΩ"), (1e5, "Ω"))

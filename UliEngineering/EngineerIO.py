@@ -32,7 +32,7 @@ __all__ = ["Quantity", "UnannotatedReturnValueError", "isValidSuffix",
            "formatValue", "autoNormalizeEngineerInput",
            "autoNormalizeEngineerInputNoUnit",
            "autoNormalizeEngineerInputNoUnitRaise", "autoFormat",
-           "auto_suffix_1d"]
+           "auto_suffix_1d", "split_unit"]
 
 Quantity = namedtuple("Quantity", ["unit"])
 
@@ -56,7 +56,7 @@ units = set(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 
 # Allowable Unit prefixes
 # Constraint: unitPrefixes ∩ siSuffices == ∅
-unitPrefixes = set(["Δ", "°"])
+unitPrefixes = "Δ°"
 
 
 def isValidSuffix(suffix):
@@ -116,6 +116,23 @@ def normalizeCommaToPoint(s):
     else:  # Point used as thousands separator
         return s.replace(".", "").replace(",", ".")
 
+def split_unit(s):
+    """
+    Split a string into (remainder, unit).
+    Only units in the units set are recognized
+    unit may be "None" if no unit is recognized
+    """
+    # Handle 2-character units (e.g. 'Hz'), then 1-character unity (e.g. 'V')
+    if s[-2:] in units: # Will also handle unit-only 1-char strings
+        s, unit = s[:-2], s[-2:]
+    elif s[-1] in units:  # Handle 1-char units
+        s, unit = s[:-1], s[-1]
+    else: # No unit
+        s, unit = s, ''
+    # Remove unit prefix, if any (e.g. degrees symbol, delta symbol)
+    s = s.strip().rstrip(unitPrefixes).strip()
+    return s, unit
+
 def splitSuffixSeparator(s):
     """
     Separate a string into a 3-tuple (number, suffix, unit).
@@ -138,15 +155,7 @@ def splitSuffixSeparator(s):
     # Ensure we have at least one character
     if not s:
         return None
-    # Handle 2-character units (MUST be a suffix)
-    if len(s) > 2 and s[-2:] in units:
-        unit = s[-2:]
-        s = s[:-2]
-    else:  # Handle 1-char units
-        # If this is executed, the unit MUST be a suffix and 1 char only
-        unit = s[-1] if s[-1] in units else ""
-        if unit:  # Strip unit from string
-            s = s[:-1]
+    s, unit = split_unit(s)
     # The string with possibly the unit removed must be non-empty
     if not s:
         return None
