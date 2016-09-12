@@ -34,13 +34,14 @@ def auto_strptime(s):
     s = s.strip()
     if "." in s: # Have fractional seconds
         if "-" in s: # Have date
-            return datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f")
+            dateformat = "%Y-%m-%d %H:%M:%S.%f"
         else: # Do not have date
-            return datetime.datetime.strptime(s, "%H:%M:%S.%f")
+            dateformat = "%H:%M:%S.%f"
     elif " " not in s: # Have only date or have only time
         if "-" in s: # Have only date
-            return datetime.datetime.strptime(s, "%Y-%m-%d")
+            dateformat = "%Y-%m-%d"
         else: # Have only time
-            return datetime.datetime.strptime(s, "%H:%M:%S")
+            dateformat = "%H:%M:%S"
     else: # Have date and time but no fractional
-        return datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
+        dateformat = "%Y-%m-%d %H:%M:%S"
+    return datetime.datetime.strptime(s, dateformat)
