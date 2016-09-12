@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Utilities for processing and modifying datetime objects
+"""
+import numpy as np
+import datetime
+
+__all__ = ["splice_date", "auto_strptime"]
+
+def splice_date(datesrc, timesrc, tzinfo=None):
+    """
+    Create a new datetime that takes the date from datesrc and the time from timesrc.
+    The tzinfo is taken from the tzinfo parameter. If it is None, it is taken from
+    timesrc.tzinfo. No timezone conversion is performed.
+    """
+    tzinfo = timesrc.tzinfo if tzinfo is None else tzinfo
+    return datetime.datetime(datesrc.year, datesrc.month, datesrc.day,
+                             timesrc.hour, timesrc.minute, timesrc.second,
+                             timesrc.microsecond, tzinfo=tzinfo)
+
+def auto_strptime(s):
+    """
+    Parses a datetime in a number of formats, automatically recognizing which format
+    is correct.
+
+    Supported formats:
+        %Y-%m-%d %H:%M:%S.%f
+        %H:%M:%S.%f
+        %Y-%m-%d
+        %H:%M:%S
+        %Y-%m-%d %H:%M:%S
+    """
+    s = s.strip()
+    if "." in s: # Have fractional seconds
+        if "-" in s: # Have date
+            return datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f")
+        else: # Do not have date
+            return datetime.datetime.strptime(s, "%H:%M:%S.%f")
+    elif " " not in s: # Have only date or have only time
+        if "-" in s: # Have only date
+            return datetime.datetime.strptime(s, "%Y-%m-%d")
+        else: # Have only time
+            return datetime.datetime.strptime(s, "%H:%M:%S")
+    else: # Have date and time but no fractional
+        return datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
