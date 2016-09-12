@@ -32,16 +32,11 @@ def auto_strptime(s):
         %Y-%m-%d %H:%M:%S
     """
     s = s.strip()
+    have_date = "-" in s
     if "." in s: # Have fractional seconds
-        if "-" in s: # Have date
-            dateformat = "%Y-%m-%d %H:%M:%S.%f"
-        else: # Do not have date
-            dateformat = "%H:%M:%S.%f"
+        dateformat = "%Y-%m-%d %H:%M:%S.%f" if have_date else "%H:%M:%S.%f"
     elif " " not in s: # Have only date or have only time
-        if "-" in s: # Have only date
-            dateformat = "%Y-%m-%d"
-        else: # Have only time
-            dateformat = "%H:%M:%S"
+        dateformat = "%Y-%m-%d" if have_date else "%H:%M:%S"
     else: # Have date and time but no fractional
         dateformat = "%Y-%m-%d %H:%M:%S"
     return datetime.datetime.strptime(s, dateformat)
