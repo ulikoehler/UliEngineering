@@ -17,7 +17,7 @@ Features include:
     - SumFilter and ChainedFilter are arbitrarily combinable
     - Intuitive, readable error messages for non-mathematicians
 """
-from UliEngineering.EngineerIO import autoNormalizeEngineerInputNoUnitRaise
+from UliEngineering.EngineerIO import normalize_numeric
 from scipy import signal
 import numpy as np
 import numbers
@@ -59,7 +59,7 @@ class SignalFilter(object):
         """
         self.btype = btype
         self.freqs = freqs
-        self.samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
+        self.samplerate = normalize_numeric(samplerate)
         self.b = None
         self.a = None
         # These will be initialized in iir()
@@ -76,11 +76,11 @@ class SignalFilter(object):
             elif len(freqs) == 0:
                 raise ValueError("Empty frequency list")
             elif isinstance(freqs[0], str):
-                freqs = [autoNormalizeEngineerInputNoUnitRaise(f) for f in freqs]
+                freqs = [normalize_numeric(f) for f in freqs]
         # Allow "4.5 kHz" etc
         if isinstance(freqs, str):
             __freqs_orig = freqs
-            freqs = autoNormalizeEngineerInputNoUnitRaise(freqs)
+            freqs = normalize_numeric(freqs)
         self.filtfreqs = self._filtfreq(freqs)
         # Check & store pass type
         if btype == "lowpass" or btype == "highpass":
@@ -139,7 +139,7 @@ class SignalFilter(object):
         """
         if self.a is None:
             raise NotComputedException()
-        samplerate = autoNormalizeEngineerInputNoUnitRaise(samplerate)
+        samplerate = normalize_numeric(samplerate)
         if samplerate == self.samplerate:
             return self
         filt = SignalFilter(samplerate, self.freqs, self.btype)

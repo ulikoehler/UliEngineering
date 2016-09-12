@@ -37,15 +37,17 @@ class UnannotatedReturnValueError(Exception):
 
 # Suffices handled by the library
 _default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
-              ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
+                     ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 _default_1st_suffix_exp = -24  # The exponential multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
 _default_units = frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
-__numeric_allowed = set("0123456789-e.")
+_numeric_allowed = set("0123456789-e.")
 
 
 class EngineerIO(object):
+    instance = None
+    """Default instance, used for global functions. Initialized on first use"""
     def __init__(self, units=_default_units,
                  unit_prefixes="Δ°",
                  suffices=_default_suffices,
@@ -145,7 +147,7 @@ class EngineerIO(object):
         # Handle unit prefix (if any). Not allowable if no unit is present
         s = s.rstrip(self.strippable)
         # Final check: Is there any number left and is it valid?
-        if not all((ch in __numeric_allowed for ch in s)):
+        if not all((ch in _numeric_allowed for ch in s)):
             raise ValueError("Remainder of string is not purely numeric: {0}".format(s))
         return (s, suffix, unit)
 
@@ -176,14 +178,13 @@ class EngineerIO(object):
         See splitSuffixSeparator() for further details on supported formats
         """
         # Make sure it's a string
-        if isinstance(v, bytes):
-            v = v.decode(encoding)
-
+        if isinstance(s, bytes):
+            s = s.decode(encoding)
+        # Perform splitting
         res = self.split_input(s.strip())
         (num, suffix, unit) = res
-        if suffix:
-            val = float(num) * (10 ** self.suffix_exp_map[suffix])
-        return (val, unit)
+        mul = (10 ** self.suffix_exp_map[suffix]) if suffix else 1
+        return (float(num) * mul, unit)
 
     def safe_normalize(self, s, encoding="utf8"):
         """
@@ -209,7 +210,7 @@ class EngineerIO(object):
         #Pre-multiply the value
         v = v * (10.0 ** -(suffixMapIdx * 3))
         #Delegate the rest of the task to the helper
-        return _formatWithSuffix(v, siSuffixMap[suffixMapIdx] + unit)
+        return _formatWithSuffix(v, self.exp_suffix_map[suffixMapIdx] + unit)
 
     def auto_suffix_1d(self, arr):
         """
@@ -231,9 +232,9 @@ class EngineerIO(object):
         suffix_idx = min(self.exp_map_max, suffix_idx)
         # Pre-multiply the value
         multiplier = 10.0 ** -(suffix_idx * 3)
-        return multiplier, siSuffixMap[suffix_idx]
+        return multiplier, self.exp_suffix_map[suffix_idx]
 
-    def auto_format(fn, *args, **kwargs):
+    def auto_format(self, fn, *args, **kwargs):
         """
         Auto-format a value by leveraging function annotations.
         For example this can be used to format using UliEngineering Physics quantities
@@ -249,9 +250,9 @@ class EngineerIO(object):
             qty = annotatedFN.__annotations__["return"]
         except KeyError:
             raise UnannotatedReturnValueError("Function {0} does not have an annotated return value")
-        return formatValue(fn(*args, **kwargs), qty.unit)
+        return self.format(fn(*args, **kwargs), qty.unit)
 
-    def normalize_numeric(self, arg):
+    def normalize_numeric_safe(self, arg):
         """
         Normalize each element of an iterable and retrieve only the numeric value
         (the unit is ignored). Works on iterables and string-likes.
@@ -260,6 +261,8 @@ class EngineerIO(object):
 
         Returns a list with None (on error) or the numeric value (no unit)
         """
+        if isinstance(arg, int) or isinstance(arg, float):
+            return arg
         # If it's stringlike, apply directly
         if isinstance(arg, str) or isinstance(arg, bytes):
             v = self.safe_normalize(arg)
@@ -271,9 +274,31 @@ class EngineerIO(object):
             ret.append(None if v is None else v[0])
         return ret
 
+    def normalize_numeric(self, arg):
+        """
+        Normalize each element of an iterable and retrieve only the numeric value
+        (the unit is ignored). Works on iterables and string-likes.
 
-# Default instance
-_default_engineer_io = EngineerIO()
+        Raises if any of the values can't be normalized
+        """
+        if isinstance(arg, int) or isinstance(arg, float):
+            return arg
+        # If it's stringlike, apply directly
+        if isinstance(arg, str) or isinstance(arg, bytes):
+            return self.normalize(arg)[0]
+        # It's an iterable
+        return [self.normalize(elem)[0] for elem in arg]
+
+
+# Default instance, initialized on first use
+
+def __init_engineer_io_instance():
+    """
+    Helper function to initialize the default instance
+    the first time any of the global functions is used.
+    """
+    if EngineerIO.instance is None:
+        EngineerIO.instance = EngineerIO()
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """
@@ -293,7 +318,7 @@ _interpunct_transform_map = {
     (True, False, True): __replace_comma_dot,
     # Below this line: Both comma and dot found
     # Comma first => comma used as thousands separators
-    (True, True, True): functools.partial(str.replace, old=",", new=""),
+    (True, True, True): lambda s: s.replace(",", ""),
     # Dot first => dot used as thousands separator
     (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
 }
@@ -334,3 +359,22 @@ def _formatWithSuffix(v, suffix=""):
     #Avoid appending whitespace if there is no suffix
     return "{0} {1}".format(res, suffix) if suffix else res
 
+def normalizeEngineerInput(s, encoding="utf8"):
+    __init_engineer_io_instance()
+    return EngineerIO.instance.normalize(s)
+
+def normalizeEngineerInput(v, unit=""):
+    __init_engineer_io_instance()
+    return EngineerIO.instance.normalize(v, unit)
+
+def safeNormalizeEngineerInput(v, unit=""):
+    __init_engineer_io_instance()
+    return EngineerIO.instance.safe_normalize(v, unit)
+
+def normalize_numeric(v):
+    __init_engineer_io_instance()
+    return EngineerIO.instance.normalize_numeric(v)
+
+def auto_format(v, *args, **kwargs):
+    __init_engineer_io_instance()
+    return EngineerIO.instance.auto_format(v, *args, **kwargs)

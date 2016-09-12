@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises
+from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO import _formatWithSuffix
 import functools
@@ -9,7 +9,7 @@ import numpy as np
 
 class TestEngineerIO(object):
     def __init__(self):
-        self.io = EngineerIO
+        self.io = EngineerIO()
 
     def test_normalize_interpunctation(self):
         for suffix in ["", "k", " kV", "V/√Hz", "µV"]:
@@ -108,7 +108,7 @@ class TestEngineerIO(object):
         assert_equal(_formatWithSuffix(99.9, "A"), '99.9 A')
         assert_equal(_formatWithSuffix(1000.0, ""), '1000')
 
-    def testFormatValue(self):
+    def test_format(self):
         assert_equal(self.io.format(1.0e-15, "V"), '1.00 fV')
         assert_equal(self.io.format(1.0e-25, "V"), None)
         assert_equal(self.io.format(234.6789e-3, "V"), '235 mV')
@@ -131,28 +131,47 @@ class TestEngineerIO(object):
         assert_true(isValidSuffix(""))
         assert_true(isValidSuffix(None))
 
-    def testGetSuffixMultiplier(self):
-        assert_equal(getSuffixMultiplier("f"), -15)
-        assert_equal(getSuffixMultiplier("k"), 3)
-        assert_equal(getSuffixMultiplier("u"), -6)
-        assert_equal(getSuffixMultiplier("µ"), -6)
-        assert_equal(getSuffixMultiplier("T"), 12)
-        assert_equal(getSuffixMultiplier(""), 0)
-        # Invalid suffix
-        assert_is_none(getSuffixMultiplier("B"))
+    def test_exp_suffix_map(self):
+        assert_equal(self.io.exp_suffix_map["f"], -15)
+        assert_equal(self.io.exp_suffix_map["k"], 3)
+        assert_equal(self.io.exp_suffix_map["u"], -6)
+        assert_equal(self.io.exp_suffix_map["µ"], -6)
+        assert_equal(self.io.exp_suffix_map["T"], 12)
+        assert_equal(self.io.exp_suffix_map[""], 0)
+        # Check "in" operator
+        assert_in("k", self.io.exp_suffix_map)
+        # Invalid exp_suffix_map
+        assert_not_in("B", self.io.exp_suffix_map)
 
-    def testAutoNormalizeEngineerInputIgnoreUnit(self):
+    def test_normalize_numeric_safe(self):
+        assert_equal(self.io.normalize_numeric_safe(1.25), 1.25)
+        assert_equal(self.io.normalize_numeric_safe("1.25"), 1.25)
+        assert_equal(self.io.normalize_numeric_safe("1.25 V"), 1.25)
+        assert_equal(self.io.normalize_numeric_safe("1k25 V"), 1250.0)
+        assert_equal(self.io.normalize_numeric_safe(b"1k25 V"), 1250.0)
+        assert_equal(self.io.normalize_numeric_safe(["1k25 V", "4.25 A"]), [1250.0, 4.25])
+        # Invali
+        assert_is_none(self.io.normalize_numeric_safe("foobar"))
+        assert_equal(self.io.normalize_numeric_safe(["foobar", "1.2 J"]), [None, 1.2])
+
+    def test_normalize_numeric(self):
         assert_equal(self.io.normalize_numeric(1.25), 1.25)
         assert_equal(self.io.normalize_numeric("1.25"), 1.25)
         assert_equal(self.io.normalize_numeric("1.25 V"), 1.25)
         assert_equal(self.io.normalize_numeric("1k25 V"), 1250.0)
-        assert_is_none(self.io.normalize_numeric(b"foobar"))
+        assert_equal(self.io.normalize_numeric(b"1k25 V"), 1250.0)
+        assert_equal(self.io.normalize_numeric(["1k25 V", "4.25 A"]), [1250.0, 4.25])
 
-    def testAutoNormalizeEngineerInputIgnoreUnitRaise(self):
-        assert_equal(autoNormalizeEngineerInputNoUnitRaise(1.25), 1.25)
-        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1.25"), 1.25)
-        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1.25 V"), 1.25)
-        assert_equal(autoNormalizeEngineerInputNoUnitRaise("1k25 V"), 1250.0)
+    @raises(ValueError)
+    def test_normalize_numeric_invalid(self):
+        self.io.normalize_numeric(["1.2 J", "foobar"])
+
+    def test_safe_normalize(self):
+        assert_equal(self.io.test_safe_normalize(1.25), 1.25)
+        assert_equal(self.io.test_safe_normalize("1.25"), 1.25)
+        assert_equal(self.io.test_safe_normalize("1.25 V"), 1.25)
+        assert_equal(self.io.test_safe_normalize("1k25 V"), 1250.0)
+        assert_is_none(self.io.test_safe_normalize("1x25"))
 
     @raises(ValueError)
     def testAutoNormalizeEngineerInputIgnoreUnitRaiseFail(self):
@@ -162,21 +181,21 @@ class TestEngineerIO(object):
 
     def testAutoFormatValid(self):
         def testfn(n=1.0) -> Quantity("V"): return n
-        assert_equal(autoFormat(testfn), "1.00 V")
+        assert_equal(self.io.auto_format(testfn), "1.00 V")
         # Test functools.partial() behaviour
         testfn2 = functools.partial(testfn, n=2.0)
-        assert_equal(autoFormat(testfn2), "2.00 V")
+        assert_equal(self.io.auto_format(testfn2), "2.00 V")
         # Test nested functools.partial() behaviour
         testfn3 = functools.partial(testfn2, n=3.0)
-        assert_equal(autoFormat(testfn3), "3.00 V")
+        assert_equal(self.io.auto_format(testfn3), "3.00 V")
 
     @raises(UnannotatedReturnValueError)
     def testAutoFormatInvalid1(self):
-        autoFormat(autoFormat)
+        self.io.auto_format(self.io.format) # Callable but not annotated
 
     @raises(ValueError)
     def testAutoFormatInvalid2(self):
-        autoFormat(None)
+        self.io.auto_format(None)
 
     def test_auto_suffix_1d(self):
         arr = np.arange(-4., 5., .5)
@@ -192,3 +211,5 @@ class TestEngineerIO(object):
         assert_equal(self.io.auto_suffix_1d(arr), (1e24, "y"))
         arr = 1e40 * np.arange(-4., 5., .5)
         assert_equal(self.io.auto_suffix_1d(arr), (1e-21, "Y"))
+
+

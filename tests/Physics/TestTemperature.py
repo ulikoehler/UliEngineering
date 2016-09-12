@@ -4,7 +4,7 @@ from numpy.testing import assert_approx_equal
 from nose.tools import raises, assert_equal
 from UliEngineering.Physics.Temperature import *
 from UliEngineering.Exceptions import *
-from UliEngineering.EngineerIO import autoFormat
+from UliEngineering.EngineerIO import auto_format
 
 class TestTemperature(object):
     def testNormalizeTemperature(self):
@@ -28,10 +28,10 @@ class TestTemperature(object):
         assert_approx_equal(normalize_temperature_celsius("273.15 °K"), 0.0)
 
     def testAutoFormatTemperature(self):
-        assert_equal(autoFormat(normalize_temperature, "-200°C"), "73.1 °K")
-        assert_equal(autoFormat(normalize_temperature_celsius, "-200°C"), "-200.00 °C")
-        assert_equal(autoFormat(normalize_temperature_celsius, "-111 °C"), "-111.00 °C")
-        assert_equal(autoFormat(normalize_temperature_celsius, "0 °K"), "-273.15 °C")
+        assert_equal(auto_format(normalize_temperature, "-200°C"), "73.1 °K")
+        assert_equal(auto_format(normalize_temperature_celsius, "-200°C"), "-200.00 °C")
+        assert_equal(auto_format(normalize_temperature_celsius, "-111 °C"), "-111.00 °C")
+        assert_equal(auto_format(normalize_temperature_celsius, "0 °K"), "-273.15 °C")
 
     @raises(InvalidUnitException)
     def testWrongUnit(self):
