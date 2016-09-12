@@ -14,3 +14,24 @@ class TestSpliceDate(object):
         d2 = datetime.datetime(1905, 1, 1, 14, 11, 25, microsecond=52)
         dres = datetime.datetime(2016, 1, 1, 14, 11, 25, microsecond=52)
         assert_equal(dres, splice_date(d1, d2))
+
+
+class TestAutoStrptime(object):
+    def test_formats(self):
+        #%Y-%m-%d %H:%M:%S.%f
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11, 50), auto_strptime("2016-02-01 15:02:11.000050"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11, 50), auto_strptime(" 2016-02-01 15:02:11.000050"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11, 50), auto_strptime("2016-02-01 15:02:11.000050 "))
+        #%H:%M:%S.%f
+        assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11, 50), auto_strptime("15:02:11.000050"))
+        #%Y-%m-%d
+        assert_equal(datetime.datetime(2016, 2, 1), auto_strptime("2016-02-01"))
+        assert_equal(datetime.datetime(2016, 2, 1), auto_strptime("2016-02-01 "))
+        #%H:%M:%S
+        assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime("15:02:11"))
+        assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime("15:02:11 "))
+        assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime(" 15:02:11"))
+        #%Y-%m-%d %H:%M:%S
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11 "))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime(" 2016-02-01 15:02:11"))
