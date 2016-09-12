@@ -5,9 +5,10 @@ language: python
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq python3-pip python3-numpy python3-scipy python3-matplotlib
-    - sudo pip3 install codecov rednose nose coverage six toolz nose-parameterized --upgrade
+    - sudo pip3 install codecov rednose nose coverage six toolz nose-parameterized codeclimate-test-reporter --upgrade
 cache: pip
 script: nosetests
 dist: trusty
 after_success:
     codecov
+    CODECLIMATE_REPO_TOKEN=71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae codeclimate-test-reporter
