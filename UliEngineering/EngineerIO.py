@@ -40,23 +40,52 @@ class UnannotatedReturnValueError(Exception):
     pass
 
 # Suffices handled by the library
-siSuffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["u", "µ"], ["m"], [],
+_default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
               ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
-siSuffixMult = -24  # The exponential multiplier for the first suffix
-
-siSuffixMapMin = -8
-siSuffixMapMax = 7
-siSuffixMap = {
-    -8: "y", -7: "z", -6: "a", -5: "f", -4: "p", -3: "n", -2: "µ", -1: "m",
-    0: "", 1: "k", 2: "M", 3: "G", 4: "T", 5: "E", 6: "Z", 7: "Y"
-}
+_default_1st_suffix_exp = -24  # The exponential multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
-units = set(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
+_default_units = frozenset(["F", "A", "Ω", "W", "H", "C", "F", "K", "Hz", "V"])
 
-# Allowable Unit prefixes
-# Constraint: unitPrefixes ∩ siSuffices == ∅
-unitPrefixes = "Δ°"
+class EngineerIO(object):
+    def __init__(self, units=_default_units,
+                 unit_prefixes="Δ°"
+                 suffices=_default_suffices,
+                 first_suffix_exp=_default_1st_suffix_exp):
+        """
+        Initialize a new EngineerIO instance with default or custom suffix
+
+        Parameters:
+        -----------
+        units : iterable of strings
+            An iterable of valid units (1-char or 2-char)
+        unit_prefixes : string
+            A list of prefixes that are silently ignored.
+            Constraint: unitPrefixes ∩ suffices == ∅
+        suffices : list of lists of unit strings
+            For each SI exponent, a list of valid suffix strings for each exponent.
+            Each successive element in the list is 1e3 from the previous one.
+            For generating strings from numbers, the first suffix in each nested list is preferred
+        first_suffix_exp : int
+            The decimal exponent of the first suffix in the suffix list.
+        """
+        self.units = set(units)
+        self.suffices = suffices
+        self.first_suffix_exp = first_suffix_exp
+        # Compute inverse suffix map
+        self.suffix_map = {}  # Key: exp // 3, Value: suffix
+        current_exp = first_suffix_exp
+        for current_suffices in suffices:
+            # Use only first suffix
+            current_suffix = current_suffices[0]
+            self.suffix_map[current_exp // 3] = current_suffix
+            # Next exponent
+            current_exp += 3
+        # Compute min/max SI value
+        self.suffix_map_min = min(self.suffix_map.keys())
+        self.suffix_map_max = max(self.suffix_map.keys())
+        # Compute list of all suffixes
+        self.all_suffixes = set(itertools.chain(*self.suffices))
 
 
 def isValidSuffix(suffix):
