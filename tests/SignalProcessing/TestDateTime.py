@@ -35,3 +35,7 @@ class TestAutoStrptime(object):
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11"))
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11 "))
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime(" 2016-02-01 15:02:11"))
+
+    def test_examples(self):
+        assert_equal(datetime.datetime(2016, 7, 21, 00, 00, 00), auto_strptime("2016-07-21 00:00:00"))
+        assert_equal(datetime.datetime(2016, 7, 21, 3, 00, 00), auto_strptime("2016-07-21 03:00:00"))
