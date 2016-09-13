@@ -12,7 +12,8 @@ def split_nth(s, delimiter=",", nth=1):
     Other strings or the split list itself are not generated.
 
     Using this function is ONLY recommended (because it's ONLY faster)
-    if the current
+    if the string contains MANY delimiters (multiple hundreds).
+    Else, use s.split(delimiter)[n - 1]
 
     Throws ValueError if the nth delimiter has not been found.
     """
