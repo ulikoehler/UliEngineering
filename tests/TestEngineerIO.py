@@ -47,7 +47,6 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("3.2 ΔHz"), ('3.2', '', 'Hz'))
         assert_tuple_equal(self.io.split_input("Δ3.2 MHz"), ('3.2', 'M', 'Hz'))
 
-    @raises(ValueError)
     @parameterized([("1,234.56kfA",),
                     ("1.23k45A",),
                     ("1,234.56kfA",),
@@ -71,8 +70,9 @@ class TestEngineerIO(object):
                     ("ΔAΔ",),
                     (" ",),
                     ("",)])
-    def test_split_input_invalid(self, s):
-        assert_is_none(self.io.split_input(s))
+    @raises(ValueError)
+    def test_normalize_numeric_invalid(self, s):
+        print(self.io.normalize_numeric(s))
 
     def test_split_unit(self):
         assert_tuple_equal(self.io.split_unit("1234"), ('1234', ''))

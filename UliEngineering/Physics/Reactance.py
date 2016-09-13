@@ -7,20 +7,20 @@ Originally published at techoverflow.net
 """
 import itertools
 import numpy as np
-from UliEngineering.EngineerIO import normalizeEngineerInput, Quantity
+from UliEngineering.EngineerIO import normalize_numeric, Quantity
 
 def capacitive_reactance(c, f=1000.0) -> Quantity("Ω"):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
-    c, _ = normalizeEngineerInput(c)
-    f, _ = normalizeEngineerInput(f)
+    c = normalize_numeric(c)
+    f = normalize_numeric(f)
     return 1.0 / (2 * np.pi * f * c)
 
 def inductive_reactance(l, f=1000.0) -> Quantity("Ω"):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """
-    l, _ = normalizeEngineerInput(l)
-    f, _ = normalizeEngineerInput(f)
+    l = normalize_numeric(l)
+    f = normalize_numeric(f)
     return 2 * np.pi * f * l

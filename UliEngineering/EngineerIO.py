@@ -121,9 +121,12 @@ class EngineerIO(object):
         Thousands separators and suffix-as-decimal-separators may NOT
         be mixed. Whitespace is removed automatically.
         """
-        # Remove thousands separator & ensure dot is used 
+        # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s).replace(" ", "")
         s, unit = self.split_unit(s) # Remove unit
+        # Check string
+        if not s:
+            raise ValueError("Can't split empty string")
         # Try to find SI suffix at the end or in the middle
         if s[-1] in self.all_suffixes:
             s, suffix = s[:-1], s[-1]
@@ -136,9 +139,9 @@ class EngineerIO(object):
             elif suffixCount == 0:
                 suffix = ""
             else:  # suffixCount == 1 => correct
-                # Suffix-as-decimal-separator --> no other decimal separator
+                # Suffix-as-decimal-separator --> there must be no other decimal separator
                 if "." in s:  # Commata already handled by normalize_interpunctation
-                    return None
+                    raise ValueError("Suffix as decimal separator, but dot is also in string: {0}".format(s))
                 suffixIndex = isSuffixList.index(True)
                 # Suffix must NOT be first character
                 if suffixIndex == 0:
@@ -181,6 +184,9 @@ class EngineerIO(object):
 
         See splitSuffixSeparator() for further details on supported formats
         """
+        # Scalars get returned directly
+        if isinstance(s, (int, float, np.generic)):
+            return s, ''
         # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
@@ -265,7 +271,10 @@ class EngineerIO(object):
 
         Returns a list with None (on error) or the numeric value (no unit)
         """
-        if isinstance(arg, int) or isinstance(arg, float):
+        if arg is None:
+            raise ValueError("Can't normalize None")
+        # Scalars get returned directly
+        if isinstance(arg, (int, float, np.generic)):
             return arg
         # If it's stringlike, apply directly
         if isinstance(arg, str) or isinstance(arg, bytes):
@@ -285,10 +294,15 @@ class EngineerIO(object):
 
         Raises if any of the values can't be normalized
         """
-        if isinstance(arg, int) or isinstance(arg, float):
+        if arg is None:
+            raise ValueError("Can't normalize None")
+
+        # Scalars get returned directly
+        if isinstance(arg, (int, float, np.generic)):
             return arg
+
         # If it's stringlike, apply directly
-        if isinstance(arg, str) or isinstance(arg, bytes):
+        if isinstance(arg, (str, bytes)):
             return self.normalize(arg)[0]
         # It's an iterable
         return [self.normalize(elem)[0] for elem in arg]

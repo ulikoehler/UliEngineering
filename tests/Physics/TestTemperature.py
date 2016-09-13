@@ -37,6 +37,6 @@ class TestTemperature(object):
     def testWrongUnit(self):
         normalize_temperature("150V")
 
-    @raises(ConversionException)
+    @raises(ValueError)
     def testInvalidUnit(self):
-        normalize_temperature("150°G")
+        normalize_temperature("1G50 G")
