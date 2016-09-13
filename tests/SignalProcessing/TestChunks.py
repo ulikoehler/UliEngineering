@@ -10,13 +10,15 @@ class TestChunkGeneration(object):
     def __init__(self):
         self.data1 = np.arange(1, 11)
         self.data2 = np.arange(1, 13)
+        # Result 1: data1 as 3,3 chunks
+        self.result1 = np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
     def test_overlapping_chunks(self):
         # Odd-sized array
         vals = overlapping_chunks(self.data1, 3, 3)
-        assert_array_equal(vals.as_array(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        assert_array_equal(vals.as_array(), self.result1)
         assert_equal(len(vals), 3)
-        assert_array_equal(vals.as_array(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        assert_array_equal(vals.as_array(), self.result1)
         # Even-sized array
         vals = overlapping_chunks(self.data2, 3, 3)
         assert_equal(len(vals), 4)
@@ -25,17 +27,25 @@ class TestChunkGeneration(object):
         # Array which is too long
         vals = overlapping_chunks(self.data2, 25, 3)
         assert_array_equal(vals.as_array(), [])
-        # Test apply function
+
+    def test_apply(self):
+        "General apply() usage"
         cg = overlapping_chunks(self.data1, 3, 3)
         cg.apply(functoolz.identity)
         cg.apply(functoolz.identity)
         cg.apply(np.square)
-        expected = np.square(np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))
-        assert_array_equal(cg.as_array(), expected)
-        # Apply composability
+        square = np.square(self.result1)
+        assert_array_equal(cg.as_array(), square)
+        # Test apply composability
         cg.apply(np.square)
-        expected = np.asarray([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) ** 4
-        assert_array_equal(cg.as_array(), expected)
+        quad = np.square(square)
+        assert_array_equal(cg.as_array(), quad)
+
+    def test_apply_composed(self):
+        "Test apply on functoolz composed function"
+        cg = overlapping_chunks(self.data1, 3, 3)
+        cg.apply(functoolz.compose(functoolz.identity, np.square))
+        assert_array_equal(cg.as_array(), np.square(self.result1))
 
     def test_overlapping_chunks_copy(self):
         d1 = self.data1.copy()
