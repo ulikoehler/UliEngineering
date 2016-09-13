@@ -204,6 +204,13 @@ def __mapAndSortIndices(x, y, idxs, sort_descending=True):
     # Copy x/y values to new array
     return np.column_stack((xvals[idxs], yvals[idxs]))
 
+def _check_extrema_comparator(comp):
+    """
+    Raise if the given comparator is neither np.greater nor np.less
+    """
+    if comparator != np.greater and comparator != np.less:
+        raise ValueError("Comparator may only be np.greater or np.less")
+
 def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
     """
     Find extrema using the given method and parameters, order them by y value and
@@ -215,9 +222,8 @@ def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
     This means that ret[0] contains the x, y coordinate of the most significant extremum
     (where the significancy is determined by the comparator)
     """
+    _check_extrema_comparator(comparator)
     # Determine extrema and x/y values at those indices
-    if comparator != np.greater and comparator != np.less:
-        raise ValueError("Comparator may only be np.greater or np.less")
     extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
     return __mapAndSortIndices(x, y, extrema, comparator == np.greater)
 
@@ -228,8 +234,7 @@ def selectByThreshold(fx, fy, thresh, comparator=np.greater):
     ret[i] = (x, y) contains the x and y values
     and the array is sorted in descending order by absolute y values.
     """
-    if comparator != np.greater and comparator != np.less:
-        raise ValueError("Comparator may only be np.greater or np.less")
+    _check_extrema_comparator(comparator)
     idxs = np.where(comparator(fy, thresh))
     return __mapAndSortIndices(fx, fy, idxs, comparator == np.greater)
 
