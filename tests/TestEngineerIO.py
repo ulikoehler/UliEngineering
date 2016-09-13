@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
+from numpy.testing import assert_allclose
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO import _formatWithSuffix
@@ -159,10 +159,10 @@ class TestEngineerIO(object):
         assert_equal(self.io.normalize_numeric_safe("1.25 V"), 1.25)
         assert_equal(self.io.normalize_numeric_safe("1k25 V"), 1250.0)
         assert_equal(self.io.normalize_numeric_safe(b"1k25 V"), 1250.0)
-        assert_equal(self.io.normalize_numeric_safe(["1k25 V", "4.25 A"]), [1250.0, 4.25])
-        # Invali
+        assert_allclose(self.io.normalize_numeric_safe(["1k25 V", "4.25 A"]), [1250.0, 4.25])
+        # Invalid inputs and partially invalid inputs
         assert_is_none(self.io.normalize_numeric_safe("foobar"))
-        assert_equal(self.io.normalize_numeric_safe(["foobar", "1.2 J"]), [None, 1.2])
+        assert_allclose(self.io.normalize_numeric_safe(["foobar", "1.2 J"]), [np.nan, 1.2])
 
     def test_normalize_numeric(self):
         assert_equal(self.io.normalize_numeric(1.25), 1.25)
@@ -170,7 +170,7 @@ class TestEngineerIO(object):
         assert_equal(self.io.normalize_numeric("1.25 V"), 1.25)
         assert_equal(self.io.normalize_numeric("1k25 V"), 1250.0)
         assert_equal(self.io.normalize_numeric(b"1k25 V"), 1250.0)
-        assert_equal(self.io.normalize_numeric(["1k25 V", "4.25 A"]), [1250.0, 4.25])
+        assert_allclose(self.io.normalize_numeric(["1k25 V", "4.25 A"]), np.asarray([1250.0, 4.25]))
 
     @raises(ValueError)
     def test_normalize_numeric_invalid(self):

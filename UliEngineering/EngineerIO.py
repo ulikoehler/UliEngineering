@@ -190,6 +190,9 @@ class EngineerIO(object):
         # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
+        # Handle lists / array
+        if isinstance(s, (list, tuple, np.ndarray)):
+            return [self.normalize(elem) for elem in s]
         # Perform splitting
         res = self.split_input(s.strip())
         (num, suffix, unit) = res
@@ -269,7 +272,8 @@ class EngineerIO(object):
 
         Use toolz.itertoolz.compact() on the result to remove all None values. 
 
-        Returns a list with None (on error) or the numeric value (no unit)
+        Returns an ndarray with np.nan (on error) or the numeric value (no unit).
+
         """
         if arg is None:
             raise ValueError("Can't normalize None")
@@ -281,10 +285,10 @@ class EngineerIO(object):
             v = self.safe_normalize(arg)
             return None if v is None else v[0]
         # It's an iterable
-        ret = []
-        for elem in arg:
+        ret = np.zeros(len(arg))
+        for i, elem in enumerate(arg):
             v = self.safe_normalize(elem)
-            ret.append(None if v is None else v[0])
+            ret[i] = np.nan if v is None else v[0]
         return ret
 
     def normalize_numeric(self, arg):
@@ -292,7 +296,9 @@ class EngineerIO(object):
         Normalize each element of an iterable and retrieve only the numeric value
         (the unit is ignored). Works on iterables and string-likes.
 
-        Raises if any of the values can't be normalized
+        Raises if any of the values can't be normalized.
+
+        If the given value is an iterable, a ndarray is returned.
         """
         if arg is None:
             raise ValueError("Can't normalize None")
@@ -305,7 +311,10 @@ class EngineerIO(object):
         if isinstance(arg, (str, bytes)):
             return self.normalize(arg)[0]
         # It's an iterable
-        return [self.normalize(elem)[0] for elem in arg]
+        ret = np.zeros(len(arg))
+        for i, elem in enumerate(arg):
+            ret[i] = self.normalize(elem)[0]
+        return ret
 
 
 # Default instance, initialized on first use
