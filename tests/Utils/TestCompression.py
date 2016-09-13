@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
 from subprocess import check_output
 from nose.tools import assert_equal, assert_true, raises
 from UliEngineering.Utils.Compression import *
@@ -12,9 +13,9 @@ class TestAutoOpen(object):
         self.tempdir = self.tempfiles.mkdtemp()
 
     def testAutoOpen(self):
-        gzfile = self.tempdir + "/test.gz"
-        bzfile = self.tempdir + "/test.bz2"
-        xzfile = self.tempdir + "/test.xz"
+        gzfile = os.path.join(self.tempdir, "test.gz")
+        bzfile = os.path.join(self.tempdir, "test.bz2")
+        xzfile = os.path.join(self.tempdir, "test.xz")
         # Create files
         check_output("echo abc | gzip -c > {0}".format(gzfile), shell=True)
         check_output("echo def | bzip2 -c > {0}".format(bzfile), shell=True)
@@ -27,5 +28,9 @@ class TestAutoOpen(object):
         with auto_open(xzfile) as infile:
             assert_equal("ghi\n", infile.read())
 
-
-
+    @raises(ValueError)
+    def testInvalidExtension(self):
+        "Test auto_open with a .foo file"
+        # No need to actually write the file!
+        filename = os.path.join(self.tempdir, "test.foo")
+        auto_open(filename)

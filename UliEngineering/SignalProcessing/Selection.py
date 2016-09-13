@@ -204,7 +204,7 @@ def __mapAndSortIndices(x, y, idxs, sort_descending=True):
     # Copy x/y values to new array
     return np.column_stack((xvals[idxs], yvals[idxs]))
 
-def _check_extrema_comparator(comp):
+def _check_extrema_comparator(comparator):
     """
     Raise if the given comparator is neither np.greater nor np.less
     """
