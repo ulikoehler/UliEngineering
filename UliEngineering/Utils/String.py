@@ -3,7 +3,22 @@
 String utilities and algorithms
 """
 
+__all__ = ["split_nth"]
+
+
 def split_nth(s, delimiter=",", nth=1):
+	# Find
+	if nth <= 0:
+		raise ValueError("Invalid nth parameter: Must be >= 0 but value is {0}".format(nth))
+	if nth == 1:
+		startidx = 0
+	#
+	startidx = 0
+	nc = nth
+	while nc > 0:
+
+
+def split_nth_x(s, delimiter=",", nth=1):
 	"""
 	Like s.split(delimiter), but only returns the nth string of split's return array.
 	Other strings or the split list itself are not generated, therefore using this function
