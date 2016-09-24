@@ -26,9 +26,14 @@ class TestNoiseDensity(object):
         assert_equal(auto_format(bottom_resistor_by_ratio, 1000.0, 0.5), "1000 Ω")
         assert_equal(auto_format(bottom_resistor_by_ratio, 1000.0, 5/6.0), "200 Ω")
 
-    def test_Ω(self):
+    def test_feedback_resistors(self):
         assert_approx_equal(feedback_top_resistor(1.8, 816e3, 0.8), 1020e3)
         assert_approx_equal(feedback_bottom_resistor(1.8, 1020e3, 0.8), 816e3)
         # Test string input
         assert_approx_equal(feedback_top_resistor("1.8 V", "816 kΩ", "0.8 V"), 1020e3)
         assert_approx_equal(feedback_bottom_resistor("1.8 V", "1020 kΩ", "0.8 V"), 816e3)
+
+    def test_feedback_voltage(self):
+        assert_approx_equal(feedback_actual_voltage(816e3, 1020e3, 0.8), 1.8)
+        # String input
+        assert_approx_equal(feedback_actual_voltage("816 kΩ", "1.02 MΩ", "0.8 V"), 1.8)

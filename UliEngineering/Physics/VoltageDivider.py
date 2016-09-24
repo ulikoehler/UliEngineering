@@ -8,7 +8,7 @@ from .Resistors import *
 
 __all__ = ["unloaded_ratio", "loaded_ratio", "top_resistor_by_ratio",
            "bottom_resistor_by_ratio", "feedback_top_resistor",
-           "feedback_bottom_resistor"]
+           "feedback_bottom_resistor", "feedback_actual_voltage"]
 
 
 def unloaded_ratio(r1, r2) -> Quantity(""):
@@ -62,7 +62,7 @@ def feedback_top_resistor(vexp, rbot, vfb) -> Quantity("Ω"):
     rbot : float
         The known bottom resistor
     vfb : float
-        The feedback voltage (that needs to be targeted by) 
+        The feedback voltage that is servoed by the regulator
     """
     vexp = normalize_numeric(vexp)
     rbot = normalize_numeric(rbot)
@@ -83,7 +83,7 @@ def feedback_bottom_resistor(vexp, rtop, vfb) -> Quantity("Ω"):
     rtop : float
         The known top resistor
     vfb : float
-        The feedback voltage (that needs to be targeted by) 
+        The feedback voltage that is servoed by the regulator
     """
     vexp = normalize_numeric(vexp)
     rtop = normalize_numeric(rtop)
@@ -91,4 +91,24 @@ def feedback_bottom_resistor(vexp, rtop, vfb) -> Quantity("Ω"):
     # Vo = Vfb * (R1/R2 + 1)
     # solve A = B*((C/D) + 1) for D
     return (vfb * rtop) / (vexp - vfb)
+
+
+def feedback_actual_voltage(rtop, rbot, vfb) -> Quantity("V"):
+    """
+    Compute the actual voltage regulator output in a feedback
+    servo setup. Returns the Vout voltage.
+
+    Parameters
+    ----------
+    rtop : float
+        The top resistor of the voltage divider
+    rbot : float
+        The bottom resistor of the voltage divider
+    vfb : float
+        The feedback voltage
+    """
+    # Equation: Vout * ratio = vfb
+    ratio = unloaded_ratio(rtop, rbot)
+    return normalize_numeric(vfb) / ratio
+
 
