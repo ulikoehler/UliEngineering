@@ -18,7 +18,7 @@ def unloaded_ratio(r1, r2) -> Quantity(""):
     """
     r1 = normalize_numeric(r1)
     r2 = normalize_numeric(r2)
-    return r1 / (r1 + r2)
+    return r2 / (r1 + r2)
 
 def loaded_ratio(r1, r2, rl) -> Quantity(""):
     """

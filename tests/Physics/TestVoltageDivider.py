@@ -8,6 +8,8 @@ from UliEngineering.EngineerIO import auto_format
 class TestNoiseDensity(object):
     def test_unloaded_ratio(self):
         assert_approx_equal(unloaded_ratio(1000.0, 1000.0), 0.5)
+        # Top resistor has lower value => ratio < 0.5
+        assert_approx_equal(unloaded_ratio(600, 1000.0), 0.625)
 
     def test_loaded_ratio(self):
         assert_approx_equal(loaded_ratio(1000.0, 1000.0, 1e60), 0.5)
@@ -34,6 +36,6 @@ class TestNoiseDensity(object):
         assert_approx_equal(feedback_bottom_resistor("1.8 V", "1020 kΩ", "0.8 V"), 816e3)
 
     def test_feedback_voltage(self):
-        assert_approx_equal(feedback_actual_voltage(816e3, 1020e3, 0.8), 1.8)
+        assert_approx_equal(feedback_actual_voltage(1020e3, 816e3, 0.8), 1.8)
         # String input
-        assert_approx_equal(feedback_actual_voltage("816 kΩ", "1.02 MΩ", "0.8 V"), 1.8)
+        assert_approx_equal(feedback_actual_voltage("1.02 MΩ", "816 kΩ", "0.8 V"), 1.8)
