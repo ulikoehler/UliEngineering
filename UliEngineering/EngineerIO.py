@@ -28,7 +28,8 @@ from collections import namedtuple
 import numpy as np
 
 __all__ = ["Quantity", "UnannotatedReturnValueError",
-           "normalize_interpunctation", "EngineerIO"]
+           "normalize_interpunctation", "EngineerIO",
+           "auto_format", "normalize_numeric"]
 
 Quantity = namedtuple("Quantity", ["unit"])
 
