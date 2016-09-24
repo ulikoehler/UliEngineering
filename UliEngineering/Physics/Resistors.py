@@ -13,6 +13,10 @@ import operator
 import numpy as np
 from UliEngineering.EngineerIO import Quantity, normalize_numeric
 
+__all__ = ["e96", "e48", "e24", "e12", "resistor_range",
+           "standard_resistors", "parallel_resistors",
+           "serial_resistors", "nearest_resistor"]
+
 # Standard resistor sequences
 e96 = np.asarray([
        1.00, 1.02, 1.05, 1.07, 1.10, 1.13, 1.15, 1.18, 1.21, 1.24, 1.27, 1.30, 1.33, 1.37, 1.40,
@@ -32,24 +36,27 @@ e24 = np.asarray([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0,
 e12 = np.asarray([1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2])
 
 
-def getResistorRange(multiplicator, sequence=e96):
-    "Get a single E96 range of resistors, e.g. for 1k to <10k use multiplicator = 1000"
+def resistor_range(multiplicator, sequence=e96):
+    """
+    Get a single range of resistors of a given sequence,
+    e.g. for 1k to <10k use multiplicator = 1000.
+    """
     return sequence * multiplicator
 
-def getStandardResistors(minExp=-1, maxExp=9, sequence=e96):
+def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     """
     Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
     exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
     multiplicators = [10 ** x for x in exponents]
-    return itertools.chain(*(getResistorRange(r, sequence=sequence) for r in multiplicators))
+    return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
 
-def findNearestResistor(value, sequence=e96) -> Quantity("Ω"):
+def nearest_resistor(value, sequence=e96) -> Quantity("Ω"):
     """
     Find the standard reistor value with the minimal difference to the given value
     """
-    return min(getStandardResistors(sequence=sequence), key=lambda r: abs(value - r))
+    return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
 
-def parallelResistors(*args) -> Quantity("Ω"):
+def parallel_resistors(*args) -> Quantity("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
@@ -57,7 +64,7 @@ def parallelResistors(*args) -> Quantity("Ω"):
     resistors = np.asarray(list(map(normalize_numeric, args)))
     return 1.0 / np.sum(np.reciprocal(resistors))
 
-def serialResistors(*args) -> Quantity("Ω"):
+def serial_resistors(*args) -> Quantity("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
