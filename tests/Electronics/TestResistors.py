@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true
-from UliEngineering.Physics.Resistors import *
+from UliEngineering.Electronics.Resistors import *
 from UliEngineering.EngineerIO import formatValue
 
 class TestResistors(object):

@@ -3,7 +3,6 @@
 """
 Utilities for computations related to noise density
 """
-from .Resistors import *
 from UliEngineering.EngineerIO import normalize_numeric, Quantity
 import numpy as np
 

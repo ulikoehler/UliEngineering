@@ -10,7 +10,6 @@ Johnson Nyquist noise utilities for both voltage and current noise
 >>> print(autoFormat(johnson_nyquist_noise_voltage, "10 MΩ", 1000, 25))
 """
 import scipy.constants
-from .Resistors import *
 from .Temperature import normalize_temperature, celsius_to_kelvin
 from UliEngineering.EngineerIO import normalize_numeric, Quantity
 import math

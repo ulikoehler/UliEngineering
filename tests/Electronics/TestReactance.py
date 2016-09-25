@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal
-from UliEngineering.Physics.Reactance import *
+from UliEngineering.Electronics.Reactance import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
 

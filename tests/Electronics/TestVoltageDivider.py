@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal
-from UliEngineering.Physics.VoltageDivider import *
+from UliEngineering.Electronics.VoltageDivider import *
 from UliEngineering.EngineerIO import auto_format
 
 class TestNoiseDensity(object):
