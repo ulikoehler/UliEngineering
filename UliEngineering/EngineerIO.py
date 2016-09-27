@@ -29,7 +29,7 @@ import numpy as np
 
 __all__ = ["Quantity", "UnannotatedReturnValueError",
            "normalize_interpunctation", "EngineerIO",
-           "auto_format", "normalize_numeric"]
+           "auto_format", "normalize_numeric", "format_value"]
 
 Quantity = namedtuple("Quantity", ["unit"])
 
@@ -391,7 +391,7 @@ def normalizeEngineerInput(s, encoding="utf8"):
     __init_engineer_io_instance()
     return EngineerIO.instance.normalize(s)
 
-def formatValue(v, unit=""):
+def format_value(v, unit=""):
     __init_engineer_io_instance()
     return EngineerIO.instance.normalize(v, unit)
 
