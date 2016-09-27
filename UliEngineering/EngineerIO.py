@@ -393,7 +393,7 @@ def normalizeEngineerInput(s, encoding="utf8"):
 
 def format_value(v, unit=""):
     __init_engineer_io_instance()
-    return EngineerIO.instance.normalize(v, unit)
+    return EngineerIO.instance.format(v, unit)
 
 def safeNormalizeEngineerInput(v, unit=""):
     __init_engineer_io_instance()
