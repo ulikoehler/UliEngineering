@@ -3,7 +3,6 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true
 from UliEngineering.Electronics.Resistors import *
-from UliEngineering.EngineerIO import formatValue
 
 class TestResistors(object):
     def test_parallel_resistors(self):
