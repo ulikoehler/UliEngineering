@@ -31,3 +31,10 @@ class TestInvertBijection(object):
 
     def testEmpty(self):
         assert_equal((0,), invert_bijection([]).shape)
+
+
+class TestApplyPairwise1D(object):
+    def testSimple(self):
+        assert_allclose([[0,0,0], [1,2,3], [2,4,6]],
+                        apply_pairwise_1d(np.arange(3), np.arange(1,4), lambda a, b: a * b))
+

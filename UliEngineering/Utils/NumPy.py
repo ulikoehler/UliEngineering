@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-__all__ = ["numpy_resize_insert", "invert_bijection"]
+__all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """
@@ -87,3 +87,36 @@ def invert_bijection(arr):
     for new, old in enumerate(arr):
         ret[old] = new
     return ret
+
+
+def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
+    """
+    Given two 1d arrays, generates a 2d matrix
+    containing at any coordinate [x,y] the value of fn(valuesA[x], valuesB[y]).
+    If valu
+
+    The input values do not neccessarily have to be numbers and can be
+    non-uniform throughout the input list data type,
+    however the output (and hence the return type of fn)
+    must be uniform and supported by numpy. The exact data type
+    must be specified in the dtype parameter
+
+    Parameters
+    ----------
+    valuesA : array-like
+        The first array of input values to fn.
+    valuesB : array-like
+        The second array of input values to fn.
+    fn : binary function
+        Applied to input value pairs
+    dtype : numpy-supported data type
+        The datatype that is passed when generating the result matrix.
+    """
+    valuesB = valuesA if valuesB is None else valuesB
+    # TODO: Possibly there is a better algorithm, e.g. np.apply_along_axis?
+    n, m = len(valuesA), len(valuesB)
+    result = np.zeros((n, m), dtype=dtype)
+    for x in range(n):
+        for y in range(m):
+            result[x, y] = fn(valuesA[x], valuesB[y])
+    return result
