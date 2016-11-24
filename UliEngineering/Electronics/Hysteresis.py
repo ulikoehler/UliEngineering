@@ -83,6 +83,12 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     thu = unloaded_ratio(r1, r2)
     return (thl, thu)
 
+def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
+    """Internal push-pull & open-drain common code"""
+    vcc = normalize_numeric(vcc)
+    thl, thu = fn(r1, r2, rh)
+    return (thl * vcc, thu * vcc)
+
 
 def hysteresis_threshold_voltages(r1, r2, rh, vcc):
     """
@@ -103,10 +109,8 @@ def hysteresis_threshold_voltages(r1, r2, rh, vcc):
         The supply voltage that drives the output of the comparator
         and the R1/R2 network.
     """
-    vcc = normalize_numeric(vcc)
-    thl, thu = hysteresis_threshold_ratios(r1, r2, rh)
-    return (thl * vcc, thu * vcc)
-
+    return __hysteresis_threshold_voltages(
+        r1, r2, rh, vcc, hysteresis_threshold_ratios)
 
 def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     """
@@ -127,9 +131,8 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
         The supply voltage that drives the output of the comparator
         and the R1/R2 network.
     """
-    vcc = normalize_numeric(vcc)
-    thl, thu = hysteresis_threshold_ratios_opendrain(r1, r2, rh)
-    return (thl * vcc, thu * vcc)
+    return __hysteresis_threshold_voltages(
+        r1, r2, rh, vcc, hysteresis_threshold_ratios_opendrain)
 
 
 def __hysteresis_threshold_factors(r1, r2, rh, fn):
