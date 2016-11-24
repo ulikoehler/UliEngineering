@@ -38,7 +38,7 @@ def top_resistor_by_ratio(rbottom, ratio) -> Quantity("Ω"):
     """
     rbottom = normalize_numeric(rbottom)
     ratio = normalize_numeric(ratio)
-    return -(rbottom * ratio) / (ratio - 1.0)
+    return rbottom * (1.0 / ratio - 1.0)
 
 
 def bottom_resistor_by_ratio(rtop, ratio) -> Quantity("Ω"):
@@ -48,7 +48,7 @@ def bottom_resistor_by_ratio(rtop, ratio) -> Quantity("Ω"):
     """
     rtop = normalize_numeric(rtop)
     ratio = normalize_numeric(ratio)
-    return rtop * (1.0 / ratio - 1.0)
+    return -(rtop * ratio) / (ratio - 1.0)
 
 def feedback_top_resistor(vexp, rbot, vfb) -> Quantity("Ω"):
     """

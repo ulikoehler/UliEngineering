@@ -22,3 +22,6 @@ class TestHysteresis(object):
         # More realistic values
         assert_allclose(hysteresis_threshold_ratios_opendrain(1e3, 1e3, 1e3), (0.3333333333, 0.5))
         assert_allclose(hysteresis_threshold_voltages_opendrain(1e3, 1e3, 1e3, 5.0), (0.3333333333*5., 0.5*5.))
+
+    def test_hysteresis_resistor(self):
+        assert_allclose(hysteresis_resistor(1e3, 1e3, 0.1), 4500)

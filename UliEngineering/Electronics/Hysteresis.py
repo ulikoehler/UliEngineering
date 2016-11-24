@@ -7,14 +7,15 @@ For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a
 """
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Electronics.Resistors import parallel_resistors
-from UliEngineering.Electronics.VoltageDivider import unloaded_ratio
+from UliEngineering.Electronics.VoltageDivider import unloaded_ratio, bottom_resistor_by_ratio
 import numpy as np
 
 __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_threshold_ratios_opendrain",
            "hysteresis_threshold_voltages_opendrain",
            "hysteresis_threshold_factors",
-           "hysteresis_threshold_factors_opendrain"]
+           "hysteresis_threshold_factors_opendrain",
+           "hysteresis_resistor"]
 
 
 def hysteresis_threshold_ratios(r1, r2, rh):
@@ -189,3 +190,44 @@ def hysteresis_threshold_factors_opendrain(r1, r2, rh):
     # Compute factors
     thnom = unloaded_ratio(r1, r2)
     return (thl / thnom, thu / thnom)
+
+
+def hysteresis_resistor(r1, r2, fh=0.05):
+    """
+    Computes the hysteresis resistor Rh for a given
+    R1, R2 divider network and a given deviation factor.
+
+    The deviation factor fh represents the one-sided deviation
+    from the nominal R1/R2 ratio. The total hysteresis is +-fh,
+    i.e 2*fh.
+
+    For example, for fh=0.05, the threshold will be 95% and 105%
+    of the nominal ratio respectively.
+
+    For open-drain comparators, fh represents the full deviation
+    as the upper threshold is equivalent to the nominal threshold.
+
+
+    Parameters
+    ----------
+    r1 : float or EngineerIO string
+        The top resistor of the divider
+    r2 : float or EngineerIO string
+        The bottom resistor of the divider
+    fh : float or EngineerIO string
+        The deviation factor (e.g. 0.05 for 5% one-sided hysteresis
+         deviation from the nominal r1/r2 value)
+    """
+    # Normalize inputs
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    fh = normalize_numeric(fh)
+    # NOTE: We compute rh for the lower threshold only
+    thnom = unloaded_ratio(r1, r2)
+    ratio_target = thnom * (1. - fh)
+    # Compute the resistor that, in parallel to R2, yields
+    # a divider with our target ratio
+    r2total = bottom_resistor_by_ratio(r1, ratio_target)
+    print(r2total)
+    # Solve 1/R3 = (1/R1 + 1/R2) for R2 => R2 = (R1 * R3) / (R1 - R3)
+    return (r2 * r2total) / (r2 - r2total)
