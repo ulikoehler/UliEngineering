@@ -12,7 +12,9 @@ import numpy as np
 
 __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_threshold_ratios_opendrain",
-           "hysteresis_threshold_voltages_opendrain"]
+           "hysteresis_threshold_voltages_opendrain",
+           "hysteresis_threshold_factors",
+           "hysteresis_threshold_factors_opendrain"]
 
 
 def hysteresis_threshold_ratios(r1, r2, rh):
@@ -127,3 +129,63 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     vcc = normalize_numeric(vcc)
     thl, thu = hysteresis_threshold_ratios_opendrain(r1, r2, rh)
     return (thl * vcc, thu * vcc)
+
+
+def hysteresis_threshold_factors(r1, r2, rh):
+    """
+    Same as hysteresis_threshold_ratios(), but calculates the
+    factor (nominal R1+R2 division ratio / actual ratio) for
+    both the lower and the upper threshold instead of the ratios
+
+    Returns (lower factor, upper factor), a tuple of floats.
+
+    This is useful e.g. for computing
+
+    Parameters
+    ----------
+    r1 : float or EngineerIO string
+        The top resistor of the divider
+    r2 : float or EngineerIO string
+        The bottom resistor of the divider
+    rh : float or EngineerIO string
+        The hysteresis resistor of the divider
+    """
+    # Normalize inputs
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    rh = normalize_numeric(rh)
+    # Compute thresholds
+    thl, thu = hysteresis_threshold_ratios(r1, r2, rh)
+    # Compute factors
+    thnom = unloaded_ratio(r1, r2)
+    return (thl / thnom, thu / thnom)
+
+
+def hysteresis_threshold_factors_opendrain(r1, r2, rh):
+    """
+    Same as hysteresis_threshold_ratios_opendrain(), but calculates the
+    factor (nominal R1+R2 division ratio / actual ratio) for
+    both the lower and the upper threshold instead of the ratios
+
+    Returns (lower factor, upper factor), a tuple of floats.
+
+    This is useful e.g. for computing
+
+    Parameters
+    ----------
+    r1 : float or EngineerIO string
+        The top resistor of the divider
+    r2 : float or EngineerIO string
+        The bottom resistor of the divider
+    rh : float or EngineerIO string
+        The hysteresis resistor of the divider
+    """
+    # Normalize inputs
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    rh = normalize_numeric(rh)
+    # Compute thresholds
+    thl, thu = hysteresis_threshold_ratios_opendrain(r1, r2, rh)
+    # Compute factors
+    thnom = unloaded_ratio(r1, r2)
+    return (thl / thnom, thu / thnom)
