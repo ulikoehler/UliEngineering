@@ -111,4 +111,3 @@ def feedback_actual_voltage(rtop, rbot, vfb) -> Quantity("V"):
     ratio = unloaded_ratio(rtop, rbot)
     return normalize_numeric(vfb) / ratio
 
-

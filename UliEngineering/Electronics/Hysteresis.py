@@ -132,6 +132,19 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     return (thl * vcc, thu * vcc)
 
 
+def __hysteresis_threshold_factors(r1, r2, rh, fn):
+    """Internal push-pull & open-drain common code"""
+    # Normalize inputs
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    rh = normalize_numeric(rh)
+    # Compute thresholds
+    thl, thu = fn(r1, r2, rh)
+    # Compute factors
+    thnom = unloaded_ratio(r1, r2)
+    return (thl / thnom, thu / thnom)
+
+
 def hysteresis_threshold_factors(r1, r2, rh):
     """
     Same as hysteresis_threshold_ratios(), but calculates the
@@ -151,15 +164,8 @@ def hysteresis_threshold_factors(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
-    # Compute thresholds
-    thl, thu = hysteresis_threshold_ratios(r1, r2, rh)
-    # Compute factors
-    thnom = unloaded_ratio(r1, r2)
-    return (thl / thnom, thu / thnom)
+    return __hysteresis_threshold_factors(
+        r1, r2, rh, hysteresis_threshold_ratios)
 
 
 def hysteresis_threshold_factors_opendrain(r1, r2, rh):
@@ -181,15 +187,8 @@ def hysteresis_threshold_factors_opendrain(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
-    # Compute thresholds
-    thl, thu = hysteresis_threshold_ratios_opendrain(r1, r2, rh)
-    # Compute factors
-    thnom = unloaded_ratio(r1, r2)
-    return (thl / thnom, thu / thnom)
+    return __hysteresis_threshold_factors(
+        r1, r2, rh, hysteresis_threshold_ratios_opendrain)
 
 
 def hysteresis_resistor(r1, r2, fh=0.05):
