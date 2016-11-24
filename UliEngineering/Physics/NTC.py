@@ -11,6 +11,7 @@ import functools
 from collections import namedtuple
 import numpy as np
 
+__all__ = ["ntc_resistance"]
 
 def ntc_resistance(r25, b25, t) -> Quantity("Ω"):
     """
