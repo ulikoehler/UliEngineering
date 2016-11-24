@@ -228,6 +228,5 @@ def hysteresis_resistor(r1, r2, fh=0.05):
     # Compute the resistor that, in parallel to R2, yields
     # a divider with our target ratio
     r2total = bottom_resistor_by_ratio(r1, ratio_target)
-    print(r2total)
     # Solve 1/R3 = (1/R1 + 1/R2) for R2 => R2 = (R1 * R3) / (R1 - R3)
     return (r2 * r2total) / (r2 - r2total)
