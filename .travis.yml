@@ -11,5 +11,5 @@ cache: pip
 script: nosetests3
 dist: trusty
 after_success:
-    codecov
+    codecov --token=e3a3e622-b5b4-40a0-b0be-f427bbb23449
     CODECLIMATE_REPO_TOKEN=71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae codeclimate-test-reporter
