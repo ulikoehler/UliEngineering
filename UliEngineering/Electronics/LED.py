@@ -12,6 +12,7 @@ Usage example:
 """
 import itertools
 from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.Exceptions import OperationImpossibleException
 
 __all__ = ["LEDForwardVoltages", "led_series_resistor"]
 
@@ -45,4 +46,9 @@ def led_series_resistor(vsupply, ioperating, vforward) -> Quantity("Ω"):
     vsupply = normalize_numeric(vsupply)
     ioperating = normalize_numeric(ioperating)
     vforward = normalize_numeric(vforward)
+    if vforward > vsupply:
+        raise OperationImpossibleException(
+            "Can't operate LED with forward voltage {} on {} supply".format(
+                vsupply, vforward
+            ))
     return (vsupply - vforward) / ioperating
