@@ -7,7 +7,7 @@ before_install:
     - sudo apt-get install -qq python3-pip python3-numpy python3-scipy python3-matplotlib python3-nose
     - sudo pip3 install codecov rednose nose coverage six toolz nose-parameterized codeclimate-test-reporter
 cache: pip
-script: nosetests
+script: nosetests3
 dist: trusty
 after_success:
     codecov
