@@ -31,6 +31,14 @@ class TestAutoStrptime(object):
         assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime("15:02:11"))
         assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime("15:02:11 "))
         assert_equal(datetime.datetime(1900, 1, 1, 15, 2, 11), auto_strptime(" 15:02:11"))
+        #%Y-%m-%d %H
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 0, 0), auto_strptime("2016-02-01 15"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 0, 0), auto_strptime(" 2016-02-01 15"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 0, 0), auto_strptime("2016-02-01 15"))
+        #%Y-%m-%d %H
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 0), auto_strptime("2016-02-01 15:02"))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 0), auto_strptime("2016-02-01 15:02 "))
+        assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 0), auto_strptime(" 2016-02-01 15:02"))
         #%Y-%m-%d %H:%M:%S
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11"))
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11), auto_strptime("2016-02-01 15:02:11 "))

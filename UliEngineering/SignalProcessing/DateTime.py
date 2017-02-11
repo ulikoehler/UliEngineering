@@ -25,18 +25,25 @@ def auto_strptime(s):
     is correct.
 
     Supported formats:
-        %Y-%m-%d %H:%M:%S.%f
-        %H:%M:%S.%f
         %Y-%m-%d
-        %H:%M:%S
+        %Y-%m-%d %H
+        %Y-%m-%d %H:%M
         %Y-%m-%d %H:%M:%S
+        %Y-%m-%d %H:%M:%S.%f
+        %H:%M:%S
+        %H:%M:%S.%f
     """
     s = s.strip()
+    ncolon = s.count(":")
     have_date = "-" in s
     if "." in s: # Have fractional seconds
         dateformat = "%Y-%m-%d %H:%M:%S.%f" if have_date else "%H:%M:%S.%f"
     elif " " not in s: # Have only date or have only time
         dateformat = "%Y-%m-%d" if have_date else "%H:%M:%S"
-    else: # Have date and time but no fractional
+    elif ncolon == 0: # Have date and time and no fractional but only hours
+        dateformat = "%Y-%m-%d %H"
+    elif ncolon == 1: # Have date and time and no fractional but only hours and minutes
+        dateformat = "%Y-%m-%d %H:%M"
+    else:  # Have date and time and no fractional but full time
         dateformat = "%Y-%m-%d %H:%M:%S"
     return datetime.datetime.strptime(s, dateformat)
