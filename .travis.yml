@@ -11,7 +11,7 @@ addons:
             - python3-nose
             - python3-coverage
 install:
-    - pip3 install codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
+    - pip3 install numpy codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
 sudo: false
 script: python3 setup.py test
