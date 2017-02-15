@@ -6,12 +6,10 @@ language: python
 addons:
     apt:
         packages:
-            - python3-numpy
             - python3-scipy
-            - python3-matplotlib
             - python3-nose
             - python3-coverage
-            - python3-nose
+            - python3-toolz
 before_install:
     - pip3 install codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
