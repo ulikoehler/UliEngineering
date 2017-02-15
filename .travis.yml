@@ -3,11 +3,17 @@ language: python
     - "3.4"
     - "3.5"
     - "3.6"
+addons:
+    apt:
+        packages:
+            - python3-numpy
+            - python3-scipy
+            - python3-matplotlib
+            - python3-nose
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq python3-pip python3-numpy python3-scipy python3-matplotlib python3-nose
-    - sudo pip3 install codecov rednose nose coverage six toolz nose-parameterized codeclimate-test-reporter
+    - pip3 install codecov rednose nose coverage six toolz nose-parameterized codeclimate-test-reporter
 cache: pip
+sudo: false
 script: nosetests3
 dist: trusty
 after_success:
