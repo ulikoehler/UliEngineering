@@ -13,7 +13,7 @@ before_install:
     - pip install codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
 sudo: false
-script: nosetests3
+script: nosetests
 dist: trusty
 after_success:
     - codeclimate-test-reporter --token 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
