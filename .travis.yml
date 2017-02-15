@@ -9,9 +9,8 @@ addons:
             - python3-scipy
             - python3-nose
             - python3-coverage
-            - python3-toolz
 before_install:
-    - pip3 install codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
+    - pip install codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
 sudo: false
 script: nosetests3
