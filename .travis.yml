@@ -6,6 +6,7 @@ language: python
 addons:
     apt:
         packages:
+            - python3-numpy
             - python3-scipy
             - python3-nose
             - python3-coverage
