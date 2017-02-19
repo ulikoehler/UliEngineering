@@ -13,3 +13,23 @@ This project is based on these two blogposts:
 Over time, the amount of source code related to electronics calculations grew too large to maintain as a set of blogposts
 
 Pull requests and bugreports of any kind are happily accepted.
+
+## Installation
+
+Run this command on your favourite shell:
+
+```
+sudo pip3 install git+https://github.com/ulikoehler/UliEngineering.git
+```
+
+After that you can use UliEngineering from any Python3 instance. Example:
+
+```
+$ python3
+Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from UliEngineering.EngineerIO import *
+>>> format_value(0.015, "V")
+'15.0 mV'
+```
