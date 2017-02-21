@@ -304,16 +304,9 @@ class EngineerIO(object):
             ret[i] = self.normalize(elem)[0]
         return ret
 
+# Initialize global instance
+EngineerIO.instance = EngineerIO()
 
-# Default instance, initialized on first use
-
-def __init_engineer_io_instance():
-    """
-    Helper function to initialize the default instance
-    the first time any of the global functions is used.
-    """
-    if EngineerIO.instance is None:
-        EngineerIO.instance = EngineerIO()
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """
@@ -375,21 +368,16 @@ def _formatWithSuffix(v, suffix=""):
     return "{0} {1}".format(res, suffix) if suffix else res
 
 def normalize_engineer_notation(s, encoding="utf8"):
-    __init_engineer_io_instance()
     return EngineerIO.instance.normalize(s)
 
 def format_value(v, unit=""):
-    __init_engineer_io_instance()
     return EngineerIO.instance.format(v, unit)
 
 def normalize_engineer_notation(v, unit=""):
-    __init_engineer_io_instance()
     return EngineerIO.instance.safe_normalize(v, unit)
 
 def normalize_numeric(v):
-    __init_engineer_io_instance()
     return EngineerIO.instance.normalize_numeric(v)
 
 def auto_format(v, *args, **kwargs):
-    __init_engineer_io_instance()
     return EngineerIO.instance.auto_format(v, *args, **kwargs)
