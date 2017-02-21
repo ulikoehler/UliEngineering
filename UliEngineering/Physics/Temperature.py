@@ -3,7 +3,7 @@
 """
 Utilities regarding temperatures
 """
-from UliEngineering.EngineerIO import normalizeEngineerInput, Quantity
+from UliEngineering.EngineerIO import normalize_engineer_notation, Quantity
 from UliEngineering.Exceptions import InvalidUnitException, ConversionException
 
 """Celsius zero in Kelvin"""
@@ -26,9 +26,9 @@ def normalize_temperature(t, default_unit="°C") -> Quantity("°K"):
     """
     unit = ""
     if isinstance(t, str):
-        res = normalizeEngineerInput(t)
+        res = normalize_engineer_notation(t)
         if res is None:
-            raise ConversionException("Invalid temperature string: {0}".format(t))
+            raise ValueError("Invalid temperature string: {0}".format(t))
         t, unit = res
     if not unit:
         unit = default_unit

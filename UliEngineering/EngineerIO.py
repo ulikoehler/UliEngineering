@@ -14,7 +14,7 @@ Examples of valid notations include:
     4e6nA
 
 Usage example:
-    >>> print(normalizeEngineerInput("1µ234 Ω"))
+    >>> print(normalize_engineer_notation("1µ234 Ω"))
     (1.234e-6, 'Ω')
 
 Originally published at techoverflow.net.
@@ -29,7 +29,8 @@ import numpy as np
 
 __all__ = ["Quantity", "UnannotatedReturnValueError",
            "normalize_interpunctation", "EngineerIO",
-           "auto_format", "normalize_numeric", "format_value"]
+           "auto_format", "normalize_numeric", "format_value",
+           "normalize_engineer_notation"]
 
 Quantity = namedtuple("Quantity", ["unit"])
 
@@ -42,7 +43,7 @@ _default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"
 _default_1st_suffix_exp = -24  # The exponential multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
-_default_units = frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
+_default_units = set(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
 _numeric_allowed = set("0123456789-e.")
 
 
@@ -387,7 +388,7 @@ def _formatWithSuffix(v, suffix=""):
     #Avoid appending whitespace if there is no suffix
     return "{0} {1}".format(res, suffix) if suffix else res
 
-def normalizeEngineerInput(s, encoding="utf8"):
+def normalize_engineer_notation(s, encoding="utf8"):
     __init_engineer_io_instance()
     return EngineerIO.instance.normalize(s)
 
@@ -395,7 +396,7 @@ def format_value(v, unit=""):
     __init_engineer_io_instance()
     return EngineerIO.instance.format(v, unit)
 
-def safeNormalizeEngineerInput(v, unit=""):
+def normalize_engineer_notation(v, unit=""):
     __init_engineer_io_instance()
     return EngineerIO.instance.safe_normalize(v, unit)
 
