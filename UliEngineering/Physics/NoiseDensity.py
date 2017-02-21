@@ -3,10 +3,11 @@
 """
 Utilities for computations related to noise density
 """
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 import numpy as np
 
-def actualNoise(density, bandwith) -> Quantity("V"):
+def actualNoise(density, bandwith) -> Unit("V"):
     """
     Compute the actual noise given:
      - A noise density in x/√Hz where x is any unit
@@ -19,7 +20,7 @@ def actualNoise(density, bandwith) -> Quantity("V"):
     bandwith = normalize_numeric(bandwith)
     return np.sqrt(bandwith) * density
 
-def noiseDensity(actual_noise, bandwith) -> Quantity("V/√Hz"):
+def noiseDensity(actual_noise, bandwith) -> Unit("V/√Hz"):
     """
     Compute the noise density given:
      - A noise density in x/√Hz where x is any unit

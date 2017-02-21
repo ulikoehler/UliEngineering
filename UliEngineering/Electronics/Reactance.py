@@ -7,9 +7,11 @@ Originally published at techoverflow.net
 """
 import itertools
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 
-def capacitive_reactance(c, f=1000.0) -> Quantity("Ω"):
+
+def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
@@ -17,7 +19,8 @@ def capacitive_reactance(c, f=1000.0) -> Quantity("Ω"):
     f = normalize_numeric(f)
     return 1.0 / (2 * np.pi * f * c)
 
-def inductive_reactance(l, f=1000.0) -> Quantity("Ω"):
+
+def inductive_reactance(l, f=1000.0) -> Unit("Ω"):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """

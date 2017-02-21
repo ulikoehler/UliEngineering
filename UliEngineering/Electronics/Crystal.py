@@ -3,12 +3,13 @@
 """
 Crystal oscillator utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 import numpy as np
 
 __all__ = ["load_capacitors"]
 
-def load_capacitors(cload, cstray="2 pF") -> Quantity("F"):
+def load_capacitors(cload, cstray="2 pF") -> Unit("F"):
     """
     Compute the load capacitors which should be used for a given crystal,
     given that the load capacitors should be symmetric (i.e. have the same value).

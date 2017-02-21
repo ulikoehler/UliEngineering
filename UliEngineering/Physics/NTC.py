@@ -6,12 +6,14 @@ Utilities regarding NTC thermistors
 See http://www.vishay.com/docs/29053/ntcintro.pdf for details
 """
 from UliEngineering.Physics.Temperature import zero_point_celsius, normalize_temperature
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 import numpy as np
 
 __all__ = ["ntc_resistance"]
 
-def ntc_resistance(r25, b25, t) -> Quantity("Ω"):
+
+def ntc_resistance(r25, b25, t) -> Unit("Ω"):
     """
     Compute the NTC resistance by  temperature and NTC parameters
 

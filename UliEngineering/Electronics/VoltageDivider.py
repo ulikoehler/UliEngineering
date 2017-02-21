@@ -3,15 +3,16 @@
 """
 Utilities for computing different aspects and complexities of voltage dividers
 """
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
 from .Resistors import *
+from UliEngineering.Units import Unit
 
 __all__ = ["unloaded_ratio", "loaded_ratio", "top_resistor_by_ratio",
            "bottom_resistor_by_ratio", "feedback_top_resistor",
            "feedback_bottom_resistor", "feedback_actual_voltage"]
 
 
-def unloaded_ratio(r1, r2) -> Quantity(""):
+def unloaded_ratio(r1, r2) -> Unit(""):
     """
     Compute the denominator of the  division ratio of a voltage divider, not taking into account
     parasitic properties or loading
@@ -20,7 +21,7 @@ def unloaded_ratio(r1, r2) -> Quantity(""):
     r2 = normalize_numeric(r2)
     return r2 / (r1 + r2)
 
-def loaded_ratio(r1, r2, rl) -> Quantity(""):
+def loaded_ratio(r1, r2, rl) -> Unit(""):
     """
     Compute the denominator of the  division ratio of a voltage divider, not taking into account
     parasitic properties but loading.
@@ -31,7 +32,7 @@ def loaded_ratio(r1, r2, rl) -> Quantity(""):
     return r1 / (r1 + parallel_resistors(r2, rl))
 
 
-def top_resistor_by_ratio(rbottom, ratio) -> Quantity("Ω"):
+def top_resistor_by_ratio(rbottom, ratio) -> Unit("Ω"):
     """
     Compute the bottom resistor of a voltage divider given the top resistor value
     and the division ration
@@ -41,7 +42,7 @@ def top_resistor_by_ratio(rbottom, ratio) -> Quantity("Ω"):
     return rbottom * (1.0 / ratio - 1.0)
 
 
-def bottom_resistor_by_ratio(rtop, ratio) -> Quantity("Ω"):
+def bottom_resistor_by_ratio(rtop, ratio) -> Unit("Ω"):
     """
     Compute the bottom resistor of a voltage divider given the top resistor value
     and the division ration
@@ -50,7 +51,7 @@ def bottom_resistor_by_ratio(rtop, ratio) -> Quantity("Ω"):
     ratio = normalize_numeric(ratio)
     return -(rtop * ratio) / (ratio - 1.0)
 
-def feedback_top_resistor(vexp, rbot, vfb) -> Quantity("Ω"):
+def feedback_top_resistor(vexp, rbot, vfb) -> Unit("Ω"):
     """
     Utility to compute the top feedback resistor
     in a voltage feedback network (e.g. for a DC/DC converter)
@@ -71,7 +72,7 @@ def feedback_top_resistor(vexp, rbot, vfb) -> Quantity("Ω"):
     # solve A = B*((C/D) + 1) for C
     return rbot * (vexp - vfb) / vfb
 
-def feedback_bottom_resistor(vexp, rtop, vfb) -> Quantity("Ω"):
+def feedback_bottom_resistor(vexp, rtop, vfb) -> Unit("Ω"):
     """
     Utility to compute the bottom feedback resistor
     in a voltage feedback network (e.g. for a DC/DC converter)
@@ -93,7 +94,7 @@ def feedback_bottom_resistor(vexp, rtop, vfb) -> Quantity("Ω"):
     return (vfb * rtop) / (vexp - vfb)
 
 
-def feedback_actual_voltage(rtop, rbot, vfb) -> Quantity("V"):
+def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
     """
     Compute the actual voltage regulator output in a feedback
     servo setup. Returns the Vout voltage.

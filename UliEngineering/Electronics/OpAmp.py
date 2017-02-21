@@ -12,9 +12,10 @@ Usage example:
 """
 import itertools
 import math
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 
-def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Quantity("V"):
+def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Unit("V"):
     """
     Computes the output voltage of a non-inverting summing amplifier:
     V1 connected via R1 to IN+

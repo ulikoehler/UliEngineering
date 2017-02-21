@@ -24,18 +24,13 @@ import math
 import itertools
 import functools
 from toolz import functoolz
-from collections import namedtuple
 import numpy as np
+from .Units import *
 
-__all__ = ["Quantity", "UnannotatedReturnValueError",
-           "normalize_interpunctation", "EngineerIO",
+__all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value",
            "normalize_engineer_notation"]
 
-Quantity = namedtuple("Quantity", ["unit"])
-
-class UnannotatedReturnValueError(Exception):
-    pass
 
 # Suffices handled by the library
 _default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
@@ -255,24 +250,15 @@ class EngineerIO(object):
         For example this can be used to format using UliEngineering Physics quantities
         The function's return value is expected to a be annotated with a Quantity() value.
         """
-        if not callable(fn):
-            raise ValueError("fn must be callable")
-        # Access innermost function inside possibly nested partials
-        annotatedFN = fn
-        while isinstance(annotatedFN, functools.partial):
-            annotatedFN = annotatedFN.func
-        try:
-            qty = annotatedFN.__annotations__["return"]
-        except KeyError:
-            raise UnannotatedReturnValueError("Function {0} does not have an annotated return value")
-        return self.format(fn(*args, **kwargs), qty.unit)
+        unit = find_returned_unit(fn)
+        return self.format(fn(*args, **kwargs), unit=unit)
 
     def normalize_numeric_safe(self, arg):
         """
         Normalize each element of an iterable and retrieve only the numeric value
         (the unit is ignored). Works on iterables and string-likes.
 
-        Use toolz.itertoolz.compact() on the result to remove all None values. 
+        Use toolz.itertoolz.compact() on the result to remove all None values.
 
         Returns an ndarray with np.nan (on error) or the numeric value (no unit).
 

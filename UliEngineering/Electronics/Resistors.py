@@ -11,7 +11,8 @@ import itertools
 import functools
 import operator
 import numpy as np
-from UliEngineering.EngineerIO import Quantity, normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.Units import Unit
 
 __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "standard_resistors", "parallel_resistors",
@@ -50,13 +51,13 @@ def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
 
-def nearest_resistor(value, sequence=e96) -> Quantity("Ω"):
+def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the standard reistor value with the minimal difference to the given value
     """
     return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
 
-def parallel_resistors(*args) -> Quantity("Ω"):
+def parallel_resistors(*args) -> Unit("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
@@ -64,7 +65,7 @@ def parallel_resistors(*args) -> Quantity("Ω"):
     resistors = np.asarray(list(map(normalize_numeric, args)))
     return 1.0 / np.sum(np.reciprocal(resistors))
 
-def serial_resistors(*args) -> Quantity("Ω"):
+def serial_resistors(*args) -> Unit("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.

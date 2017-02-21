@@ -3,6 +3,7 @@
 from numpy.testing import assert_allclose
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
+from UliEngineering.Units import *
 from UliEngineering.EngineerIO import _formatWithSuffix
 from nose_parameterized import parameterized
 import functools
@@ -183,7 +184,7 @@ class TestEngineerIO(object):
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 
     def testAutoFormatValid(self):
-        def testfn(n=1.0) -> Quantity("V"): return n
+        def testfn(n=1.0) -> Unit("V"): return n
         assert_equal(self.io.auto_format(testfn), "1.00 V")
         # Test functools.partial() behaviour
         testfn2 = functools.partial(testfn, n=2.0)

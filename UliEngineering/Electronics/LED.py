@@ -11,8 +11,9 @@ Usage example:
 
 """
 import itertools
-from UliEngineering.EngineerIO import normalize_numeric, Quantity
+from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Exceptions import OperationImpossibleException
+from UliEngineering.Units import Unit
 
 __all__ = ["LEDForwardVoltages", "led_series_resistor"]
 
@@ -35,7 +36,7 @@ class LEDForwardVoltages():
     Blue = 2.9
     White = 4.0
 
-def led_series_resistor(vsupply, ioperating, vforward) -> Quantity("Ω"):
+def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
     """
     Computes the required series resistor for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
