@@ -6,12 +6,6 @@ A python library for calculations perfomed in electronics engineering.
 
 This project is still in pre-alpha and only contains a collection of electronics functionality from [techoverflow.net](http://techoverflow.net). The python package itself has not been built or published yet.
 
-This project is based on these two blogposts:
-* [Normalizing electronics engineering value notations using Python](http://techoverflow.net/blog/2015/06/09/normalizing-electronics-engineering-value-notations-using-python/)
-* [Finding the nearest E96 resistor value in Python](http://techoverflow.net/blog/2015/05/19/finding-the-nearest-e96-resistor-value-in-python/)
-
-Over time, the amount of source code related to electronics calculations grew too large to maintain as a set of blogposts
-
 Pull requests and bugreports of any kind are happily accepted.
 
 ## Installation
@@ -33,3 +27,10 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> format_value(0.015, "V")
 '15.0 mV'
 ```
+
+## Getting started
+
+On [my blog](https://techoverflow.net), I've posted several easy-to-use examples on how to solve real-world problems using UliEngineering:
+
+[Normalizing electronics engineering value notations using Python](https://techoverflow.net/2015/06/09/normalizing-electronics-engineering-value-notations-using-python/)
+[Finding the nearest E96 resistor value in Python](https://techoverflow.net/2015/05/19/finding-the-nearest-e96-resistor-value-in-python/)
