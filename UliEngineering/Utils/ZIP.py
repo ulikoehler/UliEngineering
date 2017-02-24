@@ -7,7 +7,7 @@ import os.path
 import zipfile
 from .Files import list_recursive
 
-__all__ = ["create_zip_from_directory", "list_zip"]
+__all__ = ["create_zip_from_directory", "list_zip", "read_from_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
     """
@@ -44,3 +44,38 @@ def list_zip(zippath):
     """
     with zipfile.ZipFile(zippath) as zipin:
         return zipin.namelist()
+
+def read_from_zip(zippath, filepaths, binary=True):
+    """
+    Read one or multiple files from a ZIP, copying their contents to memory.
+    
+    Parameters
+    ----------
+    zippath : path-like
+        The path of the ZIP file
+    filepath : str or iterable of strings
+        The path of the file inside the ZIP
+        Multiple paths allowed (=> list is returned)
+    binary : bool
+        If True, returns a io.BytesIO().
+        If False, returns a io.StringIO()
+        
+    Returns
+    -------
+    If filepath is a string, a single file-like object (in-memory).
+    If filepath is any other iterable, a list of file-like in-memory objs.
+    """
+    iof = io.BytesIO if binary else io.StringIO
+    # Handle single file using the same code as multiple files
+    single_file = isinstance(filepaths, str)
+    filepaths = [filepaths] if single_file else filepaths
+    # Actually
+    with zipfile.ZipFile(zippath) as thezip:
+        # Read multiple files
+        iobufs = []
+        for file in filepaths:
+            with thezip.open(file) as inf:
+                iobufs.append(iof(inf.read()))
+        # Return result
+        return iobufs[0] if single_file else iobufs
+            
