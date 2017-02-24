@@ -73,3 +73,17 @@ class TestFileUtils(object):
         assert_equal([os.path.join(tmpdir, "test.txt"),
                        os.path.join(tmpdir, "dir/test2.txt")],
             list(list_recursive(tmpdir, relative=False, files_only=True)))
+
+    def test_(self):
+        inp = ['ne_10m_admin_0_countries.README.html',
+               'ne_10m_admin_0_countries.VERSION.txt',
+               'ne_10m_admin_0_countries.dbf',
+               'ne_10m_admin_0_countries.prj',
+               'ne_10m_admin_0_countries.shp',
+               'ne_10m_admin_0_countries.shx',
+               'ne_10m_admin_0_countries.cpg']
+        exp = [['ne_10m_admin_0_countries.dbf',
+                'ne_10m_admin_0_countries.prj',
+                'ne_10m_admin_0_countries.shp']]
+        assert_equal(exp, list(find_datasets_by_extension(
+            inp, (".dbf", ".prj", ".shp"))))
