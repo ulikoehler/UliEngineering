@@ -7,7 +7,7 @@ import os.path
 import zipfile
 from .Files import list_recursive
 
-__all__ = ["create_zip_from_directory"]
+__all__ = ["create_zip_from_directory", "list_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
     """
