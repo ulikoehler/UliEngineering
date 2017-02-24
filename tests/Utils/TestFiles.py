@@ -28,7 +28,7 @@ class TestFileUtils(object):
         handle.close()
         assert_equal(2, count_lines(fname))
         # Test 2
-        handle, fname = tmp.mkftemp()
+        handle, fname = self.tmp.mkftemp()
         handle.write("foo\r\n\r\n\r\n\na\r\na\n\n\n\r\n\r\r\n")
         handle.close()
         assert_equal(3, count_lines(fname))

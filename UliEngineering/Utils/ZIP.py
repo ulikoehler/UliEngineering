@@ -44,4 +44,3 @@ def list_zip(zippath):
     """
     with zipfile.ZipFile(zippath) as zipin:
         return zipin.namelist()
-    
