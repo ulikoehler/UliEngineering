@@ -7,7 +7,6 @@ from nose_parameterized import parameterized
 import functools
 import numpy as np
 
-
 class TestBoundingBox(object):
     def test_bbox(self):
         coords = [(6.74219, -53.57835),
@@ -32,3 +31,17 @@ class TestBoundingBox(object):
     @raises(ValueError)
     def test_invalid_bbox_input(self, arr):
         BoundingBox(arr)
+
+class TestCoordinates(object):
+    def test_polygon_lines(self):
+        coords = np.asarray([[0, 1],
+                             [1, 2],
+                             [2, 3]])
+        closed = np.asarray([[[2, 3], [0, 1]],
+                             [[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]]])
+        opened = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]]])
+        assert_allclose(closed, polygon_lines(coords, closed=True))
+        assert_allclose(opened, polygon_lines(coords, closed=False))
+                    
