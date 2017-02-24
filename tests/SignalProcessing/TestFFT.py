@@ -129,3 +129,9 @@ class TestFFT(object):
         fy = np.asarray([2, 3, 4, 5])
         assert_almost_equal(amplitude_integral(fx, fy), sum(fy) / 3.)
         assert_almost_equal(amplitude_integral(fx, fy, low=1., high=2.01), 3 + 4)
+
+    @raises(ValueError)
+    def test_too_small_fft(self):
+        d = np.random.random(10)
+        # Just test if it actually runs
+        x, y = simpleParallelFFTReduce(d, 1000.0, 100)
