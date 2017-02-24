@@ -8,7 +8,8 @@ import functools
 import numpy as np
 
 class TestBoundingBox(object):
-    def test_bbox(self):
+    def test_bbox_real(self):
+        """Test bounding box with real data"""
         coords = [(6.74219, -53.57835),
                   (6.74952, -53.57241),
                   (6.75652, -53.56289),
@@ -23,6 +24,25 @@ class TestBoundingBox(object):
         assert_allclose(bbox.width, 6.75652 - 6.73462)
         assert_allclose(bbox.height, -53.56289 - -53.57835)
         assert_in("BoundingBox(", bbox.__repr__())
+
+    def test_bbox(self):
+        """Test bounding box with simulated data"""
+        coords = [(0., 0.),
+                  (20., 10)]
+
+        coords = np.asarray(coords)
+        bbox = BoundingBox(coords)
+        assert_allclose(bbox.minx, 0)
+        assert_allclose(bbox.maxx, 20)
+        assert_allclose(bbox.miny, 0)
+        assert_allclose(bbox.maxy, 10)
+        assert_allclose(bbox.width, 20)
+        assert_allclose(bbox.height, 10)
+        assert_allclose(bbox.area, 20*10)
+        assert_allclose(bbox.aspect_ratio, 2)
+        assert_allclose(bbox.center, (10., 5.))
+        assert_allclose(bbox.max_dim, 20)
+        assert_allclose(bbox.min_dim, 10)
 
     @parameterized([(np.zeros((0,2)),),
                     (np.zeros((2,3)),),

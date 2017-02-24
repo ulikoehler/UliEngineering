@@ -37,6 +37,31 @@ class BoundingBox(object):
         """Y-axis extent of the bounding box"""
         return self.maxy - self.miny
 
+    @property
+    def area(self):
+        """width * height"""
+        return self.width * self.height
+
+    @property
+    def aspect_ratio(self):
+        """width / height"""
+        return self.width / self.height
+
+    @property
+    def center(self):
+        """(x,y) center point of the bounding box"""
+        return (self.minx + self.width / 2, self.miny + self.height / 2)
+
+    @property
+    def max_dim(self):
+        """The larger dimension: max(width, height)"""
+        return max(self.width, self.height)
+
+    @property
+    def min_dim(self):
+        """The larger dimension: max(width, height)"""
+        return min(self.width, self.height)
+
     def __repr__(self):
         return "BoundingBox({}, {}, {}, {})".format(
             self.minx, self.maxx, self.miny, self.maxy)
