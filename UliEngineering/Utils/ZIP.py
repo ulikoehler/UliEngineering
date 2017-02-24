@@ -36,3 +36,12 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
                          os.path.join(basename, filename)
                          if include_rootdir else filename)
 
+def list_zip(zippath):
+    """
+    Get a list of entries in the ZIP.
+    Equivalent to calling .namelist() on the
+    opened ZIP file.
+    """
+    with zipfile.ZipFile(zippath) as zipin:
+        return zipin.namelist()
+    
