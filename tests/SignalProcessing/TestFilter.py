@@ -3,6 +3,7 @@ import numpy as np
 from nose.tools import assert_equal, assert_true, raises, assert_in, assert_not_in, assert_is_instance
 from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
+from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
 from nose_parameterized import parameterized
 
 class TestFilter(object):
@@ -41,6 +42,18 @@ class TestFilter(object):
     @raises(ValueError)
     def testInvalidPassType(self):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="foobar")
+
+    def test_normalize_frequencies(self):
+        assert_allclose(1200., _normalize_frequencies(1200.))
+        assert_allclose(1200., _normalize_frequencies("1.2 kHz"))
+        assert_allclose(1.0, _normalize_frequencies([1.0]))
+        assert_allclose(1.0, _normalize_frequencies(["1 Hz"]))
+        assert_allclose([1.0, 2.0], _normalize_frequencies([1.0, 2.0]))
+        assert_allclose([1.0, 2.0], _normalize_frequencies(["1 Hz", "2 Hz"]))
+
+    @raises(ValueError)
+    def test_normalize_frequencies_invalid(self):
+        _normalize_frequencies(None)
 
     def testFrequencyResponse(self):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")

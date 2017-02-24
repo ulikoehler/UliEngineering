@@ -44,6 +44,30 @@ class FilterInvalidError(Exception):
     """The generated filter is numerically unstable and must not be used"""
     pass
 
+def _normalize_frequencies(freqs):
+    # Normalize freqs: Allow [1.0] instead of 1.0
+    if freqs is None:
+        raise ValueError("Critical frequencies may not be None")
+    # Allow multiple frequencies, but only 1 or 2
+    if isinstance(freqs, collections.Iterable) and not isinstance(freqs, str):
+        if len(freqs) == 0:
+            raise ValueError("Empty frequency list")
+        elif len(freqs) == 1:
+            return normalize_numeric(freqs[0])
+        elif len(freqs) > 2:
+            raise ValueError("No more than 2 critical frequencies allowed")
+    return normalize_numeric(freqs)
+
+def _check_filter_type(btype, freqs):
+    if btype == "lowpass" or btype == "highpass":
+        if not isinstance(freqs, numbers.Number):
+            raise ValueError("Pass-type {0} requires a single critical frequency, not {1}".format(btype, freqs))
+    elif btype == "bandpass" or btype == "bandstop":
+        if isinstance(freqs, numbers.Number) or len(freqs) != 2:
+            raise ValueError("Pass-type {0} requires a two critical frequencies, not {1}".format(btype, freqs))
+    else:
+        raise ValueError("Invalid pass type '{0}': Use lowpass, highpass, bandpass or bandstop!".format(btype))
+
 
 class SignalFilter(object):
     """
@@ -67,30 +91,12 @@ class SignalFilter(object):
         self.rp = None
         self.rs = None
         self.ftype = None
-        # Normalize freqs: Allow [1.0] instead of 1.0
-        if freqs is None:
-            raise ValueError("Critical frequencies may not be none")
-        if isinstance(freqs, collections.Iterable) and not isinstance(freqs, str):
-            if len(freqs) == 1:
-                freqs = freqs[0]
-            elif len(freqs) == 0:
-                raise ValueError("Empty frequency list")
-            elif isinstance(freqs[0], str):
-                freqs = [normalize_numeric(f) for f in freqs]
-        # Allow "4.5 kHz" etc
-        if isinstance(freqs, str):
-            __freqs_orig = freqs
-            freqs = normalize_numeric(freqs)
-        self.filtfreqs = self._filtfreq(freqs)
+
+        freqs = _normalize_frequencies(freqs)
+
         # Check & store pass type
-        if btype == "lowpass" or btype == "highpass":
-            if not isinstance(freqs, numbers.Number):
-                raise ValueError("Pass-type {0} requires a single critical frequency, not {1}".format(btype, freqs))
-        elif btype == "bandpass" or btype == "bandstop":
-            if isinstance(freqs, numbers.Number) or len(freqs) != 2:
-                raise ValueError("Pass-type {0} requires a two critical frequencies, not {1}".format(btype, freqs))
-        else:
-            raise ValueError("Invalid pass type '{0}': Use lowpass, highpass, bandpass or bandstop!".format(btype))
+        _check_filter_type(btype, freqs)
+        self.filtfreqs = self._filtfreq(freqs)
 
     def _filtfreq(self, f):
         """
