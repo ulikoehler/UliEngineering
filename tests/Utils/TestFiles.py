@@ -77,6 +77,6 @@ class TestFiles(object):
             list(list_recursive(tmpdir, relative=True, files_only=True)))
         assert_equal(["test.txt", "dir/", "dir/test2.txt"],
             list(list_recursive(tmpdir, relative=True, files_only=False)))
-        assert_equal([os.path.join(tmpdir, "tesat.txt"),
+        assert_equal([os.path.join(tmpdir, "test.txt"),
                        os.path.join(tmpdir, "dir/test2.txt")],
             list(list_recursive(tmpdir, relative=False, files_only=True)))
