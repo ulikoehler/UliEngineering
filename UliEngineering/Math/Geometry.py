@@ -5,7 +5,7 @@ Geometry functions, mainly for 2D coordinates.
 """
 import numpy as np
 
-__all__ = ["polygon_lines"]
+__all__ = ["polygon_lines", "polygon_area"]
 
 def polygon_lines(coords, closed=True):
     """
@@ -23,3 +23,13 @@ def polygon_lines(coords, closed=True):
     shifted = np.roll(coords, 1, axis=0)
     ret = np.transpose(np.dstack([shifted, coords]), axes=(0, 2, 1))
     return ret if closed else ret[1:]
+
+def polygon_area(coords):
+    """
+    Compute the 
+
+    Numpy hints from http://stackoverflow.com/a/30408825/2597135
+    """
+    x = coords[:,0]
+    y = coords[:,1]
+    return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
