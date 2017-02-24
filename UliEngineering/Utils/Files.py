@@ -4,8 +4,19 @@ File utilities
 """
 from toolz import functoolz
 import operator
+import os
+import os.path
 import numpy as np
 from .NumPy import numpy_resize_insert
+
+__all__ = [
+    "count_lines",
+    "extract_numeric_column",
+    "extract_column",
+    "write_textfile",
+    "read_textfile",
+    "list_recursive"
+]
 
 _strip_newline = lambda s: s.strip("\n")
 __standard_isline = functoolz.compose(bool, str.strip)
@@ -77,3 +88,47 @@ def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
         if col is not None:
             columns.append(col)
     return columns
+
+def write_textfile(path, text):
+    """
+    Utility to write text to a file,
+    auto-creating the directory tree
+    Does not write a terminating newline.
+    """
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as outfile:
+        outfile.write(text)
+
+def read_textfile(path):
+    """
+    Utility to read utf-8 encoded text from a file
+    """
+    with open(path, "r") as infile:
+        return infile.read()
+
+def list_recursive(directory, relative=False, files_only=True):
+    """
+    List a directory recursively, yielding each filename
+    (with the filename being relative to the directory).
+    
+    The results are generated in no particular order.
+
+    Parameters
+    ----------
+    directory : str | path-like
+        The directory to list
+    relative : bool
+        If True, yield relative paths
+    files_only : bool
+        If True, yield only files and ignore directories.s
+        If False, yield directories (the name ends with a slash)
+        The root directory is never yielded
+    """
+    for dirname, subdirs, files in os.walk(directory):
+        for file in files:
+            path = os.path.join(dirname, file)
+            yield os.path.relpath(path, directory) if relative else path
+        if not files_only:
+            for subdir in subdirs:
+                path = os.path.join(dirname, subdir) + "/"
+                yield os.path.relpath(path, directory) + "/" if relative else path
