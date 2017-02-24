@@ -73,10 +73,10 @@ class TestFiles(object):
         write_textfile(os.path.join(tmpdir, "test.txt"), "")
         write_textfile(os.path.join(tmpdir, "dir/test2.txt"), "")
 
-        assert_equals(["test.txt", "dir/test2.txt"],
+        assert_equal(["test.txt", "dir/test2.txt"],
             list(list_recursive(tmpdir, relative=True, files_only=True)))
-        assert_equals(["test.txt", "dir/", "dir/test2.txt"],
+        assert_equal(["test.txt", "dir/", "dir/test2.txt"],
             list(list_recursive(tmpdir, relative=True, files_only=False)))
-        assert_equals([os.path.join(tmpdir, "tesat.txt"),
+        assert_equal([os.path.join(tmpdir, "tesat.txt"),
                        os.path.join(tmpdir, "dir/test2.txt")],
             list(list_recursive(tmpdir, relative=False, files_only=True)))
