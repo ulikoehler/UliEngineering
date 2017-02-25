@@ -16,6 +16,7 @@ def polygon_lines(coords, closed=True):
     to obtain the full polygon image.
 
     If closed==True, a line is included between the last and the first point.
+    Note that the last->first pair appears first in the list.
 
     Algorithm: http://stackoverflow.com/a/42407359/2597135
     """
@@ -23,7 +24,7 @@ def polygon_lines(coords, closed=True):
         raise ValueError("Wrong shape for polygon lines input (expect (n,2)): {}".format(
             coords.shape))
     shifted = np.roll(coords, 1, axis=0)
-    ret = np.transpose(np.dstack([coords, shifted]), axes=(0, 2, 1))
+    ret = np.transpose(np.dstack([shifted, coords]), axes=(0, 2, 1))
     return ret if closed else ret[1:]
 
 def polygon_area(coords):
