@@ -38,3 +38,39 @@ class TestApplyPairwise1D(object):
         assert_allclose([[0,0,0], [1,2,3], [2,4,6]],
                         apply_pairwise_1d(np.arange(3), np.arange(1,4), lambda a, b: a * b))
 
+
+class TestNgrams(object):
+
+    def test_ngrams1(self):
+        inp = np.arange(5) # 0..4
+        closed = np.asarray([[0,1],[1,2],[2,3],[3,4],[4,0]])
+        opened = np.asarray([[0,1],[1,2],[2,3],[3,4]])
+        print(np.asarray(list(ngrams(inp, 2, closed=True))))
+        print(closed)
+        assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
+        assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
+
+    def test_ngrams2(self):
+        inp = np.asarray([[0, 1], [1, 2],  [2, 3]])
+        closed = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]],
+                             [[2, 3], [0, 1]]])
+        opened = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]]])
+        print(np.asarray(list(ngrams(inp, 2, closed=True))))
+        print(closed)
+        assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
+        assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
+
+        
+    def test_ngrams2(self):
+        inp = np.asarray([[0, 1], [1, 2],  [2, 3]])
+        closed = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]],
+                             [[2, 3], [0, 1]]])
+        opened = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]]])
+        print(np.asarray(list(ngrams(inp, 2, closed=True))))
+        print(closed)
+        assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
+        assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))

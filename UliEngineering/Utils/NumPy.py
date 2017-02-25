@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-__all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d"]
+__all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d", "ngrams"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """
@@ -120,3 +120,32 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
         for y in range(m):
             result[x, y] = fn(valuesA[x], valuesB[y])
     return result
+
+def ngrams(arr, n, closed=False):
+    """
+    Yield ngrams of subsequent entries from an arbitrarily-shaped array.
+    For example, with arr=[1,2,3,4,5,6]
+    and n=2, yields [[1,2][2,3],[3,4],[4,5],[5,6]]
+    if closed=False or [[1,2][2,3],[3,4],[4,5],[5,6],[6,1]] if closed=True.
+
+    For n=2, this function behaves similarly to
+    UliEngineering.Math.Geometry.polygon_lines()
+    however this function supports arbitrarily-shaped arrays.
+
+    Parameters
+    ----------
+    arr : numpy array like
+        The source array.
+        Will not be modified
+    n : int
+        The length of each ngram.
+        Must be <= array.shape[0].
+    closed : bool
+        True if there should be an ngram containing the last
+        and the first entries (until the next ngram would be
+        the first in the list)
+    """
+    idxs = np.arange(n)
+    for i in range(arr.shape[0] if closed else arr.shape[0] - n + 1):
+        yield arr[idxs]
+        idxs = np.mod(idxs + 1, arr.shape[0])
