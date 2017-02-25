@@ -12,9 +12,9 @@ class TestGeometry(object):
         coords = np.asarray([[0, 1],
                              [1, 2],
                              [2, 3]])
-        closed = np.asarray([[[2, 3], [0, 1]],
-                             [[0, 1], [1, 2]],
-                             [[1, 2], [2, 3]]])
+        closed = np.asarray([[[0, 1], [1, 2]],
+                             [[1, 2], [2, 3]],
+                             [[2, 3], [0, 1]]])
         opened = np.asarray([[[0, 1], [1, 2]],
                              [[1, 2], [2, 3]]])
         assert_allclose(closed, polygon_lines(coords, closed=True))
