@@ -19,7 +19,7 @@ class TestGeometry(object):
                              [[1, 2], [2, 3]]])
         assert_allclose(closed, polygon_lines(coords, closed=True))
         assert_allclose(opened, polygon_lines(coords, closed=False))
-    
+
     def test_polygon_area_triangle(self):
         # Triangle test
         coords = np.asarray([[0, 0],
@@ -41,3 +41,21 @@ class TestGeometry(object):
                              [2, 1],
                              [0, 1]])
         assert_allclose(2, polygon_area(coords))
+
+    @parameterized([
+        (np.zeros(5),),
+        (np.zeros((5,5)),),
+        (np.zeros((5,5)),)
+    ])
+    @raises(ValueError)
+    def test_polygon_area_rectangle(self, arr):
+        polygon_area(arr)
+
+    @parameterized([
+        (np.zeros(5),),
+        (np.zeros((5,5)),),
+        (np.zeros((5,5)),)
+    ])
+    @raises(ValueError)
+    def test_polygon_lines_rectangle(self, arr):
+        polygon_lines(arr)
