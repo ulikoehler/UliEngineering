@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-__all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d", "ngrams"]
+__all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d",
+           "ngrams", "split_by_pivot"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """
@@ -121,6 +122,7 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
             result[x, y] = fn(valuesA[x], valuesB[y])
     return result
 
+
 def ngrams(arr, n, closed=False):
     """
     Yield ngrams of subsequent entries from an arbitrarily-shaped array.
@@ -149,3 +151,26 @@ def ngrams(arr, n, closed=False):
     for i in range(arr.shape[0] if closed else arr.shape[0] - n + 1):
         yield arr[idxs]
         idxs = np.mod(idxs + 1, arr.shape[0])
+
+
+def split_by_pivot(arr, pivots):
+    """
+    Takes a numpy array and splits it according to pivot points.
+    Yields each slice.
+    Examples:
+    split_by_pivot([0,1,2,3,4,5], [2]) => [[0,1],[2,3,4,5]]
+    split_by_pivot([0,1,2,3,4,5], [2,4]) => [[0,1],[2,3],[4,5]]
+
+    Parameters
+    ----------
+    arr : any sliceable iterable
+        The array to return slice froms
+    pivots : iterable of ints
+        The pivot points to split at
+    """
+    # Get all slice endpoints
+    # list() required for numpy arrays
+    idxs = [0] + list(pivots) + [len(arr)]
+    # Generate all slice endpoint pairs
+    for start, end in zip(idxs[:-1], idxs[1:]):
+        yield arr[start:end]

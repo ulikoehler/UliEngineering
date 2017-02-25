@@ -74,3 +74,9 @@ class TestNgrams(object):
         print(closed)
         assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
         assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
+
+class TestPivotSplit(object):
+    def test_pivot_split(self):
+        assert_equal([[0,1],[2,3,4,5]], list(split_by_pivot([0,1,2,3,4,5], [2])))
+        assert_equal([[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [2,4])))
+        assert_equal([[],[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [0,2,4])))
