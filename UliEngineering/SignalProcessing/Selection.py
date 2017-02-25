@@ -424,7 +424,7 @@ def majority_vote_all(arr, return_absolute=False):
     """
     Perform a majority selection on the value in an array.
     The values are required to be quantized, i.e. if no values are equal
-    but only close together, this method won't work (try using a KDE-based meth0d)
+    but only close together, this method won't work (try using a KDE-based method)
     This algorithm is fast and works for huge datasets, however,
     and is well suited, for example, for analyzing FFT outputs
     (as FFT generates quantized outputs).
@@ -507,4 +507,4 @@ def multiselect(lst, indices, convert=functoolz.identity):
     >>> multiselect([1,2,3,4,5,6], [3,1,5])
     [4, 2, 6]
     """
-    return [lst[convert(indices[i])] for i in range(len(indices))]
+    return [lst[convert(idx)] for idx in indices]
