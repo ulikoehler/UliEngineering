@@ -19,10 +19,8 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
-import re
 import math
 import itertools
-import functools
 from toolz import functoolz
 import numpy as np
 from .Units import *
@@ -38,8 +36,8 @@ _default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"
 _default_1st_suffix_exp = -24  # The exponential multiplier for the first suffix
 
 # Valid unit designators. Ensure no SI suffix is added here
-_default_units = set(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
-_numeric_allowed = set("0123456789-e.")
+_default_units = frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
+_numeric_allowed = frozenset("0123456789-e.")
 
 
 class EngineerIO(object):
