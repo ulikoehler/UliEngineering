@@ -8,7 +8,6 @@ For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Electronics.Resistors import parallel_resistors
 from UliEngineering.Electronics.VoltageDivider import unloaded_ratio, bottom_resistor_by_ratio
-import numpy as np
 
 __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_threshold_ratios_opendrain",

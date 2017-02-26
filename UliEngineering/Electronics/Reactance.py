@@ -5,7 +5,6 @@ Utility to calculate idealized reactances.
 
 Originally published at techoverflow.net
 """
-import itertools
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit

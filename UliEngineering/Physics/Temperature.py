@@ -5,19 +5,25 @@ Utilities regarding temperatures
 """
 from UliEngineering.EngineerIO import normalize_engineer_notation
 from UliEngineering.Units import Unit
-from UliEngineering.Exceptions import InvalidUnitException, ConversionException
+from UliEngineering.Exceptions import InvalidUnitException
+from scipy.constants import zero_Celsius
 
-"""Celsius zero in Kelvin"""
-zero_point_celsius = 273.15
+__all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
+           "fahrenheit_to_kelvin", "normalize_temperature",
+           "normalize_temperature_celsius"]
+
 
 def celsius_to_kelvin(c) -> Unit("°K"):
-    return c + zero_point_celsius
+    return c + zero_Celsius
+
 
 def kelvin_to_celsius(c) -> Unit("°C"):
-    return c - zero_point_celsius
+    return c - zero_Celsius
+
 
 def fahrenheit_to_kelvin(f) -> Unit("K"):
     return (f + 459.67) * 5.0 / 9.0
+
 
 def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
     """
@@ -42,6 +48,7 @@ def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
         return fahrenheit_to_kelvin(t)
     else:
         raise InvalidUnitException("Unknown temperature unit: '{0}'".format(unit))
+
 
 def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
