@@ -27,26 +27,26 @@ from .Units import *
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value",
-           "normalize_engineer_notation"]
+           "normalize_engineer_notation", "normalize_engineer_notation_safe"]
 
 
-# Suffices handled by the library
-_default_suffices = [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
-                     ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
-_default_1st_suffix_exp = -24  # The exponential multiplier for the first suffix
+def _default_suffices():
+    """
+    The default first suffix list with -24 1st exp
+    """
+    return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
+            ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 
 # Valid unit designators. Ensure no SI suffix is added here
-_default_units = frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S'])
 _numeric_allowed = frozenset("0123456789-e.")
-
 
 class EngineerIO(object):
     instance = None
     """Default instance, used for global functions. Initialized on first use"""
-    def __init__(self, units=_default_units,
+    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S']),
                  unit_prefixes="Δ°",
-                 suffices=_default_suffices,
-                 first_suffix_exp=_default_1st_suffix_exp):
+                 suffices=_default_suffices(),
+                 first_suffix_exp=-24):
         """
         Initialize a new EngineerIO instance with default or custom suffix
 
@@ -370,7 +370,7 @@ def normalize_engineer_notation(s, encoding="utf8"):
 def format_value(v, unit=""):
     return EngineerIO.instance.format(v, unit)
 
-def normalize_engineer_notation(v, unit=""):
+def normalize_engineer_notation_safe(v, unit=""):
     return EngineerIO.instance.safe_normalize(v, unit)
 
 def normalize_numeric(v):
