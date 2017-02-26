@@ -1,6 +1,6 @@
 # UliEngineering
 
-[![Build Status](https://travis-ci.org/ulikoehler/UliEngineering.svg?branch=master)](https://travis-ci.org/ulikoehler/UliEngineering) [![Code Climate coverage](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/coverage.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering/coverage) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering)![License](https://img.shields.io/github/license/ulikoehler/UliEngineering.svg)
+[![Build Status](https://travis-ci.org/ulikoehler/UliEngineering.svg?branch=master)](https://travis-ci.org/ulikoehler/UliEngineering) [![Code Climate coverage](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/coverage.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering/coverage) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering) ![License](https://img.shields.io/github/license/ulikoehler/UliEngineering.svg)
 
 A python library for calculations perfomed in electronics engineering.
 
