@@ -441,8 +441,8 @@ def majority_vote_all(arr, return_absolute=False):
     c.update(gc)
     most_common = c.most_common()
     if return_absolute:
-        return c.most_common()
-    return [(rec[0], rec[1] / len(gc)) for rec in c.most_common()]
+        return most_common
+    return [(rec[0], rec[1] / len(gc)) for rec in most_common]
 
 
 def majority_vote(arr):

@@ -7,15 +7,16 @@ import numpy as np
 import functools
 from toolz import functoolz
 import random
-import collections
 
-__all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks", "random_sample_chunks",
-           "random_sample_chunks_nonoverlapping", "array_to_chunkgen"]
+__all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks",
+           "random_sample_chunks", "random_sample_chunks_nonoverlapping",
+           "array_to_chunkgen"]
 
 
 class ChunkGenerator(object):
     """
-    Chunk generator objects can lazily generate arbitrary chunks from arbitary data.
+    Chunk generator objects can lazily generate arbitrary chunks
+    from arbitary data.
     They are based around an unary generator function that takes a chunk index
     and a predefined number of chunks.
     """
@@ -34,8 +35,8 @@ class ChunkGenerator(object):
         elif isinstance(key, int):
             return self.func(self.generator(key))
         else:
-            raise TypeError("Invalid argument type for slicing: {0}".format(type(key))) 
-
+            raise TypeError("Invalid argument type for slicing: {0}".format(
+                type(key)))
 
     def __call__(self, i):  # Compatibility only. Slicing recommended
         return self.__getitem__(i)
@@ -87,14 +88,16 @@ def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
     # Precompute offset table
     chunksize = int(chunksize)
     offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))
-    gen = functools.partial(__overlapping_chunks_worker, offsets, chunksize, arr, copy)
+    gen = functools.partial(__overlapping_chunks_worker, offsets,
+                            chunksize, arr, copy)
     return ChunkGenerator(gen, offsets.size)
 
 
 def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples):
     """
     A chunk-generating function that randomly selects n non-overlapping chunks.
-    This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
+    This generator uses reshaped chunks
+    (i.e. non overlapping zero-overhead chunks)
     as a basis and randomly selects a fraction of those chunks.
     This means that only start chunk number is randomized while the chunk phase
     is always the same.

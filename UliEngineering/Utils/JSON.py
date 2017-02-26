@@ -3,9 +3,9 @@
 """
 Utilities for JSON encoding and decoding
 """
-import base64
 import json
 import numpy as np
+
 
 class NumPyEncoder(json.JSONEncoder):
     """
@@ -17,4 +17,5 @@ class NumPyEncoder(json.JSONEncoder):
         elif isinstance(obj, np.generic):  # Generic scalars
             return obj.item()
         # Let the base class default method raise the TypeError
-        raise TypeError("Unserializable object {} of type {}".format(obj, type(obj)))
+        raise TypeError("Unserializable object {} of type {}".format(
+            obj, type(obj)))

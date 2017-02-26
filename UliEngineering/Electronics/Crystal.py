@@ -5,7 +5,6 @@ Crystal oscillator utilities
 """
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
-import numpy as np
 
 __all__ = ["load_capacitors"]
 

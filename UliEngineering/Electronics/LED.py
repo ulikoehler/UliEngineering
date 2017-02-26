@@ -10,12 +10,12 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-import itertools
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.Units import Unit
 
 __all__ = ["LEDForwardVoltages", "led_series_resistor"]
+
 
 class LEDForwardVoltages():
     """

@@ -22,11 +22,11 @@ def split_nth(s, delimiter=",", nth=1):
     startidx = 0
     # Startidx is 0 if we want the first field
     if nth > 1:
-        for i in range(nth - 1):
+        for _ in range(nth - 1):
             startidx = s.index(delimiter, startidx + 1)
-        startidx += 1 # Do not include the delimiter
+        startidx += 1  # Do not include the delimiter
     # Determine end index
     endidx = s.find(delimiter, startidx)
-    if endidx == -1: # Not found -> the last part of the string
-        endidx = None # Take rest of string
+    if endidx == -1:  # Not found -> the last part of the string
+        endidx = None  # Take rest of string
     return s[startidx:endidx]

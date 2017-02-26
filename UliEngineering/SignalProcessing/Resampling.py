@@ -8,8 +8,7 @@ import functools
 import numpy as np
 import bisect
 import concurrent.futures
-from scipy.interpolate import splrep, splev, UnivariateSpline
-from toolz.functoolz import identity
+from scipy.interpolate import UnivariateSpline
 from UliEngineering.Utils.Concurrency import new_thread_executor
 from .Utils import LinRange
 

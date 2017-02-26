@@ -6,19 +6,18 @@ Unsorted signal processing utilities
 import numpy as np
 from toolz import functoolz
 import numbers
-import math
 import warnings
 from .Selection import find_true_runs
 
 __all__ = ["unstair", "optimum_polyfit", "LinRange"]
 
-
 _unstep_reduction_methods = {
-    "left": lambda a: a[:,0],
-    "right": lambda a: a[:,1],
+    "left": lambda a: a[:, 0],
+    "right": lambda a: a[:, 1],
     "middle": lambda a: np.sum(a, axis=1) // 2,
     "reduce": lambda a: a.flatten()
 }
+
 
 def unstair(x, y, method="diff", tolerance=1e-9):
     """
