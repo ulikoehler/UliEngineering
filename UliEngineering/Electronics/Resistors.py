@@ -8,8 +8,6 @@ connect them in parallel and serial fashions.
 Originally published at techoverflow.net
 """
 import itertools
-import functools
-import operator
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit

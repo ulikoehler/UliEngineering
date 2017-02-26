@@ -10,8 +10,6 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-import itertools
-import math
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 
