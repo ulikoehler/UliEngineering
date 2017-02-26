@@ -340,7 +340,6 @@ def normalize_interpunctation(s):
     Only points and commata are potentially modified.
     Other characters and digits are not handled.
     """
-    foundCommaFirst = False
     commaIdx = s.find(",")
     pointIdx = s.find(".")
     foundComma = commaIdx is not None
