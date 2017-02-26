@@ -1,5 +1,6 @@
 # UliEngineering
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d30c78429f554aedafa147c13b443982)](https://www.codacy.com/app/ulikoehler/UliEngineering?utm_source=github.com&utm_medium=referral&utm_content=ulikoehler/UliEngineering&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/ulikoehler/UliEngineering.svg?branch=master)](https://travis-ci.org/ulikoehler/UliEngineering) [![Code Climate coverage](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/coverage.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering/coverage) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering)
 
 A python library for calculations perfomed in electronics engineering.
