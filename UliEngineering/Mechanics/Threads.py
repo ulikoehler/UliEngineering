@@ -6,16 +6,16 @@ from collections import namedtuple
 
 __all__ = ["ThreadParameters", "threads"]
 
-class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter", "inner_diameter"]):
+class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter", "core_diameter"])):
     """
     Parameters
     ==========
     pitch:
         Thread pitch in mm
     outer_diameter:
-        Outside thread diameter in mm (for outside thread)
+        Outside thread diameter in mm (for exterior thread)
     inner_diameter:
-        Inside thread diameter in mm (for outside thread)
+        Inside thread diameter in mm (for exterior thread)
     """
     pass
 
@@ -42,4 +42,4 @@ threads = {
     "M48": ThreadParameters(5., 48., 41.866),
     "M56": ThreadParameters(5.5, 56., 49.252),
     "M64": ThreadParameters(6., 64., 56.639)
-]
+}
