@@ -4,11 +4,20 @@ Thread information
 """
 from collections import namedtuple
 
-ThreadParameters = namedtuple("ThreadParameters",
-    ["pitch", # Thread pitch in mm
-     "outer_diameter", # Outer diameter in mm (for outside thread)
-     "core_diameter" # Core diameter (for outside thread)
-    ])
+__all__ = ["ThreadParameters", "threads"]
+
+class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter", "inner_diameter"]):
+    """
+    Parameters
+    ==========
+    pitch:
+        Thread pitch in mm
+    outer_diameter:
+        Outside thread diameter in mm (for outside thread)
+    inner_diameter:
+        Inside thread diameter in mm (for outside thread)
+    """
+    pass
 
 threads = {
     # DIN 13
