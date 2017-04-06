@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
+from nose.tools import assert_equal, assert_true, assert_false, raises, assert_less, assert_is_none, assert_raises, assert_is_instance
 from UliEngineering.SignalProcessing.Utils import *
 from nose_parameterized import parameterized
 import concurrent.futures
@@ -86,25 +86,49 @@ class TestOptimumPolyfit(object):
 
 class TestLinSpace(object):
     @parameterized([
-        (0.0, 100.0, 101),
-        (0.0, 100.0, 202),
-        (0.0, 100.0, 735),
-        (0.0, 200.0, 101),
-        (12.5, 202.3, 101),
+        (0.0, 100.0, 101, True),
+        (0.0, 100.0, 202, True),
+        (0.0, 100.0, 735, True),
+        (0.0, 200.0, 101, True),
+        (12.5, 202.3, 101, True),
+        (0.0, 100.0, 101, False),
+        (0.0, 100.0, 202, False),
+        (0.0, 100.0, 735, False),
+        (0.0, 200.0, 101, False),
+        (12.5, 202.3, 101, False),
     ])
-    def testBasic(self, start, end, n):
+    def testBasic(self, start, end, n, endpoint):
         params = (start, end, n)
-        spc = LinRange(*params)
-        linspc = np.linspace(*params)
+        spc = LinRange(*params, endpoint=endpoint)
+        linspc = np.linspace(*params, endpoint=endpoint)
         assert_equal(len(spc), params[2])
         assert_equal(len(spc), linspc.size)
         assert_equal((len(spc),), linspc.shape)
-        assert_allclose(spc[:], linspc)
+        assert_allclose(spc.copy(), linspc)
         # Test some slice
         istart, iend = len(spc) // 3, len(spc) // 2
-        assert_allclose(spc[istart:iend], linspc[istart:iend])
-        assert_allclose(spc.view(istart, iend)[:], linspc[istart:iend])
+        assert_allclose(spc[istart:iend].copy(), linspc[istart:iend])
         # Test negative indices
         assert_allclose(spc[-istart], linspc[-istart])
         # Test mid
         assert_equal(spc.mid, (start + end) / 2.)
+
+    def test_equal(self):
+        l1 = LinRange(0., 100., 100, endpoint=False)
+        l2 = LinRange(0., 100., 100, endpoint=False)
+        l3 = LinRange(0., 100., 100, endpoint=True)
+        assert_true(l1 == l2)
+        assert_true(l2 == l1)
+        assert_false(l3 == l1)
+        assert_false(l3 == l2)
+
+    def test_repr(self):
+        l = LinRange(0., 100., 100, endpoint=False)
+        assert_equal("LinRange(0.0, 100.0, 1.0)", str(l))
+        l = LinRange(0., 100., 100, endpoint=False, dtype=np.int)
+        assert_equal("LinRange(0.0, 100.0, 1.0, dtype=int)", str(l))
+
+    def testDtype(self):
+        lin1 = LinRange(0.0, 100.0, 101)
+        assert_is_instance(lin1, LinRange)
+        assert_is_instance(lin1[:5], LinRange)

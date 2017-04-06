@@ -94,15 +94,22 @@ class LinRange(object):
     """
     Combines the properties of numpy.linspace and Python3's range by providing
     a floating-point capable lazy range generator that does not keep the entire array
-    in memory (but calculates slices on the fly
+    in memory (but calculates slices on the fly.
+
+    Use .copy() to obtain a numpy array. dtype is used as a wrapper function.
+    Requires the use of numpy dtypes.
+
+    Behaves like np.linspace
     """
-    def __init__(self, start, stop, n, endpoint=True):
+    def __init__(self, start, stop, n, endpoint=True, dtype=np.float):
         "Create a new LinRange object using a numpy.linspace-like constructor"
         self.start = start
         self.stop = stop
         n = int(n)
+        self.endpoint = endpoint
         self.step = (stop - start) / (n - 1 if endpoint else n)
         self.size = n
+        self.dtype = dtype
 
     @staticmethod
     def range(start, stop, step):
@@ -112,32 +119,53 @@ class LinRange(object):
     def __len__(self):
         return self.size
 
-    def view(self, start, stop, step=1):
-        """Return a slice of this LinRange as a view, not as a numpy array"""
-        istart, istop, istep = slice(start, stop, step).indices(self.size)
-        return LinRange(self[istart],
-                        self[istop - 1],
-                        (istop - istart) / istep)
-
     @property
     def mid(self):
         "Return the middle of the current interval as a floating point value"
-        return (self.start + self.stop) / 2.
+        return self.dtype((self.start + self.stop) / 2.)
 
     @property
     def shape(self):
         return (self.size,)
 
+    def astype(self, typearg):
+        """
+        Return self copy with a different value wrapper
+        """
+        return self(self.start, self.stop, self.size, dtype=typearg)
+
+    def copy(self):
+        """
+        Return self as a numpy array.
+        Designed to be compatible with numpy objects
+        """
+        return np.linspace(self.start, self.stop, self.size,
+                           endpoint=self.endpoint, dtype=self.dtype)
+
     def __getitem__(self, key):
+        """
+        Get:
+            - A numpy linrange slice
+        """
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)
-            start = self[istart]
-            stop = self[istop - 1]
-            n = (istop - istart) / istep
-            return np.linspace(start, stop, n)
+            return LinRange(self[istart],
+                            self[istop - 1],
+                            (istop - istart) / istep)
         elif isinstance(key, numbers.Number):
             if key < 0:
                 key = len(self) + key
-            return self.start + self.step * key
+            return self.dtype(self.start + self.step * key)
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
+
+    def __repr__(self):
+        return "LinRange({}, {}, {}{})".format(
+            self.start,
+            self.stop,
+            self.step,
+            "" if self.dtype == np.float else ", dtype={}".format(self.dtype.__qualname__)
+            )
+
+    def __eq__(self, other):
+        return self.start == other.start and self.stop == other.stop and self.step == other.step
