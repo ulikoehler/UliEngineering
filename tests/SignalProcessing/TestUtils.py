@@ -104,14 +104,17 @@ class TestLinSpace(object):
         assert_equal(len(spc), params[2])
         assert_equal(len(spc), linspc.size)
         assert_equal((len(spc),), linspc.shape)
-        assert_allclose(spc.copy(), linspc)
+        assert_allclose(spc[:], linspc)
         # Test some slice
         istart, iend = len(spc) // 3, len(spc) // 2
-        assert_allclose(spc[istart:iend].copy(), linspc[istart:iend])
+        assert_allclose(spc[istart:iend], linspc[istart:iend])
         # Test negative indices
         assert_allclose(spc[-istart], linspc[-istart])
         # Test mid
         assert_equal(spc.mid, (start + end) / 2.)
+        # Test view
+        assert_allclose(spc.view(0, None).size, linspc.size)
+        assert_allclose(spc.view(0, None)[:], linspc)
 
     def test_equal(self):
         l1 = LinRange(0., 100., 100, endpoint=False)
@@ -131,4 +134,4 @@ class TestLinSpace(object):
     def testDtype(self):
         lin1 = LinRange(0.0, 100.0, 101)
         assert_is_instance(lin1, LinRange)
-        assert_is_instance(lin1[:5], LinRange)
+        assert_is_instance(lin1.view(0, 5), LinRange)

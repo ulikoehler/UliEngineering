@@ -96,10 +96,10 @@ class LinRange(object):
     a floating-point capable lazy range generator that does not keep the entire array
     in memory (but calculates slices on the fly.
 
-    Use .copy() to obtain a numpy array. dtype is used as a wrapper function.
+    Use [:] or any other slice to obtain a numpy array. dtype is used as a wrapper function.
     Requires the use of numpy dtypes.
 
-    Behaves like np.linspace
+    Behaves like np.linspace. Use .view() to obtain a LinRange slice.
     """
     def __init__(self, start, stop, n, endpoint=True, dtype=np.float):
         "Create a new LinRange object using a numpy.linspace-like constructor"
@@ -142,6 +142,13 @@ class LinRange(object):
         return np.linspace(self.start, self.stop, self.size,
                            endpoint=self.endpoint, dtype=self.dtype)
 
+    def view(self, start=None, stop=None, step=None):
+        """
+        Return a LinSpace view of self
+        """
+        istart, istop, istep = slice(start, stop, step).indices(self.size)
+        return LinRange(self[istart], self[istop], (istop - istart) / istep, endpoint=False)
+
     def __getitem__(self, key):
         """
         Get:
@@ -149,12 +156,11 @@ class LinRange(object):
         """
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)
-            return LinRange(self[istart],
-                            self[istop - 1],
-                            (istop - istart) / istep)
+            return np.linspace(self[istart], self[istop], (istop - istart) / istep,
+                               endpoint=False, dtype=self.dtype)
         elif isinstance(key, numbers.Number):
             if key < 0:
-                key = len(self) + key
+                key = len(self) + key  # NOTE: Key is negative, so result is < len(self)!
             return self.dtype(self.start + self.step * key)
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
