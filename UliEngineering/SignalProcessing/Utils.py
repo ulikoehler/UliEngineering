@@ -161,7 +161,13 @@ class LinRange(object):
         elif isinstance(key, numbers.Number):
             if key < 0:
                 key = len(self) + key  # NOTE: Key is negative, so result is < len(self)!
-            return self.dtype(self.start + self.step * key)
+            val = self.start + self.step * key
+            # Convert to dtype
+            if self.dtype == np.float:
+                return val
+            else:
+                # TODO find better method, maybe using a scalar
+                return np.asarray([val]).astype(self.dtype)[0]
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
 
