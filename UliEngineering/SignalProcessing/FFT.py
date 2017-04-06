@@ -15,7 +15,7 @@ from UliEngineering.Utils.Concurrency import *
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
            "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
-           "amplitude_integral"]
+           "amplitude_integral", "find_closest_frequency"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -189,3 +189,12 @@ def amplitude_integral(fx, fy, low=None, high=None):
     # Normalize to [amplitude unit] / Hz
     hz = fx[-1] - fx[0]
     return np.sum(fy) / hz
+
+
+def find_closest_frequency(fftx, ffty, frequency):
+    """
+    Find the closest frequency bin and value in a FFT.
+    Return (frequency of closest frequency bin, value)
+    """
+    idx = np.argmin(np.abs(fftx - frequency))
+    return fftx[idx], ffty[idx]

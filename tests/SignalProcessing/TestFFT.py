@@ -135,3 +135,8 @@ class TestFFT(object):
         d = np.random.random(10)
         # Just test if it actually runs
         x, y = simpleParallelFFTReduce(d, 1000.0, 100)
+
+    def test_find_closest_frequency(self):
+        fftx = np.asarray([1,2,3,4,5])
+        ffty = fftx * 2
+        assert_equal((1, 2), find_closest_frequency(fftx, ffty, 0.))
