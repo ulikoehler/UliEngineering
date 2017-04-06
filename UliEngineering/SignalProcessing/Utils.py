@@ -130,9 +130,9 @@ class LinRange(object):
 
     def astype(self, typearg):
         """
-        Return self copy with a different value wrapper
+        Return self copy with a different data type
         """
-        return self(self.start, self.stop, self.size, dtype=typearg)
+        return LinRange(self.start, self.stop, self.size, dtype=typearg)
 
     def copy(self):
         """
