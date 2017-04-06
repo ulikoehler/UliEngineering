@@ -159,12 +159,18 @@ class LinRange(object):
         else:
             raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
 
+    def __dtype_name(self):
+        if hasattr(self.dtype, "__qualname__"):
+            return self.dtype.__qualname__
+        else:
+            return str(self.dtype)
+
     def __repr__(self):
         return "LinRange({}, {}, {}{})".format(
             self.start,
             self.stop,
             self.step,
-            "" if self.dtype == np.float else ", dtype={}".format(self.dtype.__qualname__)
+            "" if self.dtype == np.float else ", dtype={}".format(self.__dtype_name())
             )
 
     def __eq__(self, other):
