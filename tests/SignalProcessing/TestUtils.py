@@ -135,3 +135,10 @@ class TestLinSpace(object):
         lin1 = LinRange(0.0, 100.0, 101)
         assert_is_instance(lin1, LinRange)
         assert_is_instance(lin1.view(0, 5), LinRange)
+
+class TestAggregate(object):
+    def test_aggregate(self):
+        assert_equal([("a", 1), ("b", 1), ("c", 1)], list(aggregate("abc")))
+        assert_equal([], list(aggregate("")))
+        assert_equal([("a", 2), ("b", 1), ("c", 2), ("d", 1)],
+            list(aggregate("aabccd")))

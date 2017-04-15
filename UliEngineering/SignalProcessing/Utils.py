@@ -9,7 +9,7 @@ import numbers
 import warnings
 from .Selection import find_true_runs
 
-__all__ = ["unstair", "optimum_polyfit", "LinRange"]
+__all__ = ["unstair", "optimum_polyfit", "LinRange", "aggregate"]
 
 _unstep_reduction_methods = {
     "left": lambda a: a[:, 0],
@@ -187,3 +187,26 @@ class LinRange(object):
 
     def __eq__(self, other):
         return self.start == other.start and self.stop == other.stop and self.step == other.step
+
+def aggregate(gen):
+    """
+    Takes any iterable and aggregates subsequent values
+    yielded by the iterable into a single value with a counter.
+
+    Yields (value, count) pairs
+
+    Will NOT handle None values correctly
+    """
+    current = None
+    cnt = 0
+    for item in gen:
+        if item == current:
+            cnt += 1
+        else:
+            if current is not None:
+                yield (current, cnt)
+            current = item
+            cnt = 1
+    # Yield remaining item, if any
+    if current is not None:
+        yield (current, cnt)
