@@ -55,7 +55,7 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     return i, np.abs(fftresult[:fftsize // 2])
 
 
-def sum_reducer(gen):
+def sum_reducer(fx, gen):
     "The standard FFT reducer. Sums up all FFT y values."
     return sum(y for _, y in gen)
 
@@ -92,12 +92,12 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     ]
     # Sum up the results
     x = fft_frequencies(fftsize, samplerate)
-    fftSum = reducer((f.result() for f in concurrent.futures.as_completed(futures)))
+    fftSum = reducer(x, (f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
     return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
 
 
-def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, chunkfunc=None, **kwargs):
+def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
     """
     Easier interface to parallelFFTSum that automatically initializes a fixed size chunk generator
     and automatically initializes the executor if no executor is given.
