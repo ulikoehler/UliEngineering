@@ -15,7 +15,7 @@ from UliEngineering.Utils.Concurrency import *
 __all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
            "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
            "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
-           "amplitude_integral", "find_closest_frequency"]
+           "amplitude_integral", "find_closest_frequency", "serial_fft_reduce"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -95,6 +95,29 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     fftSum = reducer(x, (f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
     return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
+
+
+def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True):
+    """
+    Like parallelFFTReduce, but performs all operations in serial, i.e. all operations
+    are performed on the calling thread
+    """
+    if len(chunkgen) == 0:
+        raise ValueError("Can't perform FFT on empty chunk generator")
+    # Compute common parameters
+    window = __fft_windows[window](fftsize)
+    fftSum = np.zeros(fftsize // 2)
+    # Initialize threadpool
+    x = fft_frequencies(fftsize, samplerate)
+    gen = (
+        __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC)
+        for i in range(len(chunkgen))
+    )
+    # Sum up the results
+    fftSum = reducer(x, gen)
+    # Perform normalization once
+    return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
+
 
 
 def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
