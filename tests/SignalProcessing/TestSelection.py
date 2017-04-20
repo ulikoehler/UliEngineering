@@ -84,18 +84,18 @@ class TestSelectByDatetime(object):
     def testGeneric(self):
         now = datetime.datetime.now()
         # Test out of range
-        assert_equal(selectByDatetime(np.arange(10), now), 10)
+        assert_equal(select_by_datetime(np.arange(10), now), 10)
         # Test in range
         ts = now.timestamp()
         seconds50 = datetime.timedelta(seconds=50)
         r = np.arange(ts, ts + 100)
-        assert_equal(selectByDatetime(r, now + seconds50), 50)
+        assert_equal(select_by_datetime(r, now + seconds50), 50)
         # Test with string
-        assert_equal(selectByDatetime(np.arange(10), "2015-01-29 23:59:01"), 10)
+        assert_equal(select_by_datetime(np.arange(10), "2015-01-29 23:59:01"), 10)
         # Test with string w/ microseconds
-        assert_equal(selectByDatetime(np.arange(10), "2015-01-29 23:59:01.000001"), 10)
+        assert_equal(select_by_datetime(np.arange(10), "2015-01-29 23:59:01.000001"), 10)
         # Test with around set
-        assert_equal(selectByDatetime(np.arange(10), now, around=5), (5, 15))
+        assert_equal(select_by_datetime(np.arange(10), now, around=5), (5, 15))
 
     @parameterized.expand([
         ("whatever"),
@@ -107,15 +107,15 @@ class TestSelectByDatetime(object):
     ])
     @raises
     def testInvalidStringFormat(self, str):
-        selectByDatetime(np.arange(10), "2015-01-29 23:59:01")
+        select_by_datetime(np.arange(10), "2015-01-29 23:59:01")
 
     @raises
     def testNoneArray(self, str):
-        selectByDatetime(None, "2015-01-29 23:59:01")
+        select_by_datetime(None, "2015-01-29 23:59:01")
 
     @raises
     def testNoneTimestamp(self, str):
-        selectByDatetime(np.arange(10), None)
+        select_by_datetime(np.arange(10), None)
 
 class TestSelectFrequencyRange(object):
     def testGeneric(self):

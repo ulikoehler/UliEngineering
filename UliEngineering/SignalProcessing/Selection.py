@@ -12,7 +12,7 @@ from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
 
-__all__ = ["selectByDatetime", "fft_select_frequency_range", "findSortedExtrema",
+__all__ = ["select_by_datetime", "fft_select_frequency_range", "findSortedExtrema",
            "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
            "runs_ignore_borders", "shrink_ranges", "IntInterval",
            "random_slice", "findNearestIdx", "resample_discard",
@@ -121,7 +121,7 @@ class IntInterval(__Interval):
         return self.__mul__(1.0 / n)
 
 
-def selectByDatetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side="left"):
+def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side="left"):
     """
     Find the index in a timestamp array that is closest to a given value.
     The timestamp array expected to be sorted in ascending order. It is
