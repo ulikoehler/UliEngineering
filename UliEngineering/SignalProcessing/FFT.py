@@ -12,7 +12,7 @@ from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
-__all__ = ["computeFFT", "parallel_fft_reduce", "simple_fft_reduce",
+__all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "generate_sinewave",
            "dominant_frequency", "parallel_fft_reduce_all_results", "fft_frequencies",
            "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
@@ -32,7 +32,7 @@ def fft_frequencies(fftsize, samplerate):
     return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
 
 
-def computeFFT(y, samplerate, window="blackman"):
+def compute_fft(y, samplerate, window="blackman"):
     "Compute the real FFT of a dataset and return (x, y) which can directly be visualized using matplotlib etc"
     n = len(y)
     windowArr = __fft_windows[window](n)
@@ -205,7 +205,7 @@ def amplitude_integral(fx, fy, low=None, high=None):
     """
     Return the amplitude integral of a frequency-domain signal.
     Optionally, the signal can be filtered directly.
-    Call this on a (fx, fy) pair as returned by computeFFT.
+    Call this on a (fx, fy) pair as returned by compute_fft.
 
     The value at the low boundary is included in the range while the value
     at the high boundary is not.

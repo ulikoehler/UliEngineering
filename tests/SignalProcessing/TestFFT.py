@@ -11,7 +11,7 @@ import numpy as np
 class TestFFT(object):
     def testBasicFFT(self):
         rand = np.random.random(1000) * 5.0 + 1.0 # +1: Artifical DC artifacts
-        x, y = computeFFT(rand, 10.0)
+        x, y = compute_fft(rand, 10.0)
         assert_equal(x.shape, (rand.shape[0] / 2, ))
         assert_equal(y.shape, (rand.shape[0] / 2, ))
         assert_equal(x.shape, y.shape)
@@ -86,7 +86,7 @@ class TestFFT(object):
     def testFFTAmplitudeIntegral(self, amplitude, length):
         """FFT amplitude integral should be equal to ptp value of a sine wave"""
         sine = generate_sinewave(10.0, 100.0, amplitude, length)
-        fftx, ffty = computeFFT(sine, 100.0)
+        fftx, ffty = compute_fft(sine, 100.0)
         # Number of decimals must depend on value, so we need to divide here
         assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 2)
 
@@ -120,7 +120,7 @@ class TestFFT(object):
 
     def testGenerateSinewave(self):
         sw = generate_sinewave(25., 400.0, 1.0, 10.)
-        fftx, ffty = computeFFT(sw, 400.)
+        fftx, ffty = compute_fft(sw, 400.)
         df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
 
