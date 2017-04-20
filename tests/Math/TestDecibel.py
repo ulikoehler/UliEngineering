@@ -19,6 +19,11 @@ class TestDecibel(object):
         assert_allclose(-3, ratio_to_db_power(0.5), 0.05)
         assert_allclose(-6, ratio_to_db_power(0.25), 0.05)
 
+        assert_equal(-np.inf, ratio_to_db_field(0))
+        assert_equal(-np.inf, ratio_to_db_power(0))
+        assert_equal(-np.inf, ratio_to_db_field(-5))
+        assert_equal(-np.inf, ratio_to_db_power(-5))
+
     def test_value_to_db(self):
         # Test v0 = 1
         assert_allclose(12, value_to_db_field(4, 1), 0.05)
@@ -44,3 +49,8 @@ class TestDecibel(object):
         assert_allclose(-9, value_to_db_power(0.25, 2), 0.05)
         # Test string
         assert_allclose(6, value_to_db_field("4 V", "2 V"), 0.05)
+        # Test negative
+        assert_equal(-np.inf, ratio_to_db_field(0))
+        assert_equal(-np.inf, ratio_to_db_power(0))
+        assert_equal(-np.inf, ratio_to_db_field(-5))
+        assert_equal(-np.inf, ratio_to_db_power(-5))
