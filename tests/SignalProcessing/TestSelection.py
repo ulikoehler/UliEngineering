@@ -120,25 +120,25 @@ class TestSelectByDatetime(object):
 class TestSelectFrequencyRange(object):
     def testGeneric(self):
         arr = np.arange(0.0, 10.0)
-        result = selectFrequencyRange(arr, arr + 1.0, 1.0, 5.5)
+        result = fft_select_frequency_range(arr, arr + 1.0, 1.0, 5.5)
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result, (desired - 1.0, desired))
 
     def testNoneLimit(self):
         arr = np.arange(0.0, 10.0)
         # Low = None
-        result = selectFrequencyRange(arr, arr + 1.0, high=5.0)
+        result = fft_select_frequency_range(arr, arr + 1.0, high=5.0)
         desired = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
         assert_allclose(result, (desired - 1.0, desired))
         # High = None
-        result = selectFrequencyRange(arr, arr + 1.0, low=5.0)
+        result = fft_select_frequency_range(arr, arr + 1.0, low=5.0)
         desired = np.asarray([6.0, 7.0, 8.0, 9.0, 10.0])
         assert_allclose(result, (desired - 1.0, desired))
 
     def testTupleUnpacking(self):
         "Test tuple unpacking for FFT inlining"
         arr = np.arange(0.0, 10.0)
-        result = selectFrequencyRange((arr, arr + 1.0), low=1.0, high=5.5)
+        result = fft_select_frequency_range((arr, arr + 1.0), low=1.0, high=5.5)
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result, (desired - 1.0, desired))
 

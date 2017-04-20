@@ -12,7 +12,7 @@ from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
 
-__all__ = ["selectByDatetime", "selectFrequencyRange", "findSortedExtrema",
+__all__ = ["selectByDatetime", "fft_select_frequency_range", "findSortedExtrema",
            "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
            "runs_ignore_borders", "shrink_ranges", "IntInterval",
            "random_slice", "findNearestIdx", "resample_discard",
@@ -174,7 +174,7 @@ def computeFrequencyRangeIndices(x, low, high):
     endidx = np.searchsorted(x >= high, True) if high is not None else None
     return (startidx, endidx)
 
-def selectFrequencyRange(x, y=None, low=None, high=None):
+def fft_select_frequency_range(x, y=None, low=None, high=None):
     """
     From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
     Use computeFrequencyRangeIndices() to get the indices.

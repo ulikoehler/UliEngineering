@@ -7,7 +7,7 @@ import scipy.fftpack
 import numpy as np
 import functools
 from toolz import functoolz
-from .Selection import selectFrequencyRange
+from .Selection import fft_select_frequency_range
 from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
@@ -182,7 +182,7 @@ def dominant_frequency(x, y=None, low=None, high=None):
         x, y = x
     # Apply frequency range
     if low is not None or high is not None:
-        x, y = selectFrequencyRange(x, y, low=low, high=high)
+        x, y = fft_select_frequency_range(x, y, low=low, high=high)
     return x[np.argmax(y)]
 
 
@@ -212,7 +212,7 @@ def amplitude_integral(fx, fy, low=None, high=None):
 
     :return The amplitude integral value normalized as [amplitude unit] / Hz
     """
-    fx, fy = selectFrequencyRange(fx, fy, low=low, high=high)
+    fx, fy = fft_select_frequency_range(fx, fy, low=low, high=high)
     # Normalize to [amplitude unit] / Hz
     hz = fx[-1] - fx[0]
     return np.sum(fy) / hz
