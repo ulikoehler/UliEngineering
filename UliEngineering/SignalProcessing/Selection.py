@@ -18,7 +18,7 @@ __all__ = ["select_by_datetime", "fft_select_frequency_range", "find_sorted_extr
            "random_slice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "select_ranges",
-           "frequency_range_indices", "multiselect"]
+           "frequency_range_indices", "multiselect", "find_closest_index"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -508,3 +508,11 @@ def multiselect(lst, indices, convert=functoolz.identity):
     [4, 2, 6]
     """
     return [lst[convert(idx)] for idx in indices]
+
+
+def find_closest_index(frequencies, frequency):
+    """
+    Find the closest frequency bin in an array of frequencies
+    and return its index in the frequency array.
+    """
+    return np.argmin(np.abs(frequencies - frequency))

@@ -136,6 +136,8 @@ class TestFFT(object):
         # Just test if it actually runs
         x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
 
+
+class TestClosestFrequency(object):
     def test_find_closest_frequency(self):
         fftx = np.asarray([1,2,3,4,5])
         ffty = fftx * 2

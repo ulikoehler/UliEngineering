@@ -7,7 +7,7 @@ import scipy.fftpack
 import numpy as np
 import functools
 from toolz import functoolz
-from .Selection import fft_select_frequency_range
+from .Selection import fft_select_frequency_range, find_closest_index
 from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
@@ -214,14 +214,16 @@ def amplitude_integral(fx, fy, low=None, high=None):
     """
     fx, fy = fft_select_frequency_range(fx, fy, low=low, high=high)
     # Normalize to [amplitude unit] / Hz
-    hz = fx[-1] - fx[0]
-    return np.sum(fy) / hz
+    dHz = fx[-1] - fx[0]
+    return np.sum(fy) / dHz
 
 
-def find_closest_frequency(fftx, ffty, frequency):
+def find_closest_frequency(frequencies, values, frequency):
     """
-    Find the closest frequency bin and value in a FFT.
-    Return (frequency of closest frequency bin, value)
+    Find the closest frequency bin and value in an array of frequencies
+    Return (frequency of closest frequency bin, value).
+
+    Usually used as find_closest_frequency(fftx, ffty, <frequency>)
     """
-    idx = np.argmin(np.abs(fftx - frequency))
-    return fftx[idx], ffty[idx]
+    idx = find_closest_index(frequencies, frequency)
+    return frequencies[idx], values[idx]
