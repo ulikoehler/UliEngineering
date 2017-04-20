@@ -143,14 +143,14 @@ class TestSelectFrequencyRange(object):
         assert_allclose(result, (desired - 1.0, desired))
 
 
-class TestFindSortedExtrema(object):
+class Testfind_sorted_extrema(object):
     def testGreater(self):
         x = np.arange(10)
         y = np.zeros(10)
         y[2] = 1.0  # Not the largest maximum
         y[6] = 5.0
 
-        assert_allclose(findSortedExtrema(x, y), [[6.0, 5.0], [2.0, 1.0]])
+        assert_allclose(find_sorted_extrema(x, y), [[6.0, 5.0], [2.0, 1.0]])
 
     def testLess(self):
         x = np.arange(10)
@@ -158,12 +158,12 @@ class TestFindSortedExtrema(object):
         y[2] = -1.0  # Not the largest maximum
         y[6] = -5.0
 
-        assert_allclose(findSortedExtrema(x, y, comparator=np.less),
+        assert_allclose(find_sorted_extrema(x, y, comparator=np.less),
                         [[6.0, -5.0], [2.0, -1.0]])
 
     @raises(ValueError)
     def testInvalidComparator(self):
-        findSortedExtrema(None, None, comparator=map)
+        find_sorted_extrema(None, None, comparator=map)
 
 class TestSelectByThreshold(object):
 

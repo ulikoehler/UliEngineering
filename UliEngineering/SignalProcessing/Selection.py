@@ -12,7 +12,7 @@ from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
 
-__all__ = ["select_by_datetime", "fft_select_frequency_range", "findSortedExtrema",
+__all__ = ["select_by_datetime", "fft_select_frequency_range", "find_sorted_extrema",
            "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
            "runs_ignore_borders", "shrink_ranges", "IntInterval",
            "random_slice", "findNearestIdx", "resample_discard",
@@ -211,7 +211,7 @@ def _check_extrema_comparator(comparator):
     if comparator != np.greater and comparator != np.less:
         raise ValueError("Comparator may only be np.greater or np.less")
 
-def findSortedExtrema(x, y, comparator=np.greater, order=1, mode='clip'):
+def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
     """
     Find extrema using the given method and parameters, order them by y value and
     return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
