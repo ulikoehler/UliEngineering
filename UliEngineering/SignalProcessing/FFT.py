@@ -12,10 +12,11 @@ from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
-__all__ = ["computeFFT", "parallelFFTReduce", "simpleParallelFFTReduce",
-           "cutFFTDCArtifacts", "cutFFTDCArtifactsMulti", "generate_sinewave",
-           "dominant_frequency", "parallelFFTReduceAllResults", "fft_frequencies",
-           "amplitude_integral", "find_closest_frequency", "serial_fft_reduce"]
+__all__ = ["computeFFT", "parallel_fft_reduce", "simple_fft_reduce",
+           "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "generate_sinewave",
+           "dominant_frequency", "parallel_fft_reduce_all_results", "fft_frequencies",
+           "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
+           "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
 
 __fft_windows = {
     "blackman": np.blackman,
@@ -59,7 +60,7 @@ def sum_reducer(fx, gen):
     "The standard FFT reducer. Sums up all FFT y values."
     return sum(y for _, y in gen)
 
-def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None):
+def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
@@ -99,7 +100,7 @@ def parallelFFTReduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
 
 def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True):
     """
-    Like parallelFFTReduce, but performs all operations in serial, i.e. all operations
+    Like parallel_fft_reduce, but performs all operations in serial, i.e. all operations
     are performed on the calling thread
     """
     if len(chunkgen) == 0:
@@ -120,9 +121,9 @@ def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
 
 
 
-def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
+def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
     """
-    Easier interface to parallelFFTSum that automatically initializes a fixed size chunk generator
+    Easier interface to (parallel|serial)_fft_reduce that automatically initializes a fixed size chunk generator
     and automatically initializes the executor if no executor is given.
 
     The shift size is automatically set to fftsize // 4 to account for window function
@@ -130,12 +131,15 @@ def simpleParallelFFTReduce(arr, samplerate, fftsize, shiftsize=None, nthreads=4
     """
     shiftsize = fftsize // 4 if shiftsize is None else shiftsize
     chunkgen = overlapping_chunks(arr, fftsize, shiftsize)
-    return parallelFFTReduce(chunkgen, samplerate, fftsize, **kwargs)
+    return fn(chunkgen, samplerate, fftsize, **kwargs)
 
-parallelFFTReduceAllResults = \
-    functools.partial(parallelFFTReduce, normalize=False, reducer=functoolz.identity)
+simple_serial_fft_reduce = functools.partial(simple_fft_reduce, serial_fft_reduce)
+simple_parallel_fft_reduce = functools.partial(simple_fft_reduce, parallel_fft_reduce)
 
-def cutFFTDCArtifacts(fx, fy=None, return_idx=False):
+parallel_fft_reduce_all_results = \
+    functools.partial(parallel_fft_reduce, normalize=False, reducer=functoolz.identity)
+
+def fft_cut_dc_artifacts(fx, fy=None, return_idx=False):
     """
     If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
     this function can be used to remove this area from the FFT value set.
@@ -162,9 +166,9 @@ def cutFFTDCArtifacts(fx, fy=None, return_idx=False):
         return 0
     return (fx, fy)
 
-def cutFFTDCArtifactsMulti(fx, fys, return_idx=False):
+def fft_cut_dc_artifacts_multi(fx, fys, return_idx=False):
     """Remove FFT artifacts for a list of numpy arrays. Resizes all arrays to the same size"""
-    idx = max(cutFFTDCArtifacts(None, fy, return_idx=True) for fy in fys)
+    idx = max(fft_cut_dc_artifacts(None, fy, return_idx=True) for fy in fys)
     if return_idx:
         return idx
     return fx[idx:], [fy[idx:] for fy in fys]

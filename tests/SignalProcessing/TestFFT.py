@@ -17,10 +17,10 @@ class TestFFT(object):
         assert_equal(x.shape, y.shape)
         # Test if artifacts can be cut
         origLength = x.shape[0]
-        x2, y2 = cutFFTDCArtifacts(x, y)
+        x2, y2 = fft_cut_dc_artifacts(x, y)
         assert_less(x2.shape[0], origLength)
         # Check if we can also pass a tuple
-        x3, y3 = cutFFTDCArtifacts((x, y))
+        x3, y3 = fft_cut_dc_artifacts((x, y))
         assert_allclose(x2, x3)
         assert_allclose(y2, y3)
 
@@ -30,19 +30,19 @@ class TestFFT(object):
         y = np.linspace(0, 100, 100)
         y[:10] = np.linspace(100, 0, 10)
         # Insert artificial peak
-        assert_equal(cutFFTDCArtifacts(x, y, return_idx=True), 10)
+        assert_equal(fft_cut_dc_artifacts(x, y, return_idx=True), 10)
 
     def testCutDCArtifactsNoMinimum(self):
         # No minimum --> should return original array
         x = np.linspace(100, 1, 100)
         y = np.linspace(500, 5, 100)
-        x2, y2 = cutFFTDCArtifacts(x, y)
+        x2, y2 = fft_cut_dc_artifacts(x, y)
         assert_equal(x2.shape, x.shape)
         assert_equal(y2.shape, y.shape)
         assert_allclose(x2, x)
         assert_allclose(y2, y)
         # Check returned index
-        assert_equal(cutFFTDCArtifacts(x, y, return_idx=True), 0)
+        assert_equal(fft_cut_dc_artifacts(x, y, return_idx=True), 0)
 
     def testCutFFTDCArtifactsMulti(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
@@ -52,10 +52,10 @@ class TestFFT(object):
         y2 = np.linspace(0, 100, 100)
         y2[:15] = np.linspace(100, 0, 15)
         # Insert artificial peak
-        assert_equal(cutFFTDCArtifactsMulti(x, [y1], return_idx=True), 10)
-        assert_equal(cutFFTDCArtifactsMulti(x, [y1, y2], return_idx=True), 15)
+        assert_equal(fft_cut_dc_artifacts_multi(x, [y1], return_idx=True), 10)
+        assert_equal(fft_cut_dc_artifacts_multi(x, [y1, y2], return_idx=True), 15)
         # Check actual return value
-        xr, yrs = cutFFTDCArtifactsMulti(x, [y1, y2])
+        xr, yrs = fft_cut_dc_artifacts_multi(x, [y1, y2])
         yr1 = yrs[0]
         yr2 = yrs[1]
         assert_allclose(xr, x[15:])
@@ -93,7 +93,7 @@ class TestFFT(object):
     @raises(ValueError)
     def test_fft_empty_chunks(self):
         cg = ChunkGenerator(lambda _: [], 0)
-        parallelFFTReduce(cg, None, None)
+        parallel_fft_reduce(cg, None, None)
 
     @parameterized.expand([
         ("With DC", False),
@@ -103,7 +103,7 @@ class TestFFT(object):
         d = np.random.random(1000)
         chunkgen = overlapping_chunks(d, 100, 5)
         # Just test if it actually runs
-        x, y = parallelFFTReduce(chunkgen, 10.0, 100, removeDC=removeDC)
+        x, y = parallel_fft_reduce(chunkgen, 10.0, 100, removeDC=removeDC)
         if removeDC:
             assert_equal(x.shape[0], y.shape[0])
         else:  # With DC
@@ -114,7 +114,7 @@ class TestFFT(object):
     def testSimpleParallelFFTReduce(self):
         d = np.random.random(1000)
         # Just test if it actually runs
-        x, y = simpleParallelFFTReduce(d, 100.0, 100)
+        x, y = simple_parallel_fft_reduce(d, 100.0, 100)
         assert_equal(x.shape[0], 50)
         assert_equal(y.shape[0], 50)
 
@@ -134,7 +134,7 @@ class TestFFT(object):
     def test_too_small_fft(self):
         d = np.random.random(10)
         # Just test if it actually runs
-        x, y = simpleParallelFFTReduce(d, 1000.0, 100)
+        x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
 
     def test_find_closest_frequency(self):
         fftx = np.asarray([1,2,3,4,5])
