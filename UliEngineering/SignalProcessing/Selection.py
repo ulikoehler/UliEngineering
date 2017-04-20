@@ -18,7 +18,7 @@ __all__ = ["select_by_datetime", "fft_select_frequency_range", "find_sorted_extr
            "random_slice", "findNearestIdx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "select_ranges",
-           "computeFrequencyRangeIndices", "multiselect"]
+           "frequency_range_indices", "multiselect"]
 
 # Define interval class and override to obtain operator overridability
 __Interval = collections.namedtuple("Interval", ["start", "end"])
@@ -166,7 +166,7 @@ def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side=
     else:  # Return range
         return IntInterval(idx - around, idx + around)
 
-def computeFrequencyRangeIndices(x, low, high):
+def frequency_range_indices(x, low, high):
     """
     Compute (startidx, endidx) for a given frequency array (e.g. from FFT)
     """
@@ -177,7 +177,7 @@ def computeFrequencyRangeIndices(x, low, high):
 def fft_select_frequency_range(x, y=None, low=None, high=None):
     """
     From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
-    Use computeFrequencyRangeIndices() to get the indices.
+    Use frequency_range_indices() to get the indices.
 
     This function is designed to be inlined with a FFT call. In this case,
     x is a tuple (x, y) and y is None (default).
@@ -187,7 +187,7 @@ def fft_select_frequency_range(x, y=None, low=None, high=None):
     """
     if y is None:
         x, y = x
-    startidx, endidx = computeFrequencyRangeIndices(x, low, high)
+    startidx, endidx = frequency_range_indices(x, low, high)
     # Remove everything except the selected frequency range
     return (x[startidx:endidx], y[startidx:endidx])
 
