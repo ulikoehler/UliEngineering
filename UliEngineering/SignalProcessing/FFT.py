@@ -14,7 +14,7 @@ from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "generate_sinewave",
-           "dominant_frequency", "parallel_fft_reduce_all_results", "fft_frequencies",
+           "dominant_frequency", "fft_frequencies",
            "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
            "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
 
@@ -135,9 +135,6 @@ def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, 
 
 simple_serial_fft_reduce = functools.partial(simple_fft_reduce, serial_fft_reduce)
 simple_parallel_fft_reduce = functools.partial(simple_fft_reduce, parallel_fft_reduce)
-
-parallel_fft_reduce_all_results = \
-    functools.partial(parallel_fft_reduce, normalize=False, reducer=functoolz.identity)
 
 def fft_cut_dc_artifacts(fx, fy=None, return_idx=False):
     """
