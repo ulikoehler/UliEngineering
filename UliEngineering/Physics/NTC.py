@@ -11,7 +11,7 @@ from UliEngineering.Units import Unit
 import numpy as np
 from scipy.constants import zero_Celsius
 
-__all__ = ["ntc_resistance"]
+__all__ = ["ntc_resistance", "ntc_resistances"]
 
 
 def ntc_resistance(r25, b25, t) -> Unit("Ω"):
@@ -33,3 +33,14 @@ def ntc_resistance(r25, b25, t) -> Unit("Ω"):
     t = normalize_temperature(t) # t is now in Kelvins
     # Compute resistance
     return r25 * np.exp(b25 * (1./t - 1./(25. + zero_Celsius)))
+
+def ntc_resistances(r25, b25, t0=-40, t1=85, resolution=0.1):
+    """
+    Compute the resistances over a temperature range with a given resolution.
+
+    Returns
+    =======
+    A (temperatures, values) tuple
+    """
+    ts = np.linspace(t0, t1, (t1 - t0) / resolution + 1)
+    return ts, ntc_resistance(r25, b25, ts)

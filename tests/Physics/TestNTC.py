@@ -15,3 +15,7 @@ class TestNTC(object):
         assert_approx_equal(ntc_resistance("47k", "4050K", "-18°C"), 463773.791)
         assert_approx_equal(ntc_resistance("47k", "4050K", "5°C"), 124819.66)
         assert_approx_equal(ntc_resistance("47k", "4050K", "60°C"), 11280.407)
+
+    def test_ntc_resistances(self):
+        # Currently mostly test if it runs
+        ts, values = ntc_resistances("47k", "4050K")
