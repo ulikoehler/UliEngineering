@@ -51,3 +51,11 @@ class TestGenerateSinewave(object):
         assert_allclose(sw1, sw2 - 2.5, atol=1e-7)
 
 
+
+class TestGenerateSquareWave(object):
+    def testByFFT(self):
+        """Test sinewave by computing FFT dominant frequency"""
+        sw = generate_squarewave(25., 400.0, 1.0, 10.)
+        fftx, ffty = compute_fft(sw, 400.)
+        df = dominant_frequency(fftx, ffty)
+        assert_true(abs(df - 25.0) < 0.1)
