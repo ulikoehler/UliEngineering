@@ -13,7 +13,7 @@ import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
-           "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "generate_sinewave",
+           "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi",
            "dominant_frequency", "fft_frequencies",
            "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
            "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
@@ -163,12 +163,14 @@ def fft_cut_dc_artifacts(fx, fy=None, return_idx=False):
         return 0
     return (fx, fy)
 
+
 def fft_cut_dc_artifacts_multi(fx, fys, return_idx=False):
     """Remove FFT artifacts for a list of numpy arrays. Resizes all arrays to the same size"""
     idx = max(fft_cut_dc_artifacts(None, fy, return_idx=True) for fy in fys)
     if return_idx:
         return idx
     return fx[idx:], [fy[idx:] for fy in fys]
+
 
 def dominant_frequency(x, y=None, low=None, high=None):
     """
@@ -181,21 +183,6 @@ def dominant_frequency(x, y=None, low=None, high=None):
     if low is not None or high is not None:
         x, y = fft_select_frequency_range(x, y, low=low, high=high)
     return x[np.argmax(y)]
-
-
-def generate_sinewave(frequency, samplerate, amplitude, length, phaseshift=0):
-    """
-    Generate a test sinewave of a specific frequency of a specific length
-
-    :param frequency The frequency in Hz
-    :param samplerate The samplerate of the resulting array
-    :param amplitude The peak amplitude of the sinewave
-    :param length The length of the result in seconds
-    :param phaseshift The phaseshift in degrees
-    """
-    x = np.arange(length * samplerate)
-    phaseshift_add = phaseshift * 8 * np.pi * frequency / 360.
-    return amplitude * np.sin(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
 
 
 def amplitude_integral(fx, fy, low=None, high=None):
