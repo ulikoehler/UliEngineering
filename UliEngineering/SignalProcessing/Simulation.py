@@ -8,7 +8,7 @@ import numpy as np
 __all__ = ["generate_sinewave"]#, "generate_squarewave"]
 
 
-def generate_sinewave(frequency, samplerate, amplitude, length, phaseshift=0):
+def generate_sinewave(frequency, samplerate, amplitude=1., length=1., phaseshift=0, offset=0):
     """
     Generate a test sinewave of a specific frequency of a specific length
 
@@ -20,4 +20,4 @@ def generate_sinewave(frequency, samplerate, amplitude, length, phaseshift=0):
     """
     x = np.arange(length * samplerate)
     phaseshift_add = phaseshift * samplerate / (360. * frequency)
-    return amplitude * np.sin(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
+    return offset + amplitude * np.sin(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)

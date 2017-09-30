@@ -10,12 +10,12 @@ import concurrent.futures
 import numpy as np
 
 class TestGenerateSinewave(object):
-    def testGenerateSinewave(self):
+    def testByFFT(self):
+        """Test sinewave by computing FFT dominant frequency"""
         sw = generate_sinewave(25., 400.0, 1.0, 10.)
         fftx, ffty = compute_fft(sw, 400.)
         df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
-
 
     @parameterized.expand([
         (1.,),
@@ -44,4 +44,10 @@ class TestGenerateSinewave(object):
         assert_allclose(sw180, sw540, atol=1e-7)
         # Test out-of-phase
         assert_allclose(sw0, -sw180, atol=1e-7)
+
+    def testOffset(self):
+        sw1 = generate_sinewave(25., 400.0, 1.0, 10.)
+        sw2 = generate_sinewave(25., 400.0, 1.0, 10., offset=2.5)
+        assert_allclose(sw1, sw2 - 2.5, atol=1e-7)
+
 
