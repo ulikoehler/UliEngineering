@@ -14,7 +14,7 @@ __all__ = [
     "generate_trianglewave",
     "generate_sawtooth",
     "generate_inverse_sawtooth",
-    ]
+]
 
 
 def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phaseshift=0, offset=0):
