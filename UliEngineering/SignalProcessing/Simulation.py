@@ -6,6 +6,7 @@ Utilities for FFT computation and visualization
 import numpy as np
 import scipy.signal
 import functools
+from UliEngineering.EngineerIO import normalize_numeric
 
 __all__ = [
     "sine_wave",
@@ -28,6 +29,14 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
     :param length The length of the result in seconds
     :param phaseshift The phaseshift in degrees
     """
+    # Normalize text values, e.g. "100 kHz" => 100000.0
+    frequency = normalize_numeric(frequency)
+    samplerate = normalize_numeric(samplerate)
+    amplitude = normalize_numeric(amplitude)
+    length = normalize_numeric(length)
+    phaseshift = normalize_numeric(phaseshift)
+    offset = normalize_numeric(offset)
+    # Perform calculations
     x = np.arange(length * samplerate)
     phaseshift_add = phaseshift * samplerate / (360. * frequency)
     return offset + amplitude * genfn(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
