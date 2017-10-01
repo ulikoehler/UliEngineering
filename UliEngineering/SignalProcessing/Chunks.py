@@ -49,6 +49,8 @@ class ChunkGenerator(object):
         Add a function to the current list of functions. The given function
         will be executed last in the list of functions.
         """
+        # Try NOT to nest functoolz.compose, that might be expensive.
+        # Instead emulate a SINGLE functoolz.compose call
         if self.func == functoolz.identity:
             self.func = fn
         elif isinstance(self.func, functoolz.Compose):
