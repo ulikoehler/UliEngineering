@@ -11,8 +11,8 @@ import numpy as np
 
 class TestGenerateSinewave(object):
     def testByFFT(self):
-        """Test sinewave by computing FFT dominant frequency"""
-        sw = generate_sinewave(25., 400.0, 1.0, 10.)
+        """Test sine_wave by computing FFT dominant frequency"""
+        sw = sine_wave(25., 400.0, 1.0, 10.)
         fftx, ffty = compute_fft(sw, 400.)
         df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
@@ -33,11 +33,11 @@ class TestGenerateSinewave(object):
     ])
     def testPhaseShift(self, frequency):
         """Test if 0/360/720° phase shift matches, and 180/540° matches as wel"""
-        sw0 = generate_sinewave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=0.0)
-        sw180 = generate_sinewave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=180.0)
-        sw360 = generate_sinewave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=360.0)
-        sw540 = generate_sinewave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=540.0)
-        sw720 = generate_sinewave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=720.0)
+        sw0 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=0.0)
+        sw180 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=180.0)
+        sw360 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=360.0)
+        sw540 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=540.0)
+        sw720 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=720.0)
         # Test in-phase
         assert_allclose(sw0, sw360, atol=1e-7)
         assert_allclose(sw0, sw720, atol=1e-7)
@@ -46,16 +46,16 @@ class TestGenerateSinewave(object):
         assert_allclose(sw0, -sw180, atol=1e-7)
 
     def testOffset(self):
-        sw1 = generate_sinewave(25., 400.0, 1.0, 10.)
-        sw2 = generate_sinewave(25., 400.0, 1.0, 10., offset=2.5)
+        sw1 = sine_wave(25., 400.0, 1.0, 10.)
+        sw2 = sine_wave(25., 400.0, 1.0, 10., offset=2.5)
         assert_allclose(sw1, sw2 - 2.5, atol=1e-7)
 
 
 
 class TestGenerateSquareWave(object):
     def testByFFT(self):
-        """Test sinewave by computing FFT dominant frequency"""
-        sw = generate_squarewave(25., 400.0, 1.0, 10.)
+        """Test sine_wave by computing FFT dominant frequency"""
+        sw = square_wave(25., 400.0, 1.0, 10.)
         fftx, ffty = compute_fft(sw, 400.)
         df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)
