@@ -1,10 +1,11 @@
 language: python
     - "3.2"
+    - "3.3"
     - "3.4"
     - "3.5"
     - "3.6"
 install:
-    - pip install numpy scipy coverage codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
+    - sudo pip install numpy scipy coverage codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
 sudo: false
 script: python3 setup.py test
