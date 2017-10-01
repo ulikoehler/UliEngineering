@@ -10,13 +10,6 @@ import concurrent.futures
 import numpy as np
 
 class TestGenerateSinewave(object):
-    def testByFFT(self):
-        """Test sine_wave by computing FFT dominant frequency"""
-        sw = sine_wave(25., 400.0, 1.0, 10.)
-        fftx, ffty = compute_fft(sw, 400.)
-        df = dominant_frequency(fftx, ffty)
-        assert_true(abs(df - 25.0) < 0.1)
-
     @parameterized.expand([
         (1.,),
         (2.,),
@@ -52,10 +45,18 @@ class TestGenerateSinewave(object):
 
 
 
-class TestGenerateSquareWave(object):
-    def testByFFT(self):
+class TestGenerateWaves(object):
+    @parameterized.expand([
+        (sine_wave,),
+        (cosine_wave,),
+        (square_wave,),
+        (triangle_wave,),
+        (sawtooth,),
+        (inverse_sawtooth,),
+    ])
+    def testByFFT(self, fn):
         """Test sine_wave by computing FFT dominant frequency"""
-        sw = square_wave(25., 400.0, 1.0, 10.)
+        sw = fn(25., 400.0, 1.0, 10.)
         fftx, ffty = compute_fft(sw, 400.)
         df = dominant_frequency(fftx, ffty)
         assert_true(abs(df - 25.0) < 0.1)

@@ -8,10 +8,10 @@ import scipy.signal
 import functools
 
 __all__ = [
-    "sinewave",
-    "cosinewave",
-    "squarewave",
-    "trianglewave",
+    "sine_wave",
+    "cosine_wave",
+    "square_wave",
+    "triangle_wave",
     "sawtooth",
     "inverse_sawtooth",
 ]
@@ -34,7 +34,7 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
 
 sine_wave = functools.partial(_generate_wave, np.sin)
 cosine_wave = functools.partial(_generate_wave, np.cos)
-square_wave = functools.partial(_generate_wave, scipy.signal.rect)
+square_wave = functools.partial(_generate_wave, scipy.signal.square)
 triangle_wave = functools.partial(_generate_wave,
     functools.partial(scipy.signal.sawtooth, width=0.5))
 sawtooth = functools.partial(_generate_wave,

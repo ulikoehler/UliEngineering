@@ -86,7 +86,7 @@ class TestFFT(object):
     ])
     def testFFTAmplitudeIntegral(self, amplitude, length):
         """FFT amplitude integral should be equal to ptp value of a sine wave"""
-        sine = generate_sinewave(10.0, 100.0, amplitude, length)
+        sine = sine_wave(10.0, 100.0, amplitude, length)
         fftx, ffty = compute_fft(sine, 100.0)
         # Number of decimals must depend on value, so we need to divide here
         assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 2)
