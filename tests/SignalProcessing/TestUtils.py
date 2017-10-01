@@ -20,6 +20,11 @@ class TestRemoveMean(object):
         assert_allclose(remove_mean([]), [])
         assert_allclose(remove_mean([1.0, 2.0, 3.0]), [-1.0, 0.0, 1.0])
 
+class TestRMS(object):
+    def testRMS(self):
+        assert_allclose(rms([]), [])
+        assert_allclose(rms([1.0, 2.0, 3.0]), np.sqrt(np.mean([1*1, 2*2, 3*3])))
+
 class TestUnstair(object):
     @parameterized(unstairMethods)
     def testNoReduction(self, method):

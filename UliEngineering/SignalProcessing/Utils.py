@@ -9,7 +9,7 @@ import numbers
 import warnings
 from .Selection import find_true_runs
 
-__all__ = ["remove_mean", "unstair", "optimum_polyfit", "LinRange", "aggregate"]
+__all__ = ["remove_mean", "rms", "unstair", "optimum_polyfit", "LinRange", "aggregate"]
 
 _unstep_reduction_methods = {
     "left": lambda a: a[:, 0],
@@ -25,6 +25,11 @@ def remove_mean(arr):
     """
     return arr - np.mean(arr)
 
+def rms(arr):
+    """
+    Compute the root-mean-square value of the given array
+    """
+    return np.sqrt(np.mean(np.square(arr)))
 
 def unstair(x, y, method="diff", tolerance=1e-9):
     """
