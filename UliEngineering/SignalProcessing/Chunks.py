@@ -48,6 +48,8 @@ class ChunkGenerator(object):
         """
         Add a function to the current list of functions. The given function
         will be executed last in the list of functions.
+
+        Return self
         """
         # Try NOT to nest functoolz.compose, that might be expensive.
         # Instead emulate a SINGLE functoolz.compose call
@@ -57,6 +59,7 @@ class ChunkGenerator(object):
             self.func.funcs.append(fn)
         else:
             self.func = functoolz.compose(fn, self.func)
+        return self
 
     def as_list(self):
         return list(self)
