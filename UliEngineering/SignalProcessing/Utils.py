@@ -9,7 +9,7 @@ import numbers
 import warnings
 from .Selection import find_true_runs
 
-__all__ = ["unstair", "optimum_polyfit", "LinRange", "aggregate"]
+__all__ = ["remove_mean", "unstair", "optimum_polyfit", "LinRange", "aggregate"]
 
 _unstep_reduction_methods = {
     "left": lambda a: a[:, 0],
@@ -17,6 +17,13 @@ _unstep_reduction_methods = {
     "middle": lambda a: np.sum(a, axis=1) // 2,
     "reduce": lambda a: a.flatten()
 }
+
+def remove_mean(arr):
+    """
+    Substract the DC signal component, i.e. the arithmetic mean of the array,
+    from the array and return the modified array
+    """
+    return arr - np.mean(arr)
 
 
 def unstair(x, y, method="diff", tolerance=1e-9):

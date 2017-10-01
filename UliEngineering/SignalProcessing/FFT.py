@@ -11,6 +11,7 @@ from .Selection import fft_select_frequency_range, find_closest_index
 from .Chunks import overlapping_chunks
 import concurrent.futures
 from UliEngineering.Utils.Concurrency import *
+from UliEngineering.SignalProcessing.Utils import remove_mean
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi",
@@ -48,8 +49,9 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
         raise ValueError("Chunk too small: FFT size {0}, chunk size {1}".format(fftsize, chunk.size))
     yslice = chunk[:fftsize]
     # If enabled, remove DC
+    # Do NOT do this in place as the data might be processed by overlapping FFTs or otherwise
     if removeDC:
-        yslice = yslice - np.mean(yslice)
+        yslice = remove_mean(yslice)
     # Compute FFT
     fftresult = scipy.fftpack.fft(yslice * window)
     # Perform amplitude normalization

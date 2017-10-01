@@ -15,6 +15,11 @@ unstairMethods = [
     ("reduce",),
 ]
 
+class TestRemoveMean(object):
+    def testRemoveMean(self):
+        assert_allclose(remove_mean([]), [])
+        assert_allclose(remove_mean([1.0, 2.0, 3.0]), [-1.0, 0.0, 1.0])
+
 class TestUnstair(object):
     @parameterized(unstairMethods)
     def testNoReduction(self, method):
