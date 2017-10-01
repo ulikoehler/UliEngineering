@@ -35,4 +35,4 @@ def generate_squarewave(frequency, samplerate, amplitude=1., length=1., phaseshi
     """
     x = np.arange(length * samplerate)
     phaseshift_add = phaseshift * samplerate / (360. * frequency)
-    return offset + amplitude * scipy.signal-square(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
+    return offset + amplitude * scipy.signal.square(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
