@@ -25,6 +25,16 @@ class TestRMS(object):
         assert_allclose(rms([]), [])
         assert_allclose(rms([1.0, 2.0, 3.0]), np.sqrt(np.mean([1*1, 2*2, 3*3])))
 
+class TestPeakToPeak(object):
+    def testPeakToPeak(self):
+        assert_allclose(peak_to_peak([]), 0.0)
+        assert_allclose(peak_to_peak([0.0]), 0.0)
+        assert_allclose(peak_to_peak([1.0]), 0.0)
+        assert_allclose(peak_to_peak([1.0, 1.0]), 0.0)
+        assert_allclose(peak_to_peak([1.0, 2.0]), 1.0)
+        assert_allclose(peak_to_peak([2.0, 1.0]), 1.0)
+        assert_allclose(peak_to_peak([0, 1, 3, -3, 0, 5, 0.7, 0.9]), 8)
+
 class TestUnstair(object):
     @parameterized(unstairMethods)
     def testNoReduction(self, method):
