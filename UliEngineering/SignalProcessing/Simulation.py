@@ -18,7 +18,7 @@ __all__ = [
 ]
 
 
-def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phaseshift=0, offset=0):
+def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phaseshift=0., timedelay=0., offset=0.):
     """
     Generate a wave using a given function of a specific frequency of a specific length.
 
@@ -27,7 +27,8 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
     :param samplerate The samplerate of the resulting array
     :param amplitude The peak amplitude of the sinewave
     :param length The length of the result in seconds
-    :param phaseshift The phaseshift in degrees
+    :param timedelay The phaseshift, in seconds (in addition to phaseshift)
+    :param phaseshift The phaseshift in degrees (in addition to timedelay)
     """
     # Normalize text values, e.g. "100 kHz" => 100000.0
     frequency = normalize_numeric(frequency)
@@ -36,9 +37,11 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
     length = normalize_numeric(length)
     phaseshift = normalize_numeric(phaseshift)
     offset = normalize_numeric(offset)
+    timedelay = normalize_numeric(timedelay)
     # Perform calculations
     x = np.arange(length * samplerate)
     phaseshift_add = phaseshift * samplerate / (360. * frequency)
+    phaseshift_add += timedelay * samplerate
     return offset + amplitude * genfn(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
 
 sine_wave = functools.partial(_generate_wave, np.sin)
