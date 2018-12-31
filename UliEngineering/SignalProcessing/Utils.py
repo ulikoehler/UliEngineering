@@ -9,7 +9,7 @@ import numbers
 import warnings
 from .Selection import find_true_runs
 
-__all__ = ["remove_mean", "rms", "peak_to_peak", "unstair", "optimum_polyfit", "LinRange", "aggregate"]
+__all__ = ["remove_mean", "rms", "peak_to_peak", "unstair", "optimum_polyfit", "LinRange", "aggregate", "zero_crossings"]
 
 _unstep_reduction_methods = {
     "left": lambda a: a[:, 0],
@@ -228,3 +228,20 @@ def aggregate(gen):
     # Yield remaining item, if any
     if current is not None:
         yield (current, cnt)
+
+def zero_crossings(data):
+    """
+    Compute indexes in the given data array just before a zero crossing occurs.
+    A zero crossing at index i is defined as:
+        - data[i] is positive
+        - data[i + 1] exists and is negative
+    or:
+        - data[i] is negative
+        - data[i + 1] exists and is positive.
+
+    Returns an 1D numpy array with indexes.
+
+    Thanks to Jim Brissom on Stack Overflow for this solution:
+    https://stackoverflow.com/a/3843124/2597135
+    """
+    return np.where(np.diff(np.sign(data)))[0]
