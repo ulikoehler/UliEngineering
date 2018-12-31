@@ -5,4 +5,6 @@ FFT-related code that is used elsewhere to break up cyclic imports
 """
 from collections import namedtuple
 
+__all__ = ["FFTResult"]
+
 FFTResult = namedtuple("FFTResult", ["frequencies", "amplitudes", "angles"])

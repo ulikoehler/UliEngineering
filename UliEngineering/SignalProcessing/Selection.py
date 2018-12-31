@@ -191,7 +191,7 @@ def fft_select_frequency_range(fft, low=None, high=None):
     # Remove everything except the selected frequency range
     return FFTResult(
         fft.frequencies[startidx:endidx],
-        fft.values[startidx:endidx],
+        fft.amplitudes[startidx:endidx],
         fft.angles[startidx:endidx] if fft.angles else None
     )
 

@@ -18,7 +18,7 @@ __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi",
            "dominant_frequency", "fft_frequencies", "FFTResult",
            "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
-           "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
+           "simple_serial_fft_reduce", "simple_parallel_fft_reduce", "FFTResult"]
 
 __fft_windows = {
     "blackman": np.blackman,
