@@ -3,7 +3,6 @@
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
-from UliEngineering.SignalProcessing.FFT import FFTResult
 from nose_parameterized import parameterized
 import concurrent.futures
 import numpy as np
@@ -117,36 +116,6 @@ class TestSelectByDatetime(object):
     @raises
     def testNoneTimestamp(self, str):
         select_by_datetime(np.arange(10), None)
-
-class TestSelectFrequencyRange(object):
-    def testGeneric(self):
-        arr = np.arange(0.0, 10.0)
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), 1.0, 5.5)
-        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
-        assert_allclose(result.frequencies, desired - 1.0)
-        assert_allclose(result.amplitudes, desired)
-
-    def testNoneLimit(self):
-        arr = np.arange(0.0, 10.0)
-        # Low = None
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), high=5.0)
-        desired = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
-        assert_allclose(result.frequencies, desired - 1.0)
-        assert_allclose(result.amplitudes, desired)
-        # High = None
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=5.0)
-        desired = np.asarray([6.0, 7.0, 8.0, 9.0, 10.0])
-        assert_allclose(result.frequencies, desired - 1.0)
-        assert_allclose(result.amplitudes, desired)
-
-    def testTupleUnpacking(self):
-        "Test tuple unpacking for FFT inlining"
-        arr = np.arange(0.0, 10.0)
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=1.0, high=5.5)
-        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
-        assert_allclose(result.frequencies, desired - 1.0)
-        assert_allclose(result.amplitudes, desired)
-
 
 class Testfind_sorted_extrema(object):
     def testGreater(self):

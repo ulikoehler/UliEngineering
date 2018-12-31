@@ -87,9 +87,9 @@ class TestFFT(object):
     def testFFTAmplitudeIntegral(self, amplitude, length):
         """FFT amplitude integral should be equal to ptp value of a sine wave"""
         sine = sine_wave(10.0, 100.0, amplitude, length)
-        fftx, ffty = compute_fft(sine, 100.0)
+        fft = compute_fft(sine, 100.0)
         # Number of decimals must depend on value, so we need to divide here
-        assert_almost_equal(np.sum(ffty) / amplitude, 1.0, 2)
+        assert_almost_equal(np.sum(fft.amplitudes) / amplitude, 1.0, 2)
 
     @raises(ValueError)
     def test_fft_empty_chunks(self):
@@ -104,20 +104,20 @@ class TestFFT(object):
         d = np.random.random(1000)
         chunkgen = overlapping_chunks(d, 100, 5)
         # Just test if it actually runs
-        x, y = parallel_fft_reduce(chunkgen, 10.0, 100, removeDC=removeDC)
+        fft = parallel_fft_reduce(chunkgen, 10.0, 100, removeDC=removeDC)
         if removeDC:
-            assert_equal(x.shape[0], y.shape[0])
+            assert_equal(fft.frequencies.shape[0], fft.amplitudes.shape[0])
         else:  # With DC
-            assert_equal(x.shape[0], 50)
-            assert_equal(y.shape[0], 50)
-        assert_equal(x.shape, y.shape)
+            assert_equal(fft.frequencies.shape[0], 50)
+            assert_equal(fft.amplitudes.shape[0], 50)
+        assert_equal(fft.frequencies.shape, fft.amplitudes.shape)
 
     def testSimpleParallelFFTReduce(self):
         d = np.random.random(1000)
         # Just test if it actually runs
-        x, y = simple_parallel_fft_reduce(d, 100.0, 100)
-        assert_equal(x.shape[0], 50)
-        assert_equal(y.shape[0], 50)
+        fft = simple_parallel_fft_reduce(d, 100.0, 100)
+        assert_equal(fft.frequencies.shape[0], 50)
+        assert_equal(fft.amplitudes.shape[0], 50)
 
     def testAmplitudeIntegral(self):
         fft = FFTResult(np.arange(4), np.asarray([2, 3, 4, 5]), None)
@@ -136,3 +136,32 @@ class TestClosestFrequency(object):
         fftx = np.asarray([1,2,3,4,5])
         ffty = fftx * 2
         assert_equal((1, 2), find_closest_frequency(fftx, ffty, 0.))
+
+class TestFFTSelectFrequencyRange(object):
+    def testGeneric(self):
+        arr = np.arange(0.0, 10.0)
+        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), 1.0, 5.5)
+        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
+        assert_allclose(result.frequencies, desired - 1.0)
+        assert_allclose(result.amplitudes, desired)
+
+    def testNoneLimit(self):
+        arr = np.arange(0.0, 10.0)
+        # Low = None
+        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), high=5.0)
+        desired = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
+        assert_allclose(result.frequencies, desired - 1.0)
+        assert_allclose(result.amplitudes, desired)
+        # High = None
+        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=5.0)
+        desired = np.asarray([6.0, 7.0, 8.0, 9.0, 10.0])
+        assert_allclose(result.frequencies, desired - 1.0)
+        assert_allclose(result.amplitudes, desired)
+
+    def testTupleUnpacking(self):
+        "Test tuple unpacking for FFT inlining"
+        arr = np.arange(0.0, 10.0)
+        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=1.0, high=5.5)
+        desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
+        assert_allclose(result.frequencies, desired - 1.0)
+        assert_allclose(result.amplitudes, desired)
