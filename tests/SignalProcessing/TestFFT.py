@@ -120,10 +120,9 @@ class TestFFT(object):
         assert_equal(y.shape[0], 50)
 
     def testAmplitudeIntegral(self):
-        fx = np.arange(4)
-        fy = np.asarray([2, 3, 4, 5])
-        assert_almost_equal(amplitude_integral(fx, fy), sum(fy) / 3.)
-        assert_almost_equal(amplitude_integral(fx, fy, low=1., high=2.01), 3 + 4)
+        fft = FFTResult(np.arange(4), np.asarray([2, 3, 4, 5]), None)
+        assert_almost_equal(amplitude_integral(fft), sum(fft.amplitudes) / 3.)
+        assert_almost_equal(amplitude_integral(fft, low=1., high=2.01), 3 + 4)
 
     @raises(ValueError)
     def test_too_small_fft(self):
