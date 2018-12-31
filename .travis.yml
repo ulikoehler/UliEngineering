@@ -5,10 +5,12 @@ language: python
     - "3.5"
     - "3.6"
 install:
+    - pip install -U pip wheel
+    - pip install -U setuptools
     - sudo pip install setuptools numpy scipy coverage codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
 cache: pip
 sudo: false
-script: python3 setup.py test
+script: python setup.py test
 dist: xenial
 after_success:
     - codeclimate-test-reporter --token 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
