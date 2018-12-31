@@ -4,13 +4,13 @@ language: python
     - "3.4"
     - "3.5"
     - "3.6"
-install:
-    - pip install -U pip wheel
-    - pip install -U setuptools
-    - sudo pip install setuptools numpy scipy coverage codecov rednose nose coverage toolz nose-parameterized codeclimate-test-reporter
+before_install:
+    - sudo apt-get -y install python3-numpy python3-scipy python3-pip
+    - sudo pip3 install coverage codecov rednose nose toolz nose-parameterized codeclimate-test-reporter
+    - sudo pip3 install setuptools --upgrade
 cache: pip
 sudo: false
-script: python setup.py test
+script: python3 setup.py test
 dist: xenial
 after_success:
     - codeclimate-test-reporter --token 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
