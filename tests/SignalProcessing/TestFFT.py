@@ -12,38 +12,35 @@ import numpy as np
 class TestFFT(object):
     def testBasicFFT(self):
         rand = np.random.random(1000) * 5.0 + 1.0 # +1: Artifical DC artifacts
-        x, y = compute_fft(rand, 10.0)
-        assert_equal(x.shape, (rand.shape[0] / 2, ))
-        assert_equal(y.shape, (rand.shape[0] / 2, ))
-        assert_equal(x.shape, y.shape)
+        fft = compute_fft(rand, 10.0)
+        assert_equal(fft.frequencies.shape[0], rand.shape[0] / 2)
+        assert_equal(fft.amplitudes.shape[0], rand.shape[0] / 2)
+        assert_equal(fft.frequencies.shape, fft.amplitudes.shape)
         # Test if artifacts can be cut
-        origLength = x.shape[0]
-        x2, y2 = fft_cut_dc_artifacts(x, y)
-        assert_less(x2.shape[0], origLength)
-        # Check if we can also pass a tuple
-        x3, y3 = fft_cut_dc_artifacts((x, y))
-        assert_allclose(x2, x3)
-        assert_allclose(y2, y3)
+        origLength = fft.frequencies.shape[0]
+        fft2 = fft.cut_dc_artifacts()
+        assert_less(fft2.frequencies.shape[0], origLength)
 
     def testCutFFTDCArtifacts(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
         # Generate down/up slope; minimum at 10
         y = np.linspace(0, 100, 100)
         y[:10] = np.linspace(100, 0, 10)
+        fft = FFT(x, y)
         # Insert artificial peak
-        assert_equal(fft_cut_dc_artifacts(x, y, return_idx=True), 10)
+        assert_equal(fft.cut_dc_artifacts(return_idx=True), 10)
 
     def testCutDCArtifactsNoMinimum(self):
         # No minimum --> should return original array
         x = np.linspace(100, 1, 100)
         y = np.linspace(500, 5, 100)
-        x2, y2 = fft_cut_dc_artifacts(x, y)
-        assert_equal(x2.shape, x.shape)
-        assert_equal(y2.shape, y.shape)
-        assert_allclose(x2, x)
-        assert_allclose(y2, y)
+        fft = FFT(x, y).cut_dc_artifacts()
+        assert_equal(fft.frequencies.shape, x.shape)
+        assert_equal(fft.amplitudes.shape, y.shape)
+        assert_allclose(fft.frequencies, x)
+        assert_allclose(fft.amplitudes, y)
         # Check returned index
-        assert_equal(fft_cut_dc_artifacts(x, y, return_idx=True), 0)
+        assert_equal(FFT(x, y).cut_dc_artifacts(return_idx=True), 0)
 
     def testCutFFTDCArtifactsMulti(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
@@ -68,11 +65,10 @@ class TestFFT(object):
         y = np.random.random(100)
         # Insert artificial peak
         y[32] = 8.0
-        assert_equal(dominant_frequency(x, y), 132)
-        # Check if we can also pass a tuple
-        assert_equal(dominant_frequency((x, y)), 132)
+        fft = FFT(x, y)
+        assert_equal(fft.dominant_frequency(), 132)
         # Check with frequency range
-        assert_equal(dominant_frequency(x, y, low=100.0, high=140.0), 132)
+        assert_equal(fft.dominant_frequency(low=100.0, high=140.0), 132)
 
     @parameterized.expand([
         (1., 1.0),
@@ -120,7 +116,7 @@ class TestFFT(object):
         assert_equal(fft.amplitudes.shape[0], 50)
 
     def testAmplitudeIntegral(self):
-        fft = FFTResult(np.arange(4), np.asarray([2, 3, 4, 5]), None)
+        fft = FFT(np.arange(4), np.asarray([2, 3, 4, 5]), None)
         assert_almost_equal(amplitude_integral(fft), sum(fft.amplitudes) / 3.)
         assert_almost_equal(amplitude_integral(fft, low=1., high=2.01), 3 + 4)
 
@@ -132,15 +128,28 @@ class TestFFT(object):
 
 
 class TestClosestFrequency(object):
+    def __init__(self):
+        pass
+
     def test_find_closest_frequency(self):
         fftx = np.asarray([1,2,3,4,5])
-        ffty = fftx * 2
-        assert_equal((1, 2), find_closest_frequency(fftx, ffty, 0.))
+        fft = FFT(fftx, fftx * 2)
+        assert_equal((1, 2), fft.closest_frequency(0.))
+
+    def test_find_closest_value_noangle(self):
+        fftx = np.asarray([1,2,3,4,5])
+        fft = FFT(fftx, fftx * 2)
+        assert_equal((1, 2, None), fft.closest_value(0.))
+
+    def test_find_closest_value_angle(self):
+        fftx = np.asarray([1,2,3,4,5])
+        fft = FFT(fftx, fftx * 2, fftx * 3)
+        assert_equal((1, 2, 3), fft.closest_value(0.))
 
 class TestFFTSelectFrequencyRange(object):
     def testGeneric(self):
         arr = np.arange(0.0, 10.0)
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), 1.0, 5.5)
+        result = FFT(arr, arr + 1.0, None)[1.0:5.5]
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result.frequencies, desired - 1.0)
         assert_allclose(result.amplitudes, desired)
@@ -148,12 +157,12 @@ class TestFFTSelectFrequencyRange(object):
     def testNoneLimit(self):
         arr = np.arange(0.0, 10.0)
         # Low = None
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), high=5.0)
+        result = FFT(arr, arr + 1.0, None)[:5.0]
         desired = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
         assert_allclose(result.frequencies, desired - 1.0)
         assert_allclose(result.amplitudes, desired)
         # High = None
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=5.0)
+        result = FFT(arr, arr + 1.0, None)[5.0:]
         desired = np.asarray([6.0, 7.0, 8.0, 9.0, 10.0])
         assert_allclose(result.frequencies, desired - 1.0)
         assert_allclose(result.amplitudes, desired)
@@ -161,7 +170,7 @@ class TestFFTSelectFrequencyRange(object):
     def testTupleUnpacking(self):
         "Test tuple unpacking for FFT inlining"
         arr = np.arange(0.0, 10.0)
-        result = fft_select_frequency_range(FFTResult(arr, arr + 1.0, None), low=1.0, high=5.5)
+        result = FFT(arr, arr + 1.0, None)[1.0:5.5]
         desired = np.asarray([2.0, 3.0, 4.0, 5.0, 6.0])
         assert_allclose(result.frequencies, desired - 1.0)
         assert_allclose(result.amplitudes, desired)

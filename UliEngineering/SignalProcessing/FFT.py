@@ -68,8 +68,19 @@ class FFT(object):
         """
         # Apply frequency range
         if low is not None or high is not None:
-            self = fft_select_frequency_range(self[low, high])
+            self = self[low:high]
         return self.frequencies[np.argmax(self.amplitudes)]
+    
+    def dominant_value(self, low=None, high=None):
+        """
+        Return the value with the largest amplitude in a FFT spectrum.
+        The value is returned as a FFTPoint object.
+        Use .frequency, .amplitude and .angle to access
+        Optionally, a frequency range (low, high) may be given, in which case
+        the dominant frequency is only selected from that range.
+        """
+        domfreq = self.dominant_frequency(low, high)
+        return self.closest_value(domfreq)
 
     def amplitude_integral(self, low=None, high=None):
         """
@@ -109,7 +120,7 @@ class FFT(object):
             self.angles[idx] if self.angles else None
         )
 
-    def cut_dc_artifacts(fft, return_idx=False):
+    def cut_dc_artifacts(self, return_idx=False):
         """
         If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
         this function can be used to remove this area from the FFT value set.
@@ -118,22 +129,7 @@ class FFT(object):
 
         Use return_idx=True to return the start index instead of slices
         """
-        # Unpack tuple if directly called on the value of
-        lastVal = self[0]
-        idx = 0
-        # Loop until first local minimum
-        for y in fy:
-            if y > lastVal:
-                if return_idx:
-                    return idx
-                return (fx[idx:], fy[idx:])
-            idx += 1
-            lastVal = y
-        # No minimum found. We can't remove DC offset, so return something non-empty (= consistent)
-        if return_idx:
-            return 0
-        return (fx, fy)
-
+        return fft_cut_dc_artifacts(self, return_idx=return_idx)
 
 def fft_frequencies(fftsize, samplerate):
     """Return the frequencies associated to a real-onl FFT array"""
@@ -273,13 +269,13 @@ def fft_cut_dc_artifacts(fft, return_idx=False):
         if y > lastVal:
             if return_idx:
                 return idx
-            return (fft.frequencies[idx:], fft.amplitudes[idx:])
+            return FFT(fft.frequencies[idx:], fft.amplitudes[idx:], fft.angles[idx:] if fft.angles else None)
         idx += 1
         lastVal = y
     # No minimum found. We can't remove DC offset, so return something non-empty (= consistent)
     if return_idx:
         return 0
-    return (fft.frequencies, fft.amplitudes)
+    return fft
 
 
 def fft_cut_dc_artifacts_multi(fx, fys, return_idx=False):
