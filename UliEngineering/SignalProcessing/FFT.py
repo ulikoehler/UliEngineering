@@ -10,12 +10,13 @@ from toolz import functoolz
 from .Selection import fft_select_frequency_range, find_closest_index
 from .Chunks import overlapping_chunks
 import concurrent.futures
+from .FFTCommon import FFTResult
 from UliEngineering.Utils.Concurrency import *
 from UliEngineering.SignalProcessing.Utils import remove_mean
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi",
-           "dominant_frequency", "fft_frequencies",
+           "dominant_frequency", "fft_frequencies", "FFTResult",
            "amplitude_integral", "find_closest_frequency", "serial_fft_reduce",
            "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
 
@@ -34,14 +35,23 @@ def fft_frequencies(fftsize, samplerate):
 
 
 def compute_fft(y, samplerate, window="blackman"):
-    "Compute the real FFT of a dataset and return (x, y) which can directly be visualized using matplotlib etc"
+    """
+    Compute the real FFT of a dataset and return an FFTResult object which can directly be visualized using matplotlib etc:
+    result = compute_fft(...)
+    plt.plot(result.frequencies, result.amplitudes)
+
+    The angles are returned as degrees.
+    Usually, due to the oscillating phases of spectral leakage,
+    it doesn't make sense to visualize the angles directly but to
+    select the angle e.g. where the amplitudes have a peak
+    """
     n = len(y)
     windowArr = __fft_windows[window](n)
-    w = scipy.fftpack.fft(y * windowArr)
-    w = 2.0 * np.abs(w[:n // 2]) / n  # Perform amplitude normalization
+    w = scipy.fftpack.fft(y * windowArr)[:n // 2]
+    w = 2.0 * np.abs(w) / n  # Perform amplitude normalization
     x = fft_frequencies(n, samplerate)
-    return (x, w)
-
+    angles = np.rad2deg(np.angle(w))
+    return FFTResult(x, w, angles)
 
 def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     chunk = chunkgen[i]
@@ -97,7 +107,9 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     x = fft_frequencies(fftsize, samplerate)
     fftSum = reducer(x, (f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
-    return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
+    if normalize:
+        fftSum = fftSum * 2.0 / (len(chunkgen) * fftsize)
+    return FFTResult(x, fftSum, None)
 
 
 def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True):
@@ -119,8 +131,9 @@ def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     # Sum up the results
     fftSum = reducer(x, gen)
     # Perform normalization once
-    return (x, 2.0 * (fftSum / (len(chunkgen) * fftsize))) if normalize else fftSum
-
+    if normalize:
+        fftSum = fftSum * 2.0 / (len(chunkgen) * fftsize)
+    return FFTResult(x, fftSum, None)
 
 
 def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
@@ -174,42 +187,42 @@ def fft_cut_dc_artifacts_multi(fx, fys, return_idx=False):
     return fx[idx:], [fy[idx:] for fy in fys]
 
 
-def dominant_frequency(x, y=None, low=None, high=None):
+def dominant_frequency(fft, low=None, high=None):
     """
     Return the frequency with the largest amplitude in a FFT spectrum
     Optionally, a frequency range may be given
     """
-    if y is None:  # So we can pass in a FFT result tuple directly
-        x, y = x
     # Apply frequency range
     if low is not None or high is not None:
-        x, y = fft_select_frequency_range(x, y, low=low, high=high)
-    return x[np.argmax(y)]
+        fft = fft_select_frequency_range(fft, low=low, high=high)
+    return fft.frequencies[np.argmax(fft.amplitudes)]
 
-
-def amplitude_integral(fx, fy, low=None, high=None):
+def amplitude_integral(fft, low=None, high=None):
     """
     Return the amplitude integral of a frequency-domain signal.
     Optionally, the signal can be filtered directly.
-    Call this on a (fx, fy) pair as returned by compute_fft.
+    Call this on a FFTResult() object as returned by compute_fft.
 
     The value at the low boundary is included in the range while the value
     at the high boundary is not.
 
     :return The amplitude integral value normalized as [amplitude unit] / Hz
     """
-    fx, fy = fft_select_frequency_range(fx, fy, low=low, high=high)
+    fft = fft_select_frequency_range(fft, low=low, high=high)
     # Normalize to [amplitude unit] / Hz
-    dHz = fx[-1] - fx[0]
-    return np.sum(fy) / dHz
+    dHz = fft.frequencies[-1] - fft.frequencies[0]
+    return np.sum(fft.amplitudes) / dHz
 
-
-def find_closest_frequency(frequencies, values, frequency):
+def find_closest_frequency(fft, frequency):
     """
     Find the closest frequency bin and value in an array of frequencies
-    Return (frequency of closest frequency bin, value).
+    Return (frequency of closest frequency bin, value, angle).
 
     Usually used as find_closest_frequency(fftx, ffty, <frequency>)
     """
-    idx = find_closest_index(frequencies, frequency)
-    return frequencies[idx], values[idx]
+    idx = find_closest_index(fft.frequencies, frequency)
+    return (
+        fft.frequencies[idx],
+        fft.amplitudes[idx],
+        fft.angles[idx] if fft.angles else None
+    )

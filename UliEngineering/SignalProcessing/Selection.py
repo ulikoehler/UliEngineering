@@ -8,6 +8,7 @@ import datetime
 import numbers
 import functools
 import scipy.signal
+from .FFTCommon import FFTResult
 from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
@@ -177,22 +178,22 @@ def sorted_range_indices(arr, low, high):
     endidx = np.searchsorted(arr >= high, True) if high is not None else None
     return (startidx, endidx)
 
-def fft_select_frequency_range(x, y=None, low=None, high=None):
+def fft_select_frequency_range(fft, low=None, high=None):
     """
-    From a FFT (x,y) pair, select only a certain frequency range. Returns (x,y)
+    From a FFTResult object, select only a certain frequency range.
+    Returns a FFTResult object
     Use sorted_range_indices() to get the indices.
-
-    This function is designed to be inlined with a FFT call. In this case,
-    x is a tuple (x, y) and y is None (default).
 
     The low and/or high frequencies can be set to None to include the full
     frequency range, starting from or ending at a specific frequency.
     """
-    if y is None:
-        x, y = x
-    startidx, endidx = sorted_range_indices(x, low, high)
+    startidx, endidx = sorted_range_indices(fft.frequencies, low, high)
     # Remove everything except the selected frequency range
-    return (x[startidx:endidx], y[startidx:endidx])
+    return FFTResult(
+        fft.frequencies[startidx:endidx],
+        fft.values[startidx:endidx],
+        fft.angles[startidx:endidx] if fft.angles else None
+    )
 
 def __mapAndSortIndices(x, y, idxs, sort_descending=True):
     """
