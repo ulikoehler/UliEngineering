@@ -27,7 +27,7 @@ __fft_windows = {
     "none": np.ones
 }
 
-FFTPoint = namedtuple("FFTPoint", ["frequency", "value", "angle"])
+FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
 
 class FFT(object):
     """
@@ -153,10 +153,10 @@ def compute_fft(y, samplerate, window="blackman"):
     n = len(y)
     windowArr = __fft_windows[window](n)
     w = scipy.fftpack.fft(y * windowArr)[:n // 2]
-    w = 2.0 * np.abs(w) / n  # Perform amplitude normalization
+    w_norm = 2.0 * np.abs(w) / n  # Perform amplitude normalization
     x = fft_frequencies(n, samplerate)
     angles = np.rad2deg(np.angle(w))
-    return FFT(x, w, angles)
+    return FFT(x, w_norm, angles)
 
 def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     chunk = chunkgen[i]
