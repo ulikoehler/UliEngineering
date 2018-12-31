@@ -57,6 +57,6 @@ class TestGenerateWaves(object):
     def testByFFT(self, fn):
         """Test sine_wave by computing FFT dominant frequency"""
         sw = fn(25., 400.0, 1.0, 10.)
-        fftx, ffty = compute_fft(sw, 400.)
-        df = dominant_frequency(fftx, ffty)
+        fft = compute_fft(sw, 400.)
+        df = dominant_frequency(fft)
         assert_true(abs(df - 25.0) < 0.1)
