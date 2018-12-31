@@ -134,7 +134,7 @@ class TestClosestFrequency(object):
     def test_find_closest_frequency(self):
         fftx = np.asarray([1,2,3,4,5])
         fft = FFT(fftx, fftx * 2)
-        assert_equal((1, 2), fft.closest_frequency(0.))
+        assert_equal(1, fft.closest_frequency(0.))
 
     def test_find_closest_value_noangle(self):
         fftx = np.asarray([1,2,3,4,5])

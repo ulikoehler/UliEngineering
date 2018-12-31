@@ -121,7 +121,7 @@ class FFT(object):
         return FFTPoint(
             self.frequencies[idx],
             self.amplitudes[idx],
-            self.angles[idx] if self.angles else None
+            self.angles[idx] if self.angles is not None else None
         )
 
     def cut_dc_artifacts(self, return_idx=False):
