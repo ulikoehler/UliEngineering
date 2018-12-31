@@ -35,6 +35,9 @@ def peak_to_peak(arr):
     """
     Compute max(arr) - min(arr)
     """
+    if not arr:
+        # This causes numpy ValueError since some Numpy version
+        return 0.
     return np.max(arr) - np.min(arr)
 
 def unstair(x, y, method="diff", tolerance=1e-9):
