@@ -47,13 +47,17 @@ class FFT(object):
 
         fft[10.0] selects (frequency, value, angle) of 
         """
-        if isinstance(arg, slice):
-            startidx, endidx = sorted_range_indices(self.frequencies, arg.start, arg.stop)
+        if isinstance(arg, slice) or isinstance(arg, tuple):
+            if isinstance(arg, slice):
+                start, end = arg.start, arg.stop
+            else: # arg is tuple
+                start, end = arg
+            startidx, endidx = sorted_range_indices(self.frequencies, start, end)
             # Remove everything except the selected frequency range
             return FFT(
                 self.frequencies[startidx:endidx],
                 self.amplitudes[startidx:endidx],
-                self.angles[startidx:endidx] if self.angles else None
+                self.angles[startidx:endidx] if self.angles is not None else None
             )
         elif isinstance(arg, (float, int)):
             return self.closest_value(arg)
@@ -269,7 +273,7 @@ def fft_cut_dc_artifacts(fft, return_idx=False):
         if y > lastVal:
             if return_idx:
                 return idx
-            return FFT(fft.frequencies[idx:], fft.amplitudes[idx:], fft.angles[idx:] if fft.angles else None)
+            return FFT(fft.frequencies[idx:], fft.amplitudes[idx:], fft.angles[idx:] if fft.angles is not None else None)
         idx += 1
         lastVal = y
     # No minimum found. We can't remove DC offset, so return something non-empty (= consistent)

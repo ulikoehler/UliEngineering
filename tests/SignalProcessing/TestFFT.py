@@ -117,8 +117,8 @@ class TestFFT(object):
 
     def testAmplitudeIntegral(self):
         fft = FFT(np.arange(4), np.asarray([2, 3, 4, 5]), None)
-        assert_almost_equal(amplitude_integral(fft), sum(fft.amplitudes) / 3.)
-        assert_almost_equal(amplitude_integral(fft, low=1., high=2.01), 3 + 4)
+        assert_almost_equal(fft.amplitude_integral(), sum(fft.amplitudes) / 3.)
+        assert_almost_equal(fft.amplitude_integral(low=1., high=2.01), 3 + 4)
 
     @raises(ValueError)
     def test_too_small_fft(self):
