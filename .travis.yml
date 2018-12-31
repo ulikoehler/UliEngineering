@@ -6,8 +6,8 @@ language: python
     - "3.6"
 before_install:
     - sudo apt-get -y install python3-numpy python3-scipy python3-pip
-    - sudo pip3 install numpy scipy coverage codecov rednose nose toolz nose-parameterized codeclimate-test-reporter
-    - sudo pip3 install setuptools --upgrade
+    - sudo pip3 install coverage codecov rednose nose toolz nose-parameterized codeclimate-test-reporter
+    - sudo pip3 install setuptools numpy scipy --upgrade
 cache: pip
 sudo: false
 script: python3 setup.py test
