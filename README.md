@@ -40,3 +40,4 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [Finding the nearest E96 resistor value in Python](https://techoverflow.net/2015/05/19/finding-the-nearest-e96-resistor-value-in-python/)
    - [Easy zero crossing detection in Python using UliEngineering](https://techoverflow.net/2018/12/31/easy-zero-crossing-detection-in-python-using-uliengineering/)
    - [Easily generate sine/cosine wave test data in Python using UliEngineering](https://techoverflow.net/2018/12/31/easily-generate-sine-cosine-wave-data-in-python-using-uliengineering/)
+   - [Easily generate square/triangle/sawtooth/inverse sawtooth waveform data in Python using UliEngineering](https://techoverflow.net/2018/12/31/easily-generate-square-triangle-sawtooth-inverse-sawtooth-waveform-data-in-python-using-uliengineering/)
