@@ -9,7 +9,7 @@ install:
 cache: pip
 sudo: false
 script: python3 setup.py test
-dist: trusty
+dist: xenial
 after_success:
     - codeclimate-test-reporter --token 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
     - codecov --token=e3a3e622-b5b4-40a0-b0be-f427bbb23449
