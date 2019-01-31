@@ -4,6 +4,7 @@ from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal
 from UliEngineering.Physics.RF import *
 from UliEngineering.EngineerIO import auto_format
+from UliEngineering.EngineerIO import format_value
 import numpy as np
 
 class TestRF(object):
