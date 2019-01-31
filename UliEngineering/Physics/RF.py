@@ -7,9 +7,9 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 import numpy as np
 
-__all__ = ['quality_factor', 'resonant_impedance']
+__all__ = ['quality_factor', 'resonant_impedance', 'resonant_frequency']
 
-def quality_factor(frequency, bandwidth) -> Unit("V"):
+def quality_factor(frequency, bandwidth) -> Unit(""):
     """
     Compute the quality factor of a resonant circuit
     from the frequency and the bandwidth:
@@ -25,21 +25,37 @@ def quality_factor(frequency, bandwidth) -> Unit("V"):
     bandwidth = normalize_numeric(bandwidth)
     return frequency / bandwidth
 
-def resonant_impedance(L, C, Q=100.) -> Unit("V"):
+def resonant_impedance(L, C, Q=100.) -> Unit("Ω"):
     """
     Compute the resonant impedance of a resonant circuit
 
     R_res = sqrt(L / C) / Q
 
-    The value returned is in Ohms.
-
     Source: http://www.c-max-time.com/tech/antenna.php
 
     >>> resonant_impedance("100 uH", "10 nF", Q=30.0)
     3.333333333333333
-    >>> format_value(resonant_impedance("100 uH", "10 nF", Q=30.0), "Ω")
+    >>> auto_format(resonant_impedance, "100 uH", "10 nF", Q=30.0)
     '3.33 Ω'
     """
     L = normalize_numeric(L)
     C = normalize_numeric(C)
     return np.sqrt(L / C) / Q
+
+def resonant_frequency(L, C) -> Unit("Hz"):
+    """
+    Compute the resonant frequency of a resonant circuit
+    given the inductance and capacitance.
+
+    f = 1 / (2 * pi * sqrt(L * C))
+
+    Source: http://www.c-max-time.com/tech/antenna.php
+
+    >>> resonant_frequency("100 uH", "10 nF")
+    159154.94309189534
+    >>> auto_format(resonant_frequency, "100 uH", "10 nF")
+    '159 kHz'
+    """
+    L = normalize_numeric(L)
+    C = normalize_numeric(C)
+    return 1 / (2 * np.pi * np.sqrt(L * C))

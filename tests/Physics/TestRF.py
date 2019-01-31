@@ -4,7 +4,6 @@ from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal
 from UliEngineering.Physics.RF import *
 from UliEngineering.EngineerIO import auto_format
-from UliEngineering.EngineerIO import format_value
 import numpy as np
 
 class TestRF(object):
@@ -14,4 +13,8 @@ class TestRF(object):
 
     def test_resonant_impedance(self):
         assert_approx_equal(resonant_impedance("100 uH", "10 nF", Q=30.0), 10./3)
-        assert_equal(format_value(resonant_impedance("100 uH", "10 nF", Q=30.0), "Ω"), '3.33 Ω')
+        assert_equal(auto_format(resonant_impedance, "100 uH", "10 nF", Q=30.0), '3.33 Ω')
+
+    def test_resonant_frequency(self):
+        assert_approx_equal(resonant_frequency("100 uH", "10 nF"), 159154.94309189534)
+        assert_equal(auto_format(resonant_frequency, "100 uH", "10 nF"), '159 kHz')
