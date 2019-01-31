@@ -7,7 +7,9 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 import numpy as np
 
-__all__ = ['quality_factor', 'resonant_impedance', 'resonant_frequency']
+__all__ = [
+     'quality_factor', 'resonant_impedance', 'resonant_frequency',
+     'resonant_inductance']
 
 def quality_factor(frequency, bandwidth) -> Unit(""):
     """
@@ -59,3 +61,21 @@ def resonant_frequency(L, C) -> Unit("Hz"):
     L = normalize_numeric(L)
     C = normalize_numeric(C)
     return 1 / (2 * np.pi * np.sqrt(L * C))
+
+def resonant_inductance(fres, C) -> Unit("H"):
+    """
+    Compute the inductance of a resonant circuit
+    given the resonant frequency and its capacitance.
+
+    L = 1 / (4 * pi² * fres² * C)
+
+    Source: http://www.c-max-time.com/tech/antenna.php
+
+    >>> resonant_inductance("250 kHz", "10 nF")
+    4.052847345693511e-05
+    >>> auto_format(resonant_inductance, "250 kHz", "10 nF")
+    '40.5 µH'
+    """
+    fres = normalize_numeric(fres)
+    C = normalize_numeric(C)
+    return 1 / (4 * np.pi**2 * fres**2 * C)

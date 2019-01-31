@@ -18,3 +18,7 @@ class TestRF(object):
     def test_resonant_frequency(self):
         assert_approx_equal(resonant_frequency("100 uH", "10 nF"), 159154.94309189534)
         assert_equal(auto_format(resonant_frequency, "100 uH", "10 nF"), '159 kHz')
+
+    def test_resonant_inductance(self):
+        assert_approx_equal(resonant_inductance("250 kHz", "10 nF"), 4.052847345693511e-05)
+        assert_equal(auto_format(resonant_inductance, "250 kHz", "10 nF"), '40.5 µH')
