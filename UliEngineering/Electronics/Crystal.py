@@ -8,15 +8,19 @@ from UliEngineering.Units import Unit
 
 __all__ = ["load_capacitors"]
 
-def load_capacitors(cload, cpin="3pF", cstray="1 pF") -> Unit("F"):
+def load_capacitors(cload, cpin="3pF", cstray="2 pF") -> Unit("F"):
     """
     Compute the load capacitors which should be used for a given crystal,
     given that the load capacitors should be symmetric (i.e. have the same value).
 
+    NOTE: You need to use a stray capacitance value that does NOT
+    include the parasitic pin capacitance!
+
     Based on (C1 * C2) / (C1 + C2) + Cstray
     for C1 == C2 == (returned value) + cpin
 
-    >>> auto_format(load_capacitors, "6 pF", cpin="3 pF", cstray="1pF")
+    >>> auto_format(load_capacitors, "6 pF", cpin="3 pF", cstray="2pF")
+    '5.00 pF'
 
     Parameters
     ----------
