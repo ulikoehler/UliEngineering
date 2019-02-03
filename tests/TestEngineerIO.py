@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_approx_equal
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.Units import *
@@ -216,4 +216,21 @@ class TestEngineerIO(object):
         arr = 1e40 * np.arange(-4., 5., .5)
         assert_equal(self.io.auto_suffix_1d(arr), (1e-21, "Y"))
 
+    def test_special_units(self):
+        """
+        Test ppm, ppb and %
+        """
+        # %
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25"), 1.25)
+        assert_approx_equal(self.io.normalize_numeric_safe("125 %"), 1.25)
+        assert_approx_equal(self.io.normalize_numeric_safe("125.0 %"), 1.25)
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 %"), 0.0125)
+        # ppm
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 ppm"), 1.25e-6)
+        assert_approx_equal(self.io.normalize_numeric_safe("12.5 ppm"), 1.25e-5)
+        assert_approx_equal(self.io.normalize_numeric_safe("12.5ppm"), 1.25e-5)
+        # ppb
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 ppb"), 1.25e-9)
+        assert_approx_equal(self.io.normalize_numeric_safe("12.5 ppb"), 1.25e-8)
+        assert_approx_equal(self.io.normalize_numeric_safe("12.5ppb"), 1.25e-8)
 

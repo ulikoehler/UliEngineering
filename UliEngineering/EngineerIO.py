@@ -42,8 +42,12 @@ _numeric_allowed = frozenset("0123456789-e.")
 
 class EngineerIO(object):
     instance = None
-    """Default instance, used for global functions. Initialized on first use"""
-    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S']),
+    """
+    Default instance, used for global functions. Initialized on first use
+
+    Note: ppm, ppb and % are special 'units' that are handled separately.
+    """
+    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S', 'ppm', 'ppb', '%']),
                  unit_prefixes="Δ°",
                  suffices=_default_suffices(),
                  first_suffix_exp=-24):
@@ -118,7 +122,7 @@ class EngineerIO(object):
         """
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s).replace(" ", "")
-        s, unit = self.split_unit(s) # Remove unit
+        s, unit = self.split_unit(s) # Remove unitf
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
@@ -159,10 +163,12 @@ class EngineerIO(object):
         # Fallback for strings which are too short
         if len(s) <= 1:
             return s, ""
-        # Handle 2-character units (e.g. 'Hz'), then 1-character unity (e.g. 'V')
-        if s[-2:] in self.units: # Will also handle unit-only 1-char strings
+        # Handle different lengths of units
+        if s[-3:] in self.units: # Handle 3-char units (e.g. 'ppm'), then
+            s, unit = s[:-3], s[-3:]
+        elif s[-2:] in self.units: # handle 2-character units (e.g. 'Hz'), then
             s, unit = s[:-2], s[-2:]
-        elif s[-1] in self.units:  # Handle 1-char units
+        elif s[-1] in self.units: # handle 1-character units (e.g. 'V')
             s, unit = s[:-1], s[-1]
         else: # No unit
             s, unit = s, ''
@@ -189,9 +195,18 @@ class EngineerIO(object):
         if isinstance(s, (list, tuple, np.ndarray)):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
-        res = self.split_input(s.strip())
-        (num, suffix, unit) = res
+        (num, suffix, unit) = self.split_input(s.strip())
         mul = (10 ** self.suffix_exp_map[suffix]) if suffix else 1
+        # Handle ppm and ppb: They are listed as units
+        if unit == '%':
+            mul /= 100
+            unit = ''
+        elif unit == 'ppm':
+            mul /= 1e6
+            unit = ''
+        elif unit == 'ppb':
+            mul /= 1e9
+            unit = ''
         return (float(num) * mul, unit)
 
     def safe_normalize(self, s, encoding="utf8"):
