@@ -234,3 +234,11 @@ class TestEngineerIO(object):
         assert_approx_equal(self.io.normalize_numeric_safe("12.5 ppb"), 1.25e-8)
         assert_approx_equal(self.io.normalize_numeric_safe("12.5ppb"), 1.25e-8)
 
+    def test_time_units(self):
+        """
+        Test ppm, ppb and %
+        """
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 s"), 1.25)
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 min"), 1.25)
+        assert_approx_equal(self.io.normalize_numeric_safe("1.25 h"), 1.25)
+

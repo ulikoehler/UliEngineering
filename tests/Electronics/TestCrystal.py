@@ -13,3 +13,10 @@ class TestCrystal(object):
 
     def test_actual_load_capacitance(self):
         assert_equal(auto_format(actual_load_capacitance, "5 pF", cpin="3 pF", cstray="2pF"), '6.00 pF')
+
+    def test_deviation(self):
+        assert_equal(auto_format(crystal_deviation_seconds_per_minute, "20 ppm"), '1.20 ms')
+        assert_equal(auto_format(crystal_deviation_seconds_per_hour, "20 ppm"), '72.0 ms')
+        assert_equal(auto_format(crystal_deviation_seconds_per_day, "20 ppm"), '1.73 s')
+        assert_equal(auto_format(crystal_deviation_seconds_per_month, "20 ppm"), '53.6 s')
+        assert_equal(auto_format(crystal_deviation_seconds_per_year, "20 ppm"), '631 s')
