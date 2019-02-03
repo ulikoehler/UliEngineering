@@ -47,7 +47,7 @@ class EngineerIO(object):
 
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
-    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S', 'ppm', 'ppb', '%']),
+    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S', 's', 'h', 'min', 'ppm', 'ppb', '%']),
                  unit_prefixes="Δ°",
                  suffices=_default_suffices(),
                  first_suffix_exp=-24):
