@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Units, quantities and other fuzz related to
-
-
+Units, quantities and related
 """
 from collections import namedtuple
 import functools
@@ -12,9 +10,7 @@ __all__ = ["Unit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException",
            "find_returned_unit"]
 
-
 Unit = namedtuple("Unit", ["unit"])
-
 
 class UnannotatedReturnValueError(Exception):
     """

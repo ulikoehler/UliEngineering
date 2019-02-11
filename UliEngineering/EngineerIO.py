@@ -37,6 +37,22 @@ def _default_suffices():
     return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
             ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 
+def _default_units():
+    return frozenset([
+        'F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        # Time
+        's', 'h', 'min',
+        # Fraction
+        'ppm', 'ppb', '%',
+        # Length. See also Length.py
+        'meters', 'meter',
+        'mil', 'in', '\"', 'inch', 'inches',
+        'foot', 'feet', 'ft', 'yd', 'yard', 'mile',
+        'miles', 'pt', 'point', 'points', 'au', 'AU', 'AUs',
+        'ly', 'light year', 'lightyear', 'light years', 'lightyears',
+        'nautical mile', 'nautical miles'
+    ])
+
 # Valid unit designators. Ensure no SI suffix is added here
 _numeric_allowed = frozenset("0123456789-e.")
 
@@ -47,7 +63,7 @@ class EngineerIO(object):
 
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
-    def __init__(self, units=frozenset(['F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S', 's', 'h', 'min', 'ppm', 'ppb', '%']),
+    def __init__(self, units=_default_units(),
                  unit_prefixes="Δ°",
                  suffices=_default_suffices(),
                  first_suffix_exp=-24):
@@ -390,6 +406,9 @@ def normalize_engineer_notation_safe(v, unit=""):
 
 def normalize_numeric(v):
     return EngineerIO.instance.normalize_numeric(v)
+
+def normalize(v):
+    return EngineerIO.instance.normalize(v)
 
 def auto_format(v, *args, **kwargs):
     return EngineerIO.instance.auto_format(v, *args, **kwargs)
