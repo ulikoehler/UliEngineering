@@ -5,7 +5,7 @@ Utilities for length
 """
 import scipy.constants
 from .EngineerIO import EngineerIO
-from .Units import UnknownUnitInContextException
+from .Units import UnknownUnitInContextException, Unit
 
 __all__ = ["normalize_length"]
 
@@ -20,6 +20,7 @@ _length_factors = {
     'inches': scipy.constants.inch,
     '\"': scipy.constants.inch,
     'foot': scipy.constants.foot,
+    'feet': scipy.constants.foot,
     'ft': scipy.constants.foot,
     'yd': scipy.constants.yard,
     'yard': scipy.constants.yard,
@@ -31,15 +32,19 @@ _length_factors = {
     'point': scipy.constants.point,
     'points': scipy.constants.point,
     'AU': scipy.constants.astronomical_unit,
+    'au': scipy.constants.astronomical_unit,
     'AUs': scipy.constants.astronomical_unit,
     'ly': scipy.constants.light_year,
     'lightyear': scipy.constants.light_year,
     'lightyears': scipy.constants.light_year,
     'light year': scipy.constants.light_year,
-    'light years': scipy.constants.light_year
+    'light years': scipy.constants.light_year,
+    'pc': scipy.constants.parsec,
+    'parsec': scipy.constants.parsec,
+    'parsecs': scipy.constants.parsec,
 }
 
-def normalize_length(s, instance=EngineerIO.length_instance):
+def normalize_length(s, instance=EngineerIO.length_instance) -> Unit("m"):
     """
     Normalize a length to meters.
     Returns the numeric value in m or None.
@@ -51,6 +56,8 @@ def normalize_length(s, instance=EngineerIO.length_instance):
     - "1.0 mm" => 0.001
     - "1 inch" => 0.0254
     - "1 mil" => 0.000254
+    - "1.2 M light years" => 1.135287656709696e+22
+    - "9.15 kpc" => 2.8233949868947424e+17
     """
     'mil','foot',
     'ft', 'yd', 'yard', 'mile', 'pt', 'point', 'AU', 'ly', 'light year'

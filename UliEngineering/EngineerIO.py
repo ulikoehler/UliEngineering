@@ -51,7 +51,7 @@ def _length_units(include_m=False):
         'foot', 'feet', 'ft', 'yd', 'yard', 'mile',
         'miles', 'pt', 'point', 'points', 'au', 'AU', 'AUs',
         'ly', 'light year', 'lightyear', 'light years', 'lightyears',
-        'nautical mile', 'nautical miles'
+        'nautical mile', 'nautical miles', 'pc', 'parsec', 'parsecs'
     ])
     if include_m:
         units.add("m")
@@ -151,12 +151,8 @@ class EngineerIO(object):
         """
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s)
-        print("1 ",s)
-        print("1 ",self.units)
         s, unit = self.split_unit(s) # Remove unit
-        print("2 ", s)
         s = s.replace(" ", "")
-        print("3 ", s)
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
@@ -192,24 +188,28 @@ class EngineerIO(object):
         """
         Split a string into (remainder, unit).
         Only units in the units set are recognized
-        unit may be "None" if no unit is recognized
+        unit may be '' if no unit is recognized
         """
         # Fallback for strings which are too short
         if len(s) <= 1:
             return s, ""
-        # Handle different lengths of units
+        # Handle unit suffixes: "ppm"
+        # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
         for suffix in suffix_list(s):
             if suffix in self.units:
+                # Do not try to find units if encountering the first digit
+                if suffix[0].isnumeric():
+                    break
                 suffix_length = len(suffix)
-                s, unit = s[:-suffix_length], s[-suffix_length:]
+                value_str, unit = s[:-suffix_length], s[-suffix_length:]
                 found_unit_suffix = True
-                break
+        # Fallback: Try to parse as value + optionally SI postfi
         if not found_unit_suffix: # No unit
-            s, unit = s, ''
+            value_str, unit = s, ''
         # Remove unit prefix, if any (e.g. degrees symbol, delta symbol)
-        s = s.rstrip(self.strippable)
-        return s, unit
+        value_str = value_str.rstrip(self.strippable)
+        return value_str, unit
 
     def normalize(self, s, encoding="utf8"):
         """
