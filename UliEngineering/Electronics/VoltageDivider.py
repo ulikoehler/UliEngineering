@@ -83,7 +83,6 @@ def feedback_bottom_resistor(vexp, rtop, vfb) -> Unit("Ω"):
     # solve A = B*((C/D) + 1) for D
     return (vfb * rtop) / (vexp - vfb)
 
-
 def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
     """
     Compute the actual voltage regulator output in a feedback
@@ -101,12 +100,3 @@ def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
     # Equation: Vout * ratio = vfb
     ratio = voltage_divider_ratio(rtop, rbot)
     return normalize_numeric(vfb) / ratio
-
-def top_resistor_by_ratio(rbottom, ratio) -> Unit("Ω"):
-    """
-    Compute the bottom resistor of a voltage divider given the top resistor value
-    and the division ration
-    """
-    rbottom = normalize_numeric(rbottom)
-    ratio = normalize_numeric(ratio)
-    return rbottom * (1.0 / ratio - 1.0)
