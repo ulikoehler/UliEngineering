@@ -37,14 +37,14 @@ def _default_suffices():
     return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
             ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 
-def _default_units():
-    return frozenset([
-        'F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
-        # Time
-        's', 'h', 'min',
-        # Fraction
-        'ppm', 'ppb', '%',
-        # Length. See also Length.py
+def _length_units(include_m=False):
+    """
+    All known length units.
+    "m" is not included by default due to 
+    See also Length.py
+    """
+    units = set([
+        # Length
         'meters', 'meter',
         'mil', 'in', '\"', 'inch', 'inches',
         'foot', 'feet', 'ft', 'yd', 'yard', 'mile',
@@ -52,9 +52,21 @@ def _default_units():
         'ly', 'light year', 'lightyear', 'light years', 'lightyears',
         'nautical mile', 'nautical miles'
     ])
+    if include_m:
+        units.add("m")
+    return units
+
+def _default_units(include_m=False):
+    return set([
+        'F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        # Time
+        's', 'h', 'min',
+        # Fraction
+        'ppm', 'ppb', '%',
+    ]).union(_length_units(include_m=include_m))
 
 # Valid unit designators. Ensure no SI suffix is added here
-_numeric_allowed = frozenset("0123456789-e.")
+_numeric_allowed = set("0123456789-e.")
 
 class EngineerIO(object):
     instance = None
@@ -335,7 +347,7 @@ class EngineerIO(object):
 
 # Initialize global instance
 EngineerIO.instance = EngineerIO()
-
+EngineerIO.length_instance = EngineerIO(units=_default_units(include_m=True))
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """

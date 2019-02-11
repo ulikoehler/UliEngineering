@@ -4,7 +4,8 @@
 Utilities for length
 """
 import scipy.constants
-from .EngineerIO import *
+from .EngineerIO import EngineerIO
+from .Units import UnknownUnitInContextException
 
 __all__ = ["normalize_length"]
 
@@ -38,7 +39,7 @@ _length_factors = {
     'light years': scipy.constants.light_year
 }
 
-def normalize_length(s):
+def normalize_length(s, instance=EngineerIO.length_instance):
     """
     Normalize a length to meters.
     Returns the numeric value in m or None.
@@ -53,8 +54,8 @@ def normalize_length(s):
     """
     'mil','foot',
     'ft', 'yd', 'yard', 'mile', 'pt', 'point', 'AU', 'ly', 'light year'
-    value, unit = normalize(s)
+    value, unit = instance.normalize(s)
     if unit in _length_factors:
         return value * _length_factors[unit]
     else:
-        raise ValueError("Unknown length unit: {}".format(unit))
+        raise UnknownUnitInContextException("Unknown length unit: {}".format(unit))

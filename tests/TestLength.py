@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, raises
+from nose_parameterized import parameterized
 from UliEngineering.Length import *
+from UliEngineering.Units import UnknownUnitInContextException
 
 class TestLengths(object):
-    def test_hysteresis_thresholds(self):
+    def test_length_normalization(self):
         assert_approx_equal(normalize_length(1.0), 1.0)
         assert_approx_equal(normalize_length("1.0 m"), 1.0)
         assert_approx_equal(normalize_length("1.0 meter"), 1.0)
@@ -39,5 +41,11 @@ class TestLengths(object):
         assert_approx_equal(normalize_length("5.5 AU"), 149597870700*5.5)
         assert_approx_equal(normalize_length("5.5 AUs"), 149597870700*5.5)
         assert_approx_equal(normalize_length("5.5 au"), 149597870700*5.5)
-
-    def test_invalid_units(self):
+    
+    @parameterized([
+        ("1A"),
+        ("xaz"),
+    ])
+    @raises(ValueError)
+    def test_invalid_unit(self, unit):
+        normalize_length("6.6 {}".format(unit))

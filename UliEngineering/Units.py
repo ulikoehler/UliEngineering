@@ -8,7 +8,7 @@ import functools
 
 __all__ = ["Unit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException",
-           "find_returned_unit"]
+           "find_returned_unit", "UnknownUnitInContextException"]
 
 Unit = namedtuple("Unit", ["unit"])
 
@@ -23,11 +23,22 @@ class UnannotatedReturnValueError(Exception):
     pass
 
 
-class InvalidUnitInContextException(Exception):
+class InvalidUnitInContextException(ValueError):
     """
     Raised if the unit might not be a globally
     unknown or invalid unit, but in the given context
     it can't be used
+    """
+    pass
+
+
+class UnknownUnitInContextException(ValueError):
+    """
+    Raised if the unit is not known in this context,
+    e.g. if "A" is used as a unit of length.
+
+    The message should contain information on what type of
+    quantity (e.g. length) is accepted.
     """
     pass
 
