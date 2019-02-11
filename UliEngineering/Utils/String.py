@@ -3,8 +3,7 @@
 String utilities and algorithms
 """
 
-__all__ = ["split_nth"]
-
+__all__ = ["split_nth", "suffix_list"]
 
 def split_nth(s, delimiter=",", nth=1):
     """
@@ -30,3 +29,12 @@ def split_nth(s, delimiter=",", nth=1):
     if endidx == -1:  # Not found -> the last part of the string
         endidx = None  # Take rest of string
     return s[startidx:endidx]
+
+def suffix_list(s):
+    """
+    Return all suffixes for a string, including the string itself,
+    in order of ascending length.
+
+    Example: "foobar" => ['r', 'ar', 'bar', 'obar', 'oobar', 'foobar']
+    """
+    return [s[-i:] for i in range(1, len(s) + 1)]

@@ -24,6 +24,7 @@ import itertools
 from toolz import functoolz
 import numpy as np
 from .Units import *
+from .Utils.String import suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value",
@@ -149,8 +150,13 @@ class EngineerIO(object):
         be mixed. Whitespace is removed automatically.
         """
         # Remove thousands separator & ensure dot is used
-        s = normalize_interpunctation(s).replace(" ", "")
+        s = normalize_interpunctation(s)
+        print("1 ",s)
+        print("1 ",self.units)
         s, unit = self.split_unit(s) # Remove unit
+        print("2 ", s)
+        s = s.replace(" ", "")
+        print("3 ", s)
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
@@ -192,13 +198,14 @@ class EngineerIO(object):
         if len(s) <= 1:
             return s, ""
         # Handle different lengths of units
-        if s[-3:] in self.units: # Handle 3-char units (e.g. 'ppm'), then
-            s, unit = s[:-3], s[-3:]
-        elif s[-2:] in self.units: # handle 2-character units (e.g. 'Hz'), then
-            s, unit = s[:-2], s[-2:]
-        elif s[-1] in self.units: # handle 1-character units (e.g. 'V')
-            s, unit = s[:-1], s[-1]
-        else: # No unit
+        found_unit_suffix = False
+        for suffix in suffix_list(s):
+            if suffix in self.units:
+                suffix_length = len(suffix)
+                s, unit = s[:-suffix_length], s[-suffix_length:]
+                found_unit_suffix = True
+                break
+        if not found_unit_suffix: # No unit
             s, unit = s, ''
         # Remove unit prefix, if any (e.g. degrees symbol, delta symbol)
         s = s.rstrip(self.strippable)
