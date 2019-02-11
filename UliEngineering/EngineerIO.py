@@ -35,7 +35,7 @@ def _default_suffices():
     """
     The default first suffix list with -24 1st exp
     """
-    return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "u"], ["m"], [],
+    return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "μ", "u"], ["m"], [],
             ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
 
 def _length_units(include_m=False):
