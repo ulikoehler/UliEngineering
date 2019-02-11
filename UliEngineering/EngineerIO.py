@@ -150,7 +150,7 @@ class EngineerIO(object):
         """
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s).replace(" ", "")
-        s, unit = self.split_unit(s) # Remove unitf
+        s, unit = self.split_unit(s) # Remove unit
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
