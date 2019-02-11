@@ -42,6 +42,9 @@ _length_factors = {
     'pc': scipy.constants.parsec,
     'parsec': scipy.constants.parsec,
     'parsecs': scipy.constants.parsec,
+    'Å': scipy.constants.angstrom,
+    'Angstrom': scipy.constants.angstrom,
+    'angstrom': scipy.constants.angstrom,
 }
 
 def normalize_length(s, instance=EngineerIO.length_instance) -> Unit("m"):

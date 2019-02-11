@@ -46,7 +46,10 @@ class TestLengths(object):
         assert_approx_equal(normalize_length("5.5 au"), 149597870700*5.5)
         assert_approx_equal(normalize_length("9.15 pc"), 2.8233949868947424e+17)
         assert_approx_equal(normalize_length("9.15 kpc"), 2.8233949868947424e+20)
-    
+        assert_approx_equal(normalize_length("3.33 Å"), 3.33e-10)
+        assert_approx_equal(normalize_length("3.33 Angstrom"), 3.33e-10)
+        assert_approx_equal(normalize_length("3.33 angstrom"), 3.33e-10)
+
     @parameterized([
         ("1A"),
         ("xaz"),

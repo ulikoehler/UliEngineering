@@ -46,6 +46,7 @@ def _length_units(include_m=False):
     """
     units = set([
         # Length
+        'Å', 'Angstrom', 'angstrom',
         'meters', 'meter',
         'mil', 'in', '\"', 'inch', 'inches',
         'foot', 'feet', 'ft', 'yd', 'yard', 'mile',
