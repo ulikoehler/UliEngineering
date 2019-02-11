@@ -7,14 +7,14 @@ from UliEngineering.EngineerIO import auto_format
 
 class TestNoiseDensity(object):
     def test_unloaded_ratio(self):
-        assert_approx_equal(unloaded_ratio(1000.0, 1000.0), 0.5)
+        assert_approx_equal(voltage_divider_ratio(1000.0, 1000.0), 0.5)
         # Top resistor has lower value => ratio < 0.5
-        assert_approx_equal(unloaded_ratio(600, 1000.0), 0.625)
+        assert_approx_equal(voltage_divider_ratio(600, 1000.0), 0.625)
 
     def test_loaded_ratio(self):
-        assert_approx_equal(loaded_ratio(1000.0, 1000.0, 1e60), 0.5)
-        assert_approx_equal(loaded_ratio(1000.0, 1000.0, 1000.0), 0.6666666666666666)
-        assert_approx_equal(loaded_ratio("1kΩ", "1kΩ", "10 MΩ"), 0.500024998)
+        assert_approx_equal(voltage_divider_ratio(1000.0, 1000.0, 1e60), 0.5)
+        assert_approx_equal(voltage_divider_ratio(1000.0, 1000.0, 1000.0), 0.6666666666666666)
+        assert_approx_equal(voltage_divider_ratio("1kΩ", "1kΩ", "10 MΩ"), 0.500024998)
 
     def test_bottom_resistor_by_ratio(self):
         assert_approx_equal(bottom_resistor_by_ratio(1000.0, 0.5), 1000.0)

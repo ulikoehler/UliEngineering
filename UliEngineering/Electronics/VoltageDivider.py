@@ -5,32 +5,23 @@ Utilities for computing different aspects and complexities of voltage dividers
 """
 from UliEngineering.EngineerIO import normalize_numeric
 from .Resistors import *
+import numpy as np
 from UliEngineering.Units import Unit
 
-__all__ = ["unloaded_ratio", "loaded_ratio", "top_resistor_by_ratio",
+__all__ = ["voltage_divider_ratio", "top_resistor_by_ratio",
            "bottom_resistor_by_ratio", "feedback_top_resistor",
            "feedback_bottom_resistor", "feedback_actual_voltage"]
 
 
-def unloaded_ratio(r1, r2) -> Unit(""):
+def voltage_divider_ratio(r1, r2, rload=np.inf) -> Unit(""):
     """
-    Compute the denominator of the  division ratio of a voltage divider, not taking into account
-    parasitic properties or loading
-    """
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    return r2 / (r1 + r2)
-
-def loaded_ratio(r1, r2, rl) -> Unit(""):
-    """
-    Compute the denominator of the  division ratio of a voltage divider, not taking into account
-    parasitic properties but loading.
+    Compute the denominator of the  division ratio of a voltage divider.
+    
+    If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
     r1 = normalize_numeric(r1)
     r2 = normalize_numeric(r2)
-    rl = normalize_numeric(rl)
-    return r1 / (r1 + parallel_resistors(r2, rl))
-
+    return r2 / (r1 + parallel_resistors(r2, rload))
 
 def top_resistor_by_ratio(rbottom, ratio) -> Unit("Ω"):
     """
@@ -40,7 +31,6 @@ def top_resistor_by_ratio(rbottom, ratio) -> Unit("Ω"):
     rbottom = normalize_numeric(rbottom)
     ratio = normalize_numeric(ratio)
     return rbottom * (1.0 / ratio - 1.0)
-
 
 def bottom_resistor_by_ratio(rtop, ratio) -> Unit("Ω"):
     """
@@ -109,6 +99,14 @@ def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
         The feedback voltage
     """
     # Equation: Vout * ratio = vfb
-    ratio = unloaded_ratio(rtop, rbot)
+    ratio = voltage_divider_ratio(rtop, rbot)
     return normalize_numeric(vfb) / ratio
 
+def top_resistor_by_ratio(rbottom, ratio) -> Unit("Ω"):
+    """
+    Compute the bottom resistor of a voltage divider given the top resistor value
+    and the division ration
+    """
+    rbottom = normalize_numeric(rbottom)
+    ratio = normalize_numeric(ratio)
+    return rbottom * (1.0 / ratio - 1.0)

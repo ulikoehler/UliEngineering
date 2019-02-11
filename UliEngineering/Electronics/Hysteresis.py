@@ -7,7 +7,7 @@ For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a
 """
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Electronics.Resistors import parallel_resistors
-from UliEngineering.Electronics.VoltageDivider import unloaded_ratio, bottom_resistor_by_ratio
+from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio
 
 __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_threshold_ratios_opendrain",
@@ -51,8 +51,8 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     r1rh = parallel_resistors(r1, rh)
     r2rh = parallel_resistors(r2, rh)
     # Compute thresholds
-    thl = unloaded_ratio(r1, r2rh)
-    thu = unloaded_ratio(r1rh, r2)
+    thl = voltage_divider_ratio(r1, r2rh)
+    thu = voltage_divider_ratio(r1rh, r2)
     return (thl, thu)
 
 
@@ -78,8 +78,8 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     # Compute r1, r2 in parallel with rh
     r2rh = parallel_resistors(r2, rh)
     # Compute thresholds
-    thl = unloaded_ratio(r1, r2rh)
-    thu = unloaded_ratio(r1, r2)
+    thl = voltage_divider_ratio(r1, r2rh)
+    thu = voltage_divider_ratio(r1, r2)
     return (thl, thu)
 
 def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
@@ -143,7 +143,7 @@ def __hysteresis_threshold_factors(r1, r2, rh, fn):
     # Compute thresholds
     thl, thu = fn(r1, r2, rh)
     # Compute factors
-    thnom = unloaded_ratio(r1, r2)
+    thnom = voltage_divider_ratio(r1, r2)
     return (thl / thnom, thu / thnom)
 
 
@@ -224,7 +224,7 @@ def hysteresis_resistor(r1, r2, fh=0.05):
     r2 = normalize_numeric(r2)
     fh = normalize_numeric(fh)
     # NOTE: We compute rh for the lower threshold only
-    thnom = unloaded_ratio(r1, r2)
+    thnom = voltage_divider_ratio(r1, r2)
     ratio_target = thnom * (1. - fh)
     # Compute the resistor that, in parallel to R2, yields
     # a divider with our target ratio
