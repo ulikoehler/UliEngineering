@@ -168,18 +168,18 @@ class EngineerIO(object):
             else:  # suffixCount == 1 => correct
                 # Suffix-as-decimal-separator --> there must be no other decimal separator
                 if "." in s:  # Commata already handled by normalize_interpunctation
-                    raise ValueError("Suffix as decimal separator, but dot is also in string: {0}".format(s))
+                    raise ValueError("Suffix as decimal separator, but dot is also in string: {}".format(s))
                 suffixIndex = isSuffixList.index(True)
                 # Suffix must NOT be first character
                 if suffixIndex == 0:
-                    raise ValueError("Suffix in '{0}' must not be the first char".format(s))
+                    raise ValueError("Suffix in '{}' must not be the first char".format(s))
                 suffix = s[suffixIndex]
                 s = s.replace(suffix, ".")
         # Handle unit prefix (if any). Not allowable if no unit is present
         s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError("Remainder of string is not purely numeric: {0}".format(s))
+            raise ValueError("Remainder of string is not purely numeric: {}".format(s))
         return (s, suffix, unit)
 
     def split_unit(self, s):
@@ -257,7 +257,7 @@ class EngineerIO(object):
         suffixMapIdx = int(math.floor(exp / 3.))
         #Ensure we're in range
         if not self.exp_map_min < suffixMapIdx < self.exp_map_max:
-            raise ValueError("Value out of range: {0}".format(v))
+            raise ValueError("Value out of range: {}".format(v))
         #Pre-multiply the value
         v = v * (10.0 ** -(suffixMapIdx * 3))
         #Delegate the rest of the task to the helper
@@ -405,7 +405,7 @@ def _formatWithSuffix(v, suffix=""):
     else:  # Should only happen if v < 1000
         res = str(int(round(v)))
     #Avoid appending whitespace if there is no suffix
-    return "{0} {1}".format(res, suffix) if suffix else res
+    return "{} {}".format(res, suffix) if suffix else res
 
 def normalize_engineer_notation(s, encoding="utf8"):
     return EngineerIO.instance.normalize(s)
