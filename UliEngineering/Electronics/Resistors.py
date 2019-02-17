@@ -14,6 +14,7 @@ from UliEngineering.Units import Unit
 
 __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "standard_resistors", "parallel_resistors",
+           "current_through_resistor",
            "serial_resistors", "nearest_resistor"]
 
 # Standard resistor sequences
@@ -34,6 +35,37 @@ e24 = np.asarray([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0,
                   3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1])
 e12 = np.asarray([1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2])
 
+def current_through_resistor(resistor, voltage) -> Unit("A"):
+    """
+    Compute the current that flows through a resistor
+    using ohms law.
+
+    Parameters
+    ----------
+    resistor : float or Engineer string
+        The resistor in Ohms
+    voltage : float or Engineer string
+        The voltage across the resistor
+    """
+    resistor = normalize_numeric(resistor)
+    voltage = normalize_numeric(voltage)
+    return resistor / voltage
+
+def voltage_across_resistor(resistor, current) -> Unit("A"):
+    """
+    Compute the voltage that is dropped across
+    a resistor using ohms law.
+
+    Parameters
+    ----------
+    resistor : float or Engineer string
+        The resistor in Ohms
+    current : float or Engineer string
+        The current flowing through the resistor
+    """
+    resistor = normalize_numeric(resistor)
+    current = normalize_numeric(current)
+    return resistor * current
 
 def resistor_range(multiplicator, sequence=e96):
     """
