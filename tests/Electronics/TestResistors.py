@@ -21,3 +21,9 @@ class TestResistors(object):
     def test_find_nearest_resistor(self):
         assert_equal(nearest_resistor(5000, sequence=e48), 5110.0)
         assert_equal(nearest_resistor(4998), 4990.0)
+
+    def test_current_through_resistor(self):
+        assert_approx_equal(current_through_resistor("1k", "1V"), 1e-3)
+        assert_approx_equal(current_through_resistor(1e3, 2), 2e-3)
+        assert_approx_equal(current_through_resistor("1Ω", "2V"), 2)
+

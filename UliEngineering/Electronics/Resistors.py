@@ -15,6 +15,9 @@ from UliEngineering.Units import Unit
 __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "standard_resistors", "parallel_resistors",
            "current_through_resistor",
+           "power_dissipated_in_resistor_by_current",
+           "power_dissipated_in_resistor_by_voltage",
+           "voltage_across_resistor",
            "serial_resistors", "nearest_resistor"]
 
 # Standard resistor sequences
@@ -49,7 +52,7 @@ def current_through_resistor(resistor, voltage) -> Unit("A"):
     """
     resistor = normalize_numeric(resistor)
     voltage = normalize_numeric(voltage)
-    return resistor / voltage
+    return voltage / resistor
 
 def voltage_across_resistor(resistor, current) -> Unit("A"):
     """
@@ -66,6 +69,41 @@ def voltage_across_resistor(resistor, current) -> Unit("A"):
     resistor = normalize_numeric(resistor)
     current = normalize_numeric(current)
     return resistor * current
+
+def power_dissipated_in_resistor_by_current(resistor, current) -> Unit("W"):
+    """
+    Compute the power that is dissipated in
+    a resistor using P=I²R given
+    its resistance and the current flowing through it
+
+    Parameters
+    ----------
+    resistor : float or Engineer string
+        The resistor in Ohms
+    current : float or Engineer string
+        The current flowing through the resistor
+    """
+    resistor = normalize_numeric(resistor)
+    current = normalize_numeric(current)
+    return resistor * current * current
+
+def power_dissipated_in_resistor_by_voltage(resistor, voltage) -> Unit("W"):
+    """
+    Compute the power that is dissipated in
+    a resistor using P=VI given
+    its resistance and the current flowing through it
+
+    Parameters
+    ----------
+    resistor : float or Engineer string
+        The resistor in Ohms
+    current : float or Engineer string
+        The current flowing through the resistor
+    """
+    resistor = normalize_numeric(resistor)
+    voltage = normalize_numeric(voltage)
+    current = current_through_resistor(resistor, voltage)
+    return current * voltage
 
 def resistor_range(multiplicator, sequence=e96):
     """

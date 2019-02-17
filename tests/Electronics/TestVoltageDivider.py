@@ -39,3 +39,9 @@ class TestNoiseDensity(object):
         assert_approx_equal(feedback_actual_voltage(1020e3, 816e3, 0.8), 1.8)
         # String input
         assert_approx_equal(feedback_actual_voltage("1.02 MΩ", "816 kΩ", "0.8 V"), 1.8)
+
+    def test_feedback_voltage(self):
+        assert_equal(voltage_divider_power("250k", "1k", "230V").__repr__(),
+            "VoltageDividerPower(top=210 mW, bottom=840 µW, total=211 mW)")
+        assert_approx_equal(voltage_divider_power("250k", "1k", "230V").total,
+            0.2107569721115538)
