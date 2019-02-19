@@ -35,7 +35,7 @@ def peak_to_peak(arr):
     """
     Compute max(arr) - min(arr)
     """
-    if not arr:
+    if arr is None or len(arr) == 0:
         # This causes numpy ValueError since some Numpy version
         return 0.
     return np.max(arr) - np.min(arr)

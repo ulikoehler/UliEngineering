@@ -27,6 +27,7 @@ class TestRMS(object):
 
 class TestPeakToPeak(object):
     def testPeakToPeak(self):
+        assert_allclose(peak_to_peak(None), 0.0)
         assert_allclose(peak_to_peak([]), 0.0)
         assert_allclose(peak_to_peak([0.0]), 0.0)
         assert_allclose(peak_to_peak([1.0]), 0.0)
@@ -34,6 +35,13 @@ class TestPeakToPeak(object):
         assert_allclose(peak_to_peak([1.0, 2.0]), 1.0)
         assert_allclose(peak_to_peak([2.0, 1.0]), 1.0)
         assert_allclose(peak_to_peak([0, 1, 3, -3, 0, 5, 0.7, 0.9]), 8)
+        assert_allclose(peak_to_peak(np.asarray([])), 0.0)
+        assert_allclose(peak_to_peak(np.asarray([0.0])), 0.0)
+        assert_allclose(peak_to_peak(np.asarray([1.0])), 0.0)
+        assert_allclose(peak_to_peak(np.asarray([1.0, 1.0])), 0.0)
+        assert_allclose(peak_to_peak(np.asarray([1.0, 2.0])), 1.0)
+        assert_allclose(peak_to_peak(np.asarray([2.0, 1.0])), 1.0)
+        assert_allclose(peak_to_peak(np.asarray([0, 1, 3, -3, 0, 5, 0.7, 0.9])), 8)
 
 class TestUnstair(object):
     @parameterized(unstairMethods)
