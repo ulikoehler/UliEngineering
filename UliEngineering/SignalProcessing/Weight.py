@@ -5,7 +5,7 @@ Functions related to weight of arrays
 """
 import numpy as np
 
-__all__ = ["weigh_halves"]
+__all__ = ["weigh_halves", "weight_symmetry"]
 
 def weigh_halves(arr, operator=np.sum):
     """
@@ -36,3 +36,22 @@ def weigh_halves(arr, operator=np.sum):
         pivot = len(arr) // 2
         middle = arr[pivot] / 2
         return operator(arr[:pivot]) + middle, operator(arr[pivot + 1:]) + middle
+
+def weight_symmetry(a, b):
+    """
+    Given two weights a, b computes a coefficient
+    about how equal they are:
+
+    1.0 : Totally equal
+    0.0 : Totally different
+
+    The coefficient does not depend on (a + b)
+    and is computed using the following formula
+    1 - (np.abs(a - b) / (a + b))
+
+    This function is often used like this:
+    
+    >>> weight_symmetry(*weigh_halves(arr))
+    1.0
+    """
+    return 1 - (np.abs(a - b) / (a + b))
