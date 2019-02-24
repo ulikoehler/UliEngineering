@@ -207,6 +207,13 @@ def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
 
     This means that ret[0] contains the x, y coordinate of the most significant extremum
     (where the significancy is determined by the comparator)
+
+    Parameters
+    ----------
+    mode : string
+        How the edges of the vector are treated.
+        Either 'clip', 'raise' or 'wrap',
+        see numpy.take for more details
     """
     _check_extrema_comparator(comparator)
     # Determine extrema and x/y values at those indices
