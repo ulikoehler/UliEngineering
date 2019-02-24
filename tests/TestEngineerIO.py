@@ -5,7 +5,7 @@ from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_
 from UliEngineering.EngineerIO import *
 from UliEngineering.Units import *
 from UliEngineering.EngineerIO import _formatWithSuffix
-from nose_parameterized import parameterized
+from parameterized import parameterized
 import functools
 import numpy as np
 

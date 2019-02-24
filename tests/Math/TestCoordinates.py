@@ -3,7 +3,7 @@
 from numpy.testing import assert_allclose
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.Math.Coordinates import *
-from nose_parameterized import parameterized
+from parameterized import parameterized
 import functools
 import numpy as np
 

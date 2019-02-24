@@ -5,7 +5,7 @@ from nose.tools import assert_equal, assert_true, raises, assert_less, assert_al
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *
-from nose_parameterized import parameterized
+from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 

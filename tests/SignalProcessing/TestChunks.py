@@ -4,7 +4,7 @@ from toolz import functoolz
 from nose.tools import assert_equal, assert_true, raises
 from numpy.testing import assert_array_equal, assert_allclose
 from UliEngineering.SignalProcessing.Chunks import *
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
 class TestChunkGeneration(object):
     def __init__(self):

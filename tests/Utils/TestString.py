@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import assert_equal, assert_true, assert_false, raises
 from UliEngineering.Utils.String import *
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
 class TestSplitNth(object):
     def testSimple(self):

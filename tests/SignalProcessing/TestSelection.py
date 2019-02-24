@@ -3,7 +3,7 @@
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
-from nose_parameterized import parameterized
+from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true, raises
-from nose_parameterized import parameterized
+from parameterized import parameterized
 from UliEngineering.Length import *
 from UliEngineering.Units import UnknownUnitInContextException
 

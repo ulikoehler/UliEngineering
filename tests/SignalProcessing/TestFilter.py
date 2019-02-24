@@ -4,7 +4,7 @@ from nose.tools import assert_equal, assert_true, raises, assert_in, assert_not_
 from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
 class TestFilter(object):
 
