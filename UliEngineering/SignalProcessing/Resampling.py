@@ -13,8 +13,48 @@ from UliEngineering.Utils.Concurrency import new_thread_executor
 from .Utils import LinRange
 
 __all__ = ["resample_discard", "resampled_timespace",
-           "parallel_resample"]
+           "parallel_resample", "signal_samplerate"]
 
+def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
+    """
+    Compute the samplerate of a signal
+    using a quantile-based method to exclude
+    outliers (in the time delta domain) and
+    computes the by 1 / mean
+    
+    Using a low ignore_percentile value is only
+    desirable if the dataset is small and therefore
+    does not average properly due to lack of samples.
+    In most cases, using a high ignore percentile
+    like 10 is recommended.
+    
+    Returns a float (samplerate) [1/s]
+
+    Parameters
+    ----------
+    t : numpy array of datetime64 type
+        Timestamps associated with the signal
+    ignore_percentile : number
+        This percentile of outliers is ignored
+        for the mean calculation at both the top
+        and the bottom end.
+        "5" means considering the 5th...95th percentile
+        for averaging.
+    mean_method : unary function
+        Used to compute the mean after excluding outliers.
+        Except for special usecases, arithmetic mean (np.mean)
+        is recommended.
+    """
+    tdelta = np.diff(t)
+    above = np.percentile(tdelta, ignore_percentile)
+    below = np.percentile(tdelta, 100 - ignore_percentile)
+    filtered = tdelta[np.logical_and(tdelta >= above, tdelta <= below)]
+    # Filtered is too small if the sample periods are too uniform in the array
+    if len(filtered) < 0.1 * len(tdelta):
+        filtered = tdelta
+    mean_sample_period = mean_method(filtered)
+    mean_sample_period = mean_sample_period.astype("timedelta64[ns]").astype(np.int64)
+    return 1e9 / mean_sample_period # 1e9 : nanoseconds
 
 def resample_discard(arr, divisor, ofs=0):
     """
