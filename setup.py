@@ -18,7 +18,7 @@ setup(name='UliEngineering',
       include_package_data=True,
       requires=['numpy (>= 1.5)', 'scipy (>= 0.5)', 'toolz (>= 0.5)'],
       test_suite='nose.collector',
-      tests_require=['nose', 'coverage', 'mock', 'rednose', 'nose-parameterized'],
+      tests_require=['nose', 'coverage', 'mock', 'rednose', 'parameterized'],
       setup_requires=['nose>=1.0'],
       platforms="any",
       classifiers=[
