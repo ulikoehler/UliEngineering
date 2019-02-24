@@ -29,6 +29,18 @@ class TestSignalSamplerate(object):
             '2019-02-01T12:00:00.800000000',
             '2019-02-01T12:00:00.900000000',
         ], dtype='datetime64[ns]')
+        # Almost 100% equal sample rate
+        self.talmostequal = np.asarray([
+            '2019-02-01T12:00:00.100000000',
+            '2019-02-01T12:00:00.200000000',
+            '2019-02-01T12:00:00.300000000',
+            '2019-02-01T12:00:00.400000000',
+            '2019-02-01T12:00:00.500000000',
+            '2019-02-01T12:00:00.600000000',
+            '2019-02-01T12:00:00.700000000',
+            '2019-02-01T12:00:00.800000000',
+            '2019-02-01T12:00:00.900000100',
+        ], dtype='datetime64[ns]')
         # Jittery sample rate
         self.tunequal = np.asarray([
             '2019-02-01T12:00:00.103000000',
@@ -44,6 +56,7 @@ class TestSignalSamplerate(object):
 
     def testSignalSamplerate(self):
         assert_approx_equal(signal_samplerate(self.tunequal, ignore_percentile=3), 10.03344)
+        assert_approx_equal(signal_samplerate(self.talmostequal, ignore_percentile=3), 10.0)
         assert_approx_equal(signal_samplerate(self.tequal, ignore_percentile=3), 10.0)
 
 class TestParallelResampling(object):
