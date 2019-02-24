@@ -8,7 +8,7 @@ import functools
 import numpy as np
 import bisect
 import concurrent.futures
-from scipy.interpolate import UnivariateSpline
+import scipy.interpolate
 from UliEngineering.Utils.Concurrency import new_thread_executor
 from .Utils import LinRange
 
@@ -66,7 +66,7 @@ def resample_discard(arr, divisor, ofs=0):
 
 def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     """
-    Compute the new timespace after resampling a source timestamp array
+    Compute the new timespace after resampling a input timestamp array
     (not neccessarily lazy)
 
 
@@ -108,7 +108,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     return LinRange.range(startt, endt, dst_tdelta)
 
 
-def __parallel_resample_worker(torig, tnew, y, out, i, degree, chunksize, ovp_size, prefilter):
+def __parallel_resample_worker(torig, tnew, y, out, i, chunksize, ovp_size, prefilter, fitkind):
     # Find the time range in the target time
     t_target = tnew[i:i + chunksize]
     # Find the time range in the source time
@@ -127,43 +127,44 @@ def __parallel_resample_worker(torig, tnew, y, out, i, degree, chunksize, ovp_si
         tsrc_chunk, ysrc_chunk = prefilter(tsrc_chunk, ysrc_chunk)
 
     # Compute interpolating spline (might also be piecewise linear)...
-    spline = UnivariateSpline(tsrc_chunk, ysrc_chunk, k=degree)
+    fit = scipy.interpolate.interp1d(tsrc_chunk, ysrc_chunk, fitkind=fitkind)
     # ... and evaluate
-    out[i:i + chunksize] = spline(t_target)
+    out[i:i + chunksize] = fit(t_target)
 
 
 def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
                       executor=None, time_factor=1e6, degree=1,
-                      chunksize=10000, overprovisioning_factor=0.01):
+                      fitkind='linear', chunksize=10000,
+                      overprovisioning_factor=0.01):
     """
-    A resampler that uses scipy.interpolate.UnivariateSpline but splits the
-    input into chunks that can be processed. The chunksize is applied to the output timebase.
+    A resampler that uses scipy.interpolate.interp1d but splits the
+    input into chunks that can be processed.
+    The chunksize is applied to the output timebase.
 
-    Applies an optional prefilter to the source data while resampling. If the timebase of
-    the source data is off significantly, this might produce unexpected results.
+    The input x array is assumed to be sorted, facilitating binary search.
+    If the output array is not given, it is automatically allocated with the correct size.
+
+    The chunk workers are executed in parallel in a concurrent.futures thread pool.
+
+    In order to account for vector end effects, an overprovisioning factor
+    can be provided so that a fraction of the chunksize is added at both ends of
+    the source chunk.
+    This
+    A overprovisioning factor of 0.01 means that 1% of the chunksize is added on the left
+    and 1% is added on the right. This does not affect leftmost and rightmost
+    border of the input array.
+
+    Returns the output array.
+
+    Applies an optional prefilter to the input data while resampling. If the timebase of
+    the input data is off significantly, this might produce unexpected results.
     The prefilter must be a reentrant functor that takes (t, x) data and returns
     a (t, x) tuple. The returned tuple can be of arbitrary size (assuming t and x
     have the same length) but its t range must include the t range that is being interpolated.
     Note that the prefilter is performed after overprovisioning, so setting a higher
     overprovisioning factor (see below) might help dealing with prefilters that
-    return too small arrays, however at the start and the end of the source array,
+    return too small arrays, however at the start and the end of the input array,
     no overprovisioning values can be added.
-
-    The input x array is assumed to be sorted. This function will also take mmapped input
-    and output arrays.
-    If the output array is not given, it is automatically allocated with the correct size.
-
-    The chunk workers are executed in parallel in a concurrent.futures thread pool.
-
-    In order to account for , an overprovisioning factor
-    can be provided so that a fraction of the chunksize is added at both ends of
-    the source chunk. This is used for higher-degree splines that perform better
-    when not interpolating right on the edges of the source value space.
-    A overprovisioning factor of 0.01 means that 1% of the chunksize is added on the left
-    and 1% is added on the right. At the borders, only what's available is added
-    to the array.
-
-    Return the output array.
     """
     new_t = resampled_timespace(t, new_samplerate, time_factor=time_factor)
     # Lazily compute the new timespan
@@ -177,8 +178,9 @@ def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
 
     # Bind constant arguments
     f = functools.partial(__parallel_resample_worker, torig=t, tnew=new_t,
-                          y=y, out=out, degree=degree, chunksize=chunksize,
-                          ovp_size=ovp_size, prefilter=prefilter)
+                          y=y, out=out, chunksize=chunksize,
+                          ovp_size=ovp_size, prefilter=prefilter,
+                          fitkind=fitkind)
 
     futures = [executor.submit(f, i=i) for i in range(numchunks)]
     # Wait for futures to finish
