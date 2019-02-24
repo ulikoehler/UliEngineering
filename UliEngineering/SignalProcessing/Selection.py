@@ -203,7 +203,7 @@ def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
     return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
     x and y value, with the 1st dimension being sorted in descending order.
 
-    The comparator may be either np.greater or np.less.
+    The comparator may be 
 
     This means that ret[0] contains the x, y coordinate of the most significant extremum
     (where the significancy is determined by the comparator)
@@ -214,6 +214,10 @@ def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
         How the edges of the vector are treated.
         Either 'clip', 'raise' or 'wrap',
         see numpy.take for more details
+    comparator:
+        Either np.greater or np.less.
+        np.greater => Find maxima
+        np.less => Find minima
     """
     _check_extrema_comparator(comparator)
     # Determine extrema and x/y values at those indices
