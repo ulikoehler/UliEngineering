@@ -147,11 +147,11 @@ class TestSelectByThreshold(object):
         y[32] = 8.0
         y[92] = 5.5
         y[98] = 4.5
-        assert_allclose(selectByThreshold(x, y, 5.0), [[132., 8.], [192., 5.5]])
+        assert_allclose(select_by_threshold(x, y, 5.0), [[132., 8.], [192., 5.5]])
 
     @raises(ValueError)
     def testInvalidComparator(self):
-        selectByThreshold(None, None, 1.0, comparator=map)
+        select_by_threshold(None, None, 1.0, comparator=map)
 
 
 class TestFindRuns(object):
@@ -296,13 +296,13 @@ class TestRandomSelection(object):
 
 class TestFindNearestIdx(object):
     def testBasic(self):
-        assert_equal(findNearestIdx(np.arange(10), 5.0), 5)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.0), 2)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.2), 2)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.4), 2)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.5), 2)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.500001), 3)
-        assert_equal(findNearestIdx(np.arange(3, 13), 5.6), 3)
+        assert_equal(find_nearest_idx(np.arange(10), 5.0), 5)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.0), 2)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.2), 2)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.4), 2)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.5), 2)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.500001), 3)
+        assert_equal(find_nearest_idx(np.arange(3, 13), 5.6), 3)
 
 class TestGeneratorCount(object):
     @parameterized([

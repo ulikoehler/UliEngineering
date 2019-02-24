@@ -13,9 +13,9 @@ from bisect import bisect_left, bisect_right
 import collections
 
 __all__ = ["select_by_datetime", "find_sorted_extrema",
-           "selectByThreshold", "find_true_runs", "find_false_runs", "filter_runs",
+           "select_by_threshold", "find_true_runs", "find_false_runs", "filter_runs",
            "runs_ignore_borders", "shrink_ranges", "IntInterval",
-           "random_slice", "findNearestIdx", "resample_discard",
+           "random_slice", "find_nearest_idx", "resample_discard",
            "GeneratorCounter", "majority_vote_all", "majority_vote",
            "extract_by_reference", "select_ranges",
            "sorted_range_indices", "multiselect", "find_closest_index"]
@@ -224,7 +224,7 @@ def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
     extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
     return __mapAndSortIndices(x, y, extrema, comparator == np.greater)
 
-def selectByThreshold(fx, fy, thresh, comparator=np.greater):
+def select_by_threshold(fx, fy, thresh, comparator=np.greater):
     """
     Select values where a specific absolute threshold applies
     Returns a (n, 2)-shaped array where
@@ -346,7 +346,7 @@ def ranges_to_IntInterva(ranges):
     """
 
 
-def findNearestIdx(arr, v):
+def find_nearest_idx(arr, v):
     """
     Find the index in the array which refers to the value with the least
     absolute difference from v.
