@@ -25,6 +25,13 @@ class ChunkGenerator(object):
         self.num_chunks = num_chunks
         self.func = functoolz.identity
 
+    def original_slice(self, i):
+        """
+        Get the original slice for the ith chunk.
+        In contrast to __getitem__() this slice is not processed using self.func
+        """
+        return self.generator(i)
+
     def __iter__(self):
         return (self.func(self.generator(i)) for i in range(self.num_chunks))
 
