@@ -91,6 +91,9 @@ class ChunkGenerator(object):
 
         This is often used for time-intensive chunk filter functions.
 
+        Note that in many cases using this approach is much slower than
+        just using as_array().
+
         Parameters
         ----------
         executor : A concurrent.futures.Executor
