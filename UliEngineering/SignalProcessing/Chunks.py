@@ -91,19 +91,21 @@ class ChunkGenerator(object):
         Parameters
         ----------
         executor : A concurrent.futures.Executor
-            Since this writes directly to the result array,
-            ProcessPoolExecutors are currently unsupported.
+            Since this writes directly to the result array.
+            Depending on the application use either ProcessPoolExecutors
+            or ThreadPoolExecutors.
         """
         arr = np.zeros(len(self))
         if executor is None:
             executor = concurrent.futures.ThreadPoolExecutor()
         # Generate futures for executor to execute
         def __worker(i):
-            arr[i] = self[i]
+            return (i, self[i])
         futures = [executor.submit(__worker, i) for i in range(len(self))]
         # Wait until finished
-        for _ in concurrent.futures.as_completed(futures):
-            pass
+        for future in concurrent.futures.as_completed(futures):
+            i, result = future.result()
+            arr[i] = result
         return arr
 
 class IndexChunkGenerator(ChunkGenerator):
