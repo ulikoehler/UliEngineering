@@ -78,6 +78,9 @@ class ChunkGenerator(object):
         """
         return np.asarray(self.as_list())
 
+    def _evaluate_worker(self, i):
+        return (i, self[i])
+
     def evaluate_1d_parallel(self, executor=None):
         """
         Parallel evaluation of the chunks.
@@ -99,9 +102,7 @@ class ChunkGenerator(object):
         if executor is None:
             executor = concurrent.futures.ThreadPoolExecutor()
         # Generate futures for executor to execute
-        def __worker(i):
-            return (i, self[i])
-        futures = [executor.submit(__worker, i) for i in range(len(self))]
+        futures = [executor.submit(self._evaluate_worker, i) for i in range(len(self))]
         # Wait until finished
         for future in concurrent.futures.as_completed(futures):
             i, result = future.result()
@@ -128,11 +129,17 @@ class IndexChunkGenerator(ChunkGenerator):
         self.index_generator = index_generator
         # Build generator function
         if copy:
-            _generator = lambda i: self.data[index_generator(i)].copy()
+            _generator = self._copy_generator
         else: # Dont copy - default
-            _generator = lambda i: self.data[index_generator(i)]
+            _generator = self._nocopy_generator
         # Init chunk generator
         super().__init__(_generator, num_chunks, func)
+
+    def _nocopy_generator(self, i):
+        return self.data[self.index_generator(i)]
+
+    def _copy_generator(self, i):
+        return self.data[self.index_generator(i)].copy()
 
     def original_indexes(self, i):
         """
@@ -140,6 +147,9 @@ class IndexChunkGenerator(ChunkGenerator):
         Returns a slice() object.
         """
         return self.index_generator(i)
+
+def _overlapping_chunks_worker(offsets, chunksize, i):
+    return slice(offsets[i], offsets[i] + chunksize)
 
 def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     """
@@ -160,7 +170,7 @@ def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     # Precompute offset table
     chunksize = int(chunksize)
     offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))
-    gen = lambda i: slice(offsets[i], offsets[i] + chunksize)
+    gen = functools.partial(_overlapping_chunks_worker, offsets, chunksize)
     return IndexChunkGenerator(arr, gen, offsets.size, func=func, copy=copy)
 
 def sliding_window(data, window_size, shift_size=1, window_func=None, copy=False):
