@@ -131,7 +131,7 @@ class IndexChunkGenerator(ChunkGenerator):
         else: # Dont copy - default
             _generator = lambda i: self.data[index_generator(i)]
         # Init chunk generator
-        super().__init__(self, _generator, num_chunks, func)
+        super().__init__(_generator, num_chunks, func)
 
     def original_indexes(self, i):
         """

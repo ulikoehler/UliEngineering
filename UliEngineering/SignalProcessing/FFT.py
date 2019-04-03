@@ -209,7 +209,7 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     return FFT(x, fftSum, None)
 
 
-def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True):
+def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, window_param=None):
     """
     Like parallel_fft_reduce, but performs all operations in serial, i.e. all operations
     are performed on the calling thread
@@ -217,7 +217,7 @@ def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
     # Compute common parameters
-    window = __fft_windows[window](fftsize)
+    window = WindowFunctor(fftsize, window, param=window_param)
     fftSum = np.zeros(fftsize // 2)
     # Initialize threadpool
     x = fft_frequencies(fftsize, samplerate)
