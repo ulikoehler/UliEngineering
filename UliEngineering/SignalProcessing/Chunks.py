@@ -24,7 +24,7 @@ class ChunkGenerator(object):
     def __init__(self, generator, num_chunks, func=None):
         self.generator = generator
         self.num_chunks = num_chunks
-        self.func = functoolz.identity
+        self.func = func if func is not None else functoolz.identity
 
     def unprocessed_chunk(self, i):
         """
@@ -136,7 +136,7 @@ class IndexChunkGenerator(ChunkGenerator):
         else: # Dont copy - default
             _generator = self._nocopy_generator
         # Init chunk generator
-        super().__init__(_generator, num_chunks, func)
+        super().__init__(generator=_generator, num_chunks=num_chunks, func=func)
 
     def _nocopy_generator(self, i):
         return self.data[self.index_generator(i)]

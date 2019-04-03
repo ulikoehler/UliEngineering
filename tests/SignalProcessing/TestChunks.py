@@ -4,6 +4,8 @@ from toolz import functoolz
 from nose.tools import assert_equal, assert_true, raises
 from numpy.testing import assert_array_equal, assert_allclose
 from UliEngineering.SignalProcessing.Chunks import *
+from UliEngineering.SignalProcessing.Window import *
+from UliEngineering.SignalProcessing.Utils import rms
 from parameterized import parameterized
 
 class TestChunkGeneration(object):
@@ -84,7 +86,12 @@ class TestChunkGeneration(object):
     def test_fixedSizeChunkGenerator_invalid3(self):
         overlapping_chunks(self.data1, 0, 3)
 
-
+class TestSlidingWindow(object):
+    def testRMS(self):
+        # Empty array
+        assert_allclose(sliding_window(np.asarray([]), 500).apply(rms).as_array(), [])
+        # Is window applied correctly
+        assert_allclose(sliding_window(np.asarray([]), 500, window_func=WindowFunctor(500, "blackman")).func.window, np.blackman(500))
 
 
 class TestReshapedChunks(object):
