@@ -9,6 +9,7 @@ import functools
 from toolz import functoolz
 from .Selection import find_closest_index, sorted_range_indices
 from .Chunks import overlapping_chunks
+from .Window import create_and_apply_window, WindowFunctor
 import concurrent.futures
 from collections import namedtuple
 from UliEngineering.Utils.Concurrency import *
@@ -17,15 +18,6 @@ from UliEngineering.SignalProcessing.Utils import remove_mean
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce", "FFTPoint",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "fft_frequencies", "FFT",
            "serial_fft_reduce", "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
-
-__fft_windows = {
-    "blackman": np.blackman,
-    "bartlett": np.bartlett,
-    "hamming": np.hamming,
-    "hanning": np.hanning,
-    "kaiser": lambda sz: np.kaiser(sz, 2.0),
-    "none": np.ones
-}
 
 FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
 
@@ -139,7 +131,7 @@ def fft_frequencies(fftsize, samplerate):
     """Return the frequencies associated to a real-onl FFT array"""
     return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
 
-def compute_fft(y, samplerate, window="blackman"):
+def compute_fft(y, samplerate, window="blackman", window_param=None):
     """
     Compute the real FFT of a dataset and return an FFT object which can directly be visualized using matplotlib etc:
     result = compute_fft(...)
@@ -151,8 +143,8 @@ def compute_fft(y, samplerate, window="blackman"):
     select the angle e.g. where the amplitudes have a peak
     """
     n = len(y)
-    windowArr = __fft_windows[window](n)
-    w = scipy.fftpack.fft(y * windowArr)[:n // 2]
+    windowedY = create_and_apply_window(y, window, param=window_param)
+    w = scipy.fftpack.fft(windowedY)[:n // 2]
     w_norm = 2.0 * np.abs(w) / n  # Perform amplitude normalization
     x = fft_frequencies(n, samplerate)
     angles = np.rad2deg(np.angle(w))
@@ -168,7 +160,7 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     if removeDC:
         yslice = remove_mean(yslice)
     # Compute FFT
-    fftresult = scipy.fftpack.fft(yslice * window)
+    fftresult = scipy.fftpack.fft(window(yslice))
     # Perform amplitude normalization
     return i, np.abs(fftresult[:fftsize // 2])
 
@@ -201,7 +193,7 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     if executor is None:
         executor = new_thread_executor()
     # Compute common parameters
-    window = __fft_windows[window](fftsize)
+    window = WindowFunctor(fftsize, window)
     fftSum = np.zeros(fftsize // 2)
     # Initialize threadpool
     futures = [

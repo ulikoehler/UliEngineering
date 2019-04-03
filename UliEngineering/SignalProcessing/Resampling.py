@@ -13,7 +13,8 @@ from UliEngineering.Utils.Concurrency import new_thread_executor
 from .Utils import LinRange
 
 __all__ = ["resample_discard", "resampled_timespace",
-           "parallel_resample", "signal_samplerate"]
+           "parallel_resample", "signal_samplerate",
+           "serial_resample"]
 
 def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     """
@@ -69,11 +70,13 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     Compute the new timespace after resampling a input timestamp array
     (not neccessarily lazy)
 
-
     Parameters
     ----------
     t : numpy array-like
-        The source timestamps
+        The source timestamps.
+        If these are numbers, you must supply time_factor to
+        specify the resolution of the number.
+        If they are 
     new_samplerate : float
         The new datarate in Hz
     assume_sorted : bool
@@ -83,6 +86,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
         If this is False, the code determines
         the min/max value by reading the entire array.
     time_factor : float
+        Ignored if t is of dtype datetime64
         Defines what timestamps in the source (and result)
         array means. This is required to interpret new_samplerate.
         If time_factor=1e6, it means that a difference of 1.0
@@ -98,6 +102,10 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
         raise ValueError("Empty time array given - can not perform any resampling")
     if len(t) == 1:
         raise ValueError("Time array has only one value - can not perform any resampling")
+    # Handle numpy datetime64 input
+    if "datetime64" in t.dtype.name:
+        t = t.astype('datetime64[ns]').astype(np.int64)
+        time_factor = 1e9
     # Compute time endpoints
     dst_tdelta = time_factor / new_samplerate
     startt, endt = (t[0], t[-1]) if assume_sorted else (np.min(t), np.max(t))
@@ -132,8 +140,8 @@ def __parallel_resample_worker(torig, tnew, y, out, i, chunksize, ovp_size, pref
     out[i:i + chunksize] = fit(t_target)
 
 
-def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
-                      executor=None, time_factor=1e6, degree=1,
+def serial_resample(t, y, new_samplerate, out=None, prefilter=None,
+                      time_factor=1e6,
                       fitkind='linear', chunksize=10000,
                       overprovisioning_factor=0.01):
     """
@@ -165,6 +173,28 @@ def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
     overprovisioning factor (see below) might help dealing with prefilters that
     return too small arrays, however at the start and the end of the input array,
     no overprovisioning values can be added.
+    """
+    new_t = resampled_timespace(t, new_samplerate, time_factor=time_factor)
+    # Lazily compute the new timespan
+    if out is None:
+        out = np.zeros(len(new_t))
+    ovp_size = int(math.floor(overprovisioning_factor * chunksize))
+    # How many chunks do we have to process?
+    for i in range(len(new_t) // chunksize):
+        __parallel_resample_worker(i=i, orig=t, tnew=new_t,
+            y=y, out=out, chunksize=chunksize,
+            ovp_size=ovp_size, prefilter=prefilter,
+            fitkind=fitkind)
+
+    return out
+
+
+def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
+                      executor=None, time_factor=1e6,
+                      fitkind='linear', chunksize=10000,
+                      overprovisioning_factor=0.01):
+    """
+    Parallel variant of serial_resample
     """
     new_t = resampled_timespace(t, new_samplerate, time_factor=time_factor)
     # Lazily compute the new timespan

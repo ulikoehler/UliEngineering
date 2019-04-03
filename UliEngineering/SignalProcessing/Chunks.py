@@ -7,10 +7,11 @@ import numpy as np
 import functools
 from toolz import functoolz
 import random
+import concurrent.futures
 
 __all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks",
            "random_sample_chunks", "random_sample_chunks_nonoverlapping",
-           "array_to_chunkgen"]
+           "array_to_chunkgen", "IndexChunkGenerator", "sliding_window"]
 
 
 class ChunkGenerator(object):
@@ -25,10 +26,10 @@ class ChunkGenerator(object):
         self.num_chunks = num_chunks
         self.func = functoolz.identity
 
-    def original_slice(self, i):
+    def unprocessed_chunk(self, i):
         """
-        Get the original slice for the ith chunk.
-        In contrast to __getitem__() this slice is not processed using self.func
+        Get the data for the ith chunk.
+        In contrast to __getitem__() this slice is not processed using self.func().
         """
         return self.generator(i)
 
@@ -72,16 +73,74 @@ class ChunkGenerator(object):
         return list(self)
 
     def as_array(self):
+        """
+        Convert all values of this chunk to a NumPy array
+        """
         return np.asarray(self.as_list())
 
+    def evaluate_1d_parallel(self, executor=None):
+        """
+        Parallel evaluation of the chunks.
 
-def __overlapping_chunks_worker(offsets, chunksize, arr, copy, i):
-    ofs = offsets[i]
-    arrslice = arr[ofs:ofs + chunksize]
-    return arrslice.copy() if copy else arrslice
+        The prerequisite for calling this function is that the
+        functions applied to the chunk generator result in a scalar
+        value.
 
+        This is often used for time-intensive chunk filter functions.
 
-def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
+        Parameters
+        ----------
+        executor : A concurrent.futures.Executor
+            Depending on the application you should use either a
+            concurrent.futures.ThreadPoolExecutor
+            or a concurrent.futures.ProcessPoolExecutor.
+        """
+        arr = np.zeros(len(self))
+        if executor is None:
+            executor = concurrent.futures.ThreadPoolExecutor()
+        # Generate futures for executor to execute
+        def __worker(i):
+            arr[i] = self[i]
+        futures = [executor.submit(__worker, i) for i in range(len(self))]
+        # Wait until finished
+        for _ in concurrent.futures.as_completed(futures):
+            pass
+        return arr
+
+class IndexChunkGenerator(ChunkGenerator):
+    """
+    A chunk generator that operates on a data array-like object.
+    In contrast to the generic chunk generator, this allows
+    the user to retrieve the indexes used to generate a certain chunk.
+    """
+    def __init__(self, data, index_generator, num_chunks, func=None, copy=False):
+        """
+        Initialize an index chunk generator for a given array.
+        The index_generator(i) function must return a slice() object.
+
+        Keyword arguments:
+        ------------------
+        func : function-like or None
+            The chunk postprocessor function. Applied to every chunk.
+        """
+        self.data = data
+        self.index_generator = index_generator
+        # Build generator function
+        if copy:
+            _generator = lambda i: self.data[index_generator(i)].copy()
+        else: # Dont copy - default
+            _generator = lambda i: self.data[index_generator(i)]
+        # Init chunk generator
+        super().__init__(self, _generator, num_chunks, func)
+
+    def original_indexes(self, i):
+        """
+        Get the indexes used to construct a chunk from self.data.
+        Returns a slice() object.
+        """
+        return self.index_generator(i)
+
+def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     """
     A chunk-generating function that can be used for parallelFFTReduce().
     Generates only full chunks with variable chunk / shift size.
@@ -100,34 +159,50 @@ def overlapping_chunks(arr, chunksize, shiftsize, copy=False):
     # Precompute offset table
     chunksize = int(chunksize)
     offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))
-    gen = functools.partial(__overlapping_chunks_worker, offsets,
-                            chunksize, arr, copy)
-    return ChunkGenerator(gen, offsets.size)
+    gen = lambda i: slice(offsets[i], offsets[i] + chunksize)
+    return IndexChunkGenerator(arr, gen, offsets.size, func=func, copy=copy)
 
-
-def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples):
+def sliding_window(data, window_size, shift_size=1, window_func=None, copy=False):
     """
-    A chunk-generating function that randomly selects n non-overlapping chunks.
-    This generator uses reshaped chunks
-    (i.e. non overlapping zero-overhead chunks)
+    Create a chunk generator that generates left-to-right sliding window chunks.
+
+    This is a convenience wrapper of overlapping_chunks() that clearly
+    states the intent of the operation ("sliding window")
+    """
+    return overlapping_chunks(data, window_size, shift_size, func=window_func, copy=copy)
+
+
+def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False):
+    """
+    A chunk-generating function that randomly selects num_samples non-overlapping chunks.
+
+    The random indexes are generated on initialization,
+    so subsequent calls using the same index return the same sample.
+
+    This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
     as a basis and randomly selects a fraction of those chunks.
-    This means that only start chunk number is randomized while the chunk phase
-    is always the same.
+    This means that only start chunk number is randomized while the chunk relative offset
+    is always the same. In other workds,
     """
     chunksize = int(chunksize)
     arr2d = reshaped_chunks(arr, chunksize)
     indices = random.sample(range(arr2d.shape[0]), num_samples)
-    return ChunkGenerator(lambda i: arr2d[indices[i]], num_samples)
+    return IndexChunkGenerator(arr2d, lambda i: slice(indices[i], indices[i]), num_samples, copy=copy)
 
 
 def random_sample_chunks(arr, chunksize, num_samples):
     """
-    A chunk-generating function that can be used for parallelFFTReduce().
+    Generate num_samples completely random sample chunks of size chunksize.
+    
+    The random indexes are generated on initialization,
+    so subsequent calls using the same index return the same sample.
+
+
     """
     chunksize = int(chunksize)
     start_idxs = range(arr.shape[0] - (chunksize - 1))
     indices = random.sample(start_idxs, num_samples)
-    return ChunkGenerator(lambda i: arr[indices[i]:indices[i] + chunksize], num_samples)
+    return IndexChunkGenerator(arr, lambda i: slice(indices[i], indices[i] + chunksize), num_samples)
 
 
 def reshaped_chunks(arr, chunksize):
@@ -153,4 +228,4 @@ def array_to_chunkgen(arr):
     Convert a potentially multidimensional NumPy array-like
     to a ChunkGenerator(), using the values along the first axis.
     """
-    return ChunkGenerator(lambda i: arr[i], arr.shape[0])
+    return IndexChunkGenerator(arr, lambda i: slice(i, i), arr.shape[0])
