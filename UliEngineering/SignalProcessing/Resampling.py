@@ -9,7 +9,7 @@ import numpy as np
 import bisect
 import concurrent.futures
 import scipy.interpolate
-from UliEngineering.Utils.Concurrency import new_thread_executor
+from UliEngineering.Utils.Concurrency import QueuedThreadExecutor
 from .Utils import LinRange
 
 __all__ = ["resample_discard", "resampled_timespace",
@@ -201,7 +201,7 @@ def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
     if out is None:
         out = np.zeros(len(new_t))
     if executor is None:
-        executor = new_thread_executor()
+        executor = QueuedThreadExecutor()
     ovp_size = int(math.floor(overprovisioning_factor * chunksize))
     # How many chunks do we have to process?
     numchunks = len(new_t) // chunksize

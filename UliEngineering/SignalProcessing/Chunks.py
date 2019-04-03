@@ -91,9 +91,8 @@ class ChunkGenerator(object):
         Parameters
         ----------
         executor : A concurrent.futures.Executor
-            Depending on the application you should use either a
-            concurrent.futures.ThreadPoolExecutor
-            or a concurrent.futures.ProcessPoolExecutor.
+            Since this writes directly to the result array,
+            ProcessPoolExecutors are currently unsupported.
         """
         arr = np.zeros(len(self))
         if executor is None:

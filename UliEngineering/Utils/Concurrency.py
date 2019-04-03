@@ -4,15 +4,19 @@ Concurrency utilities
 """
 import concurrent.futures
 import os
+import queue
 
-__all__ = ["new_thread_executor"]
+__all__ = ["QueuedThreadExecutor"]
 
-
-def new_thread_executor(nthreads=None):
+class QueuedThreadExecutor(concurrent.futures.ThreadPoolExecutor):
     """
-    Create a new thread-based concurrent.futures executor that
-    is optimized for CPU-bound work
+    In contrast to the normal ThreadPoolExecutor, this executor has
+    the advantage of having a configurable queue size,
+    enabling more efficient processing especially with irregular,
+    slow or asynchronous queue feeders
     """
-    if nthreads is None:
-        nthreads = os.cpu_count() or 4
-    return concurrent.futures.ThreadPoolExecutor(nthreads)
+    def __init__(self, nthreads=None, queue_size=100):
+        if nthreads is None:
+            nthreads = os.cpu_count() or 4
+        super().__init__(nthreads)
+        self._work_queue = queue.Queue(queue_size)

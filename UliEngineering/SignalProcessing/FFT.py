@@ -12,7 +12,7 @@ from .Chunks import overlapping_chunks
 from .Window import create_and_apply_window, WindowFunctor
 import concurrent.futures
 from collections import namedtuple
-from UliEngineering.Utils.Concurrency import *
+from UliEngineering.Utils.Concurrency import QueuedThreadExecutor
 from UliEngineering.SignalProcessing.Utils import remove_mean
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce", "FFTPoint",
@@ -191,7 +191,7 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
     if executor is None:
-        executor = new_thread_executor()
+        executor = QueuedThreadExecutor()
     # Compute common parameters
     window = WindowFunctor(fftsize, window)
     fftSum = np.zeros(fftsize // 2)
