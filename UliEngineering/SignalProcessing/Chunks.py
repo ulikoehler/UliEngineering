@@ -187,7 +187,7 @@ def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False)
     chunksize = int(chunksize)
     arr2d = reshaped_chunks(arr, chunksize)
     indices = random.sample(range(arr2d.shape[0]), num_samples)
-    return IndexChunkGenerator(arr2d, lambda i: slice(indices[i], indices[i]), num_samples, copy=copy)
+    return IndexChunkGenerator(arr2d, lambda i: indices[i], num_samples, copy=copy)
 
 
 def random_sample_chunks(arr, chunksize, num_samples):
