@@ -34,7 +34,6 @@ While *scipy* is technically optional and listed as an optional dependency, many
  * UliEngineering.SignalProcessing.FFT
  * UliEngineering.SignalProcessing.Correlation
  * UliEngineering.SignalProcessing.Utils
- * UliEngineering.Physics.Temperature
  * UliEngineering.Physics.JohnsonNyquistNoise
  * Some functions in UliEngineering.SignalProcessing.Simulation
 

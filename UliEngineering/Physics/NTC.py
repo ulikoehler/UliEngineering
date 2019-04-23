@@ -9,7 +9,7 @@ from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 import numpy as np
-from scipy.constants import zero_Celsius
+from .Temperature import zero_Celsius
 
 __all__ = ["ntc_resistance", "ntc_resistances"]
 

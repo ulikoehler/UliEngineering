@@ -6,7 +6,11 @@ Utilities regarding temperatures
 from UliEngineering.EngineerIO import normalize_engineer_notation
 from UliEngineering.Units import Unit
 from UliEngineering.Exceptions import InvalidUnitException
-from scipy.constants import zero_Celsius
+
+try:
+    from scipy.constants import zero_Celsius
+except:
+    zero_Celsius = 273.15 # Defined to that value
 
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",
