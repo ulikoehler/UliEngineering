@@ -3,7 +3,7 @@
 """
 Utilities for FFT computation and visualization
 """
-import scipy.fftpack
+import warnings
 import numpy as np
 import functools
 from toolz import functoolz
@@ -15,9 +15,19 @@ from collections import namedtuple
 from UliEngineering.Utils.Concurrency import QueuedThreadExecutor
 from UliEngineering.SignalProcessing.Utils import remove_mean
 
+
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce", "FFTPoint",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "fft_frequencies", "FFT",
            "serial_fft_reduce", "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
+
+# Optional scipy dependency: Use either faster scipy or fallback to numpy
+try:
+    import scipy.fftpack
+    _fft_backend = scipy.fftpack.fft
+except ModuleNotFoundError:
+    import numpy.fft
+    _fft_backend = numpy.fft
+    warnings.warn("Using NumPy FFT backend fallback, install scipy for faster FFTs!", RuntimeWarning)
 
 FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
 
