@@ -26,7 +26,7 @@ try:
     _fft_backend = scipy.fftpack.fft
 except ModuleNotFoundError:
     import numpy.fft
-    _fft_backend = numpy.fft
+    _fft_backend = numpy.fft.fft
     warnings.warn("Using NumPy FFT backend fallback, install scipy for faster FFTs!", RuntimeWarning)
 
 FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
