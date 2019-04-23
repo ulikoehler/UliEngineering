@@ -4,7 +4,6 @@
 Utilities for FFT computation and visualization
 """
 import numpy as np
-import scipy.signal
 import functools
 from UliEngineering.EngineerIO import normalize_numeric
 
@@ -46,10 +45,20 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
 
 sine_wave = functools.partial(_generate_wave, np.sin)
 cosine_wave = functools.partial(_generate_wave, np.cos)
-square_wave = functools.partial(_generate_wave, scipy.signal.square)
-triangle_wave = functools.partial(_generate_wave,
-    functools.partial(scipy.signal.sawtooth, width=0.5))
-sawtooth = functools.partial(_generate_wave,
-    functools.partial(scipy.signal.sawtooth, width=1))
-inverse_sawtooth = functools.partial(_generate_wave,
-    functools.partial(scipy.signal.sawtooth, width=0))
+
+try:
+    import scipy.signal
+    square_wave = functools.partial(_generate_wave, scipy.signal.square)
+    triangle_wave = functools.partial(_generate_wave,
+        functools.partial(scipy.signal.sawtooth, width=0.5))
+    sawtooth = functools.partial(_generate_wave,
+        functools.partial(scipy.signal.sawtooth, width=1))
+    inverse_sawtooth = functools.partial(_generate_wave,
+        functools.partial(scipy.signal.sawtooth, width=0))
+except ModuleNotFoundError:
+    def _error_fn(*args, **kwargs):
+        raise NotImplementedError("You need to install scipy to use this function!")
+    square_wave = _error_fn
+    triangle_wave = _error_fn
+    sawtooth = _error_fn
+    inverse_sawtooth = _error_fn

@@ -20,6 +20,18 @@ Run this command on your favourite shell:
 sudo pip3 install git+https://github.com/ulikoehler/UliEngineering.git
 ```
 
+We *highly recommend* you also install scipy:
+```
+sudo pip3 install scipy
+```
+(you can also use `sudo apt install python3-scipy` on Debian-based Linux distros).
+
+While *scipy* is technically optional and listed as an optional dependency, many UliEngineering modules can't be used without it, including:
+
+ * UliEngineering.Length
+ * UliEngineering.SignalProcessing.Selection
+ * Some functions in UliEngineering.SignalProcessing.Simulation
+
 After that you can use UliEngineering from any Python3 instance. Example:
 
 ```
