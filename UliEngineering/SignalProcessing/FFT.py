@@ -154,7 +154,7 @@ def compute_fft(y, samplerate, window="blackman", window_param=None):
     """
     n = len(y)
     windowedY = create_and_apply_window(y, window, param=window_param)
-    w = scipy.fftpack.fft(windowedY)[:n // 2]
+    w = _fft_backend(windowedY)[:n // 2]
     w_norm = 2.0 * np.abs(w) / n  # Perform amplitude normalization
     x = fft_frequencies(n, samplerate)
     angles = np.rad2deg(np.angle(w))
@@ -170,7 +170,7 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
     if removeDC:
         yslice = remove_mean(yslice)
     # Compute FFT
-    fftresult = scipy.fftpack.fft(window(yslice))
+    fftresult = _fft_backend(window(yslice))
     # Perform amplitude normalization
     return i, np.abs(fftresult[:fftsize // 2])
 
