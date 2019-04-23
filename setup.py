@@ -16,7 +16,10 @@ setup(name='UliEngineering',
       license='Apache License v2.0',
       packages=find_packages(exclude=['tests*']),
       include_package_data=True,
-      install_requires=['numpy (>= 1.5)', 'scipy (>= 0.5)', 'toolz (>= 0.5)'],
+      install_requires=['numpy (>= 1.5)', 'toolz (>= 0.5)'],
+      extras_require= {
+        'Faster FFTs': ['scipy (>= 0.5)']
+      },
       test_suite='nose.collector',
       tests_require=['nose', 'coverage', 'mock', 'rednose', 'parameterized'],
       setup_requires=['nose>=1.0'],
