@@ -18,7 +18,7 @@ setup(name='UliEngineering',
       include_package_data=True,
       install_requires=['numpy (>= 1.5)', 'toolz (>= 0.5)'],
       extras_require= {
-        'Faster FFTs': ['scipy (>= 0.5)']
+        'SciPy functionality': ['scipy (>= 0.5)']
       },
       test_suite='nose.collector',
       tests_require=['nose', 'coverage', 'mock', 'rednose', 'parameterized'],
