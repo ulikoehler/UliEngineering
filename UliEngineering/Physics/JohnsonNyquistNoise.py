@@ -9,7 +9,6 @@ Johnson Nyquist noise utilities for both voltage and current noise
 >>> print(autoFormat(johnson_nyquist_noise_current, "20 MΩ", 1000, "20 °C"))
 >>> print(autoFormat(johnson_nyquist_noise_voltage, "10 MΩ", 1000, 25))
 """
-import scipy.constants
 from .Temperature import normalize_temperature
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
@@ -17,6 +16,13 @@ import math
 
 __all__ = ["johnson_nyquist_noise_current", "johnson_nyquist_noise_voltage"]
 
+try:
+    from scipy.constants import k as boltzmann_k
+except ModuleNotFoundError:
+    # Accept and use hardcoded but warn
+    import warnings
+    warnings.warn("Using hardcoded Boltzmann k_b constant value. This is a measured quantity! Installing scipy is recommended!", RuntimeWarning)
+    boltzmann_k = 1.38064852e-23 # Recommended value as of 2015
 
 def johnson_nyquist_noise_current(r, delta_f, T) -> Unit("A"):
     """
@@ -28,7 +34,7 @@ def johnson_nyquist_noise_current(r, delta_f, T) -> Unit("A"):
     delta_f = normalize_numeric(delta_f)
     t_kelvin = normalize_temperature(T)
     # Support celsius and kelvin inputs
-    return math.sqrt((4 * scipy.constants.k * t_kelvin * delta_f)/r)
+    return math.sqrt((4 * boltzmann_k * t_kelvin * delta_f)/r)
 
 
 def johnson_nyquist_noise_voltage(r, delta_f, T) -> Unit("V"):
@@ -40,4 +46,4 @@ def johnson_nyquist_noise_voltage(r, delta_f, T) -> Unit("V"):
     r = normalize_numeric(r)
     delta_f = normalize_numeric(delta_f)
     t_kelvin = normalize_temperature(T)
-    return math.sqrt(4 * scipy.constants.k * t_kelvin * delta_f * r)
+    return math.sqrt(4 * boltzmann_k * t_kelvin * delta_f * r)
