@@ -30,6 +30,12 @@ While *scipy* is technically optional and listed as an optional dependency, many
 
  * UliEngineering.Length
  * UliEngineering.SignalProcessing.Selection
+ * UliEngineering.SignalProcessing.Interpolation
+ * UliEngineering.SignalProcessing.FFT
+ * UliEngineering.SignalProcessing.Correlation
+ * UliEngineering.SignalProcessing.Utils
+ * UliEngineering.Physics.Temperature
+ * UliEngineering.Physics.JohnsonNyquistNoise
  * Some functions in UliEngineering.SignalProcessing.Simulation
 
 After that you can use UliEngineering from any Python3 instance. Example:
