@@ -7,7 +7,6 @@ import numpy as np
 import datetime
 import numbers
 import functools
-import scipy.signal
 from toolz import functoolz
 from bisect import bisect_left, bisect_right
 import collections
@@ -197,32 +196,38 @@ def _check_extrema_comparator(comparator):
     if comparator != np.greater and comparator != np.less:
         raise ValueError("Comparator may only be np.greater or np.less")
 
-def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
-    """
-    Find extrema using the given method and parameters, order them by y value and
-    return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
-    x and y value, with the 1st dimension being sorted in descending order.
 
-    The comparator may be 
+try:
+    import scipy.signal
+    def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
+        """
+        Find extrema using the given method and parameters, order them by y value and
+        return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
+        x and y value, with the 1st dimension being sorted in descending order.
 
-    This means that ret[0] contains the x, y coordinate of the most significant extremum
-    (where the significancy is determined by the comparator)
+        The comparator may be 
 
-    Parameters
-    ----------
-    mode : string
-        How the edges of the vector are treated.
-        Either 'clip', 'raise' or 'wrap',
-        see numpy.take for more details
-    comparator:
-        Either np.greater or np.less.
-        np.greater => Find maxima
-        np.less => Find minima
-    """
-    _check_extrema_comparator(comparator)
-    # Determine extrema and x/y values at those indices
-    extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
-    return __mapAndSortIndices(x, y, extrema, comparator == np.greater)
+        This means that ret[0] contains the x, y coordinate of the most significant extremum
+        (where the significancy is determined by the comparator)
+
+        Parameters
+        ----------
+        mode : string
+            How the edges of the vector are treated.
+            Either 'clip', 'raise' or 'wrap',
+            see numpy.take for more details
+        comparator:
+            Either np.greater or np.less.
+            np.greater => Find maxima
+            np.less => Find minima
+        """
+        _check_extrema_comparator(comparator)
+        # Determine extrema and x/y values at those indices
+        extrema = scipy.signal.argrelextrema(y, comparator, 0, order, mode)[0]
+        return __mapAndSortIndices(x, y, extrema, comparator == np.greater)
+except ModuleNotFoundError:
+    def find_sorted_extrema(*args, **kwargs):
+        raise NotImplementedError("You need to install scipy to use find_sorted_extrema()!")
 
 def select_by_threshold(fx, fy, thresh, comparator=np.greater):
     """
