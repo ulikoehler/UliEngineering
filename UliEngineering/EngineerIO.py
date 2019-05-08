@@ -269,7 +269,7 @@ class EngineerIO(object):
         #Pre-multiply the value
         v = v * (10.0 ** -(suffixMapIdx * 3))
         #Delegate the rest of the task to the helper
-        return _formatWithSuffix(v, self.exp_suffix_map[suffixMapIdx] + unit)
+        return _format_with_suffix(v, self.exp_suffix_map[suffixMapIdx] + unit)
 
     def auto_suffix_1d(self, arr):
         """
@@ -400,7 +400,7 @@ def normalize_interpunctation(s):
     return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
 
 
-def _formatWithSuffix(v, suffix="", significant_digits=3):
+def _format_with_suffix(v, suffix="", significant_digits=3):
     """
     Format a given value with a given suffix.
     This helper function formats the value to 3 visible digits.

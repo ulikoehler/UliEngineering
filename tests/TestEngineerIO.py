@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import _formatWithSuffix
+from UliEngineering.EngineerIO import _format_with_suffix
 from parameterized import parameterized
 import functools
 import numpy as np
@@ -106,11 +106,11 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), (1e5, "Ω"))
 
     def test_formatWithSuffix(self):
-        assert_equal(_formatWithSuffix(1.01, "A"), '1.01 A')
-        assert_equal(_formatWithSuffix(1, "A"), '1.00 A')
-        assert_equal(_formatWithSuffix(101, "A"), '101 A')
-        assert_equal(_formatWithSuffix(99.9, "A"), '99.9 A')
-        assert_equal(_formatWithSuffix(1000.0, ""), '1000')
+        assert_equal(_format_with_suffix(1.01, "A"), '1.01 A')
+        assert_equal(_format_with_suffix(1, "A"), '1.00 A')
+        assert_equal(_format_with_suffix(101, "A"), '101 A')
+        assert_equal(_format_with_suffix(99.9, "A"), '99.9 A')
+        assert_equal(_format_with_suffix(1000.0, ""), '1000')
 
     def test_format(self):
         assert_equal(self.io.format(1.0e-15, "V"), '1.00 fV')
