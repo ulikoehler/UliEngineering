@@ -105,12 +105,14 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.normalize("100 kΩ"), (1e5, "Ω"))
         assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), (1e5, "Ω"))
 
-    def test_formatWithSuffix(self):
+    def test_format_with_suffix(self):
         assert_equal(_format_with_suffix(1.01, "A"), '1.01 A')
         assert_equal(_format_with_suffix(1, "A"), '1.00 A')
         assert_equal(_format_with_suffix(101, "A"), '101 A')
         assert_equal(_format_with_suffix(99.9, "A"), '99.9 A')
         assert_equal(_format_with_suffix(1000.0, ""), '1000')
+        # More significant digits
+        assert_equal(_format_with_suffix(1.01, "A", significant_digits=4), '1.010 A')
 
     def test_format(self):
         assert_equal(self.io.format(1.0e-15, "V"), '1.00 fV')
@@ -122,6 +124,10 @@ class TestEngineerIO(object):
         assert_equal(self.io.format(2.3456789e-6, "V"), '2.35 µV')
         assert_equal(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
         assert_equal(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
+        # More significant digits
+        assert_equal(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
+        assert_equal(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
+        assert_equal(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
 
     @raises(ValueError)
     def test_format_invalid(self):

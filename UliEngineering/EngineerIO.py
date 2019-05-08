@@ -255,7 +255,7 @@ class EngineerIO(object):
         except ValueError:
             return None
 
-    def format(self, v, unit=""):
+    def format(self, v, unit="", significant_digits=3):
         """
         Format v using SI suffices with optional units.
         Produces a string with 3 visible digits.
@@ -269,7 +269,11 @@ class EngineerIO(object):
         #Pre-multiply the value
         v = v * (10.0 ** -(suffixMapIdx * 3))
         #Delegate the rest of the task to the helper
-        return _format_with_suffix(v, self.exp_suffix_map[suffixMapIdx] + unit)
+        return _format_with_suffix(
+            v,
+            self.exp_suffix_map[suffixMapIdx] + unit,
+            significant_digits=significant_digits
+        )
 
     def auto_suffix_1d(self, arr):
         """
@@ -293,14 +297,14 @@ class EngineerIO(object):
         multiplier = 10.0 ** -(suffix_idx * 3)
         return multiplier, self.exp_suffix_map[suffix_idx]
 
-    def auto_format(self, fn, *args, **kwargs):
+    def auto_format(self, fn, *args, significant_digits=3, **kwargs):
         """
         Auto-format a value by leveraging function annotations.
         For example this can be used to format using UliEngineering Physics quantities
         The function's return value is expected to a be annotated with a Quantity() value.
         """
         unit = find_returned_unit(fn)
-        return self.format(fn(*args, **kwargs), unit=unit)
+        return self.format(fn(*args, **kwargs), unit=unit, significant_digits=significant_digits)
 
     def normalize_numeric_safe(self, arg):
         """
@@ -427,7 +431,7 @@ def _format_with_suffix(v, suffix="", significant_digits=3):
 def normalize_engineer_notation(s, encoding="utf8"):
     return EngineerIO.instance.normalize(s)
 
-def format_value(v, unit=""):
+def format_value(v, unit="", significant_digits=3):
     return EngineerIO.instance.format(v, unit)
 
 def normalize_engineer_notation_safe(v, unit=""):
