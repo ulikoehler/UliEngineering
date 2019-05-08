@@ -68,7 +68,7 @@ def _default_units(include_m=False):
     ]).union(_length_units(include_m=include_m))
 
 # Valid unit designators. Ensure no SI suffix is added here
-_numeric_allowed = set("0123456789-e.")
+_numeric_allowed = set("+0123456789-e.")
 
 class EngineerIO(object):
     instance = None
