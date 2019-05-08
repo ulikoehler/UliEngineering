@@ -12,7 +12,7 @@ __all__ = ["ValueRange", "value_range_over_temperature"]
 
 ValueRange = namedtuple("ValueRangeOverTemperature", ["min", "max"])
 
-def value_range_over_temperature(nominal, coefficient="100ppm", tmin="-40 °C", tmax="85 °C", tnom="25 °C"):
+def value_range_over_temperature(nominal, coefficient="100ppm", tmin="-40 °C", tmax="85 °C", tnom="25 °C", significant_digits=4):
     """
     Given a component which has a nominal value (e.g. "1 kΩ")
     at tnom (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
@@ -25,8 +25,27 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tmin="-40 °C", 
     Alternatively, it can be given as a 2-tuple indicating separate "+"
     and "-" values (e.g. ("0 ppm", "100 ppm")).
 
+    Optionally, a component tolerance can be given (defaults to "0 %")
+    to also account for static (temperature-independent) differences. 
+
     Usage example:
 
+    Keyword arguments
+    -----------------
+    nominal : number or string
+        The nominal value of the component e.g. 1023 or "1.023 kΩ"
+    coefficient : number or string
+        The temperature coefficient of the component per °C
+        e.g. "100 ppm", "1 %" or 100e-6
+    tmin : number of string
+        The minimum temperature to consider in °C, e.g. "-40 °C". or -40.
+    tmax : number of string
+        The maximum temperature to consider in °C, e.g. "85 °C". or 85.
+    tnom : number or string
+        The temperature at which the nominal value was measured.
+        If not specified in the component datasheet, this is usually "20 °C" or "25 °C".
+    significant_digits : integer
+        How many significant digits to show in the resulting value strings
     Returns
     -------
     A ValueRange() instance containing strings with the correct unit, if any.
@@ -60,7 +79,7 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tmin="-40 °C", 
     max_value = pos_factor * nominal
 
     return ValueRange(
-        format_value(min_value, unit),
-        format_value(max_value, unit)
+        format_value(min_value, unit, significant_digits=significant_digits),
+        format_value(max_value, unit, significant_digits=significant_digits)
     )
     
