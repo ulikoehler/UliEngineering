@@ -432,7 +432,7 @@ def normalize_engineer_notation(s, encoding="utf8"):
     return EngineerIO.instance.normalize(s)
 
 def format_value(v, unit="", significant_digits=3):
-    return EngineerIO.instance.format(v, unit)
+    return EngineerIO.instance.format(v, unit, significant_digits=significant_digits)
 
 def normalize_engineer_notation_safe(v, unit=""):
     return EngineerIO.instance.safe_normalize(v, unit)
