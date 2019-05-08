@@ -400,16 +400,25 @@ def normalize_interpunctation(s):
     return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
 
 
-def _formatWithSuffix(v, suffix=""):
+def _formatWithSuffix(v, suffix="", significant_digits=3):
     """
     Format a given value with a given suffix.
     This helper function formats the value to 3 visible digits.
-    v must be pre-multiplied by the factor implied by the suffix
+    v must be pre-multiplied by the factor implied by the suffix.
+
+    Keyword arguments
+    -----------------
+    suffix : string
+        The suffix to append
+    significant_digits : integer
+        The number of overall significant digits to show
     """
+    if v < 1.0:
+        res = ("{:." + str(significant_digits - 0) + "f}").format(v)
     if v < 10.0:
-        res = "{:.2f}".format(v)
+        res = ("{:." + str(significant_digits - 1) + "f}").format(v)
     elif v < 100.0:
-        res = "{:.1f}".format(v)
+        res = ("{:." + str(significant_digits - 2) + "f}").format(v)
     else:  # Should only happen if v < 1000
         res = str(int(round(v)))
     #Avoid appending whitespace if there is no suffix
