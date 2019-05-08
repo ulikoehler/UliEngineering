@@ -46,8 +46,8 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tmin="-40 °C", 
         if len(coefficient) != 2:
             raise ValueError("If coefficient is given as a tuple, it must have length 2. Coefficient is {}".format(coefficient))
         # Parse tuple
-        pos_coefficient = normalize_numeric(coefficient[0])
-        neg_coefficient = normalize_numeric(coefficient[1])
+        neg_coefficient = normalize_numeric(coefficient[0])
+        pos_coefficient = normalize_numeric(coefficient[1])
     else:
         coefficient = normalize_numeric(coefficient)
         pos_coefficient = coefficient

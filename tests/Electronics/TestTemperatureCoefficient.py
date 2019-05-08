@@ -12,3 +12,16 @@ class TestTemperatureCoefficient(object):
         assert_equal(value_range_over_temperature("1 kΩ", "100 ppm"),
             ValueRange("994 Ω", "1.01 kΩ")
         )
+    
+    def test_value_range_over_temperature2(self):
+        # Test with +- the same ppm input
+        assert_equal(value_range_over_temperature("1 kΩ", ("100 ppm", "100 ppm")),
+            ValueRange("994 Ω", "1.01 kΩ")
+        )
+    
+    def test_value_range_over_temperature3(self):
+        # Test with +- the same ppm input
+        assert_equal(value_range_over_temperature("1 kΩ", ("0 ppm", "100 ppm")),
+            ValueRange("1000 Ω", "1.01 kΩ")
+        )
+
