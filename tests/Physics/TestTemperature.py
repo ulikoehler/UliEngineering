@@ -52,3 +52,11 @@ class TestTemperatureConversion(object):
         assert_approx_equal(fahrenheit_to_celsius("20 °F"), -6.66666667)
         assert_approx_equal(fahrenheit_to_celsius(20.), -6.666666667)
         assert_equal(auto_format(fahrenheit_to_celsius, "20 °F"), "-6.67 °C")
+
+    def test_fahrenheit_to_kelvin(self):
+        assert_approx_equal(fahrenheit_to_kelvin("11 °F"), 261.483333333)
+        assert_approx_equal(fahrenheit_to_kelvin(11.), 261.483333333)
+        assert_approx_equal(fahrenheit_to_kelvin("20 °F"), 266.483333333)
+        assert_approx_equal(fahrenheit_to_kelvin(20.), 266.483333333)
+        assert_equal(auto_format(fahrenheit_to_kelvin, "20 °F"), "266 K")
+

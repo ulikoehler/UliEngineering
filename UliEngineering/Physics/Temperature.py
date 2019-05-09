@@ -25,10 +25,10 @@ def kelvin_to_celsius(c) -> Unit("°C"):
     return c - zero_Celsius
 
 def fahrenheit_to_kelvin(f) -> Unit("K"):
+    f = normalize_numeric(f)
     return (f + 459.67) * 5.0 / 9.0
 
 def fahrenheit_to_celsius(f) -> Unit("°C"):
-    f = normalize_numeric(f)
     return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
 def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
