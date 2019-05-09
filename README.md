@@ -65,3 +65,4 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [Easily compute & visualize FFTs in Python using UliEngineering](https://techoverflow.net/2018/12/31/easily-compute-visualize-ffts-in-python-using-uliengineering/)
    - [Computing resistor power dissipation in Python using UliEngineering](https://techoverflow.net/2019/05/09/computing-the-temperature-under-load-of-your-electronics-components-in-python-using-uliengineering/)
    - [Computing crystal load capacitance using Python & UliEngineering](https://techoverflow.net/2019/05/10/computing-crystal-load-capacitance-using-python-uliengineering/)
+   - [How to convert Celsius/Fahrenheit/Kelvin temperatures in Python using UliEngineering](https://techoverflow.net/2019/05/10/how-to-convert-celsius-fahrenheit-kelvin-temperatures-in-python-using-uliengineering/)
