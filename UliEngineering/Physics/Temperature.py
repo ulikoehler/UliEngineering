@@ -33,7 +33,7 @@ def fahrenheit_to_kelvin(f) -> Unit("K"):
 def fahrenheit_to_celsius(f) -> Unit("°C"):
     return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
-def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
+def normalize_temperature(t, default_unit="°C") -> Unit("K"):
     """
     Normalize a temperature to kelvin.
     If it is a number or it has no unit, assume it is a default unit
@@ -56,7 +56,6 @@ def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
         return fahrenheit_to_kelvin(t)
     else:
         raise InvalidUnitException("Unknown temperature unit: '{0}'".format(unit))
-
 
 def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
