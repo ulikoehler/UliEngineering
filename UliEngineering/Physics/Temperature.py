@@ -22,6 +22,7 @@ def celsius_to_kelvin(c) -> Unit("°K"):
     return c + zero_Celsius
 
 def kelvin_to_celsius(c) -> Unit("°C"):
+    c = normalize_numeric(c)
     return c - zero_Celsius
 
 def fahrenheit_to_kelvin(f) -> Unit("K"):
