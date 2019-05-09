@@ -98,6 +98,7 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_unit("3.2 ΔMHz"), ('3.2 ΔM', 'Hz'))
         assert_tuple_equal(self.io.split_unit("100 mV"), ('100 m', 'V'))
         assert_tuple_equal(self.io.split_unit("3.2 ΔHz"), ('3.2', 'Hz'))
+        assert_tuple_equal(self.io.split_unit("50 °C/W"), ('50', '°C/W'))
         assert_tuple_equal(self.io.split_unit(""), ('', ''))
 
 

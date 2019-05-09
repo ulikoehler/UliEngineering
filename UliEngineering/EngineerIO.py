@@ -65,6 +65,8 @@ def _default_units(include_m=False):
         's', 'h', 'min',
         # Fraction
         'ppm', 'ppb', '%',
+        # Composite units
+        '°C/W'
     ]).union(_length_units(include_m=include_m))
 
 # Valid unit designators. Ensure no SI suffix is added here
