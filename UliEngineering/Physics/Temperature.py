@@ -15,20 +15,21 @@ except:
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",
            "normalize_temperature_celsius",
-           "temperature_with_dissipation"]
-
+           "temperature_with_dissipation",
+           "fahrenheit_to_celsius"]
 
 def celsius_to_kelvin(c) -> Unit("°K"):
     return c + zero_Celsius
 
-
 def kelvin_to_celsius(c) -> Unit("°C"):
     return c - zero_Celsius
-
 
 def fahrenheit_to_kelvin(f) -> Unit("K"):
     return (f + 459.67) * 5.0 / 9.0
 
+def fahrenheit_to_celsius(f) -> Unit("°C"):
+    f = normalize_numeric(f)
+    return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
 def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
     """

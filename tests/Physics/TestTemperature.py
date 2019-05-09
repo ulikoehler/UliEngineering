@@ -44,3 +44,11 @@ class TestTemperature(object):
     @raises(ValueError)
     def testInvalidUnit(self):
         normalize_temperature("1G50 G")
+
+class TestTemperatureConversion(object):
+    def test_fahrenheit_to_celsius(self):
+        assert_approx_equal(fahrenheit_to_celsius("11 °F"), -11.66666667)
+        assert_approx_equal(fahrenheit_to_celsius(11.), -11.666666667)
+        assert_approx_equal(fahrenheit_to_celsius("20 °F"), -6.66666667)
+        assert_approx_equal(fahrenheit_to_celsius(20.), -6.666666667)
+        assert_equal(auto_format(fahrenheit_to_celsius, "20 °F"), "-6.67 °C")
