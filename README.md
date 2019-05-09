@@ -17,6 +17,12 @@ Pull requests and bugreports of any kind are happily accepted.
 Run this command on your favourite shell:
 
 ```
+sudo pip3 install UliEngineering
+```
+
+In order to install the latest bleeding-edge version, use:
+
+```
 sudo pip3 install git+https://github.com/ulikoehler/UliEngineering.git
 ```
 
