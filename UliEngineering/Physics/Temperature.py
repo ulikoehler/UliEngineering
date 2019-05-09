@@ -43,7 +43,7 @@ def normalize_temperature(t, default_unit="°C") -> Unit("K"):
     if isinstance(t, str):
         res = normalize_engineer_notation(t)
         if res is None:
-            raise ValueError("Invalid temperature string: {0}".format(t))
+            raise ValueError("Invalid temperature string: {}".format(t))
         t, unit = res
     if not unit:
         unit = default_unit
@@ -55,7 +55,7 @@ def normalize_temperature(t, default_unit="°C") -> Unit("K"):
     elif unit in ["°F", "F"]:
         return fahrenheit_to_kelvin(t)
     else:
-        raise InvalidUnitException("Unknown temperature unit: '{0}'".format(unit))
+        raise InvalidUnitException("Unknown temperature unit: '{}'".format(unit))
 
 def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
