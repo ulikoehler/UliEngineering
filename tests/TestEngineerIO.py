@@ -133,6 +133,10 @@ class TestEngineerIO(object):
     def test_format_invalid(self):
         self.io.format(1.0e-25, "V")
 
+    def test_format_no_unit(self):
+        assert_equal(self.io.format(1.999999, ""), '2.00')
+        assert_equal(self.io.format(1.999999, None), '2.00')
+
     def testRounding(self):
         assert_equal(self.io.format(1.999999, ""), '2.00')
         assert_equal(self.io.format(19.99999, ""), '20.0')

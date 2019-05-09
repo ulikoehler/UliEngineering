@@ -260,6 +260,8 @@ class EngineerIO(object):
         Format v using SI suffices with optional units.
         Produces a string with 3 visible digits.
         """
+        if unit is None:
+            unit = ""
         #Suffix map is indexed by one third of the decadic logarithm.
         exp = 0 if v == 0. else math.log(abs(v), 10.)
         suffixMapIdx = int(math.floor(exp / 3.))
