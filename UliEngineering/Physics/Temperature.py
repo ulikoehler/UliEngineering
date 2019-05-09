@@ -18,7 +18,8 @@ __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "temperature_with_dissipation",
            "fahrenheit_to_celsius"]
 
-def celsius_to_kelvin(c) -> Unit("°K"):
+def celsius_to_kelvin(c) -> Unit("K"):
+    c = normalize_numeric(c)
     return c + zero_Celsius
 
 def kelvin_to_celsius(c) -> Unit("°C"):

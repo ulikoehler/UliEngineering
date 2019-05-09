@@ -67,3 +67,11 @@ class TestTemperatureConversion(object):
         assert_approx_equal(kelvin_to_celsius(300.), 26.85)
         assert_equal(auto_format(kelvin_to_celsius, "300 K"), "26.9 °C")
 
+    def test_celsius_to_kelvin(self):
+        assert_approx_equal(celsius_to_kelvin("-262.15 °C"), 11.)
+        assert_approx_equal(celsius_to_kelvin(-262.15), 11.)
+        assert_approx_equal(celsius_to_kelvin("26.85 °C"), 300.)
+        assert_approx_equal(celsius_to_kelvin(26.85), 300.)
+        assert_equal(auto_format(celsius_to_kelvin, "26.85 °C"), "300 K")
+
+
