@@ -4,39 +4,14 @@
 Utilities for computing temperature coefficients
 and their effects
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize, format_value
+from UliEngineering.EngineerIO import normalize_numeric, normalize
 from UliEngineering.Units import Unit
 from UliEngineering.Physics.Temperature import normalize_temperature
+from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
+from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
 from collections import namedtuple
 
-__all__ = ["ValueRange", "value_range_over_temperature", "value_at_temperature"]
-
-ValueRange = namedtuple("ValueRangeOverTemperature", ["min", "max"])
-
-def _normalize_minmax_tuple(arg, name="field"):
-    """
-    Interprets arg either a single +- value or as
-    a 2-tuple of + and - values.
-    All vaues 
-
-    If arg is a tuple:
-        Return ValueRange(arg[0], arg[1]) (strings are normalized)
-    Else:
-        Return ValueRange(-arg, +arg) (strings are normalized)
-    """
-    # Parse coefficient and compute min & max factors
-    if isinstance(arg, tuple):
-        # Check length 2
-        if len(arg) != 2:
-            raise ValueError("If {} is given as a tuple, it must have length 2. {} is {}".format(name, name, arg))
-        # Parse tuple
-        min_value = normalize_numeric(arg[0])
-        max_value = normalize_numeric(arg[1])
-    else:
-        arg = normalize_numeric(arg)
-        min_value = -arg
-        max_value = arg
-    return ValueRange(min_value, max_value)
+__all__ = ["value_range_over_temperature", "value_at_temperature"]
 
 def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°C"):
     """
@@ -147,15 +122,10 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     tdelta_neg = tmin - tref
     tdelta_pos = tmax - tref
     nominal, unit = normalize(nominal)
-    # Parse static tolerance
-    min_tol_coeff, max_tol_coeff = _normalize_minmax_tuple(tolerance, name="tolerance")
-    tol_neg_factor = 1. + min_tol_coeff
-    tol_pos_factor = 1. + max_tol_coeff
     # Compute nominal factors by static tolerance
-    tol_min_value = tol_neg_factor * nominal
-    tol_max_value = tol_pos_factor * nominal
+    tol_min_value, tol_max_value, _ = value_range_over_tolerance(nominal, tolerance)
     # Parse coefficient
-    min_coeff, max_coeff = _normalize_minmax_tuple(coefficient, name="coefficient")
+    min_coeff, max_coeff, _ = normalize_minmax_tuple(coefficient, name="coefficient")
     # NOTE: Minimum & maximum value could be any of those (?)
     args = [
         tol_min_value * (1. + (tdelta_neg * min_coeff)),
@@ -171,8 +141,5 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     min_temp = min(args)
     max_temp = max(args)
  
-    return ValueRange(
-        format_value(min_temp, unit, significant_digits=significant_digits),
-        format_value(max_temp, unit, significant_digits=significant_digits)
-    )
+    return ValueRange(min_temp, max_temp, unit, significant_digits)
     
