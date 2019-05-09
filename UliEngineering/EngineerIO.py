@@ -27,7 +27,7 @@ from .Units import *
 from .Utils.String import suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
-           "auto_format", "normalize_numeric", "format_value",
+           "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe"]
 
 
@@ -310,6 +310,9 @@ class EngineerIO(object):
         unit = find_returned_unit(fn)
         return self.format(fn(*args, **kwargs), unit=unit, significant_digits=significant_digits)
 
+    def auto_print(self, *args, **kwargs):
+        print(self.auto_format(*args, **kwargs))
+
     def normalize_numeric_safe(self, arg):
         """
         Normalize each element of an iterable and retrieve only the numeric value
@@ -449,3 +452,6 @@ def normalize(v):
 
 def auto_format(v, *args, **kwargs):
     return EngineerIO.instance.auto_format(v, *args, **kwargs)
+
+def auto_print(*args, **kwargs):
+    return EngineerIO.instance.auto_print(*args, **kwargs)
