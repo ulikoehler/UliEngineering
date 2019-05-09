@@ -64,3 +64,4 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [Easily generate square/triangle/sawtooth/inverse sawtooth waveform data in Python using UliEngineering](https://techoverflow.net/2018/12/31/easily-generate-square-triangle-sawtooth-inverse-sawtooth-waveform-data-in-python-using-uliengineering/)
    - [Easily compute & visualize FFTs in Python using UliEngineering](https://techoverflow.net/2018/12/31/easily-compute-visualize-ffts-in-python-using-uliengineering/)
    - [Computing resistor power dissipation in Python using UliEngineering](https://techoverflow.net/2019/05/09/computing-the-temperature-under-load-of-your-electronics-components-in-python-using-uliengineering/)
+   - [Computing crystal load capacitance using Python & UliEngineering](https://techoverflow.net/2019/05/10/computing-crystal-load-capacitance-using-python-uliengineering/)
