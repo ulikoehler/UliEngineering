@@ -137,31 +137,42 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     Example: ValueRange("99.5 Ω", "100.5 Ω")
     Use .min and .max to get the min/max value
     """
+    # NOTE: These will be in Kelvin after normalization!
     tmin = normalize_temperature(tmin)
     tmax = normalize_temperature(tmax)
     tref = normalize_temperature(tref)
     # Static tolerance
     # We are only interested in the maximum temperature
     # differential from tmin
-    tdelta_max = max(abs(tref - tmin), abs(tmax - tref))
+    tdelta_neg = tmin - tref
+    tdelta_pos = tmax - tref
     nominal, unit = normalize(nominal)
     # Parse static tolerance
     min_tol_coeff, max_tol_coeff = _normalize_minmax_tuple(tolerance, name="tolerance")
     tol_neg_factor = 1. + min_tol_coeff
     tol_pos_factor = 1. + max_tol_coeff
-    # Compute values by tolerance
+    # Compute nominal factors by static tolerance
     tol_min_value = tol_neg_factor * nominal
     tol_max_value = tol_pos_factor * nominal
     # Parse coefficient
     min_coeff, max_coeff = _normalize_minmax_tuple(coefficient, name="coefficient")
-    temp_neg_factor = 1. + (tdelta_max * min_coeff) # min_coefficient is typically < 0
-    temp_pos_factor = 1. + (tdelta_max * max_coeff)
-    # Min: Worst case minimum 
-    min_value = temp_neg_factor * tol_min_value
-    max_value = temp_pos_factor * tol_max_value
-
+    # NOTE: Minimum & maximum value could be any of those (?)
+    args = [
+        tol_min_value * (1. + (tdelta_neg * min_coeff)),
+        tol_max_value * (1. + (tdelta_neg * min_coeff)),
+        tol_min_value * (1. + (tdelta_neg * max_coeff)),
+        tol_max_value * (1. + (tdelta_neg * max_coeff)),
+        tol_min_value * (1. + (tdelta_pos * min_coeff)),
+        tol_max_value * (1. + (tdelta_pos * min_coeff)),
+        tol_min_value * (1. + (tdelta_pos * max_coeff)),
+        tol_max_value * (1. + (tdelta_pos * max_coeff))
+    ]
+    
+    min_temp = min(args)
+    max_temp = max(args)
+ 
     return ValueRange(
-        format_value(min_value, unit, significant_digits=significant_digits),
-        format_value(max_value, unit, significant_digits=significant_digits)
+        format_value(min_temp, unit, significant_digits=significant_digits),
+        format_value(max_temp, unit, significant_digits=significant_digits)
     )
     
