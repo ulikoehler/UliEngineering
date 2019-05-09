@@ -8,6 +8,12 @@ from UliEngineering.Utils.Range import ValueRange
 import numpy as np
 
 class TestTemperatureCoefficient(object):
+    def test_value_range_over_temperature_zero(self):
+        # Test with simple ppm input
+        assert(str(value_range_over_temperature("1 kΩ", "0 ppm")),
+            str(ValueRange(1000, 1000, "Ω"))
+        )
+
     def test_value_range_over_temperature1(self):
         # Test with simple ppm input
         assert(str(value_range_over_temperature("1 kΩ", "100 ppm")),
