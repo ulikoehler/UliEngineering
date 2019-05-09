@@ -3,7 +3,7 @@
 """
 Utilities regarding temperatures
 """
-from UliEngineering.EngineerIO import normalize_engineer_notation
+from UliEngineering.EngineerIO import normalize_engineer_notation, normalize_numeric
 from UliEngineering.Units import Unit
 from UliEngineering.Exceptions import InvalidUnitException
 
@@ -14,7 +14,8 @@ except:
 
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",
-           "normalize_temperature_celsius"]
+           "normalize_temperature_celsius",
+           "temperature_with_dissipation"]
 
 
 def celsius_to_kelvin(c) -> Unit("°K"):
@@ -57,3 +58,13 @@ def normalize_temperature(t, default_unit="°C") -> Unit("°K"):
 def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
     return kelvin_to_celsius(normalize_temperature(t, default_unit))
+
+def temperature_with_dissipation(power_dissipated="1 W", theta="50 °C/W", t_ambient="25 °C") -> Unit("°C"):
+    """
+    Compute the temperature of a component, given its thermal resistance (theta),
+    its dissipated power and 
+    """
+    power_dissipated = normalize_numeric(power_dissipated)
+    theta = normalize_numeric(theta)
+    t_ambient = normalize_temperature_celsius(t_ambient)
+    return t_ambient + power_dissipated * theta

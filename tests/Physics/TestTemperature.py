@@ -33,6 +33,10 @@ class TestTemperature(object):
         assert_equal(auto_format(normalize_temperature_celsius, "-111 °C"), "-111.00 °C")
         assert_equal(auto_format(normalize_temperature_celsius, "0 °K"), "-273.15 °C")
 
+    def test_temperature_with_dissipation(self):
+        assert_approx_equal(temperature_with_dissipation("1 W", "1 °C/W"), 26.)
+        assert_approx_equal(temperature_with_dissipation("1 W", "50 °C/W"), 25. + 50.)
+
     @raises(InvalidUnitException)
     def testWrongUnit(self):
         normalize_temperature("150V")
