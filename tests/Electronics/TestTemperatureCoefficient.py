@@ -49,3 +49,9 @@ class TestTemperatureCoefficient(object):
             ValueRange("994 Ω", "1.017 kΩ")
         )
 
+class TestValueAtTemperature(object):
+    def test_value_at_temperature(self):
+        # Ref temp => zero difference
+        assert_approx_equal(value_at_temperature("1 kΩ", "25 °C", "100 ppm"), 1000.0)
+        # delta T = 10° => 10 * 100 ppm
+        assert_approx_equal(value_at_temperature("1 kΩ", "35 °C", "100 ppm"), 1001.)
