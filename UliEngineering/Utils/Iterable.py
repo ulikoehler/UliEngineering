@@ -84,6 +84,26 @@ class PeekableIteratorWrapper(object):
         """
         return len(self.child)
 
+    def has_next(self):
+        """
+        Returns False only if the next call to next()
+        will raise StopIteration.
+
+        This causes the next value to be generated from
+        the child generator (and un-got) if there are no
+        values in the buffer
+        """
+        if len(self.buffer) > 0:
+            return True
+        else:
+            try:
+                v = next(self)
+                self.unget(v)
+                return True
+            except StopIteration:
+                return False
+            
+
     def unget(self, v):
         """
         Un-gets v so that v will be returned
