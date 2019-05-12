@@ -209,6 +209,19 @@ class LinRange(object):
     def __eq__(self, other):
         return self.start == other.start and self.stop == other.stop and self.step == other.step
 
+    def samplerate(self):
+        """
+        Returns the samplerate as float (unit: Hz).
+        This works especially if step is a np.timedelta64 object.
+        Else "step" is assumed to be a <seconds> value
+        """
+        if type(self.step) == np.timedelta64:
+            ns = self.step.astype("timedelta64[ns]").astype(np.int)
+            s = ns*1e-9
+            return 1./s
+        else:
+            return 1./self.step
+
 def aggregate(gen):
     """
     Takes any iterable and aggregates subsequent values

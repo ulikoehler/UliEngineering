@@ -133,6 +133,8 @@ class TestLinSpace(object):
         assert_equal(len(spc), linspc.size)
         assert_equal((len(spc),), linspc.shape)
         assert_allclose(spc[:], linspc)
+        # Test samplerate
+        assert_approx_equal(spc.samplerate(), (n - 1 if endpoint else n) / (end - start))
         # Test some slice
         istart, iend = len(spc) // 3, len(spc) // 2
         assert_allclose(spc[istart:iend], linspc[istart:iend])

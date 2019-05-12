@@ -29,11 +29,13 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     In most cases, using a high ignore percentile
     like 10 is recommended.
     
-    Returns a float (samplerate) [1/s]
+    Returns a float (samplerate) [1/s].
+
+    If t is a LinRange() object, returns t.samplerate()
 
     Parameters
     ----------
-    t : numpy array of datetime64 type
+    t : numpy array of datetime64 type (or LinRange)
         Timestamps associated with the signal
     ignore_percentile : number
         This percentile of outliers is ignored
@@ -46,6 +48,9 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
         Except for special usecases, arithmetic mean (np.mean)
         is recommended.
     """
+    # Special rule for LinRange objects that have a defined samplerate
+    if isinstance(t, LinRange):
+        return t.samplerate()
     tdelta = np.diff(t)
     above = np.percentile(tdelta, ignore_percentile)
     below = np.percentile(tdelta, 100 - ignore_percentile)
