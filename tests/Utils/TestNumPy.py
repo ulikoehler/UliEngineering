@@ -80,3 +80,7 @@ class TestPivotSplit(object):
         assert_equal([[0,1],[2,3,4,5]], list(split_by_pivot([0,1,2,3,4,5], [2])))
         assert_equal([[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [2,4])))
         assert_equal([[],[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [0,2,4])))
+
+class TestDatetime64Now(object):
+    def test_datetime64_now(self):
+        assert_equal(type(datetime64_now()), np.datetime64)

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import numpy as np
+from datetime import datetime
 
 __all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d",
-           "ngrams", "split_by_pivot"]
+           "ngrams", "split_by_pivot", "datetime64_now"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """
@@ -174,3 +175,9 @@ def split_by_pivot(arr, pivots):
     # Generate all slice endpoint pairs
     for start, end in zip(idxs[:-1], idxs[1:]):
         yield arr[start:end]
+
+def datetime64_now():
+    """
+    Return datetime.now() as np.datetime64 object.
+    """
+    return np.datetime64(datetime.now())
