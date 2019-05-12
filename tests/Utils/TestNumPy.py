@@ -4,6 +4,7 @@ from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equ
 from subprocess import check_output
 from nose.tools import assert_equal, assert_true, raises, assert_greater
 from UliEngineering.Utils.NumPy import *
+from parameterized import parameterized
 import numpy as np
 
 class TestDynamicArrayResize(object):
@@ -84,3 +85,19 @@ class TestPivotSplit(object):
 class TestDatetime64Now(object):
     def test_datetime64_now(self):
         assert_equal(type(datetime64_now()), np.datetime64)
+
+class TestDatatypeResolution(object):
+
+    @parameterized.expand([
+        ('us',),
+        ('ms',),
+        ('s',),
+        ('D',),
+        ('h',),
+        ('ns',),
+    ])
+    def test_timedelta64_resolution(self, res):
+        assert_equal(timedelta64_resolution(np.timedelta64(100, res)), res)
+    
+    def test_timedelta64_resolution(self):
+        assert_equal(datetime64_resolution(datetime64_now()), 'us')

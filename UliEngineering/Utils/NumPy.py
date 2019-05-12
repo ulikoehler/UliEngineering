@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import numpy as np
+import re
 from datetime import datetime
 
 __all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d",
-           "ngrams", "split_by_pivot", "datetime64_now"]
+           "ngrams", "split_by_pivot", "datetime64_now",
+           "timedelta64_resolution", "datetime64_resolution"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """
@@ -181,3 +183,25 @@ def datetime64_now():
     Return datetime.now() as np.datetime64 object.
     """
     return np.datetime64(datetime.now())
+
+# Regex for timedelta64_resolution etc
+_resolution_re = re.compile(r'^[^\[]+\[([^\]]+)\]$')
+
+def timedelta64_resolution(tdelta):
+    """
+    Given a timedelta64 object, returns its resolution as a string,
+    e.g. 'us' or 'ms'.
+    """
+    s = str(tdelta.dtype) # e.g. 'timedelta64[us]'
+    match = _resolution_re.match(s)
+    if match is None:
+        raise ValueError("Data type {} is not supported for ..._resolution!".format(s))
+    else:
+        return match.group(1)
+
+def datetime64_resolution(dt):
+    """
+    Given a datetime64 object, returns its resolution as a string,
+    e.g. 'us' or 'ms'.
+    """
+    return timedelta64_resolution(dt) # Same algorithm!
