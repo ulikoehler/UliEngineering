@@ -8,7 +8,7 @@ if sys.version_info < (3, 0):
     sys.exit(1)
 
 setup(name='UliEngineering',
-      version='0.2.8',
+      version='0.2.9',
       description='Computational tools for electronics engineering',
       author='Uli Köhler',
       author_email='ukoehler@techoverflow.net',
