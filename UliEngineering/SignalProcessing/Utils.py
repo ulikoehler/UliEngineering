@@ -202,7 +202,7 @@ class LinRange(object):
         return "LinRange({}, {}, {}{})".format(
             self.start,
             self.stop,
-            self.step,
+            str(self.step) if type(self.step) == np.timedelta64 else self.step,
             "" if self.dtype == np.float else ", dtype={}".format(self.__dtype_name())
             )
 
