@@ -19,9 +19,7 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
     temp = normalize_temperature_celsius(temp)
     nominal_lifetime_temperature = normalize_temperature_celsius(nominal_lifetime_temperature)
     nominal_lifetime = normalize_numeric(nominal_lifetime)
-    # --> Formula: L = Lnom * 2**(-[{T-25}/A]**B)
-    # L = Lnom * 2**(-[Tdelta/A]**B)
-    # We don't compute Re@25° but use the nom lft temp as a temp reference point
+    # Compute lifetime
     tdelta = temp - nominal_lifetime_temperature
     return nominal_lifetime * 2**(-(tdelta/A))
 
