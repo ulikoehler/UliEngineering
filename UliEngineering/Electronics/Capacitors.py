@@ -2,7 +2,28 @@
 # -*- coding: utf-8 -*-
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
+from UliEngineering.Physics.Temperature import normalize_temperature_celsius
+
 import numpy as np
+
+def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
+    """
+    Estimate the lifetime of a capacitor given
+    * Its working temperature (i.e. internal temperature)
+    * Its nominal lifetime at a nominal lifetime temperature
+    * Coefficient A: Temperature difference for which to assume a halving of the lifetime
+
+    Based on:
+    https://www.illinoiscapacitor.com/tech-center/life-calculators.aspx
+    """
+    temp = normalize_temperature_celsius(temp)
+    nominal_lifetime_temperature = normalize_temperature_celsius(nominal_lifetime_temperature)
+    nominal_lifetime = normalize_numeric(nominal_lifetime)
+    # --> Formula: L = Lnom * 2**(-[{T-25}/A]**B)
+    # L = Lnom * 2**(-[Tdelta/A]**B)
+    # We don't compute Re@25° but use the nom lft temp as a temp reference point
+    tdelta = temp - nominal_lifetime_temperature
+    return nominal_lifetime * 2**(-(tdelta/A))
 
 
 def capacitor_energy(capacitance, voltage) -> Unit("J"):
