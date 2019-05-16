@@ -68,3 +68,5 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [How to convert Celsius/Fahrenheit/Kelvin temperatures in Python using UliEngineering](https://techoverflow.net/2019/05/10/how-to-convert-celsius-fahrenheit-kelvin-temperatures-in-python-using-uliengineering/)
    - [How to get unit/resolution of NumPy np.timedelta64 object](https://techoverflow.net/2019/05/13/how-to-get-unit-resolution-of-numpy-np-timedelta64-object/)
    - [How to get unit/resolution of NumPy np.datetime64 object](https://techoverflow.net/2019/05/13/how-to-get-unit-resolution-of-numpy-np-datetime64-object/)
+   - [How to iterate all days of year using Python](https://techoverflow.net/2019/05/16/how-to-iterate-all-days-of-year-using-python/)
+   - [How to get number of days in month in Python](https://techoverflow.net/2019/05/16/how-to-get-number-of-days-in-month-in-python/)
