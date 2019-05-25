@@ -109,7 +109,7 @@ def bottom_resistor_by_ratio(rtop, ratio) -> Unit("Ω"):
     ratio = normalize_numeric(ratio)
     return -(rtop * ratio) / (ratio - 1.0)
 
-def feedback_top_resistor(vexp, rbot, vfb) -> Unit("Ω"):
+def feedback_top_resistor(vexp, rbot, vfb, rload=np.inf) -> Unit("Ω"):
     """
     Utility to compute the top feedback resistor
     in a voltage feedback network (e.g. for a DC/DC converter)
@@ -122,13 +122,16 @@ def feedback_top_resistor(vexp, rbot, vfb) -> Unit("Ω"):
         The known bottom resistor
     vfb : float
         The feedback voltage that is servoed by the regulator
+    rload : float
+        A load resistor in parallel to the bottom resistor
     """
     vexp = normalize_numeric(vexp)
     rbot = normalize_numeric(rbot)
     vfb = normalize_numeric(vfb)
+    rload = normalize_numeric(rload)
     # Vo = Vfb * (R1/R2 + 1)
     # solve A = B*((C/D) + 1) for C
-    return rbot * (vexp - vfb) / vfb
+    return (parallel_resistors(rbot, rload)) * (vexp - vfb) / vfb
 
 def feedback_bottom_resistor(vexp, rtop, vfb) -> Unit("Ω"):
     """
@@ -151,7 +154,7 @@ def feedback_bottom_resistor(vexp, rtop, vfb) -> Unit("Ω"):
     # solve A = B*((C/D) + 1) for D
     return (vfb * rtop) / (vexp - vfb)
 
-def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
+def feedback_actual_voltage(rtop, rbot, vfb, rload=np.inf) -> Unit("V"):
     """
     Compute the actual voltage regulator output in a feedback
     servo setup. Returns the Vout voltage.
@@ -165,6 +168,7 @@ def feedback_actual_voltage(rtop, rbot, vfb) -> Unit("V"):
     vfb : float
         The feedback voltage
     """
+    rload = normalize_numeric(rload)
     # Equation: Vout * ratio = vfb
-    ratio = voltage_divider_ratio(rtop, rbot)
+    ratio = voltage_divider_ratio(rtop, parallel_resistors(rbot, rload))
     return normalize_numeric(vfb) / ratio
