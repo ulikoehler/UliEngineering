@@ -18,6 +18,11 @@ class ValueRange(_ValueRange):
             format_value(self.max, self.unit, significant_digits=self.significant_digits)
         )
 
+    @property
+    def minmax(self):
+        """Return (min, max). Utility e.g. for unpacking a ValueRange ignoring Unit"""
+        return (self.min, self.max)
+
 def normalize_minmax_tuple(arg, name="field"):
     """
     Interprets arg either a single +- value or as
