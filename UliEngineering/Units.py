@@ -62,4 +62,4 @@ def find_returned_unit(fn):
         return unit.unit
     except KeyError: # No return annotation
         raise UnannotatedReturnValueError(
-            "Function {0} does not have an annotated return value")
+            "Function {} does not have an annotated return value".format(fn))
