@@ -3,6 +3,7 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true
 from UliEngineering.Electronics.Resistors import *
+from UliEngineering.EngineerIO import *
 
 class TestResistors(object):
     def test_parallel_resistors(self):
@@ -26,4 +27,8 @@ class TestResistors(object):
         assert_approx_equal(current_through_resistor("1k", "1V"), 1e-3)
         assert_approx_equal(current_through_resistor(1e3, 2), 2e-3)
         assert_approx_equal(current_through_resistor("1Ω", "2V"), 2)
+
+    def test_resistor_by_voltage_and_current(self):
+        assert_approx_equal(resistor_by_voltage_and_current("2.5 V", "1 uA"), 2.5e6)
+        assert_equal(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
 

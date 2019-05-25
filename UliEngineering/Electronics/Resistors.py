@@ -18,7 +18,8 @@ __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "power_dissipated_in_resistor_by_current",
            "power_dissipated_in_resistor_by_voltage",
            "voltage_across_resistor",
-           "serial_resistors", "nearest_resistor"]
+           "serial_resistors", "nearest_resistor",
+           "resistor_by_voltage_and_current"]
 
 # Standard resistor sequences
 e96 = np.asarray([
@@ -140,3 +141,13 @@ def serial_resistors(*args) -> Unit("Ω"):
     """
     resistors = list(map(normalize_numeric, args))
     return sum(resistors)
+
+
+def resistor_by_voltage_and_current(voltage, current) -> Unit("Ω"):
+    """
+    Compute the resistance value in Ohms that draws the given amount of
+    current if the given voltage is across it.
+    """
+    voltage = normalize_numeric(voltage)
+    current = normalize_numeric(current)
+    return voltage / current
