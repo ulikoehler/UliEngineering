@@ -75,8 +75,6 @@ def voltage_divider_power(rtop, rbot, vin, rload=np.inf):
     VoltageDividerPower(top=210 mW, bottom=840 µW, total=211 mW
     >>> voltage_divider_power("250k", "1k", "230V").total
     0.2107569721115538
-
-    
     
     If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
