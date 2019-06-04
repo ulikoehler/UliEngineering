@@ -86,7 +86,7 @@ def power_dissipated_in_resistor_by_current(resistor, current) -> Unit("W"):
     """
     resistor = normalize_numeric(resistor)
     current = normalize_numeric(current)
-    return resistor * current * current
+    return np.abs(resistor * current * current)
 
 def power_dissipated_in_resistor_by_voltage(resistor, voltage) -> Unit("W"):
     """
@@ -104,7 +104,7 @@ def power_dissipated_in_resistor_by_voltage(resistor, voltage) -> Unit("W"):
     resistor = normalize_numeric(resistor)
     voltage = normalize_numeric(voltage)
     current = current_through_resistor(resistor, voltage)
-    return current * voltage
+    return np.abs(current * voltage)
 
 def resistor_range(multiplicator, sequence=e96):
     """
