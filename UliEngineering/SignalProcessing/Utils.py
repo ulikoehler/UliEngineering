@@ -8,8 +8,9 @@ from toolz import functoolz
 import numbers
 import warnings
 from .Selection import find_true_runs
+from UliEngineering.EngineerIO import normalize_numeric
 
-__all__ = ["remove_mean", "rms", "peak_to_peak", "unstair", "optimum_polyfit", "LinRange", "aggregate", "zero_crossings"]
+__all__ = ["remove_mean", "rms", "peak_to_peak", "unstair", "optimum_polyfit", "LinRange", "aggregate", "zero_crossings", "rms_to_peak_to_peak"]
 
 _unstep_reduction_methods = {
     "left": lambda a: a[:, 0],
@@ -30,6 +31,14 @@ def rms(arr):
     Compute the root-mean-square value of the given array
     """
     return np.sqrt(np.mean(np.square(arr)))
+
+def rms_to_peak_to_peak(rms_val):
+    """
+    Given an RMS value, returns the peak to peak value
+    of a sinusoid signal with that RMS value.
+    """
+    rms_val = normalize_numeric(rms_val)
+    return rms_val * np.sqrt(2)
 
 def peak_to_peak(arr):
     """
