@@ -49,6 +49,8 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("100 mV"), ('100', 'm', 'V'))
         assert_tuple_equal(self.io.split_input("3.2 ΔHz"), ('3.2', '', 'Hz'))
         assert_tuple_equal(self.io.split_input("Δ3.2 MHz"), ('3.2', 'M', 'Hz'))
+        assert_tuple_equal(self.io.split_input("3.20 €"), ('3.20', '', '€'))
+        assert_tuple_equal(self.io.split_input("0.000014 €"), ('0.000014', '', '€'))
 
     @parameterized([("1,234.56kfA",),
                     ("1.23k45A",),
