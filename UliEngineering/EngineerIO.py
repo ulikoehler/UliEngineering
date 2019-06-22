@@ -60,7 +60,8 @@ def _length_units(include_m=False):
 
 def _default_units(include_m=False):
     return set([
-        'F', 'A', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        # NOTE: These Ω symbols are NOT identical !
+        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
         # Time
         's', 'h', 'min',
         # Fraction

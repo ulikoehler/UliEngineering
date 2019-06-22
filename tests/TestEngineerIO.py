@@ -34,6 +34,8 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("1k234Ω"), ('1.234', 'k', 'Ω'))
         assert_tuple_equal(self.io.split_input("1,234.56Ω"), ('1234.56', '', 'Ω'))
         assert_tuple_equal(self.io.split_input("1A"), ('1', '', 'A'))
+        assert_tuple_equal(self.io.split_input("0Ω"), ('0', '', 'Ω'))
+        assert_tuple_equal(self.io.split_input("0 Ω"), ('0', '', 'Ω'))
         assert_tuple_equal(self.io.split_input("1"), ('1', '', ''))
         assert_tuple_equal(self.io.split_input("1k234 Ω"), ('1.234', 'k', 'Ω'))
         assert_tuple_equal(self.io.split_input("-1,234.56kΩ"), ('-1234.56', 'k', 'Ω'))
