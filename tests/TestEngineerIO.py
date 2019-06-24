@@ -36,6 +36,8 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("1A"), SplitResult('', '1', '', '', 'A'))
         assert_tuple_equal(self.io.split_input("0Ω"), SplitResult('', '0', '', '', 'Ω'))
         assert_tuple_equal(self.io.split_input("±5%"), SplitResult('±', '5', '', '', '%'))
+        assert_tuple_equal(self.io.split_input("± 5%"), SplitResult('±', '5', '', '', '%'))
+        assert_tuple_equal(self.io.split_input("± 5 %"), SplitResult('±', '5', '', '', '%'))
         assert_tuple_equal(self.io.split_input("0 Ω"), SplitResult('', '0', '', '', 'Ω'))
         assert_tuple_equal(self.io.split_input("1"), SplitResult('', '1', '', '', ''))
         assert_tuple_equal(self.io.split_input("1k234 Ω"), SplitResult('', '1.234', 'k', '', 'Ω'))
