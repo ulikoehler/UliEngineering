@@ -121,7 +121,8 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     # differential from tmin
     tdelta_neg = tmin - tref
     tdelta_pos = tmax - tref
-    nominal, unit = normalize(nominal)
+    normalized = normalize(nominal)
+    nominal, unit = normalized.value, normalized.unit
     # Compute nominal factors by static tolerance
     tol_min_value, tol_max_value, _ = value_range_over_tolerance(nominal, tolerance)
     # Parse coefficient
