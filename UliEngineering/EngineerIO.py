@@ -20,16 +20,22 @@ Usage example:
 Originally published at techoverflow.net.
 """
 import math
+import re
 import itertools
 from toolz import functoolz
 import numpy as np
+from collections import namedtuple
 from .Units import *
 from .Utils.String import suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
-           "normalize_engineer_notation", "normalize_engineer_notation_safe"]
+           "normalize_engineer_notation", "normalize_engineer_notation_safe",
+           "SplitResult"]
 
+UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
+SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
+NormalizeResult = namedtuple("NormalizeResult", ["prefix", "value", "unit_prefix", "unit"])
 
 def _default_suffices():
     """
@@ -72,6 +78,12 @@ def _default_units(include_m=False):
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
     ]).union(_length_units(include_m=include_m))
 
+def _default_prefixes():
+    return ["Δ", "±"]
+
+def _default_unit_prefixes():
+    return ["°"]
+
 # Valid unit designators. Ensure no SI suffix is added here
 _numeric_allowed = set("+0123456789-e.")
 
@@ -83,7 +95,8 @@ class EngineerIO(object):
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
     def __init__(self, units=_default_units(),
-                 unit_prefixes="Δ°",
+                 prefixes=_default_prefixes(),
+                 unit_prefixes=_default_unit_prefixes(),
                  suffices=_default_suffices(),
                  first_suffix_exp=-24):
         """
@@ -93,9 +106,12 @@ class EngineerIO(object):
         -----------
         units : iterable of strings
             An iterable of valid units (1-char or 2-char)
+        prefixes : string
+            A list of prefixes that are ignored (available via normalize()).
+            Constraint: prefixes ∩ suffices == ∅
         unit_prefixes : string
-            A list of prefixes that are silently ignored.
-            Constraint: unitPrefixes ∩ suffices == ∅
+            A list of prefixes that ignored (available via normalize()).
+            Constraint: unitPrefixes ∩ units == ∅
         suffices : list of lists of unit strings
             For each SI exponent, a list of valid suffix strings for each exponent.
             Each successive element in the list is 1e3 from the previous one.
@@ -107,8 +123,14 @@ class EngineerIO(object):
         self.units = set(units)
         self.suffices = suffices
         self.first_suffix_exp = first_suffix_exp
+        # Build prefix regex
+        _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
+        self.prefix_re = re.compile(f'^({_prefix_set})+')
+        # Build unit prefix regex
+        __unitprefix_set = "|".join(re.escape(pfx) for pfx in unit_prefixes)
+        self.unit_prefix_re = re.compile(f'({__unitprefix_set})+$') # $: Matched at end of numeric part
         # Unit prefixes will only be used in strip, so we can strip spaces in one go.
-        self.strippable = unit_prefixes + " \t\n"
+        self.strippable = " \t\n"
         # Compute maps
         self.all_suffixes = set(itertools.chain(*self.suffices))
         self._recompute_suffix_maps()
@@ -157,8 +179,17 @@ class EngineerIO(object):
         """
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s)
-        s, unit = self.split_unit(s) # Remove unit
+        s, unit_prefix, unit = self.split_unit(s) # Remove unit
         s = s.replace(" ", "")
+        # Try to split prefix
+        prefix_hit = self.prefix_re.search(s)
+        if prefix_hit:
+            # Get actual prefix (returned later)
+            prefix = prefix_hit.group(0)
+            # Remove prefix
+            s = self.prefix_re.sub("", s)
+        else:
+            prefix = ""
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
@@ -188,7 +219,7 @@ class EngineerIO(object):
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
             raise ValueError("Remainder of string is not purely numeric: {}".format(s))
-        return (s, suffix, unit)
+        return SplitResult(prefix, s, suffix, unit_prefix, unit)
 
     def split_unit(self, s):
         """
@@ -198,7 +229,7 @@ class EngineerIO(object):
         """
         # Fallback for strings which are too short
         if len(s) <= 1:
-            return s, ""
+            return UnitSplitResult(s, '', '')
         # Handle unit suffixes: "ppm"
         # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
@@ -213,9 +244,18 @@ class EngineerIO(object):
         # Fallback: Try to parse as value + optionally SI postfi
         if not found_unit_suffix: # No unit
             value_str, unit = s, ''
-        # Remove unit prefix, if any (e.g. degrees symbol, delta symbol)
+        # Remove extra space
         value_str = value_str.rstrip(self.strippable)
-        return value_str, unit
+        # Remove unit prefix, if any
+        unit_prefix_hit = self.unit_prefix_re.search(value_str)
+        if unit_prefix_hit:
+            # Get actual prefix (returned later)
+            unit_prefix = unit_prefix_hit.group(0)
+            # Remove unit_prefix
+            value_str = self.unit_prefix_re.sub("", s)
+        else:
+            unit_prefix = ""
+        return UnitSplitResult(value_str, unit_prefix, unit)
 
     def normalize(self, s, encoding="utf8"):
         """
@@ -228,7 +268,7 @@ class EngineerIO(object):
         """
         # Scalars get returned directly
         if isinstance(s, (int, float, np.generic)):
-            return s, ''
+            return NormalizeResult('', s, '', '')
         # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
@@ -236,7 +276,7 @@ class EngineerIO(object):
         if isinstance(s, (list, tuple, np.ndarray)):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
-        (num, suffix, unit) = self.split_input(s.strip())
+        prefix, num, suffix, unit_prefix, unit = self.split_input(s.strip())
         mul = (10 ** self.suffix_exp_map[suffix]) if suffix else 1
         # Handle ppm and ppb: They are listed as units
         if unit == '%':
@@ -248,7 +288,7 @@ class EngineerIO(object):
         elif unit == 'ppb':
             mul /= 1e9
             unit = ''
-        return (float(num) * mul, unit)
+        return NormalizeResult(prefix, float(num) * mul, unit_prefix, unit)
 
     def safe_normalize(self, s, encoding="utf8"):
         """
@@ -360,11 +400,11 @@ class EngineerIO(object):
 
         # If it's stringlike, apply directly
         if isinstance(arg, (str, bytes)):
-            return self.normalize(arg)[0]
+            return self.normalize(arg).value
         # It's an iterable
         ret = np.zeros(len(arg))
         for i, elem in enumerate(arg):
-            ret[i] = self.normalize(elem)[0]
+            ret[i] = self.normalize(elem).value
         return ret
 
 # Initialize global instance

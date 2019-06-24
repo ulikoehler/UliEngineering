@@ -70,8 +70,8 @@ def normalize_length(s, instance=EngineerIO.length_instance) -> Unit("m"):
     - "1.2 M light years" => 1.135287656709696e+22
     - "9.15 kpc" => 2.8233949868947424e+17
     """
-    value, unit = instance.normalize(s)
-    if unit in _length_factors:
-        return value * _length_factors[unit]
+    result = instance.normalize(s)
+    if result.unit in _length_factors:
+        return result.value * _length_factors[result.unit]
     else:
-        raise UnknownUnitInContextException("Unknown length unit: {}".format(unit))
+        raise UnknownUnitInContextException("Unknown length unit: {}".format(result.unit))
