@@ -73,7 +73,7 @@ def _default_units(include_m=False):
         # Fraction
         'ppm', 'ppb', '%',
         # Composite units
-        '°C/W', 'C/W',
+        'C/W',
         # Currencies
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
     ]).union(_length_units(include_m=include_m))
@@ -163,7 +163,8 @@ class EngineerIO(object):
 
     def split_input(self, s):
         """
-        Separate a string into a 3-tuple (number, suffix, unit).
+        Separate a string into a number, suffix and unit plus prefixes.
+        Does not try to parse the numbers.
         returns None if the string could not be parsed.
 
         The tuple will never contain None but empty strings if some
@@ -245,7 +246,7 @@ class EngineerIO(object):
         # Fallback: Try to parse as value + optionally SI postfix
         if not found_unit_suffix: # No unit
             value_str, unit = s, ''
-        # Remove extra space
+        # Remove extra whitespace
         value_str = value_str.rstrip(self.strippable)
         # Remove unit prefix, if any
         unit_prefix_hit = self.unit_prefix_re.search(value_str)
@@ -256,6 +257,8 @@ class EngineerIO(object):
             value_str = self.unit_prefix_re.sub("", value_str)
         else:
             unit_prefix = ""
+        # Remove extra whitespace
+        value_str = value_str.rstrip(self.strippable)
         return UnitSplitResult(value_str, unit_prefix, unit)
 
     def normalize(self, s, encoding="utf8"):
@@ -375,12 +378,12 @@ class EngineerIO(object):
         # If it's stringlike, apply directly
         if isinstance(arg, str) or isinstance(arg, bytes):
             v = self.safe_normalize(arg)
-            return None if v is None else v[0]
+            return None if v is None else v.value
         # It's an iterable
         ret = np.zeros(len(arg))
         for i, elem in enumerate(arg):
             v = self.safe_normalize(elem)
-            ret[i] = np.nan if v is None else v[0]
+            ret[i] = np.nan if v is None else v.value
         return ret
 
     def normalize_numeric(self, arg):

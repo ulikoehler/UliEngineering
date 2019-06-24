@@ -44,7 +44,7 @@ def normalize_temperature(t, default_unit="°C") -> Unit("K"):
         res = normalize_engineer_notation(t)
         if res is None:
             raise ValueError("Invalid temperature string: {}".format(t))
-        t, unit = res
+        t, unit = res.value, res.unit
     if not unit:
         unit = default_unit
     # Evaluate unit

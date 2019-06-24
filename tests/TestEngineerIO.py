@@ -46,10 +46,8 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("3.2 MHz"), SplitResult('', '3.2', 'M', '', 'Hz'))
         assert_tuple_equal(self.io.split_input("3.2 °C"), SplitResult('', '3.2', '', '°', 'C'))
         assert_tuple_equal(self.io.split_input("3k2 °C"), SplitResult('', '3.2', 'k', '°', 'C'))
-        assert_tuple_equal(self.io.split_input("3.2 MΔHz"), SplitResult('', '3.2', 'M', '', 'Hz'))
         assert_tuple_equal(self.io.split_input("100 mV"), SplitResult('', '100', 'm', '', 'V'))
-        assert_tuple_equal(self.io.split_input("3.2 ΔHz"), SplitResult('', '3.2', '', '', 'Hz'))
-        assert_tuple_equal(self.io.split_input("Δ3.2 MHz"), SplitResult('', '3.2', 'M', '', 'Hz'))
+        assert_tuple_equal(self.io.split_input("Δ3.2 MHz"), SplitResult('Δ', '3.2', 'M', '', 'Hz'))
         assert_tuple_equal(self.io.split_input("3.20 €"), SplitResult('', '3.20', '', '', '€'))
         assert_tuple_equal(self.io.split_input("0.000014 €"), SplitResult('', '0.000014', '', '', '€'))
 
@@ -100,16 +98,14 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_unit("3.2 MHz"), UnitSplitResult('3.2 M', '', 'Hz'))
         assert_tuple_equal(self.io.split_unit("3.2 °C"), UnitSplitResult('3.2', '°', 'C'))
         assert_tuple_equal(self.io.split_unit("3k2 °C"), UnitSplitResult('3k2', '°', 'C'))
-        assert_tuple_equal(self.io.split_unit("3.2 MΔHz"), UnitSplitResult('3.2 M', 'Δ', 'Hz'))
         assert_tuple_equal(self.io.split_unit("100 mV"), UnitSplitResult('100 m', '', 'V'))
-        assert_tuple_equal(self.io.split_unit("3.2 ΔHz"), UnitSplitResult('3.2', 'Δ', 'Hz'))
         assert_tuple_equal(self.io.split_unit("50 °C/W"), UnitSplitResult('50', '°', 'C/W'))
         assert_tuple_equal(self.io.split_unit(""), UnitSplitResult('', '', ''))
 
 
     def test_normalize(self):
-        assert_tuple_equal(self.io.normalize("100 kΩ"), (1e5, "Ω"))
-        assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), (1e5, "Ω"))
+        assert_tuple_equal(self.io.normalize("100 kΩ"), NormalizeResult('', 1e5, '', "Ω"))
+        assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), NormalizeResult('', 1e5, '', "Ω"))
 
     def test_format_with_suffix(self):
         assert_equal(_format_with_suffix(1.01, "A"), '1.01 A')

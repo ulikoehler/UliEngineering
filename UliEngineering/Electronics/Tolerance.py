@@ -15,7 +15,8 @@ def value_range_over_tolerance(nominal, tolerance="1 %"):
     Compute the minimum and maximum value of a given component,
     given its nominal value and its tolerance.
     """
-    nominal, unit = normalize(nominal)
+    normalized = normalize(nominal)
+    nominal, unit = normalized.value, normalized.unit
     # Parse static tolerance
     min_tol_coeff, max_tol_coeff, nix = normalize_minmax_tuple(tolerance, name="tolerance")
     tol_neg_factor = 1. + min_tol_coeff
