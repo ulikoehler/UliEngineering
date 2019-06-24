@@ -1,0 +1,5 @@
+## 0.3
+Somewhat breaking changes to EngineerIO internal APIs:
+normalize_numeric() works as before, but other (lower-level) functions returned namedtuples
+instead of tuples, and additionally parse separate prefix and unit prefix values.
+This allows for fine-grained control and validation of values like "±5%"
