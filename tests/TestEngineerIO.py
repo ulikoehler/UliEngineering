@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult
+from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult
 from parameterized import parameterized
 import functools
 import numpy as np

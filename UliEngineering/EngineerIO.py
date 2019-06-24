@@ -234,6 +234,7 @@ class EngineerIO(object):
         # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
         for suffix in suffix_list(s):
+            # Is the suffix a unit?
             if suffix in self.units:
                 # Do not try to find units if encountering the first digit
                 if suffix[0].isnumeric():
@@ -241,7 +242,7 @@ class EngineerIO(object):
                 suffix_length = len(suffix)
                 value_str, unit = s[:-suffix_length], s[-suffix_length:]
                 found_unit_suffix = True
-        # Fallback: Try to parse as value + optionally SI postfi
+        # Fallback: Try to parse as value + optionally SI postfix
         if not found_unit_suffix: # No unit
             value_str, unit = s, ''
         # Remove extra space
@@ -252,7 +253,7 @@ class EngineerIO(object):
             # Get actual prefix (returned later)
             unit_prefix = unit_prefix_hit.group(0)
             # Remove unit_prefix
-            value_str = self.unit_prefix_re.sub("", s)
+            value_str = self.unit_prefix_re.sub("", value_str)
         else:
             unit_prefix = ""
         return UnitSplitResult(value_str, unit_prefix, unit)
