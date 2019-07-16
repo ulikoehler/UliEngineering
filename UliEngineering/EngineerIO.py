@@ -266,7 +266,7 @@ class EngineerIO(object):
         Converts an engineer's input of a wide variety of formats to a numeric
         value.
 
-        Returns a pair (number, unit) or None if the conversion could not be performed.
+        Returns a NormalizeResult() or None if the conversion could not be performed.
 
         See splitSuffixSeparator() for further details on supported formats
         """
