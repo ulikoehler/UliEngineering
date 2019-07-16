@@ -73,7 +73,7 @@ def _default_units(include_m=False):
         # Fraction
         'ppm', 'ppb', '%',
         # Composite units
-        'C/W',
+        'C/W', '€/km', '€/m',
         # Currencies
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
     ]).union(_length_units(include_m=include_m))
