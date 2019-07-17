@@ -326,6 +326,15 @@ class EngineerIO(object):
             significant_digits=significant_digits
         )
 
+    def print(self, v, unit="", significant_digits=3):
+        """
+        Like format_value, but also prints the value
+        """
+        s = self.format(v, unit, significant_digits)
+        print(s)
+        return s
+
+
     def auto_suffix_1d(self, arr):
         """
         Takes an array of arbitrary values and determines
@@ -487,6 +496,9 @@ def normalize_engineer_notation(s, encoding="utf8"):
 
 def format_value(v, unit="", significant_digits=3):
     return EngineerIO.instance.format(v, unit, significant_digits=significant_digits)
+
+def print_value(v, unit="", significant_digits=3):
+    return EngineerIO.instance.print(v, unit, significant_digits=significant_digits)
 
 def normalize_engineer_notation_safe(v, unit=""):
     return EngineerIO.instance.safe_normalize(v, unit)
