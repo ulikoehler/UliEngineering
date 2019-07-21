@@ -125,7 +125,7 @@ class EngineerIO(object):
         self.first_suffix_exp = first_suffix_exp
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
-        self.prefix_re = re.compile(f'^({_prefix_set})+')
+        self.prefix_re = re.compile('^(' + _prefix_set + ')+')
         # Build unit prefix regex
         __unitprefix_set = "|".join(re.escape(pfx) for pfx in unit_prefixes)
         self.unit_prefix_re = re.compile(f'({__unitprefix_set})+$') # $: Matched at end of numeric part
