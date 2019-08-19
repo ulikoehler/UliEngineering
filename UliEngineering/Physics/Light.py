@@ -21,8 +21,8 @@ __all__ = ["lumen_to_candela_by_apex_angle"]
 def lumen_to_candela_by_apex_angle(flux, angle) -> Unit("cd"):
     """
     Compute the luminous intensity from the luminous flux,
-    assuming that the flux is distributed equally around
-    a cone with apex angle <angle+>
+    assuming that the flux of <flux> is distributed equally around
+    a cone with apex angle <angle>.
 
     Keyword parameters
     ------------------
