@@ -33,7 +33,7 @@ def lumen_to_candela_by_apex_angle(flux, angle) -> Unit("cd"):
         For many LEDs, this is 
 
     >>> autoFormat(lumen_to_candela_by_apex_angle, "25 lm", "120°")
-    '1.00 mV'
+    '7.96 cd'
     """
     flux = normalize_numeric(flux)
     angle = normalize_numeric(angle)
