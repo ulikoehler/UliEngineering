@@ -72,6 +72,8 @@ def _default_units(include_m=False):
         's', 'h', 'min',
         # Fraction
         'ppm', 'ppb', '%',
+        # Lighting
+        'lm', 'lx', 'cd',
         # Composite units
         'C/W', '€/km', '€/m',
         # Currencies
