@@ -18,7 +18,7 @@ __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "power_dissipated_in_resistor_by_current",
            "power_dissipated_in_resistor_by_voltage",
            "voltage_across_resistor",
-           "serial_resistors", "nearest_resistor",
+           "series_resistors", "nearest_resistor",
            "resistor_by_voltage_and_current"]
 
 # Standard resistor sequences
@@ -134,7 +134,7 @@ def parallel_resistors(*args) -> Unit("Ω"):
     resistors = np.asarray(list(map(normalize_numeric, args)))
     return 1.0 / np.sum(np.reciprocal(resistors))
 
-def serial_resistors(*args) -> Unit("Ω"):
+def series_resistors(*args) -> Unit("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
