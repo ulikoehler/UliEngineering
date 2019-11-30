@@ -135,7 +135,7 @@ def parallel_resistors(*args) -> Unit("Ω"):
     # Check for zeros
     if len(np.nonzero(resistors)[0]) != len(resistors):
         return 0.0
-    return 1.0 / np.sum(np.reciprocal(resistors))
+    return 1.0 / np.sum(np.reciprocal(resistors.astype(np.float)))
 
 def series_resistors(*args) -> Unit("Ω"):
     """
