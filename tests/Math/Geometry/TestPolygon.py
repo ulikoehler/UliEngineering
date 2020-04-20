@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
-from UliEngineering.Math.Geometry import *
+from UliEngineering.Math.Geometry.Polygon import *
 from parameterized import parameterized
 import functools
 import numpy as np
 
-class TestGeometry(object):
+class TestPolygon(object):
     def test_polygon_lines(self):
         coords = np.asarray([[0, 1],
                              [1, 2],
