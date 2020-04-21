@@ -17,12 +17,8 @@ class TestCircle(unittest.TestCase):
         (3.125, ),
     ])
     def test_circle_area(self, radius):
-        # by radius
         assert_approx_equal(circle_area(radius), np.pi*(radius**2))
         assert_approx_equal(circle_area(f"{radius}"), np.pi*(radius**2))
-        # By diameter
-        assert_approx_equal(circle_area_from_diameter(radius*2), np.pi*(radius**2))
-        assert_approx_equal(circle_area_from_diameter(f"{radius*2}"), np.pi*(radius**2))
 
     @parameterized.expand([
         (0.0, ),
@@ -31,10 +27,6 @@ class TestCircle(unittest.TestCase):
         (3.125, ),
     ])
     def test_circle_circumference(self, radius):
-        # by radius
         assert_approx_equal(circle_circumference(radius), 2*np.pi*radius)
         assert_approx_equal(circle_circumference(f"{radius}"), 2*np.pi*radius)
-        # By diameter
-        assert_approx_equal(circle_circumference_from_diameter(radius*2), 2*np.pi*radius)
-        assert_approx_equal(circle_circumference_from_diameter(f"{radius*2}"), 2*np.pi*radius)
 
