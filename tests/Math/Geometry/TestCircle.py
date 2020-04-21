@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
+from nose.tools import assert_equal, assert_true, assert_false, raises, assert_less, assert_is_none, assert_raises, assert_is_instance
+from UliEngineering.Math.Geometry.Circle import *
+from parameterized import parameterized
+import concurrent.futures
+import numpy as np
+import datetime
+
+
+class TestCircle(object):
+    @parameterized([
+        (0.0),
+        (1.0),
+        (4.0),
+        (3.125),
+    ])
+    def test_circle_area(self, radius):
+        # by radius
+        assert_approx_equal(circle_area(radius), 2*np.pi*(radius**2))
+        assert_approx_equal(circle_area(f"{radius} m"), 2*np.pi*(radius**2))
+        # By diameter
+        assert_approx_equal(circle_area_from_diameter(radius*2), 2*np.pi*(radius**4))
+        assert_approx_equal(circle_area_from_diameter(f"{radius*2} m"), 2*np.pi*(radius**2))
+
+    @parameterized([
+        (0.0),
+        (1.0),
+        (4.0),
+        (3.125),
+    ])
+    def test_circle_circumference(self, radius):
+        # by radius
+        assert_approx_equal(circle_area(radius), 2*np.pi*radius)
+        assert_approx_equal(circle_area(f"{radius} m"), 2*np.pi*radius)
+        # By diameter
+        assert_approx_equal(circle_area_from_diameter(radius*2), 2*np.pi*(radius**4))
+        assert_approx_equal(circle_area_from_diameter(f"{radius*2} m"), 2*np.pi*radius)
+
