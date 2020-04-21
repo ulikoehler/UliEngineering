@@ -30,3 +30,11 @@ class TestCentrifugalAcceleration(unittest.TestCase):
         self.assertAlmostEqual(centrifugal_acceleration(0.1, 100), 39478.417, places=2)
         self.assertAlmostEqual(centrifugal_acceleration(0.2, 100), 78956.835, places=2)
         self.assertAlmostEqual(centrifugal_acceleration(0.2, 10), 789.568, places=2)
+
+    def test_centrifuge_radius(self):
+        # Reference: Inverse of test_centrifugal_acceleration()
+        # Note: t
+        # These have speed > 0
+        self.assertAlmostEqual(centrifuge_radius(39478.417, 100), 0.1, places=2)
+        self.assertAlmostEqual(centrifuge_radius(78956.835, 100), 0.2, places=2)
+        self.assertAlmostEqual(centrifuge_radius(789.568, 10), 0.2, places=2)
