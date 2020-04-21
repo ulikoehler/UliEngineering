@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Geometry functions, mainly for 2D coordinates.
+Circle geometry functions
 """
 import math
 from UliEngineering.EngineerIO import normalize_numeric
@@ -22,14 +22,14 @@ def circle_area_from_diameter(diameter):
     Compute the enclosed area of a circle from its diameter
     """
     diameter = normalize_numeric(diameter)
-    return math.pi * (diameter / 2)**2
+    return math.pi * diameter**2 / 4.0
 
 def circle_circumference(radius):
     """
     Compute the circumference of a circle from its radius
     """
     radius = normalize_numeric(radius)
-    return 2 * math.pi * radius
+    return 2. * math.pi * radius
 
 def circle_circumference_from_diameter(diameter):
     """
