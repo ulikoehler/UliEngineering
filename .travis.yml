@@ -5,7 +5,7 @@ language: python
     - "3.5"
     - "3.6"
 before_install:
-    - sudo apt-get -y install python3-numpy python3-scipy python3-pip liblapack-dev libblas-dev gfortran
+    - sudo apt-get -y install python3-numpy python3-scipy python3-pip liblapack-dev libblas-dev gfortran python3-setuptools
     - sudo pip3 install coverage codecov toolz parameterized codeclimate-test-reporter
     - sudo pip3 install setuptools numpy --upgrade
 cache: pip
