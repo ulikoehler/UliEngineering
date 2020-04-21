@@ -95,15 +95,15 @@ class TestUnstair(unittest.TestCase):
         sx = np.arange(1000) * .02
         rsine = np.round(np.sin(sx) * 10.) / 10.
         rx, ry = unstair(sx, rsine, method=method)
-        assert_less(rx.size, sx.size)
-        assert_less(ry.size, rsine.size)
+        self.assertLess(rx.size, sx.size)
+        self.assertLess(ry.size, rsine.size)
 
 class TestOptimumPolyfit(unittest.TestCase):
     def testBasic(self):
         x = np.linspace(-100., 100., 10000)
         y = np.square(x)
         poly, deg, score = optimum_polyfit(x, y)
-        assert_less(score, 1e-10)
+        self.assertLess(score, 1e-10)
         self.assertEqual(np.max(np.abs(y - poly(x))), score)
 
     def testRandom(self):
@@ -163,8 +163,8 @@ class TestLinSpace(unittest.TestCase):
 
     def testDtype(self):
         lin1 = LinRange(0.0, 100.0, 101)
-        assert_is_instance(lin1, LinRange)
-        assert_is_instance(lin1.view(0, 5), LinRange)
+        self.assertIsInstance(lin1, LinRange)
+        self.assertIsInstance(lin1.view(0, 5), LinRange)
 
 class TestAggregate(unittest.TestCase):
     def test_aggregate(self):

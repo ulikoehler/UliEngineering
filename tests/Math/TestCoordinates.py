@@ -23,7 +23,7 @@ class TestBoundingBox(unittest.TestCase):
         assert_allclose(bbox.maxy, -53.56289)
         assert_allclose(bbox.width, 6.75652 - 6.73462)
         assert_allclose(bbox.height, -53.56289 - -53.57835)
-        assert_in("BoundingBox(", bbox.__repr__())
+        self.assertIn("BoundingBox(", bbox.__repr__())
 
     def test_bbox(self):
         """Test bounding box with simulated data"""

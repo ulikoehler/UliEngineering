@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools  assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
 from parameterized import parameterized
 import concurrent.futures
@@ -335,7 +334,7 @@ class TestMajorityVote(unittest.TestCase):
         # Check mv_all
         self.assertTrue(res == [(3, 0.5), (2, 0.25), (1, 0.25)] or res == [(3, 0.5), (1, 0.25), (2, 0.25)])
         self.assertEqual(majority_vote(lst), 3)
-        assert_is_none(majority_vote([]))
+        self.assertIsNone(majority_vote([]))
 
 
 class TestExtractByReference(unittest.TestCase):

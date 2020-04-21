@@ -82,11 +82,11 @@ class TestChunkGeneration(unittest.TestCase):
 
     def test_fixedSizeChunkGenerator_invalid2(self):
         with self.assertRaises(Exception):
-        overlapping_chunks(self.data1, 3, 0)
+            overlapping_chunks(self.data1, 3, 0)
 
     def test_fixedSizeChunkGenerator_invalid3(self):
         with self.assertRaises(Exception):
-        overlapping_chunks(self.data1, 0, 3)
+            overlapping_chunks(self.data1, 0, 3)
 
 class TestSlidingWindow(unittest.TestCase):
     def testRMS(self):

@@ -130,12 +130,12 @@ class TestFilter(unittest.TestCase):
             filt.as_samplerate(100.)
 
     def testChain(self):
-        assert_is_instance(self.filt.chain(5), ChainedFilter)
-        assert_is_instance(self.filt.chain(1), SignalFilter)
+        self.assertIsInstance(self.filt.chain(5), ChainedFilter)
+        self.assertIsInstance(self.filt.chain(1), SignalFilter)
         # chain_with
-        assert_is_instance(self.filt.chain_with(self_repeat=1), SignalFilter)
-        assert_is_instance(self.filt.chain_with(self_repeat=2), ChainedFilter)
-        assert_is_instance(self.filt.chain_with(other=self.filt,
+        self.assertIsInstance(self.filt.chain_with(self_repeat=1), SignalFilter)
+        self.assertIsInstance(self.filt.chain_with(self_repeat=2), ChainedFilter)
+        self.assertIsInstance(self.filt.chain_with(other=self.filt,
                                self_repeat=2, other_repeat=2), ChainedFilter)
 
     def testChain0(self):
@@ -244,16 +244,16 @@ class TestFilterBank(unittest.TestCase):
         bank["A"] = filt1
         bank["B"] = filt2
         # Check 100 Hz bank
-        assert_in("A", bank)
-        assert_in("B", bank)
-        assert_not_in(filt1, bank)
-        assert_not_in(bank, bank)
+        self.assertIn("A", bank)
+        self.assertIn("B", bank)
+        self.assertNotIn(filt1, bank)
+        self.assertNotIn(bank, bank)
         # Check fast path resampling to same samplerate
         self.assertTrue(bank.as_samplerate(100.) == bank)
         # Check resampled bank
         bank200 = bank.as_samplerate(200.)
         self.assertTrue(bank200 != bank)
-        assert_in("A", bank200)
-        assert_in("B", bank200)
+        self.assertIn("A", bank200)
+        self.assertIn("B", bank200)
         self.assertEqual(bank200["A"].samplerate, 200.)
         self.assertEqual(bank200["B"].samplerate, 200.)

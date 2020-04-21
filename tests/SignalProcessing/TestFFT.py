@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_approx_equal, assert_allclose, assert_almost_equal
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.Chunks import *
@@ -20,7 +20,7 @@ class TestFFT(unittest.TestCase):
         # Test if artifacts can be cut
         origLength = fft.frequencies.shape[0]
         fft2 = fft.cut_dc_artifacts()
-        assert_less(fft2.frequencies.shape[0], origLength)
+        self.assertLess(fft2.frequencies.shape[0], origLength)
 
     def testCutFFTDCArtifacts(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
