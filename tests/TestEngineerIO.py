@@ -78,9 +78,9 @@ class TestEngineerIO(unittest.TestCase):
                     ("ΔAΔ",),
                     (" ",),
                     ("",)])
-    @raises(ValueError)
     def test_normalize_numeric_invalid(self, s):
-        print(self.io.normalize_numeric(s))
+        with self.assertRaises(ValueError):
+            print(self.io.normalize_numeric(s))
 
     def test_split_unit(self):
         assert_tuple_equal(self.io.split_unit("1234"), UnitSplitResult('1234', '', ''))
@@ -135,9 +135,9 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
 
-    @raises(ValueError)
     def test_format_invalid(self):
-        self.io.format(1.0e-25, "V")
+        with self.assertRaises(ValueError):
+            self.io.format(1.0e-25, "V")
 
     def test_format_no_unit(self):
         self.assertEqual(self.io.format(1.999999, ""), '2.00')
@@ -205,13 +205,13 @@ class TestEngineerIO(unittest.TestCase):
         testfn3 = functools.partial(testfn2, n=3.0)
         self.assertEqual(self.io.auto_format(testfn3), "3.00 V")
 
-    @raises(UnannotatedReturnValueError)
     def testAutoFormatInvalid1(self):
-        self.io.auto_format(self.io.format) # Callable but not annotated
+        with self.assertRaises(UnannotatedReturnValueError):
+            self.io.auto_format(self.io.format) # Callable but not annotated
 
-    @raises(ValueError)
     def testAutoFormatInvalid2(self):
-        self.io.auto_format(None)
+        with self.assertRaises(UnannotatedReturnValueError):
+            self.io.auto_format(None)
 
     def test_auto_suffix_1d(self):
         arr = np.arange(-4., 5., .5)

@@ -98,6 +98,6 @@ class TestLengths(unittest.TestCase):
         ("xaz"),
         ("yxard"),
     ])
-    @raises(ValueError)
     def test_invalid_unit(self, unit):
-        normalize_length("6.6 {}".format(unit))
+        with self.assertRaises(ValueError):
+            normalize_length("6.6 {}".format(unit))

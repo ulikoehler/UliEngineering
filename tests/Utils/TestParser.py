@@ -11,9 +11,9 @@ class TestParseIntFloat(unittest.TestCase):
         self.assertEqual(parse_int_or_float("1.0"), 1.0)
         self.assertEqual(parse_int_or_float("-2.225"), -2.225)
 
-    @raises(ValueError)
     def test_parse_int_or_float_err(self):
-        parse_int_or_float("3ahtj4")
+        with self.assertRaises(ValueError):
+            parse_int_or_float("3ahtj4")
 
     def test_try_parse_int_or_float(self):
         self.assertEqual(try_parse_int_or_float("1"), 1)

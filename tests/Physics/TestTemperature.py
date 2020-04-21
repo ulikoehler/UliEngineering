@@ -39,13 +39,13 @@ class TestTemperature(unittest.TestCase):
         assert_approx_equal(temperature_with_dissipation("1 W", "1 °C/W"), 26.)
         assert_approx_equal(temperature_with_dissipation("1 W", "50 °C/W"), 25. + 50.)
 
-    @raises(InvalidUnitException)
     def testWrongUnit(self):
-        normalize_temperature("150V")
+        with self.assertRaises(InvalidUnitException):
+            normalize_temperature("150V")
 
-    @raises(ValueError)
     def testInvalidUnit(self):
-        normalize_temperature("1G50 G")
+        with self.assertRaises(ValueError):
+            normalize_temperature("1G50 G")
 
 class TestTemperatureConversion(unittest.TestCase):
     def test_fahrenheit_to_celsius(self):

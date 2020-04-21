@@ -15,7 +15,7 @@ class TestLEDSeriesResistors(unittest.TestCase):
         assert_approx_equal(led_series_resistor("12V", "20 mA", "1.6V"), 520.)
         assert_approx_equal(led_series_resistor(12.0, 20e-3, LEDForwardVoltages.Red), 520.)
 
-    @raises(OperationImpossibleException)
     def test_led_series_resistor_invalid(self):
         # Forward voltage too high for supply voltage
-        assert_approx_equal(led_series_resistor("1V", "20 mA", "1.6V"), 520.)
+        with self.assertRaises(OperationImpossibleException):
+            assert_approx_equal(led_series_resistor("1V", "20 mA", "1.6V"), 520.)

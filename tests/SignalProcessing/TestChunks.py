@@ -77,14 +77,16 @@ class TestChunkGeneration(unittest.TestCase):
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
-    @raises
     def test_fixedSizeChunkGenerator_invalid1(self):
-        overlapping_chunks(None, 3, 3)
-    @raises
+        with self.assertRaises(Exception):
+            overlapping_chunks(None, 3, 3)
+
     def test_fixedSizeChunkGenerator_invalid2(self):
+        with self.assertRaises(Exception):
         overlapping_chunks(self.data1, 3, 0)
-    @raises
+
     def test_fixedSizeChunkGenerator_invalid3(self):
+        with self.assertRaises(Exception):
         overlapping_chunks(self.data1, 0, 3)
 
 class TestSlidingWindow(unittest.TestCase):

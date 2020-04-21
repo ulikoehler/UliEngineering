@@ -40,9 +40,9 @@ class TestFilter(unittest.TestCase):
         d2 = filt(self.d)
         self.assertEqual(self.d.shape, d2.shape)
 
-    @raises(ValueError)
     def testInvalidPassType(self):
-        filt = SignalFilter(100.0, [1.0, 2.0], btype="foobar")
+        with self.assertRaises(ValueError):
+            filt = SignalFilter(100.0, [1.0, 2.0], btype="foobar")
 
     def test_normalize_frequencies(self):
         assert_allclose(1200., _normalize_frequencies(1200.))
@@ -52,9 +52,9 @@ class TestFilter(unittest.TestCase):
         assert_allclose([1.0, 2.0], _normalize_frequencies([1.0, 2.0]))
         assert_allclose([1.0, 2.0], _normalize_frequencies(["1 Hz", "2 Hz"]))
 
-    @raises(ValueError)
     def test_normalize_frequencies_invalid(self):
-        _normalize_frequencies(None)
+        with self.assertRaises(ValueError):
+            _normalize_frequencies(None)
 
     def testFrequencyResponse(self):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
@@ -99,24 +99,24 @@ class TestFilter(unittest.TestCase):
         ("bandpass", "foobar"),
         ("bandstop", "foobar"),
     ])
-    @raises(ValueError)
     def testWrongFrequencyParam(self, btype, freqs):
-        SignalFilter(100.0, freqs, btype)
+        with self.assertRaises(ValueError):
+            SignalFilter(100.0, freqs, btype)
 
-    @raises(NotComputedException)
     def testUninitializedFilter1(self):
-        filt = SignalFilter(100.0, 1.0)
-        filt.is_stable()
+        with self.assertRaises(NotComputedException):
+            filt = SignalFilter(100.0, 1.0)
+            filt.is_stable()
 
-    @raises(NotComputedException)
     def testUninitializedFilter2(self):
-        filt = SignalFilter(100.0, 1.0)
-        filt(self.d)
+        with self.assertRaises(NotComputedException):
+            filt = SignalFilter(100.0, 1.0)
+            filt(self.d)
 
-    @raises(FilterUnstableError)
     def testUnstableFilter(self):
-        filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
-        filt.iir(order=100, rp=1e-12)
+        with self.assertRaises(FilterUnstableError):
+            filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
+            filt.iir(order=100, rp=1e-12)
 
     def testAsSamplerate(self):
         # TODO improve test
@@ -124,11 +124,11 @@ class TestFilter(unittest.TestCase):
         self.filt.as_samplerate(200.)
         self.filt.as_samplerate(50.)
 
-    @raises(NotComputedException)
     def testAsSamplerateNotComputed(self):
         # TODO improve test
-        filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
-        filt.as_samplerate(100.)
+        with self.assertRaises(NotComputedException):
+            filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
+            filt.as_samplerate(100.)
 
     def testChain(self):
         assert_is_instance(self.filt.chain(5), ChainedFilter)
@@ -139,13 +139,10 @@ class TestFilter(unittest.TestCase):
         assert_is_instance(self.filt.chain_with(other=self.filt,
                                self_repeat=2, other_repeat=2), ChainedFilter)
 
-
-    @raises(ValueError)
     def testChain0(self):
         "Test chain with repeat=0"
-        self.filt.chain(0)
-
-
+        with self.assertRaises(ValueError):
+            self.filt.chain(0)
 
 
 class TestChainedFilter(TestFilter):
@@ -204,16 +201,16 @@ class TestChainedFilter(TestFilter):
         assert_true(cf400 == cf)
         assert_true(cf500 != cf)
 
-    @raises(FilterInvalidError)
     def testDifferingSamplerateFilters(self):
-        testFilter1 = SignalFilter(400.0, 100.0, btype="lowpass").iir(1, ftype="butter")
-        testFilter2 = SignalFilter(400.0, 10.0, btype="lowpass").iir(1, ftype="butter")
-        testFilter3 = SignalFilter(100.0, 20.0, btype="lowpass").iir(1, ftype="butter")
-        ChainedFilter([testFilter1, testFilter2, testFilter3])
+        with self.assertRaises(FilterInvalidError):
+            testFilter1 = SignalFilter(400.0, 100.0, btype="lowpass").iir(1, ftype="butter")
+            testFilter2 = SignalFilter(400.0, 10.0, btype="lowpass").iir(1, ftype="butter")
+            testFilter3 = SignalFilter(100.0, 20.0, btype="lowpass").iir(1, ftype="butter")
+            ChainedFilter([testFilter1, testFilter2, testFilter3])
 
-    @raises(ValueError)
     def testEmptyList(self):
-        ChainedFilter([])
+        with self.assertRaises(ValueError):
+            ChainedFilter([])
 
 
 class TestSumFilter(TestFilter):

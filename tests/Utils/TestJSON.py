@@ -30,6 +30,6 @@ class TestNumpyEncoder(unittest.TestCase):
         self.assertEqual(json.dumps("gaa", cls=NumPyEncoder), '"gaa"')
         self.assertEqual(json.dumps(None, cls=NumPyEncoder), 'null')
 
-    @raises(TypeError)
     def test_invalid_encoding(self):
-        json.dumps(set([1,2,3]), cls=NumPyEncoder)
+        with self.assertRaises(TypeError):
+            json.dumps(set([1,2,3]), cls=NumPyEncoder)

@@ -89,10 +89,10 @@ class TestFFT(unittest.TestCase):
         # Number of decimals must depend on value, so we need to divide here
         assert_almost_equal(np.sum(fft.amplitudes) / amplitude, 1.0, 2)
 
-    @raises(ValueError)
     def test_fft_empty_chunks(self):
-        cg = ChunkGenerator(lambda _: [], 0)
-        parallel_fft_reduce(cg, None, None)
+        with self.assertRaises(ValueError):
+            cg = ChunkGenerator(lambda _: [], 0)
+            parallel_fft_reduce(cg, None, None)
 
     @parameterized.expand([
         ("With DC", False),
@@ -122,11 +122,11 @@ class TestFFT(unittest.TestCase):
         assert_almost_equal(fft.amplitude_integral(), sum(fft.amplitudes) / 3.)
         assert_almost_equal(fft.amplitude_integral(low=1., high=2.01), 3 + 4)
 
-    @raises(ValueError)
     def test_too_small_fft(self):
-        d = np.random.random_sample(10)
-        # Just test if it actually runs
-        x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
+        with self.assertRaises(ValueError):
+            d = np.random.random_sample(10)
+            # Just test if it actually runs
+            x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
 
 
 class TestClosestFrequency(unittest.TestCase):

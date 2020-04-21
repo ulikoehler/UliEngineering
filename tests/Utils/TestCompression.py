@@ -29,9 +29,9 @@ class TestAutoOpen(unittest.TestCase):
         with auto_open(xzfile) as infile:
             self.assertEqual("ghi\n", infile.read())
 
-    @raises(ValueError)
     def testInvalidExtension(self):
         "Test auto_open with a .foo file"
         # No need to actually write the file!
-        filename = os.path.join(self.tempdir, "test.foo")
-        auto_open(filename)
+        with self.assertRaises(ValueError):
+            filename = os.path.join(self.tempdir, "test.foo")
+            auto_open(filename)

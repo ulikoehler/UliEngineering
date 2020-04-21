@@ -23,7 +23,7 @@ class TestPowerFactor(unittest.TestCase):
         assert_allclose(power_factor_by_phase_angle(90-360), 0.0, atol=1e-15)
         assert_allclose(power_factor_by_phase_angle(np.pi/2., unit="rad"), 0.0, atol=1e-15)
 
-    @raises(ValueError)
     def test_power_factor_by_phase_angle_bad_unit(self):
-        power_factor_by_phase_angle(unit="nosuchunit")
+        with self.assertRaises(ValueError):
+            power_factor_by_phase_angle(unit="nosuchunit")
 

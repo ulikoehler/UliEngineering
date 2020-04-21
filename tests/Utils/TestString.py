@@ -43,11 +43,11 @@ class TestSplitNth(unittest.TestCase):
         self.assertEqual("", split_nth("", nth=1))
 
     @parameterized.expand(["a", "abc", "abcdef", "abc,def"])
-    @raises(ValueError)
     def testInvalidFirst(self, param):
-        split_nth(param, nth=3)
+        with self.assertRaises(ValueError):
+            split_nth(param, nth=3)
 
-    @raises(ValueError)
     def testInvalidOther(self):
-        split_nth("abc,def", nth=3)
+        with self.assertRaises(ValueError):
+            split_nth("abc,def", nth=3)
 

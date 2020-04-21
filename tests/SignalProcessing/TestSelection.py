@@ -46,10 +46,10 @@ class TestIntInterval(unittest.TestCase):
         (lambda iv: 'b' * iv,),
         (lambda iv: iv / 'b',),
     ])
-    @raises(TypeError)
     def testInvalidArithmetic(self, lamb):
-        iv = IntInterval(5, 10)
-        lamb(iv)
+        with self.assertRaises(TypeError):
+            iv = IntInterval(5, 10)
+            lamb(iv)
 
     def testCall(self):
         x = np.arange(100)
@@ -58,16 +58,16 @@ class TestIntInterval(unittest.TestCase):
         y = np.arange(1, 100)
         assert_allclose(IntInterval(6, 15)(x, y), (np.arange(6, 15), np.arange(7, 16)))
 
-    @raises(TypeError)
     def testCallNoArgs(self):
-        IntInterval(6, 15)()
+        with self.assertRaises(TypeError):
+            IntInterval(6, 15)()
 
     def testLen(self):
         self.assertEqual(len(IntInterval(6, 15)), 15 - 6)
 
-    @raises
     def testInvalidAdd(self):
-        IntInterval(1, 10) + self
+        with self.assertRaises(Exception):
+            IntInterval(1, 10) + self
 
     def testRangeArrayToIntIntervals(self):
         arr = np.asarray([[41, 60], [0, 30]])
@@ -106,17 +106,17 @@ class TestSelectByDatetime(unittest.TestCase):
         ("2015-01-29 23:59:01.0000001"),  # Too many digits
         ("2015-01-29 23:59:01.00000a1"),  # a is not a digit
     ])
-    @raises
     def testInvalidStringFormat(self, str):
-        select_by_datetime(np.arange(10), "2015-01-29 23:59:01")
+        with self.assertRaises(Exception):
+            select_by_datetime(np.arange(10), "2015-01-29 23:59:01")
 
-    @raises
     def testNoneArray(self, str):
-        select_by_datetime(None, "2015-01-29 23:59:01")
+        with self.assertRaises(Exception):
+            select_by_datetime(None, "2015-01-29 23:59:01")
 
-    @raises
     def testNoneTimestamp(self, str):
-        select_by_datetime(np.arange(10), None)
+        with self.assertRaises(Exception):
+            select_by_datetime(np.arange(10), None)
 
 class Testfind_sorted_extrema(unittest.TestCase):
     def testGreater(self):
@@ -136,9 +136,9 @@ class Testfind_sorted_extrema(unittest.TestCase):
         assert_allclose(find_sorted_extrema(x, y, comparator=np.less),
                         [[6.0, -5.0], [2.0, -1.0]])
 
-    @raises(ValueError)
     def testInvalidComparator(self):
-        find_sorted_extrema(None, None, comparator=map)
+        with self.assertRaises(ValueError):
+            find_sorted_extrema(None, None, comparator=map)
 
 class TestSelectByThreshold(unittest.TestCase):
 
@@ -150,9 +150,9 @@ class TestSelectByThreshold(unittest.TestCase):
         y[98] = 4.5
         assert_allclose(select_by_threshold(x, y, 5.0), [[132., 8.], [192., 5.5]])
 
-    @raises(ValueError)
     def testInvalidComparator(self):
-        select_by_threshold(None, None, 1.0, comparator=map)
+        with self.assertRaises(ValueError):
+            select_by_threshold(None, None, 1.0, comparator=map)
 
 
 class TestFindRuns(unittest.TestCase):
@@ -272,9 +272,9 @@ class TestShrinkRanges(unittest.TestCase):
         assert_allclose(result, [5, 20, 22])
         self.assertEqual(result.dtype, np.int)
 
-    @raises(KeyError)
     def testInvalidFunction(self):
-        shrink_ranges(np.zeros(5), "foobar")
+        with self.assertRaises(KeyError):
+            shrink_ranges(np.zeros(5), "foobar")
 
 
 class TestRandomSelection(unittest.TestCase):
@@ -289,10 +289,10 @@ class TestRandomSelection(unittest.TestCase):
         ("number", 5),
         ("numpy array", np.arange(5))
     ])
-    @raises(ValueError)
     def testTooSmall(self, _, arr):
         "Test if arrays which are too small are handled correctly"
-        random_slice(arr, 10)
+        with self.assertRaises(ValueError):
+            random_slice(arr, 10)
 
 
 class TestFindNearestIdx(unittest.TestCase):
@@ -366,6 +366,6 @@ class TestMultiSelect(unittest.TestCase):
     def testShort(self):
         self.assertEqual([1], multiselect([1], [0]))
 
-    @raises(IndexError)
     def testBadIdx(self):
-        self.assertEqual([1], multiselect([1], [3]))
+        with self.assertRaises(IndexError):
+            self.assertEqual([1], multiselect([1], [3]))

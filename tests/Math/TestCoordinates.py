@@ -49,6 +49,6 @@ class TestBoundingBox(unittest.TestCase):
                     (np.zeros((2,3)),),
                     (np.zeros((2,2,2)),)
                     ])
-    @raises(ValueError)
     def test_invalid_bbox_input(self, arr):
-        BoundingBox(arr)
+        with self.assertRaises(ValueError):
+            BoundingBox(arr)

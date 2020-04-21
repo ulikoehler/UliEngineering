@@ -48,15 +48,15 @@ class TestPolygon(unittest.TestCase):
         (np.zeros((5,5)),),
         (np.zeros((5,5)),)
     ])
-    @raises(ValueError)
     def test_polygon_area_rectangle_zeros(self, arr):
-        polygon_area(arr)
+        with self.assertRaises(ValueError):
+            polygon_area(arr)
 
     @parameterized.expand([
         (np.zeros(5),),
         (np.zeros((5,5)),),
         (np.zeros((5,5)),)
     ])
-    @raises(ValueError)
     def test_polygon_lines_rectangle(self, arr):
-        polygon_lines(arr)
+        with self.assertRaises(ValueError):
+            polygon_lines(arr)
