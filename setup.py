@@ -20,9 +20,8 @@ setup(name='UliEngineering',
       extras_require= {
         'SciPy functionality': ['scipy (>= 0.5)']
       },
-      test_suite='nose.collector',
-      tests_require=['nose', 'coverage', 'mock', 'rednose', 'parameterized'],
-      setup_requires=['nose>=1.0'],
+      test_suite='tests',
+      tests_require=['coverage', 'mock', 'parameterized'],
       platforms="any",
       classifiers=[
         'Development Status :: 4 - Beta',
