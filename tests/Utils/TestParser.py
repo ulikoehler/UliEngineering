@@ -3,9 +3,9 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true, raises
 from UliEngineering.Utils.Parser import *
+import unittest
 
-
-class TestParseIntFloat(object):
+class TestParseIntFloat(unittest.TestCase):
     def test_parse_int_or_float(self):
         assert_equal(parse_int_or_float("1"), 1)
         assert_equal(parse_int_or_float("1.0"), 1.0)

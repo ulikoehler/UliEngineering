@@ -6,8 +6,9 @@ from UliEngineering.Math.Coordinates import *
 from parameterized import parameterized
 import functools
 import numpy as np
+import unittest
 
-class TestBoundingBox(object):
+class TestBoundingBox(unittest.TestCase):
     def test_bbox_real(self):
         """Test bounding box with real data"""
         coords = [(6.74219, -53.57835),

@@ -5,11 +5,12 @@ from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
 from parameterized import parameterized
+import unittest
 
-class TestFilter(object):
+class TestFilter(unittest.TestCase):
 
     def __init__(self):
-        self.d = np.random.random(1000)
+        self.d = np.random.random_sample(1000)
         # Some rather random test filter
         self.filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         self.filt.iir(order=2, rp=1)
@@ -239,7 +240,7 @@ class TestSumFilter(TestFilter):
         filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
         SumFilter(filt)
 
-class TestFilterBank(object):
+class TestFilterBank(unittest.TestCase):
     def testBasic(self):
         filt1 = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=1)
         filt2 = SignalFilter(100.0, 2.0, btype="lowpass").iir(order=1)

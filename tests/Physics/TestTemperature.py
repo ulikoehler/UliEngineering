@@ -5,8 +5,9 @@ from nose.tools import raises, assert_equal
 from UliEngineering.Physics.Temperature import *
 from UliEngineering.Exceptions import *
 from UliEngineering.EngineerIO import auto_format
+import unittest
 
-class TestTemperature(object):
+class TestTemperature(unittest.TestCase):
     def testNormalizeTemperature(self):
         # Pure numbers
         assert_approx_equal(normalize_temperature("0"), 273.15)
@@ -46,7 +47,7 @@ class TestTemperature(object):
     def testInvalidUnit(self):
         normalize_temperature("1G50 G")
 
-class TestTemperatureConversion(object):
+class TestTemperatureConversion(unittest.TestCase):
     def test_fahrenheit_to_celsius(self):
         assert_approx_equal(fahrenheit_to_celsius("11 °F"), -11.66666667)
         assert_approx_equal(fahrenheit_to_celsius(11.), -11.666666667)

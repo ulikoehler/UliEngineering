@@ -3,8 +3,9 @@
 from nose.tools import assert_equal, assert_true, assert_false, raises
 from UliEngineering.Utils.String import *
 from parameterized import parameterized
+import unittest
 
-class TestSplitNth(object):
+class TestSplitNth(unittest.TestCase):
     def testSimple(self):
         assert_equal("a", split_nth("a,b,c,d,e,f"))
         assert_equal("a", split_nth("a,b,c,d,e,f", nth=1))

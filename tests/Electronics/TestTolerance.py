@@ -6,8 +6,9 @@ from UliEngineering.Electronics.Tolerance import *
 from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Utils.Range import ValueRange
 import numpy as np
+import unittest
 
-class TestValueRangeOverTolerance(object):
+class TestValueRangeOverTolerance(unittest.TestCase):
     def test_value_range_over_tolerance(self):
         # Test with simple ppm input
         assert_equal(str(value_range_over_tolerance("1 kΩ", "1 %")),

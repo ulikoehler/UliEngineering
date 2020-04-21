@@ -6,8 +6,9 @@ from UliEngineering.Electronics.TemperatureCoefficient import *
 from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Utils.Range import ValueRange
 import numpy as np
+import unittest
 
-class TestTemperatureCoefficient(object):
+class TestTemperatureCoefficient(unittest.TestCase):
     def test_value_range_over_temperature_zero(self):
         # Test with simple ppm input
         assert(str(value_range_over_temperature("1 kΩ", "0 ppm")),
@@ -56,7 +57,7 @@ class TestTemperatureCoefficient(object):
             str(ValueRange(994, 1017, "Ω"))
         )
 
-class TestValueAtTemperature(object):
+class TestValueAtTemperature(unittest.TestCase):
     def test_value_at_temperature(self):
         # Ref temp => zero difference
         assert_approx_equal(value_at_temperature("1 kΩ", "25 °C", "100 ppm"), 1000.0)

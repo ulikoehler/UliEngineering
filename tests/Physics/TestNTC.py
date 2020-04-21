@@ -6,8 +6,9 @@ from UliEngineering.Physics.NTC import *
 from UliEngineering.Exceptions import *
 import functools
 import numpy as np
+import unittest
 
-class TestNTC(object):
+class TestNTC(unittest.TestCase):
     def test_ntc_resistance(self):
         # Values arbitrarily from Murata NCP15WB473D03RC
         assert_approx_equal(ntc_resistance("47k", "4050K", "25°C"), 47000)

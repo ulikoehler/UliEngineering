@@ -5,8 +5,9 @@ from nose.tools import raises
 from UliEngineering.Electronics.MOSFET import *
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.EngineerIO import auto_format
+import unittest
 
-class TestLEDSeriesResistors(object):
+class TestLEDSeriesResistors(unittest.TestCase):
     def test_mosfet_gate_charge_losses(self):
         # Example verified at http://www.elektronik-kompendium.de/sites/bau/1109111.htm
         # Also verified at https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-led-series-resistor

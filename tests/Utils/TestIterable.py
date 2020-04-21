@@ -3,9 +3,10 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true, raises, assert_false
 from UliEngineering.Utils.Iterable import *
+import unittest
 
 
-class TestListIterator(object):
+class TestListIterator(unittest.TestCase):
     def test_to_list(self):
         iterable = [1,2,3,4,5]
         it = ListIterator(iterable)
@@ -31,7 +32,7 @@ class TestListIterator(object):
         assert_equal(list(it), [])
     
 
-class TestPeekableIteratorWrapper(object):
+class TestPeekableIteratorWrapper(unittest.TestCase):
     def test_list_2without_peek(self):
         iterable = [1,2,3,4,5]
         it = PeekableIteratorWrapper(ListIterator(iterable))

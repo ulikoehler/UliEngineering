@@ -3,8 +3,9 @@
 from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true, raises
 from UliEngineering.Utils.JSON import *
+import unittest
 
-class TestNumpyEncoder(object):
+class TestNumpyEncoder(unittest.TestCase):
     def testNDArrayEncoding(self):
         arr = np.asarray([1, 2, 3, 5])
         s = json.dumps(arr, cls=NumPyEncoder)

@@ -7,10 +7,11 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
 executor = concurrent.futures.ThreadPoolExecutor(4)
 
-class TestIntInterval(object):
+class TestIntInterval(unittest.TestCase):
     def testAdd(self):
         assert_equal(IntInterval(1, 10) + 5, (6, 15))
         assert_equal(5 + IntInterval(1, 10), (6, 15))
@@ -80,7 +81,7 @@ class TestIntInterval(object):
         assert_allclose(IntInterval.to_ranges(intervals), arr)
 
 
-class TestSelectByDatetime(object):
+class TestSelectByDatetime(unittest.TestCase):
     def testGeneric(self):
         now = datetime.datetime.now()
         # Test out of range
@@ -117,7 +118,7 @@ class TestSelectByDatetime(object):
     def testNoneTimestamp(self, str):
         select_by_datetime(np.arange(10), None)
 
-class Testfind_sorted_extrema(object):
+class Testfind_sorted_extrema(unittest.TestCase):
     def testGreater(self):
         x = np.arange(10)
         y = np.zeros(10)
@@ -139,11 +140,11 @@ class Testfind_sorted_extrema(object):
     def testInvalidComparator(self):
         find_sorted_extrema(None, None, comparator=map)
 
-class TestSelectByThreshold(object):
+class TestSelectByThreshold(unittest.TestCase):
 
     def testGreater(self):
         x = np.linspace(100, 199, 100)
-        y = np.random.random(100)
+        y = np.random.random_sample(100)
         y[32] = 8.0
         y[92] = 5.5
         y[98] = 4.5
@@ -154,7 +155,7 @@ class TestSelectByThreshold(object):
         select_by_threshold(None, None, 1.0, comparator=map)
 
 
-class TestFindRuns(object):
+class TestFindRuns(unittest.TestCase):
     def testSimple(self):
         x = np.full(25, False, np.bool)
         x[4:9] = True
@@ -230,7 +231,7 @@ class TestFindRuns(object):
         assert_allclose(find_true_runs(x), np.zeros((0, 2)))
 
 
-class TestShrinkRanges(object):
+class TestShrinkRanges(unittest.TestCase):
     def __init__(self):
         self.x = np.zeros(25)
         self.x[4:9] = 1.0
@@ -276,7 +277,7 @@ class TestShrinkRanges(object):
         shrink_ranges(np.zeros(5), "foobar")
 
 
-class TestRandomSelection(object):
+class TestRandomSelection(unittest.TestCase):
     def testBasic(self):
         # Just test if it does not raise
         random_slice(100, 10)
@@ -294,7 +295,7 @@ class TestRandomSelection(object):
         random_slice(arr, 10)
 
 
-class TestFindNearestIdx(object):
+class TestFindNearestIdx(unittest.TestCase):
     def testBasic(self):
         assert_equal(find_nearest_idx(np.arange(10), 5.0), 5)
         assert_equal(find_nearest_idx(np.arange(3, 13), 5.0), 2)
@@ -304,7 +305,7 @@ class TestFindNearestIdx(object):
         assert_equal(find_nearest_idx(np.arange(3, 13), 5.500001), 3)
         assert_equal(find_nearest_idx(np.arange(3, 13), 5.6), 3)
 
-class TestGeneratorCount(object):
+class TestGeneratorCount(unittest.TestCase):
     @parameterized.expand([
         (True,), (False,)
     ])
@@ -327,7 +328,7 @@ class TestGeneratorCount(object):
             assert_equal(len(gc), len(lst))
 
 
-class TestMajorityVote(object):
+class TestMajorityVote(unittest.TestCase):
     def testBasic(self):
         lst = [1, 2, 3, 3]
         res = majority_vote_all(lst)
@@ -337,7 +338,7 @@ class TestMajorityVote(object):
         assert_is_none(majority_vote([]))
 
 
-class TestExtractByReference(object):
+class TestExtractByReference(unittest.TestCase):
     def testBasic(self):
         fx = np.arange(100)
         fy = np.square(fx)
@@ -347,7 +348,7 @@ class TestExtractByReference(object):
         assert_allclose(resY, fy[20:50])
 
 
-class TestSelectRanges(object):
+class TestSelectRanges(unittest.TestCase):
     def testBasic(self):
         arr = np.arange(10)
         ranges = np.asarray([[3, 5], [7, 8]])
@@ -355,7 +356,7 @@ class TestSelectRanges(object):
         assert_array_equal(result[0], [3, 4])
         assert_array_equal(result[1], [7])
 
-class TestMultiSelect(object):
+class TestMultiSelect(unittest.TestCase):
     def testBasic(self):
         assert_equal([4, 2, 6], multiselect([1, 2, 3, 4, 5, 6], [3, 1, 5]))
 

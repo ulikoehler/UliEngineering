@@ -8,10 +8,12 @@ from UliEngineering.SignalProcessing.Chunks import *
 from parameterized import parameterized
 import concurrent.futures
 import numpy as np
+import numpy.random
+import unittest
 
-class TestFFT(object):
+class TestFFT(unittest.TestCase):
     def testBasicFFT(self):
-        rand = np.random.random(1000) * 5.0 + 1.0 # +1: Artifical DC artifacts
+        rand = np.random.random_sample(1000) * 5.0 + 1.0 # +1: Artifical DC artifacts
         fft = compute_fft(rand, 10.0)
         assert_equal(fft.frequencies.shape[0], rand.shape[0] / 2)
         assert_equal(fft.amplitudes.shape[0], rand.shape[0] / 2)
@@ -62,7 +64,7 @@ class TestFFT(object):
 
     def testDominantFrequency(self):
         x = np.linspace(100, 199, 100) # Must not be equal to array index (so we check the fn doesnt just return indices)
-        y = np.random.random(100)
+        y = np.random.random_sample(100)
         # Insert artificial peak
         y[32] = 8.0
         fft = FFT(x, y)
@@ -97,7 +99,7 @@ class TestFFT(object):
         ("Without DC", True),
     ])
     def testParallelFFTReduce(self, name, removeDC):
-        d = np.random.random(1000)
+        d = np.random.random_sample(1000)
         chunkgen = overlapping_chunks(d, 100, 5)
         # Just test if it actually runs
         fft = parallel_fft_reduce(chunkgen, 10.0, 100, removeDC=removeDC)
@@ -109,7 +111,7 @@ class TestFFT(object):
         assert_equal(fft.frequencies.shape, fft.amplitudes.shape)
 
     def testSimpleParallelFFTReduce(self):
-        d = np.random.random(1000)
+        d = np.random.random_sample(1000)
         # Just test if it actually runs
         fft = simple_parallel_fft_reduce(d, 100.0, 100)
         assert_equal(fft.frequencies.shape[0], 50)
@@ -122,12 +124,12 @@ class TestFFT(object):
 
     @raises(ValueError)
     def test_too_small_fft(self):
-        d = np.random.random(10)
+        d = np.random.random_sample(10)
         # Just test if it actually runs
         x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
 
 
-class TestClosestFrequency(object):
+class TestClosestFrequency(unittest.TestCase):
     def __init__(self):
         pass
 
@@ -146,7 +148,7 @@ class TestClosestFrequency(object):
         fft = FFT(fftx, fftx * 2, fftx * 3)
         assert_equal((1, 2, 3), fft.closest_value(0.))
 
-class TestFFTSelectFrequencyRange(object):
+class TestFFTSelectFrequencyRange(unittest.TestCase):
     def testGeneric(self):
         arr = np.arange(0.0, 10.0)
         result = FFT(arr, arr + 1.0, None)[1.0:5.5]

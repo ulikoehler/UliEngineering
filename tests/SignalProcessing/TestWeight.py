@@ -7,8 +7,9 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
-class TestWeighHalves(object):
+class TestWeighHalves(unittest.TestCase):
     def testWeighHalves(self):
         # Empty array
         assert_allclose(weigh_halves(np.zeros(0)), (0, 0))
@@ -17,7 +18,7 @@ class TestWeighHalves(object):
         # Odd array size
         assert_allclose(weigh_halves(np.arange(5)), (2., 8.))
 
-class TestWeightSymmetry(object):
+class TestWeightSymmetry(unittest.TestCase):
     def testWeightSymmetry(self):
         assert_approx_equal(weight_symmetry(0.5, 0.5), 1.0)
         assert_approx_equal(weight_symmetry(0.02, 0.98), 0.04)

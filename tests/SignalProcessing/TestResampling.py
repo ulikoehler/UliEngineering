@@ -3,9 +3,10 @@ import numpy as np
 from nose.tools import assert_equal, assert_true, raises, assert_raises
 from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.SignalProcessing.Resampling import *
+import unittest
 
 
-class TestBSplineResampling(object):
+class TestBSplineResampling(unittest.TestCase):
     def __init__(self):
         self.x = np.arange(100)
         self.y = np.square(self.x)
@@ -15,7 +16,7 @@ class TestBSplineResampling(object):
         assert_allclose(resample_discard(x, 2), [0, 2, 4, 6, 8])
         assert_allclose(resample_discard(x, 3), [0, 3, 6, 9])
 
-class TestSignalSamplerate(object):
+class TestSignalSamplerate(unittest.TestCase):
     def __init__(self):
         # 100% equal sample rate
         self.tequal = np.asarray([
@@ -59,7 +60,7 @@ class TestSignalSamplerate(object):
         assert_approx_equal(signal_samplerate(self.talmostequal, ignore_percentile=3), 10.0)
         assert_approx_equal(signal_samplerate(self.tequal, ignore_percentile=3), 10.0)
 
-class TestParallelResampling(object):
+class TestParallelResampling(unittest.TestCase):
     def __init__(self):
         self.x = np.arange(100)
         self.y = np.square(self.x)

@@ -3,8 +3,9 @@
 import os.path
 from nose.tools import assert_equal, assert_true, assert_false
 from UliEngineering.Utils.Temporary import *
+import unittest
 
-class TestTemporary(object):
+class TestTemporary(unittest.TestCase):
     def testMkstemp(self):
         tgen = AutoDeleteTempfileGenerator()
         # Create file and check if it exists

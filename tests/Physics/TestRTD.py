@@ -6,8 +6,9 @@ from UliEngineering.Physics.RTD import *
 from UliEngineering.Exceptions import *
 import functools
 import numpy as np
+import unittest
 
-class TestRTD(object):
+class TestRTD(unittest.TestCase):
     def test_ptx_resistance(self):
         # Reference values from http://pavitronic.dk/eng/pt1000val.html
         # Other reference values (4 significant digits): http://grundpraktikum.physik.uni-saarland.de/scripts/Platin_Widerstandsthermometer.pdf
@@ -116,7 +117,7 @@ class TestRTD(object):
         expected = np.asarray([602.55, 1000.000, 1385.055])
         tempassert(pt1000_resistance(data), expected)
 
-class TestRTDPolynomialComputation(object):
+class TestRTDPolynomialComputation(unittest.TestCase):
     def test_optimize_check_polynomial(self):
         # Basically the code from techoverflow.net without matplotlib
         temp = np.linspace(-200.0, 0.0, 10000)

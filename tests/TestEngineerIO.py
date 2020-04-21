@@ -8,8 +8,9 @@ from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSpli
 from parameterized import parameterized
 import functools
 import numpy as np
+import unittest
 
-class TestEngineerIO(object):
+class TestEngineerIO(unittest.TestCase):
     def __init__(self):
         self.io = EngineerIO()
 
@@ -58,6 +59,7 @@ class TestEngineerIO(object):
                     ("1,234.56kfA",),
                     ("foobar",),
                     (None,),
+                    (["1.2 J", "foobar"],),
                     ("1k2 MA",),
                     ("1.2kkA",),
                     ("1k2kA",),
@@ -162,7 +164,7 @@ class TestEngineerIO(object):
         # Invalid suffix_exp_map
         assert_not_in("B", self.io.suffix_exp_map)
 
-    def test_exp_suffix_map(self):
+    def test_exp_suffix_map2(self):
         assert_equal("", self.io.exp_suffix_map[0])
         assert_equal("k", self.io.exp_suffix_map[1])
         assert_equal("M", self.io.exp_suffix_map[2])
@@ -186,10 +188,6 @@ class TestEngineerIO(object):
         assert_equal(self.io.normalize_numeric("1k25 V"), 1250.0)
         assert_equal(self.io.normalize_numeric(b"1k25 V"), 1250.0)
         assert_allclose(self.io.normalize_numeric(["1k25 V", "4.25 A"]), np.asarray([1250.0, 4.25]))
-
-    @raises(ValueError)
-    def test_normalize_numeric_invalid(self):
-        self.io.normalize_numeric(["1.2 J", "foobar"])
 
     def test_safe_normalize(self):
         assert_tuple_equal(self.io.safe_normalize("1.25 kV"), NormalizeResult('', 1250., '', 'V'))

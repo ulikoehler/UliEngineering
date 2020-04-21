@@ -8,8 +8,9 @@ from UliEngineering.SignalProcessing.Chunks import *
 from parameterized import parameterized
 import concurrent.futures
 import numpy as np
+import unittest
 
-class TestGenerateSinewave(object):
+class TestGenerateSinewave(unittest.TestCase):
     @parameterized.expand([
         (1.,),
         (2.,),
@@ -45,7 +46,7 @@ class TestGenerateSinewave(object):
 
 
 
-class TestGenerateWaves(object):
+class TestGenerateWaves(unittest.TestCase):
     @parameterized.expand([
         (sine_wave,),
         (cosine_wave,),

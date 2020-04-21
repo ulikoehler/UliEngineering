@@ -51,4 +51,4 @@ def cylinder_surface_area(radius, height):
     """
     radius = normalize_numeric(radius)
     height = normalize_numeric(height)
-    return cylinder_side_surface_area(radius, height) + 2 * 
+    return cylinder_side_surface_area(radius, height) + 2 # TODO

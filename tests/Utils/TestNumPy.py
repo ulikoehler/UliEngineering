@@ -6,8 +6,9 @@ from nose.tools import assert_equal, assert_true, raises, assert_greater
 from UliEngineering.Utils.NumPy import *
 from parameterized import parameterized
 import numpy as np
+import unittest
 
-class TestDynamicArrayResize(object):
+class TestDynamicArrayResize(unittest.TestCase):
     def test_numpy_resize_insert(self):
         arr = np.zeros(3)
         # Insert within bounds
@@ -24,7 +25,7 @@ class TestDynamicArrayResize(object):
         assert_array_equal(arr, [1, 2, 3, 4])
 
 
-class TestInvertBijection(object):
+class TestInvertBijection(unittest.TestCase):
     def testSimple(self):
         assert_allclose([0, 1, 2, 3], invert_bijection(np.arange(4)))
         assert_allclose([2, 0, 1, 3], invert_bijection([1, 2, 0, 3]))
@@ -34,13 +35,13 @@ class TestInvertBijection(object):
         assert_equal((0,), invert_bijection([]).shape)
 
 
-class TestApplyPairwise1D(object):
+class TestApplyPairwise1D(unittest.TestCase):
     def testSimple(self):
         assert_allclose([[0,0,0], [1,2,3], [2,4,6]],
                         apply_pairwise_1d(np.arange(3), np.arange(1,4), lambda a, b: a * b))
 
 
-class TestNgrams(object):
+class TestNgrams(unittest.TestCase):
 
     def test_ngrams1(self):
         inp = np.arange(5) # 0..4
@@ -63,30 +64,17 @@ class TestNgrams(object):
         assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
         assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
 
-        
-    def test_ngrams2(self):
-        inp = np.asarray([[0, 1], [1, 2],  [2, 3]])
-        closed = np.asarray([[[0, 1], [1, 2]],
-                             [[1, 2], [2, 3]],
-                             [[2, 3], [0, 1]]])
-        opened = np.asarray([[[0, 1], [1, 2]],
-                             [[1, 2], [2, 3]]])
-        print(np.asarray(list(ngrams(inp, 2, closed=True))))
-        print(closed)
-        assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
-        assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
-
-class TestPivotSplit(object):
+class TestPivotSplit(unittest.TestCase):
     def test_pivot_split(self):
         assert_equal([[0,1],[2,3,4,5]], list(split_by_pivot([0,1,2,3,4,5], [2])))
         assert_equal([[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [2,4])))
         assert_equal([[],[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [0,2,4])))
 
-class TestDatetime64Now(object):
+class TestDatetime64Now(unittest.TestCase):
     def test_datetime64_now(self):
         assert_equal(type(datetime64_now()), np.datetime64)
 
-class TestDatatypeResolution(object):
+class TestDatatypeResolution(unittest.TestCase):
 
     @parameterized.expand([
         ('us',),
@@ -98,6 +86,3 @@ class TestDatatypeResolution(object):
     ])
     def test_timedelta64_resolution(self, res):
         assert_equal(timedelta64_resolution(np.timedelta64(100, res)), res)
-    
-    def test_timedelta64_resolution(self):
-        assert_equal(datetime64_resolution(datetime64_now()), 'us')

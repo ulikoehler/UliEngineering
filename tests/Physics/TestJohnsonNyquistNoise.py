@@ -4,8 +4,9 @@ from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal
 from UliEngineering.Physics.JohnsonNyquistNoise import *
 from UliEngineering.EngineerIO import auto_format
+import unittest
 
-class TestJohnsonNyquistNoise(object):
+class TestJohnsonNyquistNoise(unittest.TestCase):
     def test_johnson_nyquist_noise_current(self):
         v = johnson_nyquist_noise_current("20 MΩ", "Δ10000 Hz", "20 °C")
         assert_approx_equal(v, 2.84512e-12, significant=5)

@@ -3,8 +3,9 @@
 from numpy.testing import assert_approx_equal, assert_allclose
 from nose.tools import assert_equal, assert_true
 from UliEngineering.Electronics.Hysteresis import *
+import unittest
 
-class TestHysteresis(object):
+class TestHysteresis(unittest.TestCase):
     def test_hysteresis_thresholds(self):
         # 1e300: Near-infinite resistor should not affect ratio
         assert_allclose(hysteresis_threshold_ratios(1e3, 1e3, 1e300), (0.5, 0.5))

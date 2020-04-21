@@ -5,8 +5,9 @@ from nose.tools import assert_equal
 from UliEngineering.Electronics.Reactance import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
+import unittest
 
-class TestNoiseDensity(object):
+class TestNoiseDensity(unittest.TestCase):
     def test_capacitive_reactance(self):
         assert_approx_equal(capacitive_reactance("100 pF", "3.2 MHz"), 497.3592)
         assert_approx_equal(capacitive_reactance(100e-12, 3.2e6), 497.3592)

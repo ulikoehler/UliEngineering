@@ -7,6 +7,7 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
 unstairMethods = [
     ("left",),
@@ -15,17 +16,17 @@ unstairMethods = [
     ("reduce",),
 ]
 
-class TestRemoveMean(object):
+class TestRemoveMean(unittest.TestCase):
     def testRemoveMean(self):
         assert_allclose(remove_mean([]), [])
         assert_allclose(remove_mean([1.0, 2.0, 3.0]), [-1.0, 0.0, 1.0])
 
-class TestRMS(object):
+class TestRMS(unittest.TestCase):
     def testRMS(self):
         assert_allclose(rms([]), [])
         assert_allclose(rms([1.0, 2.0, 3.0]), np.sqrt(np.mean([1*1, 2*2, 3*3])))
 
-class TestPeakToPeak(object):
+class TestPeakToPeak(unittest.TestCase):
     def testPeakToPeak(self):
         assert_allclose(peak_to_peak(None), 0.0)
         assert_allclose(peak_to_peak([]), 0.0)
@@ -43,7 +44,7 @@ class TestPeakToPeak(object):
         assert_allclose(peak_to_peak(np.asarray([2.0, 1.0])), 1.0)
         assert_allclose(peak_to_peak(np.asarray([0, 1, 3, -3, 0, 5, 0.7, 0.9])), 8)
 
-class TestUnstair(object):
+class TestUnstair(unittest.TestCase):
     @parameterized.expand(unstairMethods)
     def testNoReduction(self, method):
         # Test if unstair returns the original array for a non-step function
@@ -98,7 +99,7 @@ class TestUnstair(object):
         assert_less(rx.size, sx.size)
         assert_less(ry.size, rsine.size)
 
-class TestOptimumPolyfit(object):
+class TestOptimumPolyfit(unittest.TestCase):
     def testBasic(self):
         x = np.linspace(-100., 100., 10000)
         y = np.square(x)
@@ -108,11 +109,11 @@ class TestOptimumPolyfit(object):
 
     def testRandom(self):
         x = np.linspace(-100., 100., 1000)
-        y = np.random.random(x.size)
+        y = np.random.random_sample(x.size)
         poly, deg, score = optimum_polyfit(x, y)
 
 
-class TestLinSpace(object):
+class TestLinSpace(unittest.TestCase):
     @parameterized.expand([
         (0.0, 100.0, 101, True),
         (0.0, 100.0, 202, True),
@@ -166,7 +167,7 @@ class TestLinSpace(object):
         assert_is_instance(lin1, LinRange)
         assert_is_instance(lin1.view(0, 5), LinRange)
 
-class TestAggregate(object):
+class TestAggregate(unittest.TestCase):
     def test_aggregate(self):
         assert_equal([("a", 1), ("b", 1), ("c", 1)], list(aggregate("abc")))
         assert_equal([], list(aggregate("")))

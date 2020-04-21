@@ -4,8 +4,9 @@ from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal
 from UliEngineering.Physics.NoiseDensity import *
 from UliEngineering.EngineerIO import auto_format
+import unittest
 
-class TestNoiseDensity(object):
+class TestNoiseDensity(unittest.TestCase):
     def testActualNoise(self):
         assert_approx_equal(actualNoise("100 µV", "100 Hz"), 1e-3)
         assert_approx_equal(actualNoise(1e-4, 100), 1e-3)

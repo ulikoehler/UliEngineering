@@ -6,8 +6,9 @@ from UliEngineering.Physics.Frequency import *
 from UliEngineering.Exceptions import *
 import functools
 import numpy as np
+import unittest
 
-class TestFrequencies(object):
+class TestFrequencies(unittest.TestCase):
     def test_frequency_to_period(self):
         assert_approx_equal(frequency_to_period(0.1), 10)
         assert_approx_equal(frequency_to_period("0.1 Hz"), 10)

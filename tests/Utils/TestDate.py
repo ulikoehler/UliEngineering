@@ -4,8 +4,9 @@ import os
 from subprocess import check_output
 from nose.tools import assert_equal, assert_true, raises
 from UliEngineering.Utils.Date import *
+import unittest
 
-class TestDate(object):
+class TestDate(unittest.TestCase):
     def test_number_of_days_in_month(self):
         assert_equal(number_of_days_in_month(2019, 1), 31)
         assert_equal(number_of_days_in_month(2019, 2), 28)

@@ -5,8 +5,9 @@ from nose.tools import assert_equal
 from UliEngineering.Electronics.Power import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
+import unittest
 
-class TestPower(object):
+class TestPower(unittest.TestCase):
     def test_current_by_power(self):
         assert_allclose(current_by_power(25), 25 / 230, atol=1e-15)
         assert_allclose(current_by_power(25, 230), 25 / 230, atol=1e-15)

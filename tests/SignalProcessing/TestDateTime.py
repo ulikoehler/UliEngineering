@@ -7,8 +7,9 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
-class TestSpliceDate(object):
+class TestSpliceDate(unittest.TestCase):
     def test_simple(self):
         d1 = datetime.datetime(2016, 1, 1, 12, 32, 15, microsecond=123456)
         d2 = datetime.datetime(1905, 1, 1, 14, 11, 25, microsecond=52)
@@ -16,7 +17,7 @@ class TestSpliceDate(object):
         assert_equal(dres, splice_date(d1, d2))
 
 
-class TestAutoStrptime(object):
+class TestAutoStrptime(unittest.TestCase):
     def test_formats(self):
         #%Y-%m-%d %H:%M:%S.%f
         assert_equal(datetime.datetime(2016, 2, 1, 15, 2, 11, 50), auto_strptime("2016-02-01 15:02:11.000050"))

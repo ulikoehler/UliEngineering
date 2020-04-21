@@ -7,10 +7,11 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
-class TestWindow(object):
+class TestWindow(unittest.TestCase):
     def testWindowFunctor(self):
-        data = np.random.random(1000) 
+        data = np.random.random_sample(1000) 
         ftor = WindowFunctor(len(data), "blackman")
         # normal
         result = ftor(data)
@@ -19,9 +20,8 @@ class TestWindow(object):
         result = ftor(data, inplace=True)
         assert_allclose(result, data)
 
-    
-    def testWindowFunctor(self):
-        data = np.random.random(1000) 
+    def testWindow(self):
+        data = np.random.random_sample(1000) 
         # normal
         result = create_and_apply_window(data, "blackman")
         assert_allclose(result, data * np.blackman(1000))

@@ -6,8 +6,9 @@ from UliEngineering.Math.Decibel import *
 from parameterized import parameterized
 import functools
 import numpy as np
+import unittest
 
-class TestDecibel(object):
+class TestDecibel(unittest.TestCase):
     def test_ratio_to_db(self):
         assert_allclose(12, ratio_to_db_field(4), 0.05)
         assert_allclose(6, ratio_to_db_field(2), 0.05)

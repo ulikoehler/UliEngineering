@@ -5,8 +5,9 @@ from nose.tools import assert_equal, assert_true, raises
 from parameterized import parameterized
 from UliEngineering.Length import *
 from UliEngineering.Units import UnknownUnitInContextException
+import unittest
 
-class TestLengths(object):
+class TestLengths(unittest.TestCase):
     def test_length_normalization(self):
         assert_approx_equal(normalize_length(1.0), 1.0)
         assert_approx_equal(normalize_length("1.0 m"), 1.0)

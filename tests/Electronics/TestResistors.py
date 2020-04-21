@@ -4,8 +4,9 @@ from numpy.testing import assert_approx_equal
 from nose.tools import assert_equal, assert_true
 from UliEngineering.Electronics.Resistors import *
 from UliEngineering.EngineerIO import *
+import unittest
 
-class TestResistors(object):
+class TestResistors(unittest.TestCase):
     def test_parallel_resistors(self):
         assert_approx_equal(parallel_resistors(1000.0, 1000.0), 500.0)
         assert_approx_equal(parallel_resistors(1000.0, 1000.0, 500.0), 250.0)

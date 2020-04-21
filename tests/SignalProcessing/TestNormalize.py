@@ -7,8 +7,9 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
-class TestNormalize(object):
+class TestNormalize(unittest.TestCase):
     def test_center_to_zero(self):
         assert_allclose(center_to_zero([]).data, [])
         assert_allclose(center_to_zero(np.asarray([0.])).data, [0.])

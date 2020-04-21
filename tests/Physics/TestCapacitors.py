@@ -5,8 +5,9 @@ from nose.tools import assert_equal
 from UliEngineering.Electronics.Capacitors import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
+import unittest
 
-class TestCapacitors(object):
+class TestCapacitors(unittest.TestCase):
     def test_capacitor_energy(self):
         assert_approx_equal(capacitor_energy("1.5 F", "5.0 V"), 18.75)
         assert_approx_equal(capacitor_energy("1.5 F", "0.0 V"), 0.0)

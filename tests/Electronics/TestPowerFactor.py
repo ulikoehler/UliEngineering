@@ -5,8 +5,9 @@ from nose.tools import assert_equal
 from UliEngineering.Electronics.PowerFactor import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
+import unittest
 
-class TestPowerFactor(object):
+class TestPowerFactor(unittest.TestCase):
     def test_power_factor_by_phase_angle(self):
         assert_allclose(power_factor_by_phase_angle(0.0), 1.0, atol=1e-15)
         assert_allclose(power_factor_by_phase_angle("0"), 1.0, atol=1e-15)

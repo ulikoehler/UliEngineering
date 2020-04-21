@@ -5,8 +5,9 @@ from subprocess import check_output
 from nose.tools import assert_equal, assert_true, raises
 from UliEngineering.Utils.Compression import *
 from UliEngineering.Utils.Temporary import *
+import unittest
 
-class TestAutoOpen(object):
+class TestAutoOpen(unittest.TestCase):
     def __init__(self):
         # Use auto-managed temporary files
         self.tempfiles = AutoDeleteTempfileGenerator()

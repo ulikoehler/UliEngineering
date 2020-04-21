@@ -6,8 +6,9 @@ from UliEngineering.Math.Geometry.Polygon import *
 from parameterized import parameterized
 import functools
 import numpy as np
+import unittest
 
-class TestPolygon(object):
+class TestPolygon(unittest.TestCase):
     def test_polygon_lines(self):
         coords = np.asarray([[0, 1],
                              [1, 2],
@@ -48,7 +49,7 @@ class TestPolygon(object):
         (np.zeros((5,5)),)
     ])
     @raises(ValueError)
-    def test_polygon_area_rectangle(self, arr):
+    def test_polygon_area_rectangle_zeros(self, arr):
         polygon_area(arr)
 
     @parameterized.expand([
