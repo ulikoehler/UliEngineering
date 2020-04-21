@@ -144,7 +144,7 @@ class EngineerIO(object):
         """
         # Compute inverse suffix map
         self.exp_suffix_map = {}  # Key: exp // 3, Value: suffix
-        self.suffix_exp_map = {}  # Key: suffix, value: exponent
+        self.suffix_exp_map = {'': 0}  # Key: suffix, value: exponent
         current_exp = self.first_suffix_exp
         # Iterate over first suffices in each list
         for current_suffices in self.suffices:

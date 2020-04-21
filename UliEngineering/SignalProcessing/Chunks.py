@@ -170,6 +170,8 @@ def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     Returns (g, n) where g is a unary generator function (which takes the chunk
         number as an argument) and n is the number of chunks.
     """
+    if chunksize == 0:
+        raise ValueError("chunksize must not be 0")
     # Precompute offset table
     chunksize = int(chunksize)
     offsets = np.asarray(range(0, arr.shape[0] - (chunksize - 1), shiftsize))

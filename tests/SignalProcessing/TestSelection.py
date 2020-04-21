@@ -94,6 +94,8 @@ class TestSelectByDatetime(unittest.TestCase):
         self.assertEqual(select_by_datetime(np.arange(10), "2015-01-29 23:59:01"), 10)
         # Test with string w/ microseconds
         self.assertEqual(select_by_datetime(np.arange(10), "2015-01-29 23:59:01.000001"), 10)
+        # Test with string w/ microseconds with one digit missing (assumed to be 0)
+        self.assertEqual(select_by_datetime(np.arange(10), "2015-01-29 23:59:01.00001"), 10)
         # Test with around set
         self.assertEqual(select_by_datetime(np.arange(10), now, around=5), (5, 15))
 
@@ -101,7 +103,6 @@ class TestSelectByDatetime(unittest.TestCase):
         ("whatever"),
         ("2015-01-2923:59:01"),  # Missing space
         ("2015-01-29 23:59:01,000001"),  # Comma instead of point
-        ("2015-01-29 23:59:01.00001"),  # Not enough digits
         ("2015-01-29 23:59:01.0000001"),  # Too many digits
         ("2015-01-29 23:59:01.00000a1"),  # a is not a digit
     ])

@@ -209,7 +209,7 @@ class TestEngineerIO(unittest.TestCase):
             self.io.auto_format(self.io.format) # Callable but not annotated
 
     def testAutoFormatInvalid2(self):
-        with self.assertRaises(UnannotatedReturnValueError):
+        with self.assertRaises(ValueError):
             self.io.auto_format(None)
 
     def test_auto_suffix_1d(self):
