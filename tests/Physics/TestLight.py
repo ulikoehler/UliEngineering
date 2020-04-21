@@ -5,7 +5,7 @@ from UliEngineering.Physics.Light import *
 from UliEngineering.EngineerIO import auto_format
 import unittest
 
-class TestJohnsonNyquistNoise(unittest.TestCase):
+class TestLight(unittest.TestCase):
     def test_lumen_to_candela_by_apex_angle(self):
         v = lumen_to_candela_by_apex_angle("25 lm", "120°")
         assert_approx_equal(v, 7.9577471546, significant=5)
