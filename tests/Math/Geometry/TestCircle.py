@@ -7,10 +7,11 @@ from parameterized import parameterized
 import concurrent.futures
 import numpy as np
 import datetime
+import unittest
 
 
-class TestCircle(object):
-    @parameterized([
+class TestCircle(unittest.TestCase):
+    @parameterized.expand([
         (0.0, ),
         (1.0, ),
         (4.0, ),
@@ -24,7 +25,7 @@ class TestCircle(object):
         assert_approx_equal(circle_area_from_diameter(radius*2), np.pi*(radius**2))
         assert_approx_equal(circle_area_from_diameter(f"{radius*2}"), np.pi*(radius**2))
 
-    @parameterized([
+    @parameterized.expand([
         (0.0, ),
         (1.0, ),
         (4.0, ),

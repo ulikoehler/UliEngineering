@@ -42,7 +42,7 @@ class TestPolygon(object):
                              [0, 1]])
         assert_allclose(2, polygon_area(coords))
 
-    @parameterized([
+    @parameterized.expand([
         (np.zeros(5),),
         (np.zeros((5,5)),),
         (np.zeros((5,5)),)
@@ -51,7 +51,7 @@ class TestPolygon(object):
     def test_polygon_area_rectangle(self, arr):
         polygon_area(arr)
 
-    @parameterized([
+    @parameterized.expand([
         (np.zeros(5),),
         (np.zeros((5,5)),),
         (np.zeros((5,5)),)

@@ -37,7 +37,7 @@ class TestIntInterval(object):
         # Division, assumed to be implemented via multiplication
         assert_equal(IntInterval(5, 10) / (1. / 3.), (0, 15))
 
-    @parameterized([
+    @parameterized.expand([
         (lambda iv: 'b' - iv,),
         (lambda iv: iv + 'b',),
         (lambda iv: 'b' + iv,),
@@ -305,7 +305,7 @@ class TestFindNearestIdx(object):
         assert_equal(find_nearest_idx(np.arange(3, 13), 5.6), 3)
 
 class TestGeneratorCount(object):
-    @parameterized([
+    @parameterized.expand([
         (True,), (False,)
     ])
     def testBasic(self, generator):

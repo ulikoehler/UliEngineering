@@ -14,7 +14,7 @@ class TestFilter(object):
         self.filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         self.filt.iir(order=2, rp=1)
 
-    @parameterized([
+    @parameterized.expand([
         ("lowpass", 1.0),
         ("highpass", 1.0),
         ("bandpass", [1.0, 2.0]),
@@ -26,7 +26,7 @@ class TestFilter(object):
         d2 = filt(self.d)
         assert_equal(self.d.shape, d2.shape)
 
-    @parameterized([
+    @parameterized.expand([
         ("butter",),
         ("cheby1",),
         ("cheby2",),
@@ -60,7 +60,7 @@ class TestFilter(object):
         filt.iir(order=3)
         filt.frequency_response()
 
-    @parameterized([
+    @parameterized.expand([
         ("lowpass", 1.0),
         ("highpass", 1.0),
         ("bandpass", [1.0, 2.0]),
@@ -79,7 +79,7 @@ class TestFilter(object):
     def testCorrectFrequencyParam(self, btype, freqs):
         SignalFilter(100.0, freqs, btype)
 
-    @parameterized([
+    @parameterized.expand([
         ("lowpass", None),
         ("highpass", None),
         ("bandpass", None),
@@ -149,7 +149,7 @@ class TestFilter(object):
 
 class TestChainedFilter(TestFilter):
 
-    @parameterized([
+    @parameterized.expand([
         ("lowpass", 1.0),
         ("highpass", 1.0),
         ("bandpass", [1.0, 2.0]),
@@ -216,7 +216,7 @@ class TestChainedFilter(TestFilter):
 
 
 class TestSumFilter(TestFilter):
-    @parameterized([
+    @parameterized.expand([
         ("lowpass", 1.0),
         ("highpass", 1.0),
         ("bandpass", [1.0, 2.0]),

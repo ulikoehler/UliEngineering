@@ -53,7 +53,7 @@ class TestEngineerIO(object):
         assert_tuple_equal(self.io.split_input("3.20 €"), SplitResult('', '3.20', '', '', '€'))
         assert_tuple_equal(self.io.split_input("0.000014 €"), SplitResult('', '0.000014', '', '', '€'))
 
-    @parameterized([("1,234.56kfA",),
+    @parameterized.expand([("1,234.56kfA",),
                     ("1.23k45A",),
                     ("1,234.56kfA",),
                     ("foobar",),

@@ -41,7 +41,7 @@ class TestSplitNth(object):
         assert_equal("", split_nth("aa,bb,,", nth=4))
         assert_equal("", split_nth("", nth=1))
 
-    @parameterized(["a", "abc", "abcdef", "abc,def"])
+    @parameterized.expand(["a", "abc", "abcdef", "abc,def"])
     @raises(ValueError)
     def testInvalidFirst(self, param):
         split_nth(param, nth=3)

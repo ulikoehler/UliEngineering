@@ -92,7 +92,7 @@ class TestLengths(object):
         assert_approx_equal(convert_length_to_meters(3.33, "Angstrom"), 3.33e-10)
         assert_approx_equal(convert_length_to_meters(3.33, "angstrom"), 3.33e-10)
 
-    @parameterized([
+    @parameterized.expand([
         ("1A"),
         ("xaz"),
         ("yxard"),

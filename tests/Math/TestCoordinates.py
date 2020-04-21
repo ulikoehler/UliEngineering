@@ -44,7 +44,7 @@ class TestBoundingBox(object):
         assert_allclose(bbox.max_dim, 20)
         assert_allclose(bbox.min_dim, 10)
 
-    @parameterized([(np.zeros((0,2)),),
+    @parameterized.expand([(np.zeros((0,2)),),
                     (np.zeros((2,3)),),
                     (np.zeros((2,2,2)),)
                     ])

@@ -44,7 +44,7 @@ class TestPeakToPeak(object):
         assert_allclose(peak_to_peak(np.asarray([0, 1, 3, -3, 0, 5, 0.7, 0.9])), 8)
 
 class TestUnstair(object):
-    @parameterized(unstairMethods)
+    @parameterized.expand(unstairMethods)
     def testNoReduction(self, method):
         # Test if unstair returns the original array for a non-step function
         x = np.arange(10)
@@ -89,7 +89,7 @@ class TestUnstair(object):
         assert_array_equal(xres, xexpected)
         assert_array_equal(yres, yexpected)
 
-    @parameterized(unstairMethods)
+    @parameterized.expand(unstairMethods)
     def testSine(self, method):
         # Test with a rounded sine function. Data should be reduced
         sx = np.arange(1000) * .02
@@ -113,7 +113,7 @@ class TestOptimumPolyfit(object):
 
 
 class TestLinSpace(object):
-    @parameterized([
+    @parameterized.expand([
         (0.0, 100.0, 101, True),
         (0.0, 100.0, 202, True),
         (0.0, 100.0, 735, True),

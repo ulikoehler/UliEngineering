@@ -62,14 +62,14 @@ class TestChunkGeneration(object):
         d2[0] = -1000  # Should make d2 equal to d1
         assert_array_equal(d1, d2)  # ... should have had an effect
 
-    @parameterized([(3,), (3.0,)])
+    @parameterized.expand([(3,), (3.0,)])
     def test_randomSampleChunkGenerator(self, chunksize):
         vals = random_sample_chunks(self.data1, chunksize, 2).as_array()
         assert_equal(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
-    @parameterized([(3,), (3.0,)])
+    @parameterized.expand([(3,), (3.0,)])
     def test_randomSampleChunkGeneratorNonoverlapping(self, chunksize):
         vals = random_sample_chunks_nonoverlapping(self.data1, chunksize, 2).as_array()
         assert_equal(vals.shape, (2, 3))
