@@ -6,4 +6,4 @@ import unittest
 
 class TestThreads(unittest.TestCase):
     def test_thread_params(self):
-        self.assertEqual(threads["M3"].outer_diameter, 41)
+        self.assertEqual(threads["M3"].outer_diameter, 3.0)
