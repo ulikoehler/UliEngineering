@@ -42,5 +42,5 @@ def ntc_resistances(r25, b25, t0=-40, t1=85, resolution=0.1):
     =======
     A (temperatures, values) tuple
     """
-    ts = np.linspace(t0, t1, (t1 - t0) / resolution + 1)
+    ts = np.linspace(t0, t1, (t1 - t0) // resolution + 1)
     return ts, ntc_resistance(r25, b25, ts)
