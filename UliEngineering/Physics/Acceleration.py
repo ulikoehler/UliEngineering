@@ -10,7 +10,7 @@ import scipy.constants
 
 g0 = scipy.constants.physical_constants['standard acceleration of gravity'][0]
 
-__all__ = ["g_to_ms2", "ms2_to_g"]
+__all__ = ["g_to_ms2", "ms2_to_g", "centrifugal_acceleration"]
 
 def g_to_ms2(g) -> Unit("m/s²"):
     """
@@ -26,13 +26,23 @@ def ms2_to_g(ms2) -> Unit("g"):
     ms2 = normalize_numeric(ms2)
     return ms2 / g0
 
-def centrifugal_acceleration(rpm) -> Unit("Hz"):
+def centrifugal_acceleration(radius, speed) -> Unit("m2"):
     """
-    Compute the frequency associated with a period.
+    Compute the centrifugal acceleration given 
+
+    Online calculator available here:
+    https://techoverflow.net/2020/04/20/centrifuge-acceleration-calculator-from-rpm-and-diameter/
+    (NOTE: Different units !)
 
     Parameters
     ----------
-    period : number or Engineer string or NumPy array-like
-        The period in seconds
+    radius :
+        The radius of the centrifuge in m
+    speed :
+        The speed of the centrifuge in Hz
+
+    Returns
+    -------
+    The acceleration in m/s²
     """
-    pass
+    return 4 * np.pi**2 * radius * speed**2

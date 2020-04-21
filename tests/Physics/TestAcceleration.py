@@ -21,3 +21,12 @@ class TestAccelerationConversion(unittest.TestCase):
         self.assertAlmostEqual(ms2_to_g(120.), 120 / g0)
         self.assertAlmostEqual(ms2_to_g(150.), 150 / g0)
 
+class TestCentrifugalAcceleration(unittest.TestCase):
+    def test_centrifugal_acceleration(self):
+        # Reference: https://techoverflow.net/2020/04/20/centrifuge-acceleration-calculator-from-rpm-and-diameter/
+        # No acceleration if not turning
+        self.assertAlmostEqual(centrifugal_acceleration(0.1, 0), 0.0, places=2)
+        # These have speed > 0
+        self.assertAlmostEqual(centrifugal_acceleration(0.1, 100), 39478.417, places=2)
+        self.assertAlmostEqual(centrifugal_acceleration(0.2, 100), 78956.835, places=2)
+        self.assertAlmostEqual(centrifugal_acceleration(0.2, 10), 789.568, places=2)
