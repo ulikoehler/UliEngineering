@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-from nose.tools import assert_equal, assert_true, raises, assert_in, assert_not_in, assert_is_instance
+from nose.tools import self.assertEqual, assert_true, raises, assert_in, assert_not_in, assert_is_instance
 from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
@@ -25,7 +25,7 @@ class TestFilter(unittest.TestCase):
         filt = SignalFilter(100.0, frequencies, btype=btype)
         filt.iir(order=3)
         d2 = filt(self.d)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(self.d.shape, d2.shape)
 
     @parameterized.expand([
         ("butter",),
@@ -38,7 +38,7 @@ class TestFilter(unittest.TestCase):
         filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")
         filt.iir(order=3, ftype=ftype)
         d2 = filt(self.d)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(self.d.shape, d2.shape)
 
     @raises(ValueError)
     def testInvalidPassType(self):
@@ -160,18 +160,18 @@ class TestChainedFilter(TestFilter):
         filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
         cfilt = ChainedFilter([filt, filt])
         d2 = cfilt(self.d)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(self.d.shape, d2.shape)
         # Check repeat
         cfilt = ChainedFilter(filt, repeat=4)
         d2 = cfilt(self.d)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(self.d.shape, d2.shape)
         assert_true(cfilt.is_stable())
         # Check +=
         len1 = len(cfilt)
         cfilt += filt
         d2 = cfilt(self.d)
-        assert_equal(len(cfilt), len1 + 1)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(len(cfilt), len1 + 1)
+        self.assertEqual(self.d.shape, d2.shape)
 
     def testFrequencyResponse(self):
         testFilter = SignalFilter(400.0, 100.0, btype="lowpass").iir(1, ftype="butter")
@@ -179,13 +179,13 @@ class TestChainedFilter(TestFilter):
         fx1, fy1 = ChainedFilter(testFilter, repeat=1).frequency_response()
         fx2, fy2 = ChainedFilter(testFilter, repeat=2).frequency_response()
         # Shapes should all match
-        assert_equal(fx0.shape, fy0.shape)
-        assert_equal(fx1.shape, fy1.shape)
-        assert_equal(fx2.shape, fy2.shape)
-        assert_equal(fx0.shape, fx1.shape)
-        assert_equal(fx1.shape, fx2.shape)
-        assert_equal(fy0.shape, fy1.shape)
-        assert_equal(fy1.shape, fy2.shape)
+        self.assertEqual(fx0.shape, fy0.shape)
+        self.assertEqual(fx1.shape, fy1.shape)
+        self.assertEqual(fx2.shape, fy2.shape)
+        self.assertEqual(fx0.shape, fx1.shape)
+        self.assertEqual(fx1.shape, fx2.shape)
+        self.assertEqual(fy0.shape, fy1.shape)
+        self.assertEqual(fy1.shape, fy2.shape)
         # X should be all equal
         assert_allclose(fx0, fx1)
         assert_allclose(fx1, fx2)
@@ -194,9 +194,9 @@ class TestChainedFilter(TestFilter):
         # fy2 filters more -> should be less
         assert_array_less(fy2, fy1)
         # Check samplerate
-        assert_equal(ChainedFilter(testFilter, repeat=1).samplerate, 400.)
-        assert_equal(ChainedFilter(testFilter, repeat=2).samplerate, 400.)
-        assert_equal(ChainedFilter(testFilter, repeat=3).samplerate, 400.)
+        self.assertEqual(ChainedFilter(testFilter, repeat=1).samplerate, 400.)
+        self.assertEqual(ChainedFilter(testFilter, repeat=2).samplerate, 400.)
+        self.assertEqual(ChainedFilter(testFilter, repeat=3).samplerate, 400.)
         # Check as_samplerate (basic check)
         cf = ChainedFilter(testFilter, repeat=1)
         cf400 = cf.as_samplerate(400.)  # Same samplerate => shortcut
@@ -227,14 +227,14 @@ class TestSumFilter(TestFilter):
         filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
         sfilt = SumFilter([filt, filt])
         d2 = sfilt(self.d)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(self.d.shape, d2.shape)
         assert_true(sfilt.is_stable())
         # Check +=
         len1 = len(sfilt)
         sfilt += filt
         d2 = sfilt(self.d)
-        assert_equal(len(sfilt), len1 + 1)
-        assert_equal(self.d.shape, d2.shape)
+        self.assertEqual(len(sfilt), len1 + 1)
+        self.assertEqual(self.d.shape, d2.shape)
 
     def testSingleFilterConstructor(self):
         filt = SignalFilter(100.0, 1.0, btype="lowpass").iir(order=3)
@@ -259,5 +259,5 @@ class TestFilterBank(unittest.TestCase):
         assert_true(bank200 != bank)
         assert_in("A", bank200)
         assert_in("B", bank200)
-        assert_equal(bank200["A"].samplerate, 200.)
-        assert_equal(bank200["B"].samplerate, 200.)
+        self.assertEqual(bank200["A"].samplerate, 200.)
+        self.assertEqual(bank200["B"].samplerate, 200.)

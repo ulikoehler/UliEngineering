@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os.path
-from nose.tools import assert_equal, assert_true, assert_false
+from nose.tools import self.assertEqual, assert_true, assert_false
 from UliEngineering.Utils.Temporary import *
 import unittest
 

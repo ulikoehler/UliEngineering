@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose, assert_approx_equal
-from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
+from nose.tools import self.assertEqual, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.EngineerIO import *
 from UliEngineering.Units import *
 from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult
@@ -16,13 +16,13 @@ class TestEngineerIO(unittest.TestCase):
 
     def test_normalize_interpunctation(self):
         for suffix in ["", "k", " kV", "V/√Hz", "µV"]:
-            assert_equal(normalize_interpunctation("1234" + suffix), '1234' + suffix)
-            assert_equal(normalize_interpunctation("123.4" + suffix), '123.4' + suffix)
-            assert_equal(normalize_interpunctation("123,4" + suffix), '123.4' + suffix)
-            assert_equal(normalize_interpunctation("1,234.5" + suffix), '1234.5' + suffix)
-            assert_equal(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
-            assert_equal(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
-        assert_equal(normalize_interpunctation(""), "")
+            self.assertEqual(normalize_interpunctation("1234" + suffix), '1234' + suffix)
+            self.assertEqual(normalize_interpunctation("123.4" + suffix), '123.4' + suffix)
+            self.assertEqual(normalize_interpunctation("123,4" + suffix), '123.4' + suffix)
+            self.assertEqual(normalize_interpunctation("1,234.5" + suffix), '1234.5' + suffix)
+            self.assertEqual(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
+            self.assertEqual(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
+        self.assertEqual(normalize_interpunctation(""), "")
 
     def test_split_input(self):
         assert_tuple_equal(self.io.split_input("1234"), SplitResult('', '1234', '', '', ''))
@@ -112,81 +112,81 @@ class TestEngineerIO(unittest.TestCase):
         assert_tuple_equal(self.io.normalize("100 kΩ".encode("utf8")), NormalizeResult('', 1e5, '', "Ω"))
 
     def test_format_with_suffix(self):
-        assert_equal(_format_with_suffix(1.01, "A"), '1.01 A')
-        assert_equal(_format_with_suffix(1, "A"), '1.00 A')
-        assert_equal(_format_with_suffix(101, "A"), '101 A')
-        assert_equal(_format_with_suffix(99.9, "A"), '99.9 A')
-        assert_equal(_format_with_suffix(1000.0, ""), '1000')
+        self.assertEqual(_format_with_suffix(1.01, "A"), '1.01 A')
+        self.assertEqual(_format_with_suffix(1, "A"), '1.00 A')
+        self.assertEqual(_format_with_suffix(101, "A"), '101 A')
+        self.assertEqual(_format_with_suffix(99.9, "A"), '99.9 A')
+        self.assertEqual(_format_with_suffix(1000.0, ""), '1000')
         # More significant digits
-        assert_equal(_format_with_suffix(1.01, "A", significant_digits=4), '1.010 A')
+        self.assertEqual(_format_with_suffix(1.01, "A", significant_digits=4), '1.010 A')
 
     def test_format(self):
-        assert_equal(self.io.format(1.0e-15, "V"), '1.00 fV')
-        assert_equal(self.io.format(234.6789e-3, "V"), '235 mV')
-        assert_equal(self.io.format(234.6789, "V"), '235 V')
-        assert_equal(self.io.format(2345.6789, "V"), '2.35 kV')
-        assert_equal(self.io.format(2345.6789e6, "V"), '2.35 GV')
-        assert_equal(self.io.format(2345.6789e12, "V"), '2.35 EV')
-        assert_equal(self.io.format(2.3456789e-6, "V"), '2.35 µV')
-        assert_equal(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
-        assert_equal(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
+        self.assertEqual(self.io.format(1.0e-15, "V"), '1.00 fV')
+        self.assertEqual(self.io.format(234.6789e-3, "V"), '235 mV')
+        self.assertEqual(self.io.format(234.6789, "V"), '235 V')
+        self.assertEqual(self.io.format(2345.6789, "V"), '2.35 kV')
+        self.assertEqual(self.io.format(2345.6789e6, "V"), '2.35 GV')
+        self.assertEqual(self.io.format(2345.6789e12, "V"), '2.35 EV')
+        self.assertEqual(self.io.format(2.3456789e-6, "V"), '2.35 µV')
+        self.assertEqual(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
         # More significant digits
-        assert_equal(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
-        assert_equal(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
-        assert_equal(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
 
     @raises(ValueError)
     def test_format_invalid(self):
         self.io.format(1.0e-25, "V")
 
     def test_format_no_unit(self):
-        assert_equal(self.io.format(1.999999, ""), '2.00')
-        assert_equal(self.io.format(1.999999, None), '2.00')
+        self.assertEqual(self.io.format(1.999999, ""), '2.00')
+        self.assertEqual(self.io.format(1.999999, None), '2.00')
 
     def testRounding(self):
-        assert_equal(self.io.format(1.999999, ""), '2.00')
-        assert_equal(self.io.format(19.99999, ""), '20.0')
-        assert_equal(self.io.format(199.9999, ""), '200')
+        self.assertEqual(self.io.format(1.999999, ""), '2.00')
+        self.assertEqual(self.io.format(19.99999, ""), '20.0')
+        self.assertEqual(self.io.format(199.9999, ""), '200')
 
     def testIsValidSuffix(self):
         for c in "fpnuµmkMGT":
             assert_in(c, self.io.suffix_exp_map)
 
     def test_exp_suffix_map(self):
-        assert_equal(self.io.suffix_exp_map["f"], -15)
-        assert_equal(self.io.suffix_exp_map["k"], 3)
-        assert_equal(self.io.suffix_exp_map["u"], -6)
-        assert_equal(self.io.suffix_exp_map["µ"], -6)
-        assert_equal(self.io.suffix_exp_map["T"], 12)
-        assert_equal(self.io.suffix_exp_map[""], 0)
+        self.assertEqual(self.io.suffix_exp_map["f"], -15)
+        self.assertEqual(self.io.suffix_exp_map["k"], 3)
+        self.assertEqual(self.io.suffix_exp_map["u"], -6)
+        self.assertEqual(self.io.suffix_exp_map["µ"], -6)
+        self.assertEqual(self.io.suffix_exp_map["T"], 12)
+        self.assertEqual(self.io.suffix_exp_map[""], 0)
         # Check "in" operator
         assert_in("k", self.io.suffix_exp_map)
         # Invalid suffix_exp_map
         assert_not_in("B", self.io.suffix_exp_map)
 
     def test_exp_suffix_map2(self):
-        assert_equal("", self.io.exp_suffix_map[0])
-        assert_equal("k", self.io.exp_suffix_map[1])
-        assert_equal("M", self.io.exp_suffix_map[2])
-        assert_equal("n", self.io.exp_suffix_map[-3])
+        self.assertEqual("", self.io.exp_suffix_map[0])
+        self.assertEqual("k", self.io.exp_suffix_map[1])
+        self.assertEqual("M", self.io.exp_suffix_map[2])
+        self.assertEqual("n", self.io.exp_suffix_map[-3])
 
     def test_normalize_numeric_safe(self):
-        assert_equal(self.io.normalize_numeric_safe(1.25), 1.25)
-        assert_equal(self.io.normalize_numeric_safe("1.25"), 1.25)
-        assert_equal(self.io.normalize_numeric_safe("1.25 V"), 1.25)
-        assert_equal(self.io.normalize_numeric_safe("1k25 V"), 1250.0)
-        assert_equal(self.io.normalize_numeric_safe(b"1k25 V"), 1250.0)
+        self.assertEqual(self.io.normalize_numeric_safe(1.25), 1.25)
+        self.assertEqual(self.io.normalize_numeric_safe("1.25"), 1.25)
+        self.assertEqual(self.io.normalize_numeric_safe("1.25 V"), 1.25)
+        self.assertEqual(self.io.normalize_numeric_safe("1k25 V"), 1250.0)
+        self.assertEqual(self.io.normalize_numeric_safe(b"1k25 V"), 1250.0)
         assert_allclose(self.io.normalize_numeric_safe(["1k25 V", "4.25 A"]), [1250.0, 4.25])
         # Invalid inputs and partially invalid inputs
         assert_is_none(self.io.normalize_numeric_safe("foobar"))
         assert_allclose(self.io.normalize_numeric_safe(["foobar", "1.2 J"]), [np.nan, 1.2])
 
     def test_normalize_numeric(self):
-        assert_equal(self.io.normalize_numeric(1.25), 1.25)
-        assert_equal(self.io.normalize_numeric("1.25"), 1.25)
-        assert_equal(self.io.normalize_numeric("1.25 V"), 1.25)
-        assert_equal(self.io.normalize_numeric("1k25 V"), 1250.0)
-        assert_equal(self.io.normalize_numeric(b"1k25 V"), 1250.0)
+        self.assertEqual(self.io.normalize_numeric(1.25), 1.25)
+        self.assertEqual(self.io.normalize_numeric("1.25"), 1.25)
+        self.assertEqual(self.io.normalize_numeric("1.25 V"), 1.25)
+        self.assertEqual(self.io.normalize_numeric("1k25 V"), 1250.0)
+        self.assertEqual(self.io.normalize_numeric(b"1k25 V"), 1250.0)
         assert_allclose(self.io.normalize_numeric(["1k25 V", "4.25 A"]), np.asarray([1250.0, 4.25]))
 
     def test_safe_normalize(self):
@@ -197,13 +197,13 @@ class TestEngineerIO(unittest.TestCase):
 
     def testAutoFormatValid(self):
         def testfn(n=1.0) -> Unit("V"): return n
-        assert_equal(self.io.auto_format(testfn), "1.00 V")
+        self.assertEqual(self.io.auto_format(testfn), "1.00 V")
         # Test functools.partial() behaviour
         testfn2 = functools.partial(testfn, n=2.0)
-        assert_equal(self.io.auto_format(testfn2), "2.00 V")
+        self.assertEqual(self.io.auto_format(testfn2), "2.00 V")
         # Test nested functools.partial() behaviour
         testfn3 = functools.partial(testfn2, n=3.0)
-        assert_equal(self.io.auto_format(testfn3), "3.00 V")
+        self.assertEqual(self.io.auto_format(testfn3), "3.00 V")
 
     @raises(UnannotatedReturnValueError)
     def testAutoFormatInvalid1(self):
@@ -215,18 +215,18 @@ class TestEngineerIO(unittest.TestCase):
 
     def test_auto_suffix_1d(self):
         arr = np.arange(-4., 5., .5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1., ""))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1., ""))
         arr = 1e-3 * np.arange(-4., 5., .5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1e3, "m"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e3, "m"))
         arr = 1e9 * np.arange(-4., 5., .5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1e-9, "G"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e-9, "G"))
         arr = np.arange(1000., 2000., 5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1e-3, "k"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e-3, "k"))
         # Test out of limits
         arr = 1e-40 * np.arange(-4., 5., .5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1e24, "y"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e24, "y"))
         arr = 1e40 * np.arange(-4., 5., .5)
-        assert_equal(self.io.auto_suffix_1d(arr), (1e-21, "Y"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e-21, "Y"))
 
     def test_special_units(self):
         """

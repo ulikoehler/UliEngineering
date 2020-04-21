@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from subprocess import check_output
-from nose.tools import assert_equal, assert_true, raises, assert_greater
+from nose.tools import self.assertEqual, assert_true, raises, assert_greater
 from UliEngineering.Utils.NumPy import *
 from parameterized import parameterized
 import numpy as np
@@ -15,11 +15,11 @@ class TestDynamicArrayResize(unittest.TestCase):
         arr = numpy_resize_insert(arr, 1, 0)
         arr = numpy_resize_insert(arr, 2, 1)
         arr = numpy_resize_insert(arr, 3, 2)
-        assert_equal(arr.size, 3)
+        self.assertEqual(arr.size, 3)
         assert_array_equal(arr, [1, 2, 3])
         # Resize
         arr = numpy_resize_insert(arr, 4, 3)
-        assert_equal(arr.size, 1003) # 3 orig size + min growth = 1000
+        self.assertEqual(arr.size, 1003) # 3 orig size + min growth = 1000
         # Remove extra size
         arr = np.resize(arr, 4)
         assert_array_equal(arr, [1, 2, 3, 4])
@@ -32,7 +32,7 @@ class TestInvertBijection(unittest.TestCase):
         assert_allclose([1, 0, 2, 3], invert_bijection([1, 0, 2, 3]))
 
     def testEmpty(self):
-        assert_equal((0,), invert_bijection([]).shape)
+        self.assertEqual((0,), invert_bijection([]).shape)
 
 
 class TestApplyPairwise1D(unittest.TestCase):
@@ -66,13 +66,13 @@ class TestNgrams(unittest.TestCase):
 
 class TestPivotSplit(unittest.TestCase):
     def test_pivot_split(self):
-        assert_equal([[0,1],[2,3,4,5]], list(split_by_pivot([0,1,2,3,4,5], [2])))
-        assert_equal([[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [2,4])))
-        assert_equal([[],[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [0,2,4])))
+        self.assertEqual([[0,1],[2,3,4,5]], list(split_by_pivot([0,1,2,3,4,5], [2])))
+        self.assertEqual([[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [2,4])))
+        self.assertEqual([[],[0,1],[2,3],[4,5]], list(split_by_pivot([0,1,2,3,4,5], [0,2,4])))
 
 class TestDatetime64Now(unittest.TestCase):
     def test_datetime64_now(self):
-        assert_equal(type(datetime64_now()), np.datetime64)
+        self.assertEqual(type(datetime64_now()), np.datetime64)
 
 class TestDatatypeResolution(unittest.TestCase):
 
@@ -85,4 +85,4 @@ class TestDatatypeResolution(unittest.TestCase):
         ('ns',),
     ])
     def test_timedelta64_resolution(self, res):
-        assert_equal(timedelta64_resolution(np.timedelta64(100, res)), res)
+        self.assertEqual(timedelta64_resolution(np.timedelta64(100, res)), res)

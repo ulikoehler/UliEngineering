@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
-from nose.tools import raises, assert_true, assert_equal
+from nose.tools import raises, assert_true, self.assertEqual
 from UliEngineering.Physics.NTC import *
 from UliEngineering.Exceptions import *
 import functools

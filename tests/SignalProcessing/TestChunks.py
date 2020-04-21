@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 from toolz import functoolz
-from nose.tools import assert_equal, assert_true, raises
+from nose.tools import self.assertEqual, assert_true, raises
 from numpy.testing import assert_array_equal, assert_allclose
 from UliEngineering.SignalProcessing.Chunks import *
 from UliEngineering.SignalProcessing.Window import *
@@ -20,11 +20,11 @@ class TestChunkGeneration(unittest.TestCase):
         # Odd-sized array
         vals = overlapping_chunks(self.data1, 3, 3)
         assert_array_equal(vals.as_array(), self.result1)
-        assert_equal(len(vals), 3)
+        self.assertEqual(len(vals), 3)
         assert_array_equal(vals.as_array(), self.result1)
         # Even-sized array
         vals = overlapping_chunks(self.data2, 3, 3)
-        assert_equal(len(vals), 4)
+        self.assertEqual(len(vals), 4)
         assert_array_equal(vals.as_array(), [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
         assert_array_equal(vals[1:3], [[4, 5, 6], [7, 8, 9]])
         # Array which is too long
@@ -66,14 +66,14 @@ class TestChunkGeneration(unittest.TestCase):
     @parameterized.expand([(3,), (3.0,)])
     def test_randomSampleChunkGenerator(self, chunksize):
         vals = random_sample_chunks(self.data1, chunksize, 2).as_array()
-        assert_equal(vals.shape, (2, 3))
+        self.assertEqual(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
     @parameterized.expand([(3,), (3.0,)])
     def test_randomSampleChunkGeneratorNonoverlapping(self, chunksize):
         vals = random_sample_chunks_nonoverlapping(self.data1, chunksize, 2).as_array()
-        assert_equal(vals.shape, (2, 3))
+        self.assertEqual(vals.shape, (2, 3))
         assert_true((vals <= 10).all())
         assert_true((vals >= 0).all())
 
@@ -100,11 +100,11 @@ class TestReshapedChunks(unittest.TestCase):
         arr = np.arange(10)
         # 1
         chunks = reshaped_chunks(arr, 2)
-        assert_equal(chunks.shape, (5, 2))
+        self.assertEqual(chunks.shape, (5, 2))
         assert_array_equal(chunks, np.asarray([[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]))
         # 2
         chunks = reshaped_chunks(arr, 4)
-        assert_equal(chunks.shape, (2, 4))
+        self.assertEqual(chunks.shape, (2, 4))
         assert_array_equal(chunks, np.asarray([[0, 1, 2, 3], [4, 5, 6, 7]]))
 
     def test_empty(self):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import assert_equal, assert_true, raises, assert_less, assert_almost_equal
+from nose.tools import self.assertEqual, assert_true, raises, assert_less, assert_almost_equal
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *

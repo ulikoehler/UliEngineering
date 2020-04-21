@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-from nose.tools import assert_equal, assert_true, raises, assert_raises
+from nose.tools import self.assertEqual, assert_true, raises, assert_raises
 from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.SignalProcessing.Resampling import *
 import unittest

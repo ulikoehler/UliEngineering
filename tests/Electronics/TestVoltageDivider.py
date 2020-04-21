@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal
+from nose.tools import self.assertEqual
 from UliEngineering.Electronics.VoltageDivider import *
 from UliEngineering.EngineerIO import auto_format
 import unittest
@@ -20,14 +20,14 @@ class TestNoiseDensity(unittest.TestCase):
     def test_bottom_resistor_by_ratio(self):
         assert_approx_equal(bottom_resistor_by_ratio(1000.0, 0.5), 1000.0)
         assert_approx_equal(bottom_resistor_by_ratio(200.0, 5/6.0), 1000.0)
-        assert_equal(auto_format(bottom_resistor_by_ratio, 1000.0, 0.5), "1000 Ω")
-        assert_equal(auto_format(bottom_resistor_by_ratio, 400.0, 5/6.0), "2.00 kΩ")
+        self.assertEqual(auto_format(bottom_resistor_by_ratio, 1000.0, 0.5), "1000 Ω")
+        self.assertEqual(auto_format(bottom_resistor_by_ratio, 400.0, 5/6.0), "2.00 kΩ")
 
     def test_top_resistor_by_ratio(self):
         assert_approx_equal(top_resistor_by_ratio(1000.0, 0.5), 1000.0)
         assert_approx_equal(top_resistor_by_ratio(1000.0, 5/6.0), 200.0)
-        assert_equal(auto_format(top_resistor_by_ratio, 1000.0, 0.5), "1000 Ω")
-        assert_equal(auto_format(top_resistor_by_ratio, 1000.0, 5/6.0), "200 Ω")
+        self.assertEqual(auto_format(top_resistor_by_ratio, 1000.0, 0.5), "1000 Ω")
+        self.assertEqual(auto_format(top_resistor_by_ratio, 1000.0, 5/6.0), "200 Ω")
 
     def test_feedback_resistors(self):
         assert_approx_equal(feedback_top_resistor(1.8, 816e3, 0.8), 1020e3)
@@ -42,7 +42,7 @@ class TestNoiseDensity(unittest.TestCase):
         assert_approx_equal(feedback_actual_voltage("1.02 MΩ", "816 kΩ", "0.8 V"), 1.8)
 
     def test_feedback_voltage_str(self):
-        assert_equal(voltage_divider_power("250k", "1k", "230V").__repr__(),
+        self.assertEqual(voltage_divider_power("250k", "1k", "230V").__repr__(),
             "VoltageDividerPower(top=210 mW, bottom=840 µW, total=211 mW)")
         assert_approx_equal(voltage_divider_power("250k", "1k", "230V").total,
             0.2107569721115538)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import assert_equal, assert_true, assert_false, raises, assert_less, assert_is_none, assert_raises, assert_is_instance
+from nose.tools import self.assertEqual, assert_true, assert_false, raises, assert_less, assert_is_none, assert_raises, assert_is_instance
 from UliEngineering.SignalProcessing.Utils import *
 from parameterized import parameterized
 import concurrent.futures
@@ -105,7 +105,7 @@ class TestOptimumPolyfit(unittest.TestCase):
         y = np.square(x)
         poly, deg, score = optimum_polyfit(x, y)
         assert_less(score, 1e-10)
-        assert_equal(np.max(np.abs(y - poly(x))), score)
+        self.assertEqual(np.max(np.abs(y - poly(x))), score)
 
     def testRandom(self):
         x = np.linspace(-100., 100., 1000)
@@ -130,9 +130,9 @@ class TestLinSpace(unittest.TestCase):
         params = (start, end, n)
         spc = LinRange(*params, endpoint=endpoint)
         linspc = np.linspace(*params, endpoint=endpoint)
-        assert_equal(len(spc), params[2])
-        assert_equal(len(spc), linspc.size)
-        assert_equal((len(spc),), linspc.shape)
+        self.assertEqual(len(spc), params[2])
+        self.assertEqual(len(spc), linspc.size)
+        self.assertEqual((len(spc),), linspc.shape)
         assert_allclose(spc[:], linspc)
         # Test samplerate
         assert_approx_equal(spc.samplerate(), (n - 1 if endpoint else n) / (end - start))
@@ -142,7 +142,7 @@ class TestLinSpace(unittest.TestCase):
         # Test negative indices
         assert_allclose(spc[-istart], linspc[-istart])
         # Test mid
-        assert_equal(spc.mid, (start + end) / 2.)
+        self.assertEqual(spc.mid, (start + end) / 2.)
         # Test view
         assert_allclose(spc.view(0, None).size, linspc.size)
         assert_allclose(spc.view(0, None)[:], linspc)
@@ -158,9 +158,9 @@ class TestLinSpace(unittest.TestCase):
 
     def test_repr(self):
         l = LinRange(0., 100., 100, endpoint=False)
-        assert_equal("LinRange(0.0, 100.0, 1.0)", str(l))
+        self.assertEqual("LinRange(0.0, 100.0, 1.0)", str(l))
         l = LinRange(0., 100., 100, endpoint=False, dtype=np.int)
-        assert_equal("LinRange(0.0, 100.0, 1.0, dtype=int)", str(l))
+        self.assertEqual("LinRange(0.0, 100.0, 1.0, dtype=int)", str(l))
 
     def testDtype(self):
         lin1 = LinRange(0.0, 100.0, 101)
@@ -169,7 +169,7 @@ class TestLinSpace(unittest.TestCase):
 
 class TestAggregate(unittest.TestCase):
     def test_aggregate(self):
-        assert_equal([("a", 1), ("b", 1), ("c", 1)], list(aggregate("abc")))
-        assert_equal([], list(aggregate("")))
-        assert_equal([("a", 2), ("b", 1), ("c", 2), ("d", 1)],
+        self.assertEqual([("a", 1), ("b", 1), ("c", 1)], list(aggregate("abc")))
+        self.assertEqual([], list(aggregate("")))
+        self.assertEqual([("a", 2), ("b", 1), ("c", 2), ("d", 1)],
             list(aggregate("aabccd")))

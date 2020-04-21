@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import assert_equal, assert_true, raises, assert_less, assert_is_none, assert_raises
+from nose.tools import self.assertEqual, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.Selection import *
 from parameterized import parameterized
 import concurrent.futures
@@ -13,30 +13,30 @@ executor = concurrent.futures.ThreadPoolExecutor(4)
 
 class TestIntInterval(unittest.TestCase):
     def testAdd(self):
-        assert_equal(IntInterval(1, 10) + 5, (6, 15))
-        assert_equal(5 + IntInterval(1, 10), (6, 15))
+        self.assertEqual(IntInterval(1, 10) + 5, (6, 15))
+        self.assertEqual(5 + IntInterval(1, 10), (6, 15))
 
     def testSub(self):
-        assert_equal(IntInterval(6, 15) - 5, (1, 10))
-        assert_equal(5 - IntInterval(6, 15), (-1, -10))
+        self.assertEqual(IntInterval(6, 15) - 5, (1, 10))
+        self.assertEqual(5 - IntInterval(6, 15), (-1, -10))
 
     def testMultiplyDivide(self):
         # == 1
-        assert_equal(IntInterval(1, 10) * 1, (1, 10))
-        assert_equal(IntInterval(1, 10) * 1.0, (1, 10))
+        self.assertEqual(IntInterval(1, 10) * 1, (1, 10))
+        self.assertEqual(IntInterval(1, 10) * 1.0, (1, 10))
         # > 1
-        assert_equal(IntInterval(5, 10) * 2, (3, 12))
-        assert_equal(IntInterval(5, 10) * 3, (0, 15))
-        assert_equal(IntInterval(5, 10) * 5, (-5, 20))
-        assert_equal(IntInterval(5, 10) * 3.0, (0, 15))
+        self.assertEqual(IntInterval(5, 10) * 2, (3, 12))
+        self.assertEqual(IntInterval(5, 10) * 3, (0, 15))
+        self.assertEqual(IntInterval(5, 10) * 5, (-5, 20))
+        self.assertEqual(IntInterval(5, 10) * 3.0, (0, 15))
         # < 1
-        assert_equal(IntInterval(5, 10) * 0.5, (6, 9))
-        assert_equal(IntInterval(5, 10) * 0.1, (7, 8))
-        assert_equal(IntInterval(5, 10) * 1e-6, (7, 8))
+        self.assertEqual(IntInterval(5, 10) * 0.5, (6, 9))
+        self.assertEqual(IntInterval(5, 10) * 0.1, (7, 8))
+        self.assertEqual(IntInterval(5, 10) * 1e-6, (7, 8))
         # == 0
-        assert_equal(IntInterval(5, 10) * 0.0, (7, 7))
+        self.assertEqual(IntInterval(5, 10) * 0.0, (7, 7))
         # Division, assumed to be implemented via multiplication
-        assert_equal(IntInterval(5, 10) / (1. / 3.), (0, 15))
+        self.assertEqual(IntInterval(5, 10) / (1. / 3.), (0, 15))
 
     @parameterized.expand([
         (lambda iv: 'b' - iv,),
@@ -63,7 +63,7 @@ class TestIntInterval(unittest.TestCase):
         IntInterval(6, 15)()
 
     def testLen(self):
-        assert_equal(len(IntInterval(6, 15)), 15 - 6)
+        self.assertEqual(len(IntInterval(6, 15)), 15 - 6)
 
     @raises
     def testInvalidAdd(self):
@@ -72,7 +72,7 @@ class TestIntInterval(unittest.TestCase):
     def testRangeArrayToIntIntervals(self):
         arr = np.asarray([[41, 60], [0, 30]])
         res = IntInterval.from_ranges(arr)
-        assert_equal(res, [IntInterval(41, 60), IntInterval(0, 30)])
+        self.assertEqual(res, [IntInterval(41, 60), IntInterval(0, 30)])
 
 
     def testIntIntervalsToRangeArray(self):
@@ -85,18 +85,18 @@ class TestSelectByDatetime(unittest.TestCase):
     def testGeneric(self):
         now = datetime.datetime.now()
         # Test out of range
-        assert_equal(select_by_datetime(np.arange(10), now), 10)
+        self.assertEqual(select_by_datetime(np.arange(10), now), 10)
         # Test in range
         ts = now.timestamp()
         seconds50 = datetime.timedelta(seconds=50)
         r = np.arange(ts, ts + 100)
-        assert_equal(select_by_datetime(r, now + seconds50), 50)
+        self.assertEqual(select_by_datetime(r, now + seconds50), 50)
         # Test with string
-        assert_equal(select_by_datetime(np.arange(10), "2015-01-29 23:59:01"), 10)
+        self.assertEqual(select_by_datetime(np.arange(10), "2015-01-29 23:59:01"), 10)
         # Test with string w/ microseconds
-        assert_equal(select_by_datetime(np.arange(10), "2015-01-29 23:59:01.000001"), 10)
+        self.assertEqual(select_by_datetime(np.arange(10), "2015-01-29 23:59:01.000001"), 10)
         # Test with around set
-        assert_equal(select_by_datetime(np.arange(10), now, around=5), (5, 15))
+        self.assertEqual(select_by_datetime(np.arange(10), now, around=5), (5, 15))
 
     @parameterized.expand([
         ("whatever"),
@@ -163,11 +163,11 @@ class TestFindRuns(unittest.TestCase):
         # Test find_true_runs
         result = find_true_runs(x)
         assert_allclose(result, [[4, 8], [14, 20]])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
         # Test findFalseRuns
         result = find_false_runs(x)
         assert_allclose(result, [[0, 3], [9, 13], [21, 24]])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
 
     def testSize1(self):
         # Generate test data
@@ -249,15 +249,15 @@ class TestShrinkRanges(unittest.TestCase):
         # Min selector
         result = shrink_ranges(ranges, "min")
         assert_allclose(result, [4, 14, 22])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
         # Max selector
         result = shrink_ranges(ranges, "max")
         assert_allclose(result, [8, 20, 22])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
         # Middle selector
         result = shrink_ranges(ranges, "middle")
         assert_allclose(result, [6, 17, 22])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
 
     def testComplex(self):
         """Test data-aware methods"""
@@ -266,11 +266,11 @@ class TestShrinkRanges(unittest.TestCase):
         # Min Y selector
         result = shrink_ranges(ranges, "miny", y=self.x)
         assert_allclose(result, [6, 17, 22])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
         # Max Y selector
         result = shrink_ranges(ranges, "maxy", y=self.x)
         assert_allclose(result, [5, 20, 22])
-        assert_equal(result.dtype, np.int)
+        self.assertEqual(result.dtype, np.int)
 
     @raises(KeyError)
     def testInvalidFunction(self):
@@ -297,13 +297,13 @@ class TestRandomSelection(unittest.TestCase):
 
 class TestFindNearestIdx(unittest.TestCase):
     def testBasic(self):
-        assert_equal(find_nearest_idx(np.arange(10), 5.0), 5)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.0), 2)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.2), 2)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.4), 2)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.5), 2)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.500001), 3)
-        assert_equal(find_nearest_idx(np.arange(3, 13), 5.6), 3)
+        self.assertEqual(find_nearest_idx(np.arange(10), 5.0), 5)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.0), 2)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.2), 2)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.4), 2)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.5), 2)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.500001), 3)
+        self.assertEqual(find_nearest_idx(np.arange(3, 13), 5.6), 3)
 
 class TestGeneratorCount(unittest.TestCase):
     @parameterized.expand([
@@ -312,20 +312,20 @@ class TestGeneratorCount(unittest.TestCase):
     def testBasic(self, generator):
         lst = np.arange(5)
         gc = GeneratorCounter((i for i in lst) if generator else lst)
-        assert_equal(len(gc), 0)  # No iterations yet
-        assert_equal(list(gc), [0, 1, 2, 3, 4])
-        assert_equal(len(gc), len(lst))
+        self.assertEqual(len(gc), 0)  # No iterations yet
+        self.assertEqual(list(gc), [0, 1, 2, 3, 4])
+        self.assertEqual(len(gc), len(lst))
         # Test reiter
         if not generator:
             gc.reiter(reset_count=False)
-            assert_equal(len(gc), len(lst))
-            assert_equal(list(gc), list(lst))
-            assert_equal(len(gc), len(lst) * 2)
+            self.assertEqual(len(gc), len(lst))
+            self.assertEqual(list(gc), list(lst))
+            self.assertEqual(len(gc), len(lst) * 2)
             # With count reset
             gc.reiter(reset_count=True)
-            assert_equal(len(gc), 0)
-            assert_equal(list(gc), list(lst))
-            assert_equal(len(gc), len(lst))
+            self.assertEqual(len(gc), 0)
+            self.assertEqual(list(gc), list(lst))
+            self.assertEqual(len(gc), len(lst))
 
 
 class TestMajorityVote(unittest.TestCase):
@@ -334,7 +334,7 @@ class TestMajorityVote(unittest.TestCase):
         res = majority_vote_all(lst)
         # Check mv_all
         assert_true(res == [(3, 0.5), (2, 0.25), (1, 0.25)] or res == [(3, 0.5), (1, 0.25), (2, 0.25)])
-        assert_equal(majority_vote(lst), 3)
+        self.assertEqual(majority_vote(lst), 3)
         assert_is_none(majority_vote([]))
 
 
@@ -358,14 +358,14 @@ class TestSelectRanges(unittest.TestCase):
 
 class TestMultiSelect(unittest.TestCase):
     def testBasic(self):
-        assert_equal([4, 2, 6], multiselect([1, 2, 3, 4, 5, 6], [3, 1, 5]))
+        self.assertEqual([4, 2, 6], multiselect([1, 2, 3, 4, 5, 6], [3, 1, 5]))
 
     def testEmpty(self):
-        assert_equal([], multiselect([], []))
+        self.assertEqual([], multiselect([], []))
 
     def testShort(self):
-        assert_equal([1], multiselect([1], [0]))
+        self.assertEqual([1], multiselect([1], [0]))
 
     @raises(IndexError)
     def testBadIdx(self):
-        assert_equal([1], multiselect([1], [3]))
+        self.assertEqual([1], multiselect([1], [3]))

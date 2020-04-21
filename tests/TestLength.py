@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_true, raises
+from nose.tools import self.assertEqual, assert_true, raises
 from parameterized import parameterized
 from UliEngineering.Length import *
 from UliEngineering.Units import UnknownUnitInContextException

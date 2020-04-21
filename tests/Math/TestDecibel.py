@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from nose.tools import assert_equal, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
+from nose.tools import self.assertEqual, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.Math.Decibel import *
 from parameterized import parameterized
 import functools
@@ -20,10 +20,10 @@ class TestDecibel(unittest.TestCase):
         assert_allclose(-3, ratio_to_db_power(0.5), 0.05)
         assert_allclose(-6, ratio_to_db_power(0.25), 0.05)
 
-        assert_equal(-np.inf, ratio_to_db_field(0))
-        assert_equal(-np.inf, ratio_to_db_power(0))
-        assert_equal(-np.inf, ratio_to_db_field(-5))
-        assert_equal(-np.inf, ratio_to_db_power(-5))
+        self.assertEqual(-np.inf, ratio_to_db_field(0))
+        self.assertEqual(-np.inf, ratio_to_db_power(0))
+        self.assertEqual(-np.inf, ratio_to_db_field(-5))
+        self.assertEqual(-np.inf, ratio_to_db_power(-5))
 
     def test_value_to_db(self):
         # Test v0 = 1
@@ -51,7 +51,7 @@ class TestDecibel(unittest.TestCase):
         # Test string
         assert_allclose(6, value_to_db_field("4 V", "2 V"), 0.05)
         # Test negative
-        assert_equal(-np.inf, ratio_to_db_field(0))
-        assert_equal(-np.inf, ratio_to_db_power(0))
-        assert_equal(-np.inf, ratio_to_db_field(-5))
-        assert_equal(-np.inf, ratio_to_db_power(-5))
+        self.assertEqual(-np.inf, ratio_to_db_field(0))
+        self.assertEqual(-np.inf, ratio_to_db_power(0))
+        self.assertEqual(-np.inf, ratio_to_db_field(-5))
+        self.assertEqual(-np.inf, ratio_to_db_power(-5))

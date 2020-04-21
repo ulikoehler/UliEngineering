@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
-from nose.tools import raises, assert_true, assert_equal
+from nose.tools import raises, assert_true, self.assertEqual
 from UliEngineering.Physics.RTD import *
 from UliEngineering.Exceptions import *
 import functools
@@ -122,8 +122,8 @@ class TestRTDPolynomialComputation(unittest.TestCase):
         # Basically the code from techoverflow.net without matplotlib
         temp = np.linspace(-200.0, 0.0, 1000)
         x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=noCorrection)
-        assert_equal(x.shape, temp.shape)
-        assert_equal(y.shape, temp.shape)
+        self.assertEqual(x.shape, temp.shape)
+        self.assertEqual(y.shape, temp.shape)
         # Peak deviation w/o correction should be around 2.4 .. 2.5 °C
         assert_allclose(pkdev, 2.45, rtol=0.05)
         # Correct

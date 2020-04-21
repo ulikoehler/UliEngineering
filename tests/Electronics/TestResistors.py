@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import assert_equal, assert_true
+from nose.tools import self.assertEqual, assert_true
 from UliEngineering.Electronics.Resistors import *
 from UliEngineering.EngineerIO import *
 import unittest
@@ -21,8 +21,8 @@ class TestResistors(unittest.TestCase):
         assert_true(len(list(standard_resistors())) > 500)
 
     def test_find_nearest_resistor(self):
-        assert_equal(nearest_resistor(5000, sequence=e48), 5110.0)
-        assert_equal(nearest_resistor(4998), 4990.0)
+        self.assertEqual(nearest_resistor(5000, sequence=e48), 5110.0)
+        self.assertEqual(nearest_resistor(4998), 4990.0)
 
     def test_current_through_resistor(self):
         assert_approx_equal(current_through_resistor("1k", "1V"), 1e-3)
@@ -31,5 +31,5 @@ class TestResistors(unittest.TestCase):
 
     def test_resistor_by_voltage_and_current(self):
         assert_approx_equal(resistor_by_voltage_and_current("2.5 V", "1 uA"), 2.5e6)
-        assert_equal(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
+        self.assertEqual(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
 
