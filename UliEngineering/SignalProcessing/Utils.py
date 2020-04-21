@@ -177,7 +177,7 @@ class LinRange(object):
         Return a LinSpace view of self
         """
         istart, istop, istep = slice(start, stop, step).indices(self.size)
-        return LinRange(self[istart], self[istop], (istop - istart) / istep, endpoint=False)
+        return LinRange(self[istart], self[istop], (istop - istart) // istep, endpoint=False)
 
     def __getitem__(self, key):
         """
@@ -186,7 +186,7 @@ class LinRange(object):
         """
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)
-            return np.linspace(self[istart], self[istop], (istop - istart) / istep,
+            return np.linspace(self[istart], self[istop], (istop - istart) // istep,
                                endpoint=False, dtype=self.dtype)
         elif isinstance(key, numbers.Number):
             if key < 0:
