@@ -95,7 +95,7 @@ def checkCorrectionPolynomialQuality(r0, reftemp, poly):
     quality = np.max([np.abs(tempdiff.max()), np.abs(tempdiff.min())])
     return (resistances, tempdiff, quality)
 
-def computeCorrectionPolynomial(r0, order=5):
+def computeCorrectionPolynomial(r0, order=5, n=1000000):
     """
     Compute a correction polynomial that can be applied to the resistance
     to get an additive correction coefficient that approximately corrects
@@ -110,7 +110,7 @@ def computeCorrectionPolynomial(r0, order=5):
     It is recommended to use order=5 for this problem.
     """
     # Compute values with no correct
-    reftemp = np.linspace(-200.0, 0.0, 1000000)
+    reftemp = np.linspace(-200.0, 0.0, n)
     resistances, tempdiff, _ = checkCorrectionPolynomialQuality(r0, reftemp, poly=noCorrection)
     # Compute best polynomial
     return np.poly1d(np.polyfit(resistances, tempdiff, order))

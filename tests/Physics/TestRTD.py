@@ -126,7 +126,7 @@ class TestRTDPolynomialComputation(unittest.TestCase):
         # Peak deviation w/o correction should be around 2.4 .. 2.5 °C
         assert_allclose(pkdev, 2.45, rtol=0.05)
         # Correct
-        mypoly = computeCorrectionPolynomial(1000.0)
+        mypoly = computeCorrectionPolynomial(1000.0, n=5000)
         self.assertTrue(isinstance(mypoly, np.poly1d))
         x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=mypoly)
         # pkdev should not exceed 0.1 m°C
