@@ -46,8 +46,8 @@ class TestNgrams(unittest.TestCase):
         inp = np.arange(5) # 0..4
         closed = np.asarray([[0,1],[1,2],[2,3],[3,4],[4,0]])
         opened = np.asarray([[0,1],[1,2],[2,3],[3,4]])
-        print(np.asarray(list(ngrams(inp, 2, closed=True))))
-        print(closed)
+        #print(np.asarray(list(ngrams(inp, 2, closed=True))))
+        #print(closed)
         assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
         assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
 
@@ -58,8 +58,8 @@ class TestNgrams(unittest.TestCase):
                              [[2, 3], [0, 1]]])
         opened = np.asarray([[[0, 1], [1, 2]],
                              [[1, 2], [2, 3]]])
-        print(np.asarray(list(ngrams(inp, 2, closed=True))))
-        print(closed)
+        #print(np.asarray(list(ngrams(inp, 2, closed=True))))
+        #print(closed)
         assert_allclose(closed, np.asarray(list(ngrams(inp, 2, closed=True))))
         assert_allclose(opened, np.asarray(list(ngrams(inp, 2, closed=False))))
 
