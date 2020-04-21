@@ -8,7 +8,7 @@ from UliEngineering.Utils.Temporary import *
 import unittest
 
 class TestFileUtils(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.tmp = AutoDeleteTempfileGenerator()
 
     def create_zip_from_directory(self):

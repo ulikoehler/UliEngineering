@@ -9,7 +9,7 @@ import unittest
 
 class TestFilter(unittest.TestCase):
 
-    def __init__(self):
+    def setUp(self):
         self.d = np.random.random_sample(1000)
         # Some rather random test filter
         self.filt = SignalFilter(100.0, [1.0, 2.0], btype="bandpass")

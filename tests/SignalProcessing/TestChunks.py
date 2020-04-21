@@ -10,7 +10,7 @@ from parameterized import parameterized
 import unittest
 
 class TestChunkGeneration(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.data1 = np.arange(1, 11)
         self.data2 = np.arange(1, 13)
         # Result 1: data1 as 3,3 chunks

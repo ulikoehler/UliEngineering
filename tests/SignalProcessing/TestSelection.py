@@ -232,7 +232,7 @@ class TestFindRuns(unittest.TestCase):
 
 
 class TestShrinkRanges(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.x = np.zeros(25)
         self.x[4:9] = 1.0
         self.x[5] = 2.0

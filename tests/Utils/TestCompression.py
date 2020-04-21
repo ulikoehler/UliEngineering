@@ -8,7 +8,7 @@ from UliEngineering.Utils.Temporary import *
 import unittest
 
 class TestAutoOpen(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         # Use auto-managed temporary files
         self.tempfiles = AutoDeleteTempfileGenerator()
         self.tempdir = self.tempfiles.mkdtemp()

@@ -11,7 +11,7 @@ import numpy as np
 import unittest
 
 class TestEngineerIO(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.io = EngineerIO()
 
     def test_normalize_interpunctation(self):

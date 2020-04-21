@@ -7,7 +7,7 @@ import unittest
 
 
 class TestBSplineResampling(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.x = np.arange(100)
         self.y = np.square(self.x)
 
@@ -17,7 +17,7 @@ class TestBSplineResampling(unittest.TestCase):
         assert_allclose(resample_discard(x, 3), [0, 3, 6, 9])
 
 class TestSignalSamplerate(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         # 100% equal sample rate
         self.tequal = np.asarray([
             '2019-02-01T12:00:00.100000000',
@@ -61,7 +61,7 @@ class TestSignalSamplerate(unittest.TestCase):
         assert_approx_equal(signal_samplerate(self.tequal, ignore_percentile=3), 10.0)
 
 class TestParallelResampling(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         self.x = np.arange(100)
         self.y = np.square(self.x)
 
