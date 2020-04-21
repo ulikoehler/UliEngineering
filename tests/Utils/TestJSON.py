@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import self.assertEqual, assert_true, raises
 from UliEngineering.Utils.JSON import *
 import unittest
 
@@ -20,7 +19,7 @@ class TestNumpyEncoder(unittest.TestCase):
         arr = [np.int64(75),
                np.int64(31)]
         print(arr)
-        assert_true(isinstance(arr[0], np.generic))
+        self.assertTrue(isinstance(arr[0], np.generic))
         s = json.dumps(arr, cls=NumPyEncoder)
         self.assertEqual(s, "[75, 31]")
 

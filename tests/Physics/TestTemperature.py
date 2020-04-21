@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import raises, self.assertEqual
 from UliEngineering.Physics.Temperature import *
 from UliEngineering.Exceptions import *
 from UliEngineering.EngineerIO import auto_format

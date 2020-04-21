@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import self.assertEqual, assert_true, assert_false, raises, assert_less, assert_is_none, assert_raises, assert_is_instance
 from UliEngineering.SignalProcessing.Utils import *
 from parameterized import parameterized
 import concurrent.futures
@@ -151,10 +150,10 @@ class TestLinSpace(unittest.TestCase):
         l1 = LinRange(0., 100., 100, endpoint=False)
         l2 = LinRange(0., 100., 100, endpoint=False)
         l3 = LinRange(0., 100., 100, endpoint=True)
-        assert_true(l1 == l2)
-        assert_true(l2 == l1)
-        assert_false(l3 == l1)
-        assert_false(l3 == l2)
+        self.assertTrue(l1 == l2)
+        self.assertTrue(l2 == l1)
+        self.assertFalse(l3 == l1)
+        self.assertFalse(l3 == l2)
 
     def test_repr(self):
         l = LinRange(0., 100., 100, endpoint=False)

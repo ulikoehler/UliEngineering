@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import self.assertEqual, assert_true, raises
 from UliEngineering.Utils.Parser import *
 import unittest
 

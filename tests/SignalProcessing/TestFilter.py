@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import numpy as np
-from nose.tools import self.assertEqual, assert_true, raises, assert_in, assert_not_in, assert_is_instance
 from numpy.testing import assert_array_equal, assert_array_less, assert_allclose
 from UliEngineering.SignalProcessing.Filter import *
 from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
@@ -162,7 +161,7 @@ class TestChainedFilter(TestFilter):
         cfilt = ChainedFilter(filt, repeat=4)
         d2 = cfilt(self.d)
         self.assertEqual(self.d.shape, d2.shape)
-        assert_true(cfilt.is_stable())
+        self.assertTrue(cfilt.is_stable())
         # Check +=
         len1 = len(cfilt)
         cfilt += filt
@@ -198,8 +197,8 @@ class TestChainedFilter(TestFilter):
         cf = ChainedFilter(testFilter, repeat=1)
         cf400 = cf.as_samplerate(400.)  # Same samplerate => shortcut
         cf500 = cf.as_samplerate(500.)
-        assert_true(cf400 == cf)
-        assert_true(cf500 != cf)
+        self.assertTrue(cf400 == cf)
+        self.assertTrue(cf500 != cf)
 
     def testDifferingSamplerateFilters(self):
         with self.assertRaises(FilterInvalidError):
@@ -225,7 +224,7 @@ class TestSumFilter(TestFilter):
         sfilt = SumFilter([filt, filt])
         d2 = sfilt(self.d)
         self.assertEqual(self.d.shape, d2.shape)
-        assert_true(sfilt.is_stable())
+        self.assertTrue(sfilt.is_stable())
         # Check +=
         len1 = len(sfilt)
         sfilt += filt
@@ -250,10 +249,10 @@ class TestFilterBank(unittest.TestCase):
         assert_not_in(filt1, bank)
         assert_not_in(bank, bank)
         # Check fast path resampling to same samplerate
-        assert_true(bank.as_samplerate(100.) == bank)
+        self.assertTrue(bank.as_samplerate(100.) == bank)
         # Check resampled bank
         bank200 = bank.as_samplerate(200.)
-        assert_true(bank200 != bank)
+        self.assertTrue(bank200 != bank)
         assert_in("A", bank200)
         assert_in("B", bank200)
         self.assertEqual(bank200["A"].samplerate, 200.)

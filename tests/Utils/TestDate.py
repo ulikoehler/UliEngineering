@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 from subprocess import check_output
-from nose.tools import self.assertEqual, assert_true, raises
 from UliEngineering.Utils.Date import *
 import unittest
 

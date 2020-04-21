@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os.path
-from nose.tools import self.assertEqual, assert_true, assert_false
 from UliEngineering.Utils.Temporary import *
 import unittest
 
@@ -10,10 +9,10 @@ class TestTemporary(unittest.TestCase):
         tgen = AutoDeleteTempfileGenerator()
         # Create file and check if it exists
         (_, fname) = tgen.mkstemp()
-        assert_true(os.path.isfile(fname))
+        self.assertTrue(os.path.isfile(fname))
         # Delete and check if file has vanished
         tgen.delete_all()
-        assert_false(os.path.isfile(fname))
+        self.assertFalse(os.path.isfile(fname))
 
 
     def testMkftemp(self):
@@ -24,17 +23,17 @@ class TestTemporary(unittest.TestCase):
         handle.write("foo")
         handle.close()
         # Should not be deleted on close
-        assert_true(os.path.isfile(fname))
+        self.assertTrue(os.path.isfile(fname))
         # Delete and check if file has vanished
         tgen.delete_all()
-        assert_false(os.path.isfile(fname))
+        self.assertFalse(os.path.isfile(fname))
 
     def testMkdtemp(self):
         tgen = AutoDeleteTempfileGenerator()
         # Create file and check if it exists
         dirname = tgen.mkdtemp()
-        assert_true(os.path.isdir(dirname))
+        self.assertTrue(os.path.isdir(dirname))
         # Delete and check if file has vanished
         tgen.delete_all()
-        assert_false(os.path.isdir(dirname))
+        self.assertFalse(os.path.isdir(dirname))
 

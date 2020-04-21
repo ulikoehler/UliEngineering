@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from nose.tools import self.assertEqual, assert_tuple_equal, assert_is_none, assert_true, assert_false, raises, assert_in, assert_not_in
 from UliEngineering.Math.Coordinates import *
 from parameterized import parameterized
 import functools

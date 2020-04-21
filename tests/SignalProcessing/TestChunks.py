@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
 from toolz import functoolz
-from nose.tools import self.assertEqual, assert_true, raises
 from numpy.testing import assert_array_equal, assert_allclose
 from UliEngineering.SignalProcessing.Chunks import *
 from UliEngineering.SignalProcessing.Window import *
@@ -67,15 +66,15 @@ class TestChunkGeneration(unittest.TestCase):
     def test_randomSampleChunkGenerator(self, chunksize):
         vals = random_sample_chunks(self.data1, chunksize, 2).as_array()
         self.assertEqual(vals.shape, (2, 3))
-        assert_true((vals <= 10).all())
-        assert_true((vals >= 0).all())
+        self.assertTrue((vals <= 10).all())
+        self.assertTrue((vals >= 0).all())
 
     @parameterized.expand([(3,), (3.0,)])
     def test_randomSampleChunkGeneratorNonoverlapping(self, chunksize):
         vals = random_sample_chunks_nonoverlapping(self.data1, chunksize, 2).as_array()
         self.assertEqual(vals.shape, (2, 3))
-        assert_true((vals <= 10).all())
-        assert_true((vals >= 0).all())
+        self.assertTrue((vals <= 10).all())
+        self.assertTrue((vals >= 0).all())
 
     def test_fixedSizeChunkGenerator_invalid1(self):
         with self.assertRaises(Exception):

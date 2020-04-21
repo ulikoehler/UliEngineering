@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import self.assertEqual, assert_true, raises, assert_less, assert_almost_equal
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *
@@ -60,4 +59,4 @@ class TestGenerateWaves(unittest.TestCase):
         sw = fn(25., 400.0, 1.0, 10.)
         fft = compute_fft(sw, 400.)
         df = fft.dominant_frequency()
-        assert_true(abs(df - 25.0) < 0.1)
+        self.assertTrue(abs(df - 25.0) < 0.1)

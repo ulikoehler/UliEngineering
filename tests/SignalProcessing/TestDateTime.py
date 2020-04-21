@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import self.assertEqual, assert_true, raises, assert_less, assert_is_none, assert_raises
 from UliEngineering.SignalProcessing.DateTime import *
 from parameterized import parameterized
 import concurrent.futures

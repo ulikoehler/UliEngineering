@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
-from nose.tools import raises, assert_true, self.assertEqual
 from UliEngineering.Physics.RTD import *
 from UliEngineering.Exceptions import *
 import functools
@@ -128,7 +127,7 @@ class TestRTDPolynomialComputation(unittest.TestCase):
         assert_allclose(pkdev, 2.45, rtol=0.05)
         # Correct
         mypoly = computeCorrectionPolynomial(1000.0)
-        assert_true(isinstance(mypoly, np.poly1d))
+        self.assertTrue(isinstance(mypoly, np.poly1d))
         x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=mypoly)
         # pkdev should not exceed 0.1 m°C
         assert_array_less([pkdev], [1e-4])

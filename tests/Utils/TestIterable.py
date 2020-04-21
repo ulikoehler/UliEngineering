@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from nose.tools import self.assertEqual, assert_true, raises, assert_false
 from UliEngineering.Utils.Iterable import *
 import unittest
 
@@ -81,32 +80,32 @@ class TestPeekableIteratorWrapper(unittest.TestCase):
         # has_next() might influence next() so this is a separate test.
         # Short test
         it = PeekableIteratorWrapper(ListIterator([]))
-        assert_false(it.has_next())
+        self.assertFalse(it.has_next())
         # Main test
         iterable = [1,2,3]
         it = PeekableIteratorWrapper(ListIterator(iterable))
         # 1
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         self.assertEqual(it.peek(), 1)
         self.assertEqual(next(it), 1)
         self.assertEqual(it.peek(), 2)
         self.assertEqual(it.peek(), 2)
         # 5
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         it.unget(5)
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         self.assertEqual(it.peek(), 5)
         self.assertEqual(next(it), 5)
         self.assertEqual(it.peek(), 2)
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         # 2
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         self.assertEqual(next(it), 2)
         self.assertEqual(it.peek(), 3)
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         # 3
-        assert_true(it.has_next())
+        self.assertTrue(it.has_next())
         self.assertEqual(next(it), 3)
-        assert_false(it.has_next())
+        self.assertFalse(it.has_next())
         self.assertEqual(list(it), [])
-        assert_false(it.has_next())
+        self.assertFalse(it.has_next())

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from nose.tools import self.assertEqual, assert_true, assert_false, raises
 from UliEngineering.Utils.String import *
 from parameterized import parameterized
 import unittest

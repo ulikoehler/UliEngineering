@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from nose.tools import raises
 from UliEngineering.Electronics.MOSFET import *
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.EngineerIO import auto_format

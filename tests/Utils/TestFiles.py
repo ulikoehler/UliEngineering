@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import io
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from nose.tools import self.assertEqual, assert_true, assert_false
 from UliEngineering.Utils.Files import *
 from UliEngineering.Utils.Temporary import *
 import unittest
@@ -54,7 +53,7 @@ class TestFileUtils(unittest.TestCase):
 
         write_textfile(fname, "foobar")
         # Check file
-        assert_true(os.path.isfile(fname))
+        self.assertTrue(os.path.isfile(fname))
         with open(fname) as infile:
             self.assertEqual(infile.read(), "foobar")
         # Read back

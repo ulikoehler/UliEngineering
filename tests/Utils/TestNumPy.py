@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from subprocess import check_output
-from nose.tools import self.assertEqual, assert_true, raises, assert_greater
 from UliEngineering.Utils.NumPy import *
 from parameterized import parameterized
 import numpy as np
