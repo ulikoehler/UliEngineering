@@ -11,10 +11,10 @@ class TestResistors(object):
         assert_approx_equal(parallel_resistors(1000.0, 1000.0, 500.0), 250.0)
         assert_approx_equal(parallel_resistors("1kΩ", "1kΩ"), 500.0)
 
-    def test_serial_resistors(self):
-        assert_approx_equal(serial_resistors(1000.0, 1000.0), 2000.0)
-        assert_approx_equal(serial_resistors(1000.0, 1000.0, 500.0), 2500.0)
-        assert_approx_equal(serial_resistors("1kΩ", "1kΩ"), 2000.0)
+    def test_series_resistors(self):
+        assert_approx_equal(series_resistors(1000.0, 1000.0), 2000.0)
+        assert_approx_equal(series_resistors(1000.0, 1000.0, 500.0), 2500.0)
+        assert_approx_equal(series_resistors("1kΩ", "1kΩ"), 2000.0)
 
     def test_standard_resistors(self):
         assert_true(len(list(standard_resistors())) > 500)
