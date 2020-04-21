@@ -105,15 +105,15 @@ class TestSelectByDatetime(unittest.TestCase):
         ("2015-01-29 23:59:01.0000001"),  # Too many digits
         ("2015-01-29 23:59:01.00000a1"),  # a is not a digit
     ])
-    def testInvalidStringFormat(self, str):
+    def testInvalidStringFormat(self, s):
         with self.assertRaises(Exception):
-            select_by_datetime(np.arange(10), "2015-01-29 23:59:01")
+            select_by_datetime(np.arange(10), s)
 
-    def testNoneArray(self, str):
+    def testNoneArray(self):
         with self.assertRaises(Exception):
             select_by_datetime(None, "2015-01-29 23:59:01")
 
-    def testNoneTimestamp(self, str):
+    def testNoneTimestamp(self):
         with self.assertRaises(Exception):
             select_by_datetime(np.arange(10), None)
 
