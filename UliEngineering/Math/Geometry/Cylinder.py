@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Geometry functions, mainly for 2D coordinates.
+Geometry functions for cylinders and hollow cylinders
 """
 import math
 from UliEngineering.EngineerIO import normalize_numeric
+from .Circle import circle_area
 
 __all__ = [
-    "cylinder_volume", "cylinder_surface_area"
+    "cylinder_volume", "cylinder_side_surface_area", "cylinder_surface_area"
 ]
 
 def cylinder_volume(radius, height):
@@ -16,7 +17,7 @@ def cylinder_volume(radius, height):
     """
     radius = normalize_numeric(radius)
     height = normalize_numeric(height)
-    return math.pi * radius**2 * height
+    return math.pi * (radius**2) * height
 
 def cylinder_side_surface_area(radius, height):
     """
@@ -24,8 +25,7 @@ def cylinder_side_surface_area(radius, height):
     """
     radius = normalize_numeric(radius)
     height = normalize_numeric(height)
-    return math.pi 
-    
+    return 2 * math.pi * radius * height
 
 def cylinder_surface_area(radius, height):
     """
@@ -33,4 +33,4 @@ def cylinder_surface_area(radius, height):
     """
     radius = normalize_numeric(radius)
     height = normalize_numeric(height)
-    return cylinder_side_surface_area(radius, height) + 2 # TODO
+    return cylinder_side_surface_area(radius, height) + 2 * circle_area(radius)
