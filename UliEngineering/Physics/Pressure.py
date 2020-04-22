@@ -7,7 +7,7 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 import numpy as np
 
-__all__ = ["pascal_to_bar", "bar_to_pascal"]
+__all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential"]
 
 def pascal_to_bar(pressure: Unit("Pa")) -> Unit("bar"):
     """
@@ -22,3 +22,17 @@ def bar_to_pascal(pressure: Unit("bar")) -> Unit("Pa"):
     """
     pressure = normalize_numeric(pressure)
     return pressure*1e5
+
+def barlow_tangential(outer_diameter: Unit("m"), inner_diameter: Unit("m"), pressure: Unit("Pa")) -> Unit("Pa"):
+    """
+    Compute the tangential stress of a pressure vessel at [pressure] using Barlow's formula for thin-walled tubes.
+
+    Note that this formula only applies for (outer_diameter/inner_diameter) < 1.2 !
+    (this assumption is not checked). Otherwise, the stress distribution will be too uneven.
+    """
+    outer_diameter = normalize_numeric(outer_diameter)
+    inner_diameter = normalize_numeric(inner_diameter)
+    pressure = normalize_numeric(pressure)
+    dm = (outer_diameter + inner_diameter) / 2
+    s = (outer_diameter - inner_diameter) / 2
+    return pressure * dm / (2 * s)
