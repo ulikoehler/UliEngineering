@@ -9,7 +9,7 @@ import numpy as np
 import scipy.constants
 
 __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
-           "rotation_linear_speed"]
+           "rotation_linear_speed", "centrifugal_force"]
 
 def rpm_to_Hz(rpm) -> Unit("Hz"):
     """
@@ -27,7 +27,7 @@ def hz_to_rpm(hz) -> Unit("rpm"):
 
 rpm_to_rps = rpm_to_Hz
 
-def angular_speed(speed: Unit("Hz")):
+def angular_speed(speed: Unit("Hz")) -> Unit("1/s"):
     """
     Compute ω, the angular speed of a centrifugal system
     """
@@ -40,3 +40,11 @@ def rotation_linear_speed(radius: Unit("m"), speed: Unit("Hz")) -> Unit("m/s"):
     """
     radius = normalize_numeric(radius)
     return radius * angular_speed(speed)
+
+def centrifugal_force(radius: Unit("m"), speed: Unit("Hz"), mass: Unit("g")) -> Unit("N"):
+    """
+    Compute the centrifugal force of a [mass] rotation at [speed] at radius [radius]
+    """
+    radius = normalize_numeric(radius)
+    mass = normalize_numeric(mass) / 1000.0 # mass needs to be Kilograms TODO Improve
+    return mass * angular_speed(speed)**2 * radius

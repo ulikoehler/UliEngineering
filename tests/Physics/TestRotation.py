@@ -34,6 +34,16 @@ class TestRotationOther(unittest.TestCase):
         self.assertAlmostEqual(angular_speed(1000), 1000*2*math.pi)
         self.assertAlmostEqual(angular_speed("1 kHz"), 1000*2*math.pi)
 
+    def test_centrifugal_force(self):
+        # Zero cases
+        self.assertAlmostEqual(centrifugal_force(5, 10, 0), 0)
+        self.assertAlmostEqual(centrifugal_force(0, 10, 500), 0)
+        self.assertAlmostEqual(centrifugal_force(5, 0, 500), 0)
+        # Non zero cases
+        # Reference: https://www.thecalculator.co/others/Centrifugal-Force-Calculator-660.html
+        self.assertAlmostEqual(centrifugal_force(5, 10, 500), 9869.604401089358, places=2)
+        self.assertAlmostEqual(centrifugal_force("5", "10", "500"), 9869.604401089358, places=2)
+
     def test_rotation_linear_speed(self):
         self.assertAlmostEqual(rotation_linear_speed(1, 0.), 0)
         self.assertAlmostEqual(rotation_linear_speed(1, "0 Hz"), 0)
