@@ -4,6 +4,7 @@ from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.Rotation import *
 from UliEngineering.EngineerIO import auto_format
 import unittest
+import math
 
 class TestRotationConversion(unittest.TestCase):
     def test_rpm_to_hz(self):
@@ -23,3 +24,23 @@ class TestRotationConversion(unittest.TestCase):
         self.assertAlmostEqual(hz_to_rpm(1.), 60.)
         self.assertAlmostEqual(hz_to_rpm(2.), 120.)
         self.assertAlmostEqual(hz_to_rpm(2.5), 150.)
+
+class TestRotationOther(unittest.TestCase):
+    def test_angular_speed(self):
+        self.assertAlmostEqual(angular_speed(0.), 0)
+        self.assertAlmostEqual(angular_speed("0 Hz"), 0)
+        self.assertAlmostEqual(angular_speed(1), 1*2*math.pi)
+        self.assertAlmostEqual(angular_speed("1 Hz"), 1*2*math.pi)
+        self.assertAlmostEqual(angular_speed(1000), 1000*2*math.pi)
+        self.assertAlmostEqual(angular_speed("1 kHz"), 1000*2*math.pi)
+
+    def test_rotation_linear_speed(self):
+        self.assertAlmostEqual(rotation_linear_speed(1, 0.), 0)
+        self.assertAlmostEqual(rotation_linear_speed(1, "0 Hz"), 0)
+        self.assertAlmostEqual(rotation_linear_speed(1, 1), 1*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed(1, "1 Hz"), 1*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed(1, 1000), 1000*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed(1, "1 kHz"), 1000*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed("1", "1 kHz"), 1000*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed("2", "1 kHz"), 2000*2*math.pi)
+        self.assertAlmostEqual(rotation_linear_speed("1m", "1 kHz"), 1*2*math.pi)
