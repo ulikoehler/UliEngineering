@@ -49,7 +49,7 @@ def centrifugal_force(radius: Unit("m"), speed: Unit("Hz"), mass: Unit("g")) -> 
     mass = normalize_numeric(mass) / 1000.0 # mass needs to be Kilograms TODO Improve
     return mass * angular_speed(speed)**2 * radius
 
-def rotating_liquid_pressure(density: Unit("kg/m³"), speed: Unit("Hz"), radius: Unit("m")) -> Unit("N"):
+def rotating_liquid_pressure(density: Unit("kg/m³"), speed: Unit("Hz"), radius: Unit("m")) -> Unit("Pa"):
     """
     Compute the pressure in a body of liquid (relative to the steady-state pressure)
     The calculation does not include gravity.
