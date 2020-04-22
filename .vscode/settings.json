@@ -8,5 +8,10 @@
         "./tests",
         "-p",
         "Test*.py"
-    ]
+    ],
+    "files.exclude": {
+        "**/*.pyc": true,
+        "**/__pycache__": true,
+        ".eggs"": true
+    }
 }
