@@ -422,6 +422,30 @@ class EngineerIO(object):
             ret[i] = self.normalize(elem).value
         return ret
 
+    def normalize_numeric_verify_unit(self, arg, reference: Unit):
+        """
+        Normalize a value. If it is a string
+        verify if its unit matches the reference unit.
+        """
+        if arg is None:
+            raise ValueError("Can't normalize None")
+
+        # Scalars get returned directly
+        if isinstance(arg, (int, float, np.generic)):
+            return arg
+
+        # If it's stringlike, apply directly
+        if isinstance(arg, (str, bytes)):
+            normalize_result = self.normalize(arg)
+            if normalize_result.unit == reference.unit:
+                raise InvalidUnitInContextException(f"Invalid unit: Expected {reference} but found {normalize_result.unit} in source string '{arg}'")
+            return normalize_result.value
+        # It's an iterable
+        ret = np.zeros(len(arg))
+        for i, elem in enumerate(arg):
+            ret[i] = self.normalize(elem).value
+        return ret
+
 # Initialize global instance
 EngineerIO.instance = EngineerIO()
 EngineerIO.length_instance = EngineerIO(units=_default_units(include_m=True))
