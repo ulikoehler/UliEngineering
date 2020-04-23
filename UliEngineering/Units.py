@@ -7,7 +7,7 @@ from collections import namedtuple
 import functools
 
 __all__ = ["Unit", "UnannotatedReturnValueError",
-           "InvalidUnitInContextException",
+           "InvalidUnitInContextException", "InvalidUnitCombinationException",
            "find_returned_unit", "UnknownUnitInContextException"]
 
 Unit = namedtuple("Unit", ["unit"])
@@ -42,6 +42,12 @@ class UnknownUnitInContextException(ValueError):
     """
     pass
 
+class InvalidUnitCombinationException(ValueError):
+    """
+    Raised if the units involved in an operation can't be
+    combined in the way requested, for example if the
+    """
+    pass
 
 def find_returned_unit(fn):
     """
