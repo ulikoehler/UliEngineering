@@ -189,13 +189,22 @@ class TestEngineerIO(unittest.TestCase):
         assert_allclose(self.io.normalize_numeric(["1k25 V", "4.25 A"]), np.asarray([1250.0, 4.25]))
 
     def test_normalize_numeric_verify_unit(self):
-        # Tests that should not verify any unite
         self.assertEqual(self.io.normalize_numeric_verify_unit(1.25, Unit("V")), 1.25)
         self.assertEqual(self.io.normalize_numeric_verify_unit("1.25", Unit("V")), 1.25)
         self.assertEqual(self.io.normalize_numeric_verify_unit("1.25 V", Unit("V")), 1.25)
         self.assertEqual(self.io.normalize_numeric_verify_unit("1k25 V", Unit("V")), 1250.0)
         self.assertEqual(self.io.normalize_numeric_verify_unit(b"1k25 V", Unit("V")), 1250.0)
         assert_allclose(self.io.normalize_numeric_verify_unit(["1k25 V", "4.25 V"], Unit("V")), np.asarray([1250.0, 4.25]))
+
+    @parameterized.expand([
+        ("1.25 A", Unit("V")),
+        ("1.25 kA", Unit("V")),
+        ("1.25 V", Unit("A")),
+    ])
+    def test_normalize_numeric_verify_unit_raises(self, s, reference):
+        # Tests that should not verify any unite
+        with self.assertRaises(InvalidUnitInContextException):
+            self.io.normalize_numeric_verify_unit(s, reference)
 
     def test_safe_normalize(self):
         self.assertTupleEqual(self.io.safe_normalize("1.25 kV"), NormalizeResult('', 1250., '', 'V'))

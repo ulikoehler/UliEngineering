@@ -6,7 +6,7 @@ from UliEngineering.Length import *
 from UliEngineering.Units import UnknownUnitInContextException
 import unittest
 
-class TestLengths(unittest.TestCase):
+class TestLength(unittest.TestCase):
     def test_length_normalization(self):
         assert_approx_equal(normalize_length(1.0), 1.0)
         assert_approx_equal(normalize_length("1.0 m"), 1.0)
@@ -93,9 +93,9 @@ class TestLengths(unittest.TestCase):
         assert_approx_equal(convert_length_to_meters(3.33, "angstrom"), 3.33e-10)
 
     @parameterized.expand([
-        ("1A"),
-        ("xaz"),
-        ("yxard"),
+        ("1A",),
+        ("xaz",),
+        ("yxard",),
     ])
     def test_invalid_unit(self, unit):
         with self.assertRaises(ValueError):
