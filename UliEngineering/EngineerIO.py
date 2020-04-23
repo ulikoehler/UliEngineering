@@ -437,7 +437,8 @@ class EngineerIO(object):
         # If it's stringlike, apply directly
         if isinstance(arg, (str, bytes)):
             normalize_result = self.normalize(arg)
-            if normalize_result.unit == reference.unit:
+            # Check if unit matches (it's also considered a match if there is no unit at all)
+            if normalize_result.unit and normalize_result.unit != reference.unit:
                 raise InvalidUnitInContextException(f"Invalid unit: Expected {reference} but found {normalize_result.unit} in source string '{arg}'")
             return normalize_result.value
         # It's an iterable
