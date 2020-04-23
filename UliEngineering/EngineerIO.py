@@ -494,7 +494,7 @@ def _format_with_suffix(v, suffix="", significant_digits=3):
     return "{} {}".format(res, suffix) if suffix else res
 
 def normalize_engineer_notation(s, encoding="utf8"):
-    return EngineerIO.instance.normalize(s)
+    return EngineerIO.instance.normalize(s, encoding=encoding)
 
 def format_value(v, unit="", significant_digits=3):
     return EngineerIO.instance.format(v, unit, significant_digits=significant_digits)
