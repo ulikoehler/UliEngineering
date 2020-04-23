@@ -31,7 +31,7 @@ from .Utils.String import suffix_list
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "SplitResult"]
+           "normalize_numeric_verify_unit", "SplitResult"]
 
 UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
@@ -526,6 +526,9 @@ def format_value(v, unit="", significant_digits=3):
 
 def print_value(v, unit="", significant_digits=3):
     return EngineerIO.instance.print(v, unit, significant_digits=significant_digits)
+
+def normalize_numeric_verify_unit(self, arg, reference: Unit):
+    return EngineerIO.instance.normalize_numeric_verify_unit(arg, reference)
 
 def normalize_engineer_notation_safe(v, unit=""):
     return EngineerIO.instance.safe_normalize(v, unit)
