@@ -61,7 +61,7 @@ class Quantity(object):
         else: # Non-Quantities: Compare by value
             return op(self.value, other)
     
-    def __perform_arithmetic(self, other, op):
+    def __perform_addsub(self, other, op):
         """Perform an operation on a quantity (e.g. addition)"""
         if isinstance(other, Quantity): # Quantities: Compare only if units match
             if self.unit != other.unit:
@@ -86,10 +86,10 @@ class Quantity(object):
         return self.__compare(other, operator.ge)
 
     def __add__(self, other):
-        return self.__perform_arithmetic(other, operator.add)
+        return self.__perform_addsub(other, operator.add)
 
     def __sub__(self, other):
-        return self.__perform_arithmetic(other, operator.sub)
+        return self.__perform_addsub(other, operator.sub)
 
     def __mul__(self, other):
         return self.__perform_arithmetic(other, operator.mul)
