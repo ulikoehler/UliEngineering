@@ -92,7 +92,7 @@ class Quantity(object):
 
     def __mul__(self, other):
         return self.__perform_arithmetic(other, operator.mul)
-
+    
     def __truediv__(self, other):
         return self.__perform_arithmetic(other, operator.truediv)
 
@@ -125,3 +125,42 @@ class Quantity(object):
     
     def __abs__(self):
         return Quantity(abs(self.value), self.unit, self._io)
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __rtruediv__(self, other):
+        return self.__truediv__(other)
+
+    def __rfloordiv__(self, other):
+        return self.__floordiv__(other)
+
+    def __rmod__(self, other):
+        return self.__mod__(other)
+
+    def __rdivmod__(self, other):
+        return self.__divmod__(other)
+
+    def __rpow__(self, other):
+        return self.__pow__(other)
+
+    def __rlshift__(self, other):
+        return self.__lshift__(other)
+
+    def __rrshift__(self, other):
+        return self.__rshift__(other)
+
+    def __rand__(self, other):
+        return self.__and__(other)
+
+    def __rxor__(self, other):
+        return self.__xor__(other)
+        
+    def __ror__(self, other):
+        return self.__or__(other)
