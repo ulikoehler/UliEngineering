@@ -6,6 +6,7 @@ Units and exceptions related to units.
 from UliEngineering.EngineerIO import EngineerIO
 from UliEngineering.Units import *
 import operator
+import math
 
 __all__ = ["Quantity"]
 
@@ -40,12 +41,12 @@ class Quantity(object):
         """
         Quantity equality operator.
         Quantities are equal to:
-            - Quantity instances with the same value and unit
+            - Quantity instances with the same value and unit (value is compared using math.isclose)
             - Strings that are exactly equal to this quantity's representation
             - Other objects that are equal to the quantity's value
         """
         if isinstance(other, Quantity):
-            return self.value == other.value and self.unit == other.unit
+            return math.isclose(self.value, other.value) and self.unit == other.unit
         elif isinstance(other, str):
             return self.__repr__() == other
         else: # Other objects that are equal to the quantity's value

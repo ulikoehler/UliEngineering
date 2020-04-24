@@ -77,4 +77,12 @@ class TestQuantity(unittest.TestCase):
         with self.assertRaises(InvalidUnitCombinationException):
             Quantity(arg) <= Quantity("1.23 V") 
         with self.assertRaises(InvalidUnitCombinationException):
-            Quantity(arg) >= Quantity("1.23 V") 
+            Quantity(arg) >= Quantity("1.23 V")
+
+    def test_arithmetic_operators(self):
+        "Test whether a Quantity can be parsed from a string"
+        # Quantity-Quantity
+        self.assertEqual(Quantity("1.23 mV") + Quantity("1.11 mV"), Quantity("2.34 mV"))
+        print((Quantity("1.23 mV") - Quantity("1.11 mV")).value)
+        print((Quantity("0.12 mV")).value)
+        self.assertEqual(Quantity("1.23 mV") - Quantity("1.11 mV"), Quantity("0.12 mV"))
