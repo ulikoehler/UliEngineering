@@ -60,7 +60,6 @@ class Quantity(object):
             return op(self.value, other)
     
     def __lt__(self, other):
-        print("XXXS")
         return self.__compare(other, operator.lt)
 
     def __le__(self, other):
