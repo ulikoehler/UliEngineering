@@ -69,6 +69,9 @@ class Quantity(object):
         else: # Non-Quantities: Compare by value
             return Quantity(op(self.value, other), self.unit)
     
+    def __repr__(self):
+        return self._io.format(self.value, self.unit)
+
     def __lt__(self, other):
         return self.__compare(other, operator.lt)
 
@@ -80,9 +83,6 @@ class Quantity(object):
 
     def __ge__(self, other):
         return self.__compare(other, operator.ge)
-
-    def __repr__(self):
-        return self._io.format(self.value, self.unit)
 
     def __add__(self, other):
         return self.__perform_arithmetic(other, operator.add)
