@@ -48,6 +48,13 @@ class TestQuantity(unittest.TestCase):
         self.assertGreater(Quantity("9.23 mV"), Quantity("2.34 mV"))
         self.assertGreaterEqual(Quantity("9.23 mV"), Quantity("2.34 mV"))
         self.assertGreaterEqual(Quantity("9.23 mV"), Quantity("9.23 mV"))
+        # Quantity-number comparisons
+        self.assertLess(Quantity("1.23 mV"), 2.34e-3)
+        self.assertLessEqual(Quantity("1.23 mV"), 2.34e-3)
+        self.assertLessEqual(Quantity("1.23 mV"), 1.23e-3)
+        self.assertGreater(Quantity("9.23 mV"), 1.23e-3)
+        self.assertGreaterEqual(Quantity("9.23 mV"), 2.34e-3)
+        self.assertGreaterEqual(Quantity("9.23 mV"), 9.23e-3)
 
     @parameterized.expand([
         ("1.23 A", ),

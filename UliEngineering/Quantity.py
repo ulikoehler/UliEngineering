@@ -59,7 +59,8 @@ class Quantity(object):
         else: # Non-Quantities: Compare by vlaue
             return op(self.value, other)
     
-    def ___lt__(self, other):
+    def __lt__(self, other):
+        print("XXXS")
         return self.__compare(other, operator.lt)
 
     def __le__(self, other):
