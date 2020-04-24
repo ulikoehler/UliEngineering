@@ -66,5 +66,4 @@ class TestParallelResampling(unittest.TestCase):
 
     def testSimpleCall(self):
         # Check if a simple call does not raise any exceptions
-        print("foo")
         parallel_resample(self.x, self.y, 10.0, time_factor=1.0)
