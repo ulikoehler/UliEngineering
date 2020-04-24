@@ -52,12 +52,22 @@ class Quantity(object):
             return other == self.value
     
     def __compare(self, other, op):
+        """Perform a comparison on a Quantity, e.g. 'less than'"""
         if isinstance(other, Quantity): # Quantities: Compare only if units match
             if self.unit != other.unit:
                 raise InvalidUnitCombinationException(f"Can't compare Quantities with different units: {self} and {other}")
             return op(self.value, other.value)
-        else: # Non-Quantities: Compare by vlaue
+        else: # Non-Quantities: Compare by value
             return op(self.value, other)
+    
+    def __perform_arithmetic(self, other, op):
+        """Perform an operation on a quantity (e.g. addition)"""
+        if isinstance(other, Quantity): # Quantities: Compare only if units match
+            if self.unit != other.unit:
+                raise InvalidUnitCombinationException(f"Can't perform {op.__name__} operation on Quantities with different units: {self} and {other}")
+            return Quantity(op(self.value, other.value), self.unit)
+        else: # Non-Quantities: Compare by value
+            return Quantity(op(self.value, other), self.unit)
     
     def __lt__(self, other):
         return self.__compare(other, operator.lt)
@@ -73,6 +83,45 @@ class Quantity(object):
 
     def __repr__(self):
         return self._io.format(self.value, self.unit)
+
+    def __add__(self, other):
+        return self.__perform_arithmetic(other, operator.add)
+
+    def __sub__(self, other):
+        return self.__perform_arithmetic(other, operator.sub)
+
+    def __mul__(self, other):
+        return self.__perform_arithmetic(other, operator.mul)
+
+    def __truediv__(self, other):
+        return self.__perform_arithmetic(other, operator.truediv)
+
+    def __floordiv__(self, other):
+        return self.__perform_arithmetic(other, operator.floordiv)
+
+    def __mod__(self, other):
+        return self.__perform_arithmetic(other, operator.mod)
+
+    def __divmod__(self, other):
+        return (self // other, self % other)
+
+    def __pow__(self, other):
+        return self.__perform_arithmetic(other, operator.pow)
+
+    def __lshift__(self, other):
+        return self.__perform_arithmetic(other, operator.lshift)
+
+    def __rshift__(self, other):
+        return self.__perform_arithmetic(other, operator.rshift)
+
+    def __and__(self, other):
+        return self.__perform_arithmetic(other, operator.and_)
+
+    def __xor__(self, other):
+        return self.__perform_arithmetic(other, operator.xor)
+
+    def __or__(self, other):
+        return self.__perform_arithmetic(other, operator.or_)
     
     def __abs__(self):
         return Quantity(abs(self.value), self.unit, self._io)
