@@ -39,7 +39,7 @@ class TestQuantity(unittest.TestCase):
         self.assertNotEqual(q, -1.23e-3)
         self.assertNotEqual(q, "2.34 mV")
 
-    def test_numerical_operators(self):
+    def test_numerical_comparison(self):
         "Test whether a Quantity can be parsed from a string"
         # Quantity-Quantity comparisons
         self.assertLess(Quantity("1.23 mV"), Quantity("2.34 mV"))
@@ -60,7 +60,7 @@ class TestQuantity(unittest.TestCase):
         ("1.23 A", ),
         ("99 °C", ),
     ])
-    def test_numerical_operators_invalid_combination(self, arg):
+    def test_numerical_comparison_invalid_combination(self, arg):
         with self.assertRaises(InvalidUnitCombinationException):
             Quantity("1.23 V") < Quantity(arg)
         with self.assertRaises(InvalidUnitCombinationException):
