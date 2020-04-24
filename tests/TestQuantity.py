@@ -3,7 +3,7 @@
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
 from UliEngineering.Quantity import *
-from UliEngineering.Units import UnknownUnitInContextException
+from UliEngineering.Units import UnknownUnitInContextException, InvalidUnitCombinationException
 import unittest
 
 class TestQuantity(unittest.TestCase):
@@ -32,9 +32,42 @@ class TestQuantity(unittest.TestCase):
         self.assertEqual(q, 1.23e-3)
         self.assertEqual(q, "1.23 mV")
         # Inequality
+        self.assertTrue(q != Quantity("2.34 mV")) # Direct non equality
         self.assertNotEqual(q, Quantity("2.34 mV"))
         self.assertNotEqual(q, Quantity(2.34e-3, "V"))
         self.assertNotEqual(q, 2.34e-3)
         self.assertNotEqual(q, -1.23e-3)
         self.assertNotEqual(q, "2.34 mV")
 
+    def test_numerical_operators(self):
+        "Test whether a Quantity can be parsed from a string"
+        # Quantity-Quantity comparisons
+        self.assertLess(Quantity("1.23 mV"), Quantity("2.34 mV"))
+        self.assertLessEqual(Quantity("1.23 mV"), Quantity("2.34 mV"))
+        self.assertLessEqual(Quantity("1.23 mV"), Quantity("1.23 mV"))
+        self.assertGreater(Quantity("9.23 mV"), Quantity("2.34 mV"))
+        self.assertGreaterEqual(Quantity("9.23 mV"), Quantity("2.34 mV"))
+        self.assertGreaterEqual(Quantity("9.23 mV"), Quantity("9.23 mV"))
+
+    @parameterized.expand([
+        ("1.23 A", ),
+        ("99 °C", ),
+    ])
+    def test_numerical_operators_invalid_combination(self, arg):
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity("1.23 V") < Quantity(arg)
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity("1.23 V") > Quantity(arg)
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity("1.23 V") <= Quantity(arg)
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity("1.23 V") >= Quantity(arg)
+        # Inverted order
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity(arg) < Quantity("1.23 V") 
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity(arg) > Quantity("1.23 V") 
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity(arg) <= Quantity("1.23 V") 
+        with self.assertRaises(InvalidUnitCombinationException):
+            Quantity(arg) >= Quantity("1.23 V") 

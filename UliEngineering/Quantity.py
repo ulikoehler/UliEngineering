@@ -4,6 +4,8 @@
 Units and exceptions related to units.
 """
 from UliEngineering.EngineerIO import EngineerIO
+from UliEngineering.Units import *
+import operator
 
 __all__ = ["Quantity"]
 
@@ -49,6 +51,26 @@ class Quantity(object):
         else: # Other objects that are equal to the quantity's value
             return other == self.value
     
+    def __compare(self, other, op):
+        if isinstance(other, Quantity): # Quantities: Compare only if units match
+            if self.unit != other.unit:
+                raise InvalidUnitCombinationException(f"Can't compare Quantities with different units: {self} and {other}")
+            return op(self.value, other.value)
+        else: # Non-Quantities: Compare by vlaue
+            return op(self.value, other)
+    
+    def ___lt__(self, other):
+        return self.__compare(other, operator.lt)
+
+    def __le__(self, other):
+        return self.__compare(other, operator.le)
+        
+    def __gt__(self, other):
+        return self.__compare(other, operator.gt)
+
+    def __ge__(self, other):
+        return self.__compare(other, operator.ge)
+
     def __repr__(self):
         return self._io.format(self.value, self.unit)
     
