@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Units, quantities and related
+Units and exceptions related to units.
 """
 from collections import namedtuple
 import functools
