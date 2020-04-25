@@ -96,9 +96,9 @@ class Unit(object):
         return [SubUnit(entry) for entry in _multiplicative_separator_re.split(s)]
 
     def __repr__(self):
-        numerator_str = "·".join(self.numerator)
+        numerator_str = "·".join(str(num) for num in self.numerator)
         if self.denominator:
-            denominator_str = "·".join(self.denominator)
+            denominator_str = "·".join(str(den) for den in self.denominator)
             return f"{numerator_str}/{denominator_str}"
         else:
             # No denominator
