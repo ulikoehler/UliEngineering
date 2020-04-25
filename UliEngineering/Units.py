@@ -10,7 +10,92 @@ __all__ = ["Unit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException", "InvalidUnitCombinationException",
            "find_returned_unit", "UnknownUnitInContextException"]
 
-Unit = namedtuple("Unit", ["unit"])
+class SubUnit(object):
+    """
+    Represents a single (non-compound) unit to the power of N.
+    For example, this class can represent:
+        - m
+        - m²
+        - km³
+        - N
+        - Pa
+        - m
+    but not:
+        - N/mm²
+        - kg*N
+    """
+    def __init__(self, unit, power=None):
+        # Only one argument?
+        if power is None:
+            self.unit, self.power = SubUnit.parse(unit)
+
+    @staticmethod
+    def parse(self, s):
+        """
+        Parse a SubUnit from a string.
+        """
+        # Normalize ! 
+        s = s.replace("²", "^2")
+        s = s.replace("³", "^3")
+        # Parse power
+        power_count = unit.count("/")
+        if power_count == 0:
+            # Only numerator
+            self.unit = s
+            self.power = 1
+        elif power_count == 1:
+            unit_str, _, power_str = unit.partition("/")
+            self.unit = unit_str
+            self.power = int(power_str)
+        else:
+            raise ValueError(f"Unit '{unit}' contains more than one slash. Can't process !")
+    
+    def __eq__(self, other):
+        if not isinstance(other, SubUnit):
+            raise NotImplemented
+        return self.unit == other.unit and self.power == other.power
+
+
+class Unit(object):
+    """
+    Represents a potentially compound unit.
+    For example, this class can 
+    """
+    def __init__(self, unit):
+        # Split unit into numerator & denominator
+        slash_count = unit.count("/")
+        if slash_count == 0:
+            # Only numerator
+            self.numerator = Unit._split_unit_string(unit)
+            self.denominator = []
+        elif slash_count == 1:
+            num_str, _, den_str = unit.partition("/")
+            self.numerator = Unit._split_unit_string(num_str)
+            self.denominator = Unit._split_unit_string(den_str)
+        else:
+            raise ValueError(f"Unit '{unit}' contains more than one slash. Can't process !")
+        # Sort !
+        self.numerator.sort()
+
+    @staticmethod
+    def _split_unit_string(s):
+        """
+        Split a multiplied list of units
+        """
+        return [entry for entry in s.split("*")]
+
+    def __repr__(self):
+        pass # TODO
+
+    def __mul__(self, other):
+        """
+        Multiply this unit with another Unit.
+        """
+        if not isinstance(other, Unit):
+            raise ValueError(f"Can't multiply a Unit with a non-Unit like {other}")
+        pass # TODO
+
+
 
 class UnannotatedReturnValueError(Exception):
     """
