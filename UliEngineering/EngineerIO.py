@@ -294,7 +294,7 @@ class EngineerIO(object):
         elif unit == 'ppb':
             mul /= 1e9
             unit = ''
-        return NormalizeResult(prefix, float(num) * mul, unit_prefix, unit)
+        return NormalizeResult(prefix, float(num) * mul, unit_prefix, Unit(unit))
 
     def safe_normalize(self, s, encoding="utf8"):
         """

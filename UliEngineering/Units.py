@@ -107,7 +107,7 @@ class Unit(object):
         return [SubUnit(entry) for entry in _multiplicative_separator_re.split(s)]
 
     def __repr__(self):
-        numerator_str = "·".join(str(num) for num in self.numerator)
+        numerator_str = "·".join(str(num) for num in self.numerator) if self.numerator else "1"
         if self.denominator:
             denominator_str = "·".join(str(den) for den in self.denominator)
             return f"{numerator_str}/{denominator_str}"
@@ -129,6 +129,15 @@ class Unit(object):
         if not isinstance(other, Unit):
             raise NotImplementedError
         return str(self) == str(other)
+
+    def __hash__(self):
+        return self.__repr__().__hash__()
+
+    def __bool__(self):
+        """
+        Units are true-ish if they are not dimensionless
+        """
+        return bool(self.numerator) or bool(self.denominator)
 
 
 
