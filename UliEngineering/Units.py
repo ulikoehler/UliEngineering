@@ -7,7 +7,7 @@ from collections import namedtuple
 import functools
 import re
 
-__all__ = ["Unit", "UnannotatedReturnValueError",
+__all__ = ["Unit", "SubUnit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException", "InvalidUnitCombinationException",
            "find_returned_unit", "UnknownUnitInContextException"]
 
@@ -27,10 +27,9 @@ class SubUnit(object):
         - N/mm²
         - kg*N
     """
-    def __init__(self, unit, power=None):
-        # Only one argument?
-        if power is None:
-            self.unit, self.power = SubUnit.parse(unit)
+    def __init__(self, unit, power=1):
+        self.unit = unit
+        self.power = power
 
     @staticmethod
     def parse(s):
@@ -60,7 +59,7 @@ class SubUnit(object):
             power = int(power_str)
         else:
             raise ValueError(f"SubUnit '{s}' contains more than one slash. Can't process !")
-        return (unit, power)
+        return SubUnit(unit, power)
 
     def __eq__(self, other):
         if not isinstance(other, SubUnit):
@@ -104,7 +103,7 @@ class Unit(object):
         """
         Split a multiplied list of units into individual unit-power combinations
         """
-        return [SubUnit(entry) for entry in _multiplicative_separator_re.split(s)]
+        return [SubUnit.parse(entry) for entry in _multiplicative_separator_re.split(s)]
 
     def __repr__(self):
         numerator_str = "·".join(str(num) for num in self.numerator) if self.numerator else "1"
