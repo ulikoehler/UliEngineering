@@ -324,7 +324,7 @@ class EngineerIO(object):
         #Delegate the rest of the task to the helper
         return _format_with_suffix(
             v,
-            self.exp_suffix_map[suffixMapIdx] + unit,
+            f"{self.exp_suffix_map[suffixMapIdx]}{unit}",
             significant_digits=significant_digits
         )
 
