@@ -61,7 +61,7 @@ class SubUnit(object):
         else:
             raise ValueError(f"SubUnit '{s}' contains more than one slash. Can't process !")
         return (unit, power)
-    
+
     def __eq__(self, other):
         if not isinstance(other, SubUnit):
             raise NotImplementedError
@@ -122,6 +122,13 @@ class Unit(object):
         if not isinstance(other, Unit):
             raise ValueError(f"Can't multiply a Unit with a non-Unit like {other}")
         pass # TODO
+
+    def __eq__(self, other):
+        if isinstance(other, (str, bytes)):
+            return self == Unit(other)
+        if not isinstance(other, Unit):
+            raise NotImplementedError
+        return str(self) == str(other)
 
 
 
