@@ -5,10 +5,13 @@ Units and exceptions related to units.
 """
 from collections import namedtuple
 import functools
+import re
 
 __all__ = ["Unit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException", "InvalidUnitCombinationException",
            "find_returned_unit", "UnknownUnitInContextException"]
+
+_multiplicative_separator_re = re.compile(r"[\*·×]")
 
 class SubUnit(object):
     """
@@ -30,29 +33,36 @@ class SubUnit(object):
             self.unit, self.power = SubUnit.parse(unit)
 
     @staticmethod
-    def parse(self, s):
+    def parse(s):
         """
         Parse a SubUnit from a string.
         """
         # Normalize ! 
-        s = s.replace("²", "^2")
-        s = s.replace("³", "^3")
+        s = s.replace("²", "^2") \
+             .replace("³", "^3") \
+             .replace("⁴", "^4") \
+             .replace("⁵", "^5") \
+             .replace("⁶", "^6") \
+             .replace("⁷", "^7") \
+             .replace("⁸", "^8") \
+             .replace("⁹", "^9")
         # Parse power
-        power_count = unit.count("/")
+        power_count = s.count("^")
         if power_count == 0:
             # Only numerator
-            self.unit = s
-            self.power = 1
+            unit = s
+            power = 1
         elif power_count == 1:
-            unit_str, _, power_str = unit.partition("/")
-            self.unit = unit_str
-            self.power = int(power_str)
+            unit_str, _, power_str = s.partition("/")
+            unit = unit_str
+            power = int(power_str)
         else:
-            raise ValueError(f"Unit '{unit}' contains more than one slash. Can't process !")
+            raise ValueError(f"SubUnit '{s}' contains more than one slash. Can't process !")
+        return (unit, power)
     
     def __eq__(self, other):
         if not isinstance(other, SubUnit):
-            raise NotImplemented
+            raise NotImplementedError
         return self.unit == other.unit and self.power == other.power
 
 
@@ -74,18 +84,25 @@ class Unit(object):
             self.denominator = Unit._split_unit_string(den_str)
         else:
             raise ValueError(f"Unit '{unit}' contains more than one slash. Can't process !")
-        # Sort !
+        # Sort for reproducible results
         self.numerator.sort()
+        self.denominator.sort()
 
     @staticmethod
     def _split_unit_string(s):
         """
-        Split a multiplied list of units
+        Split a multiplied list of units into individual unit-power combinations
         """
-        return [entry for entry in s.split("*")]
+        return [SubUnit(entry) for entry in _multiplicative_separator_re.split(s)]
 
     def __repr__(self):
-        pass # TODO
+        numerator_str = "·".join(self.numerator)
+        if self.denominator:
+            denominator_str = "·".join(self.denominator)
+            return f"{numerator_str}/{denominator_str}"
+        else:
+            # No denominator
+            return numerator_str
 
     def __mul__(self, other):
         """
