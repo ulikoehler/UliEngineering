@@ -45,7 +45,9 @@ class SubUnit(object):
              .replace("⁶", "^6") \
              .replace("⁷", "^7") \
              .replace("⁸", "^8") \
-             .replace("⁹", "^9")
+             .replace("⁹", "^9") \
+             .replace("⁰", "^0") \
+             .replace("¹", "^1") \
         # Parse power
         power_count = s.count("^")
         if power_count == 0:
@@ -64,6 +66,15 @@ class SubUnit(object):
         if not isinstance(other, SubUnit):
             raise NotImplementedError
         return self.unit == other.unit and self.power == other.power
+
+    def __repr__(self):
+        if self.power == 0:
+            return ""
+        elif self.power == 1:
+            return self.unit
+        else:
+            # TODO pretty-format
+            return f"{self.unit}^{self.power}"
 
 
 class Unit(object):
