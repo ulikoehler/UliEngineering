@@ -24,3 +24,9 @@ class TestSubUnit(unittest.TestCase):
         self.assertNotEqual(SubUnit.parse("V^3"), SubUnit("V"))
         self.assertNotEqual(SubUnit.parse("V^3"), SubUnit("V", 2))
         self.assertNotEqual(SubUnit.parse("V^3"), SubUnit("V", 4))
+
+class TestUnit(unittest.TestCase):
+    def test_construct(self):
+        u = Unit("V")
+        self.assertEqual(u.numerator, [SubUnit("V")])
+        self.assertEqual(u.denominator, [])
