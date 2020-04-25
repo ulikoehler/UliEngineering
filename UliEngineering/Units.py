@@ -53,7 +53,7 @@ class SubUnit(object):
             unit = s
             power = 1
         elif power_count == 1:
-            unit_str, _, power_str = s.partition("/")
+            unit_str, _, power_str = s.partition("^")
             unit = unit_str
             power = int(power_str)
         else:
