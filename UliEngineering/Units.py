@@ -75,11 +75,20 @@ class SubUnit(object):
             # TODO pretty-format
             return f"{self.unit}^{self.power}"
 
-
 class Unit(object):
     """
     Represents a potentially compound unit.
-    For example, this class can 
+    For example, this class can represent:
+
+    For example, this class can represent:
+        - m
+        - m²
+        - km³
+        - N
+        - Pa
+        - m
+        - N/mm²
+        - N*m
     """
     def __init__(self, unit):
         # Split unit into numerator & denominator
