@@ -9,8 +9,10 @@ import unittest
 class TestTemperature(unittest.TestCase):
     def testNormalizeTemperature(self):
         # Pure numbers, assumed to be °C
-        assert_approx_equal(normalize_temperature("0"), 273.15)
-        assert_approx_equal(normalize_temperature("1"), 274.15)
+        with self.assertRaises(InvalidUnitException):
+            assert_approx_equal(normalize_temperature("0"), 273.15)
+        with self.assertRaises(InvalidUnitException):
+            assert_approx_equal(normalize_temperature("1"), 274.15)
         assert_approx_equal(normalize_temperature(1), 274.15)
         assert_approx_equal(normalize_temperature(1, default_unit="K"), 1.0)
         # With units
