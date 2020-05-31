@@ -3,7 +3,7 @@
 Utilities for iterables
 """
 
-__all__ = ["PeekableIteratorWrapper", "ListIterator"]
+__all__ = ["PeekableIteratorWrapper", "ListIterator", "skip_first"]
 
 class ListIterator(object):
     """
@@ -124,3 +124,10 @@ class PeekableIteratorWrapper(object):
         val = next(self)
         self.unget(val)
         return val
+
+def skip_first(it):
+    """
+    Skip the first element of an Iterable
+    """
+    next(it)
+    yield from it
