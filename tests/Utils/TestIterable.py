@@ -109,3 +109,13 @@ class TestPeekableIteratorWrapper(unittest.TestCase):
         self.assertFalse(it.has_next())
         self.assertEqual(list(it), [])
         self.assertFalse(it.has_next())
+
+
+class TestSkipFirst(unittest.TestCase):
+    def test_list(self):
+        self.assertEqual([2,3,4,5], list(skip_first([1,2,3,4,5])))
+        self.assertEqual([], list(skip_first([])))
+    def test_gen(self):
+        self.assertEqual([2,3,4,5], list(skip_first(v for v in [1,2,3,4,5])))
+        self.assertEqual([], list(skip_first(v for v in [])))
+    
