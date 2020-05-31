@@ -5,6 +5,7 @@ from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equ
 from UliEngineering.Utils.Files import *
 from UliEngineering.Utils.Temporary import *
 import unittest
+import os.path
 
 class TestFileUtils(unittest.TestCase):
     def setUp(self):
@@ -62,16 +63,18 @@ class TestFileUtils(unittest.TestCase):
 
     def test_list_recursive(self):
         tmpdir = self.tmp.mkdtemp()
+        # Make platform-dependent filename
+        filename_test2 = os.path.join("dir", "test2.txt")
         # Create test files
         write_textfile(os.path.join(tmpdir, "test.txt"), "")
-        write_textfile(os.path.join(tmpdir, "dir/test2.txt"), "")
+        write_textfile(os.path.join(tmpdir, filename_test2), "")
 
-        self.assertEqual(["test.txt", "dir/test2.txt"],
+        self.assertEqual(["test.txt", filename_test2],
             list(list_recursive(tmpdir, relative=True, files_only=True)))
-        self.assertEqual(["test.txt", "dir/", "dir/test2.txt"],
+        self.assertEqual(["test.txt", "dir/", filename_test2],
             list(list_recursive(tmpdir, relative=True, files_only=False)))
         self.assertEqual([os.path.join(tmpdir, "test.txt"),
-                       os.path.join(tmpdir, "dir/test2.txt")],
+                       os.path.join(tmpdir, filename_test2)],
             list(list_recursive(tmpdir, relative=False, files_only=True)))
 
     def test_(self):
