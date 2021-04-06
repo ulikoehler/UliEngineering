@@ -514,9 +514,11 @@ def _format_with_suffix(v, suffix="", significant_digits=3):
     significant_digits : integer
         The number of overall significant digits to show
     """
-    if v < 1.0:
+    if np.isnan(v):
+        res = "-"
+    elif v < 1.0:
         res = ("{:." + str(significant_digits - 0) + "f}").format(v)
-    if v < 10.0:
+    elif v < 10.0:
         res = ("{:." + str(significant_digits - 1) + "f}").format(v)
     elif v < 100.0:
         res = ("{:." + str(significant_digits - 2) + "f}").format(v)
