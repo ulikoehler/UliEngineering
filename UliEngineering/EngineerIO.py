@@ -313,6 +313,13 @@ class EngineerIO(object):
         """
         if unit is None:
             unit = ""
+        # Handle NaN
+        if np.isnan(v):
+            return _format_with_suffix(
+                v,
+                unit,
+                significant_digits=significant_digits
+            )
         #Suffix map is indexed by one third of the decadic logarithm.
         exp = 0 if v == 0. else math.log(abs(v), 10.)
         suffixMapIdx = int(math.floor(exp / 3.))
