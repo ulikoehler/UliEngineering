@@ -133,6 +133,8 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
+        # Special values
+        self.assertEqual(self.io.format(np.nan, "A"), 'NaN')
 
     def test_format_invalid(self):
         with self.assertRaises(ValueError):

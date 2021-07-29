@@ -96,6 +96,8 @@ class EngineerIO(object):
 
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
+    nan_placeholder = "NaN"
+
     def __init__(self, units=_default_units(),
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
@@ -313,6 +315,8 @@ class EngineerIO(object):
         """
         if unit is None:
             unit = ""
+        if np.isnan(v):
+            return self.nan_placeholder
         #Suffix map is indexed by one third of the decadic logarithm.
         exp = 0 if v == 0. else math.log(abs(v), 10.)
         suffixMapIdx = int(math.floor(exp / 3.))
