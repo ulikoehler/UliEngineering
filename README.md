@@ -71,3 +71,4 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [How to iterate all days of year using Python](https://techoverflow.net/2019/05/16/how-to-iterate-all-days-of-year-using-python/)
    - [How to get number of days in month in Python](https://techoverflow.net/2019/05/16/how-to-get-number-of-days-in-month-in-python/)
    - [How to compute candelas from lumens by apex angle](https://techoverflow.net/2019/08/19/lumen-to-candela-online-calculator-python-code/)
+   - [How to compute resistor voltage divider ratio using Python](https://techoverflow.net/2021/12/16/how-to-compute-resistor-voltage-divider-ratio-using-python/)
