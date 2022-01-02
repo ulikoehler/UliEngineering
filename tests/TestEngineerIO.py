@@ -192,7 +192,6 @@ class TestEngineerIO(unittest.TestCase):
 
     def test_normalize_numeric_verify_unit(self):
         self.assertEqual(self.io.normalize_numeric_verify_unit(1.25, Unit("V")), 1.25)
-        self.assertEqual(self.io.normalize_numeric_verify_unit("1.25", Unit("V")), 1.25)
         self.assertEqual(self.io.normalize_numeric_verify_unit("1.25 V", Unit("V")), 1.25)
         self.assertEqual(self.io.normalize_numeric_verify_unit("1k25 V", Unit("V")), 1250.0)
         self.assertEqual(self.io.normalize_numeric_verify_unit(b"1k25 V", Unit("V")), 1250.0)
