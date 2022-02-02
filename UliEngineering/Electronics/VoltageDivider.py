@@ -15,7 +15,6 @@ __all__ = ["voltage_divider_ratio", "top_resistor_by_ratio",
            "feedback_bottom_resistor", "feedback_actual_voltage",
            "voltage_divider_power"]
 
-
 def voltage_divider_ratio(rtop, rbot, rload=np.inf) -> Unit(""):
     """
     Compute the division ratio of a voltage divider.

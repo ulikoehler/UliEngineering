@@ -128,12 +128,12 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(2345.6789e12, "V"), '2.35 EV')
         self.assertEqual(self.io.format(2.3456789e-6, "V"), '2.35 µV')
         self.assertEqual(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.346 µ°C')
         self.assertEqual(self.io.format(np.NaN, "V"), '- V')
         # More significant digits
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.3457 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.34568 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.35 µ°C')
 
     def test_format_invalid(self):
         with self.assertRaises(ValueError):
