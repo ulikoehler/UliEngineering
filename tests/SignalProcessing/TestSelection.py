@@ -163,11 +163,11 @@ class TestFindRuns(unittest.TestCase):
         # Test find_true_runs
         result = find_true_runs(x)
         assert_allclose(result, [[4, 8], [14, 20]])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, np.int64)
         # Test findFalseRuns
         result = find_false_runs(x)
         assert_allclose(result, [[0, 3], [9, 13], [21, 24]])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, np.int64)
 
     def testSize1(self):
         # Generate test data
