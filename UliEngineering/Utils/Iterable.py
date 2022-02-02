@@ -3,6 +3,7 @@
 Utilities for iterables
 """
 import collections
+import collections.abc
 
 __all__ = ["PeekableIteratorWrapper", "ListIterator", "skip_first"]
 
@@ -134,13 +135,13 @@ def skip_first(it):
     This will always return a generator or raise TypeError()
     in case the argument's type is not compatible
     """
-    if isinstance(it, collections.Iterator):
+    if isinstance(it, collections.abc.Iterator):
         try:
             next(it)
             yield from it
         except StopIteration:
             return
-    elif isinstance(it, collections.Iterable):
+    elif isinstance(it, collections.abc.Iterable):
         yield from skip_first(it.__iter__())
     else:
         raise TypeError(f"You must pass an Iterator or an Iterable to skip_first(), but you passed {it}")
