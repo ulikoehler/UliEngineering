@@ -131,7 +131,7 @@ class LinRange(object):
 
     Behaves like np.linspace. Use .view() to obtain a LinRange slice.
     """
-    def __init__(self, start, stop, n, endpoint=True, dtype=np.float):
+    def __init__(self, start, stop, n, endpoint=True, dtype=float):
         "Create a new LinRange object using a numpy.linspace-like constructor"
         self.start = start
         self.stop = stop
@@ -193,7 +193,7 @@ class LinRange(object):
                 key = len(self) + key  # NOTE: Key is negative, so result is < len(self)!
             val = self.start + self.step * key
             # Convert to dtype
-            if self.dtype == np.float:
+            if self.dtype == float:
                 return val
             else:
                 # TODO find better method, maybe using a scalar
@@ -212,7 +212,7 @@ class LinRange(object):
             self.start,
             self.stop,
             str(self.step) if type(self.step) == np.timedelta64 else self.step,
-            "" if self.dtype == np.float else ", dtype={}".format(self.__dtype_name())
+            "" if self.dtype == float else ", dtype={}".format(self.__dtype_name())
             )
 
     def __eq__(self, other):
@@ -225,7 +225,7 @@ class LinRange(object):
         Else "step" is assumed to be a <seconds> value
         """
         if type(self.step) == np.timedelta64:
-            ns = self.step.astype("timedelta64[ns]").astype(np.int)
+            ns = self.step.astype("timedelta64[ns]").astype(int)
             s = ns*1e-9
             return 1./s
         else:

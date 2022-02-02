@@ -158,7 +158,7 @@ class TestLinSpace(unittest.TestCase):
     def test_repr(self):
         l = LinRange(0., 100., 100, endpoint=False)
         self.assertEqual("LinRange(0.0, 100.0, 1.0)", str(l))
-        l = LinRange(0., 100., 100, endpoint=False, dtype=np.int)
+        l = LinRange(0., 100., 100, endpoint=False, dtype=int)
         self.assertEqual("LinRange(0.0, 100.0, 1.0, dtype=int)", str(l))
 
     def testDtype(self):
