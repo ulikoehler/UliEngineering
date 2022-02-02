@@ -157,7 +157,7 @@ class TestSelectByThreshold(unittest.TestCase):
 
 class TestFindRuns(unittest.TestCase):
     def testSimple(self):
-        x = np.full(25, False, np.bool)
+        x = np.full(25, False, bool)
         x[4:9] = True
         x[14:21] = True
         # Test find_true_runs
@@ -183,14 +183,14 @@ class TestFindRuns(unittest.TestCase):
 
     def testStart(self):
         # Generate test data
-        x = np.full(25, False, np.bool)
+        x = np.full(25, False, bool)
         x[:3] = True
         ranges = find_true_runs(x > 0.5)
         assert_allclose(ranges, [[0, 2]])
 
     def testEnd(self):
         # Generate test data
-        x = np.full(25, False, np.bool)
+        x = np.full(25, False, bool)
         # One
         x[24] = True
         ranges = find_true_runs(x > 0.5)

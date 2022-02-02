@@ -59,7 +59,7 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     if len(filtered) < 0.1 * len(tdelta):
         filtered = tdelta
     mean_sample_period = mean_method(filtered)
-    mean_sample_period = mean_sample_period.astype("timedelta64[ns]").astype(float64)
+    mean_sample_period = mean_sample_period.astype("timedelta64[ns]").astype(np.float64)
     return 1e9 / mean_sample_period # 1e9 : nanoseconds
 
 def resample_discard(arr, divisor, ofs=0):
@@ -109,7 +109,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
         raise ValueError("Time array has only one value - can not perform any resampling")
     # Handle numpy datetime64 input
     if "datetime64" in t.dtype.name:
-        t = t.astype('datetime64[ns]').astype(float64)
+        t = t.astype('datetime64[ns]').astype(np.float64)
         time_factor = 1e9
     # Compute time endpoints
     dst_tdelta = time_factor / new_samplerate
