@@ -16,8 +16,8 @@ class TestNumpyEncoder(unittest.TestCase):
         self.assertEqual(s, "[[1, 1], [2, 2], [3, 3], [5, 5]]")
 
     def testNPScalarEncoding(self):
-        arr = [np.int64(75),
-               np.int64(31)]
+        arr = [float64(75),
+               float64(31)]
         print(arr)
         self.assertTrue(isinstance(arr[0], np.generic))
         s = json.dumps(arr, cls=NumPyEncoder)

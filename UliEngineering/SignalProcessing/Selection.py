@@ -249,7 +249,7 @@ def find_true_runs(arr):
     """
     # Ensure the ends don't cause issues and we are calculating in int-space
     oneZero = np.zeros(1)
-    cated = np.concatenate((oneZero, arr, oneZero)).view(dtype=np.int)
+    cated = np.concatenate((oneZero, arr, oneZero)).view(dtype=float)
     diffs = np.diff(cated)
     starts = np.nonzero(diffs >= 1)[0]
     ends = np.nonzero(diffs <= -1)[0] - 1
