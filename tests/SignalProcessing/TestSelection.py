@@ -163,11 +163,11 @@ class TestFindRuns(unittest.TestCase):
         # Test find_true_runs
         result = find_true_runs(x)
         assert_allclose(result, [[4, 8], [14, 20]])
-        self.assertEqual(result.dtype, np.int64)
+        self.assertEqual(result.dtype, int)
         # Test findFalseRuns
         result = find_false_runs(x)
         assert_allclose(result, [[0, 3], [9, 13], [21, 24]])
-        self.assertEqual(result.dtype, np.int64)
+        self.assertEqual(result.dtype, int)
 
     def testSize1(self):
         # Generate test data
@@ -249,15 +249,15 @@ class TestShrinkRanges(unittest.TestCase):
         # Min selector
         result = shrink_ranges(ranges, "min")
         assert_allclose(result, [4, 14, 22])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, int)
         # Max selector
         result = shrink_ranges(ranges, "max")
         assert_allclose(result, [8, 20, 22])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, int)
         # Middle selector
         result = shrink_ranges(ranges, "middle")
         assert_allclose(result, [6, 17, 22])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, int)
 
     def testComplex(self):
         """Test data-aware methods"""
@@ -266,11 +266,11 @@ class TestShrinkRanges(unittest.TestCase):
         # Min Y selector
         result = shrink_ranges(ranges, "miny", y=self.x)
         assert_allclose(result, [6, 17, 22])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, int)
         # Max Y selector
         result = shrink_ranges(ranges, "maxy", y=self.x)
         assert_allclose(result, [5, 20, 22])
-        self.assertEqual(result.dtype, float)
+        self.assertEqual(result.dtype, int)
 
     def testInvalidFunction(self):
         with self.assertRaises(KeyError):
