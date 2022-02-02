@@ -187,8 +187,8 @@ class TestChainedFilter(TestFilter):
         assert_allclose(fx1, fx2)
         # Y with repeat=1 should be equal
         assert_allclose(fy0, fy1)
-        # fy2 filters more -> should be less
-        assert_array_less(fy2, fy1)
+        # fy2 filters more -> should be less, ignoring outliers at the start/end
+        assert_array_less(fy2[5:-5], fy1[5:-5])
         # Check samplerate
         self.assertEqual(ChainedFilter(testFilter, repeat=1).samplerate, 400.)
         self.assertEqual(ChainedFilter(testFilter, repeat=2).samplerate, 400.)
