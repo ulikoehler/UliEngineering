@@ -6,7 +6,7 @@ __all__ = [
     "yearly_interest_to_equivalent_daily_interest",
     "yearly_interest_to_equivalent_arbitrary_interest",
     "interest_apply_multiple_times",
-    "interest_factors_for_timestamps"
+    "extrapolate_interest_to_timestamps"
 ]
 
 def yearly_interest_to_equivalent_monthly_interest(interest):
@@ -72,7 +72,7 @@ def interest_apply_multiple_times(interest, times):
     """
     return np.power(1.+interest, times)-1.
 
-def interest_factors_for_timestamps(interest, timestamps):
+def extrapolate_interest_to_timestamps(interest, timestamps):
     """
     Given a yearly interest such as 0.022 (= 2.2%),
     extrapolate the total interest factor up to each time point X
