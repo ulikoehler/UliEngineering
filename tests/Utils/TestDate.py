@@ -30,3 +30,15 @@ class TestGenerateDays(unittest.TestCase):
                 np.datetime64('2022-01-04T00:00:00.000000'),
                 np.datetime64('2022-01-05T00:00:00.000000')
             ], dtype='datetime64[us]'))
+
+class TestExtractMonths(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(extract_months(np.asarray([])), np.ndarray([], int))
+    def test_simple(self):
+        assert_array_equal(extract_months(generate_days(100, 2022, 1, 1)),
+            np.asarray([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3,
+                3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4])
+        )
