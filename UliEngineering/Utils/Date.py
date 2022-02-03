@@ -6,7 +6,8 @@ from datetime import datetime
 
 __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
     "generate_days", "extract_months", "extract_years", "extract_day_of_month",
-    "extract_day_of_week", "is_first_day_of_month", "is_first_day_of_week"]
+    "extract_day_of_week", "is_first_day_of_month", "is_first_day_of_week",
+    "is_month_change", "is_year_change"]
 
 Date = namedtuple("Date", ["year", "month", "day"])
 
@@ -68,6 +69,9 @@ def is_first_day_of_month(timestamps):
 
     Returns a boolean array of the same length which is
     true if the given date is on the first day of any month.
+
+    This is related to is_first_day_of_month(), but implements
+    a slightly different algorithm
     """
     return extract_day_of_month(timestamps) == 1
 
@@ -79,6 +83,40 @@ def is_first_day_of_week(timestamps):
     true if the given date is on the first day of any week.
     """
     return extract_day_of_week(timestamps) == 1
+
+def is_month_change(timestamps, first_value_is_change=False):
+    """
+    Takes a Numpy array of np.datetime64.
+
+    Returns a boolean array of the same length which is
+    true if the given date is the first date in the given array
+    in that particular month
+
+    If first_value_is_change is True, the first element of the array will be True,
+    else it will be False.
+
+    When using day-resolution datasets, this is often similar
+    to using is_first_day_of_month(), however this function
+    will only return True once for a given month,
+    whereas is_first_day_of_month() will return True for ANY
+    date that is on the 1st day of the month.
+    """
+    return np.append([first_value_is_change],
+        np.diff(extract_months(timestamps)).astype(bool))
+
+def is_year_change(timestamps, first_value_is_change=False):
+    """
+    Takes a Numpy array of np.datetime64.
+
+    If first_value_is_change is True, the first element of the array will be True,
+    else it will be False.
+
+    Returns a boolean array of the same length which is
+    true if the given date is the first date in the given array
+    in that particular year
+    """
+    return np.append([first_value_is_change],
+        np.diff(extract_years(timestamps)).astype(bool))
 
 def generate_days(ndays, year=2022, month=1, day=1):
     """

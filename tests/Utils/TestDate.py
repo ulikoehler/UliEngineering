@@ -75,11 +75,34 @@ class TestIsFirstDayOfMonth(unittest.TestCase):
             np.asarray([False, False, True, False, False])
         )
 
-
 class TestIsFirstDayOfWeek(unittest.TestCase):
     def test_empty(self):
         assert_array_equal(is_first_day_of_week(np.asarray([])), np.ndarray([], bool))
     def test_simple(self):
         assert_array_equal(is_first_day_of_week(generate_days(6, 2021, 12, 30)),
             np.asarray([False, False, False, False, True, False])
+        )
+
+class TestIsMonthChange(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(is_month_change(np.asarray([])), np.ndarray([], bool))
+    def test_simple(self):
+        assert_array_equal(is_month_change(generate_days(6, 2021, 12, 30)),
+            np.asarray([False, False, True, False, False, False])
+        )
+        # To differentiate from is_month_change
+        assert_array_equal(is_month_change(generate_days(6, 2021, 1, 30)),
+            np.asarray([False, False, True, False, False, False])
+        )
+
+class TestIsYearChange(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(is_year_change(np.asarray([])), np.ndarray([], bool))
+    def test_simple(self):
+        assert_array_equal(is_year_change(generate_days(6, 2021, 12, 30)),
+            np.asarray([False, False, True, False, False, False])
+        )
+        # To differentiate from is_month_change
+        assert_array_equal(is_year_change(generate_days(6, 2021, 1, 30)),
+            np.asarray([False, False, False, False, False, False])
         )
