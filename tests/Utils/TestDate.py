@@ -66,3 +66,11 @@ class TestExtractDayOfWeek(unittest.TestCase):
         assert_array_equal(extract_day_of_week(generate_days(5, 2021, 12, 30)),
             np.asarray([4, 5, 6, 7, 1]) # 30th Dec 2012 was a thursday. Manually verified.
         )
+
+class TestIsFirstDayOfMonth(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(is_first_day_of_month(np.asarray([])), np.ndarray([], bool))
+    def test_simple(self):
+        assert_array_equal(is_first_day_of_month(generate_days(5, 2021, 12, 30)),
+            np.asarray([False, False, True, False, False])
+        )

@@ -6,7 +6,7 @@ from datetime import datetime
 
 __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
     "generate_days", "extract_months", "extract_years", "extract_day_of_month",
-    "extract_day_of_week"]
+    "extract_day_of_week", "is_first_day_of_month"]
 
 Date = namedtuple("Date", ["year", "month", "day"])
 
@@ -61,6 +61,15 @@ def extract_day_of_week(timestamps):
     (Monday=1, Sunday=7)
     """
     return np.asarray([dt.isoweekday() for dt in timestamps.astype(datetime)])
+
+def is_first_day_of_month(timestamps):
+    """
+    Takes a Numpy array of np.datetime64.
+
+    Returns a boolean array of the same length which is
+    true if the given date is on the first day of any month.
+    """
+    return extract_day_of_month(timestamps) == 1
 
 def generate_days(ndays, year=2022, month=1, day=1):
     """
