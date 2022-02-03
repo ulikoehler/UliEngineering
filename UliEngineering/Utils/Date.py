@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
-    "generate_days", "extract_months", "extract_years"]
+    "generate_days", "extract_months", "extract_years", "extract_day_of_month"]
 
 Date = namedtuple("Date", ["year", "month", "day"])
 
@@ -42,6 +42,15 @@ def extract_years(timestamps):
     (e.g. 2022)
     """
     return np.asarray([dt.year for dt in timestamps.astype(datetime)])
+
+def extract_day_of_month(timestamps):
+    """
+    Given an 1D array of np.datetime64 timestamps,
+    extract the month of each timestamps and return a
+    numpy array of the same size, containing the day of month
+    (1-31, depending on the month)
+    """
+    return np.asarray([dt.day for dt in timestamps.astype(datetime)])
 
 def generate_days(ndays, year=2022, month=1, day=1):
     """

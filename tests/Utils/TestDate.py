@@ -50,3 +50,11 @@ class TestExtractYears(unittest.TestCase):
         assert_array_equal(extract_years(generate_days(5, 2021, 12, 30)),
             np.asarray([2021, 2021, 2022, 2022, 2022])
         )
+
+class TestExtractDayOfMonth(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(extract_day_of_month(np.asarray([])), np.ndarray([], int))
+    def test_simple(self):
+        assert_array_equal(extract_day_of_month(generate_days(5, 2021, 12, 30)),
+            np.asarray([30, 31, 1, 2, 3])
+        )
