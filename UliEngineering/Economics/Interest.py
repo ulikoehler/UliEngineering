@@ -5,7 +5,8 @@ __all__ = [
     "yearly_interest_to_equivalent_monthly_interest",
     "yearly_interest_to_equivalent_daily_interest",
     "yearly_interest_to_equivalent_arbitrary_interest",
-    "interest_apply_multiple_times"
+    "interest_apply_multiple_times",
+    "interest_factors_for_timestamps"
 ]
 
 def yearly_interest_to_equivalent_monthly_interest(interest):
@@ -70,3 +71,24 @@ def interest_apply_multiple_times(interest, times):
     (1+interest)**times - 1
     """
     return np.power(1.+interest, times)-1.
+
+def interest_factors_for_timestamps(interest, timestamps):
+    """
+    Given a yearly interest such as 0.022 (= 2.2%),
+    extrapolate the total interest factor up to each time point X
+    in the timestamps array. The first timestamp in the array is assumed
+    to be 1.0.
+
+    This works by computing the time difference for each timestamps t_i
+    to the first timestamp t_0 and then applying the correct exponent
+    to the interest to obtain a yearly equivalent interest factor.
+
+    This function returns a numpy array of interest factors (typically >1),
+    not interests(typically <1) for easy multiplication onto any values.
+    """
+    # We compute in microseconds, not nanoseconds!
+    timestamps = timestamps.astype('datetime64[us]')
+    tdelta_us = (timestamps - timestamps[0]).astype(np.int64)
+    # scipy.constants.Julian_year == 31557600.0,
+    # multiplied by 1e6 due to microseconds timestamps
+    return np.power(1.+interest, (tdelta_us/31557600e6))
