@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
-    "generate_days", "generate_years",
+    "generate_days", "generate_years", "generate_months",
     "extract_months", "extract_years", "extract_day_of_month",
     "extract_day_of_week", "is_first_day_of_month", "is_first_day_of_week",
     "is_month_change", "is_year_change"]
@@ -134,11 +134,36 @@ def generate_days(ndays, year=2022, month=1, day=1):
      '2022-01-04T00:00:00.000000',
      '2022-01-05T00:00:00.000000']
     """
+    # NOTE: This method is more efficient than the "string parsing"
+    # method used by generate_months() and generate_years(),
+    # but this only matters if generating a lot of entries
+    # and it only works if the datetime64-represented
+    # distance between units to generate is constant
     day_indexes = np.arange(ndays, dtype=np.int64) # 0, 1, ..., [ndays-1]
     startdate = np.datetime64(f'{year:02d}-{month:02d}-{day:02d}T00:00:00.000000', 'us')
     usec_per_day = int(1e6) * 86400 # 86.4k sec per day = 60*60*24s
     usec_offsets = day_indexes * usec_per_day
     return usec_offsets + startdate
+
+def generate_months(nmonths, year=2022, month=1, day=1):
+    """
+    Generate an 1d array of [ndays] timestamps, starting at the given day,
+    each timestamp being exactly one month from the previous one.
+    The given date will be the first timestamp.
+
+    Returns a array of np.datetime64[us]
+
+    >>> generate_months(5, 2022, 1, 1)
+    ['2022-01-01T00:00:00.000000',
+     '2022-02-01T00:00:00.000000',
+     '2022-03-01T00:00:00.000000',
+     '2022-04-01T00:00:00.000000',
+     '2022-05-01T00:00:00.000000']
+    """
+    return np.asarray([
+        f'{year:04d}-{month+i:02d}-{day:02d}T00:00:00.000000'
+        for i in range(nmonths)
+    ], dtype='datetime64[us]')
 
 def generate_years(nyears, year=2022, month=1, day=1):
     """

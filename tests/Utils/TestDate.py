@@ -31,6 +31,19 @@ class TestGenerateDays(unittest.TestCase):
                 np.datetime64('2022-01-05T00:00:00.000000')
             ], dtype='datetime64[us]'))
 
+class TestGenerateMonths(unittest.TestCase):
+    def test_empty(self):
+        assert_array_equal(generate_months(0), np.ndarray([], 'datetime64[us]'))
+    def test_simple(self):
+        assert_array_equal(generate_months(5, 2022, 1, 1),
+            np.asarray([
+                np.datetime64('2022-01-01T00:00:00.000000'),
+                np.datetime64('2022-02-01T00:00:00.000000'),
+                np.datetime64('2022-03-01T00:00:00.000000'),
+                np.datetime64('2022-04-01T00:00:00.000000'),
+                np.datetime64('2022-05-01T00:00:00.000000')
+            ], dtype='datetime64[us]'))
+
 class TestGenerateYears(unittest.TestCase):
     def test_empty(self):
         assert_array_equal(generate_years(0), np.ndarray([], 'datetime64[us]'))
