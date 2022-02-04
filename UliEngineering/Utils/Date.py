@@ -102,6 +102,8 @@ def is_month_change(timestamps, first_value_is_change=False):
     whereas is_first_day_of_month() will return True for ANY
     date that is on the 1st day of the month.
     """
+    if len(timestamps) == 0:
+        return np.asarray([], dtype=bool)
     return np.append([first_value_is_change],
         np.diff(extract_months(timestamps)).astype(bool))
 
@@ -116,6 +118,8 @@ def is_year_change(timestamps, first_value_is_change=False):
     true if the given date is the first date in the given array
     in that particular year
     """
+    if len(timestamps) == 0:
+        return np.asarray([], dtype=bool)
     return np.append([first_value_is_change],
         np.diff(extract_years(timestamps)).astype(bool))
 
