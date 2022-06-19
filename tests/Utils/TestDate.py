@@ -145,6 +145,9 @@ class TestYieldMinutesSeconds(unittest.TestCase):
             self.assertEqual(result.year, 2022)
             self.assertEqual(result.month, 6)
             self.assertEqual(result.day, 15)
+            # Minutes & seconds should be always set to 0
+            self.assertEqual(result.minute, 0)
+            self.assertEqual(result.second, 0)
 
     def test_yield_minutes_on_day(self):
         results = list(yield_minutes_on_day(2022, 6, 15))
@@ -156,6 +159,8 @@ class TestYieldMinutesSeconds(unittest.TestCase):
             self.assertEqual(result.year, 2022)
             self.assertEqual(result.month, 6)
             self.assertEqual(result.day, 15)
+            # Seconds should be always set to 0
+            self.assertEqual(result.second, 0)
 
     def test_yield_seconds_on_day(self):
         results = list(yield_seconds_on_day(2022, 6, 15))
