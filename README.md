@@ -3,10 +3,10 @@
 [![Unit tests](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml/badge.svg)](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f59d862b25524914b29ec5f0c0b80e7f)](https://www.codacy.com/gh/ulikoehler/UliEngineering/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ulikoehler/UliEngineering&amp;utm_campaign=Badge_Grade) [![Code Climate coverage](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/coverage.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering/coverage) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering) ![License](https://img.shields.io/github/license/ulikoehler/UliEngineering.svg) 
 
 A Python3 library for:
-  - Data science
-  - Electronics Engineering
-  - Specialized algorithms
-  - Physics
+    - Data science
+    - Electronics Engineering
+    - Specialized algorithms
+    - Physics
 which contains a collection of functions I haven't found elsewhere.
 Some algorithms have also been accepted on my blog [https://techoverflow.net/](https://techoverflow.net/)
 
