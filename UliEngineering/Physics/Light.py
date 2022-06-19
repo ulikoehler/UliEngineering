@@ -7,15 +7,6 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 import numpy as np
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Utilities for computations related to noise density
-"""
-from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.Units import Unit
-import numpy as np
-
 __all__ = ["lumen_to_candela_by_apex_angle"]
 
 def lumen_to_candela_by_apex_angle(flux, angle) -> Unit("cd"):
