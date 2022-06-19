@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
-from subprocess import check_output
-from UliEngineering.Utils.Date import *
 import unittest
-from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
+from datetime import datetime
+
 import numpy as np
+from numpy.testing import (assert_array_equal)
+from UliEngineering.Utils.Date import *
+
 
 class TestDate(unittest.TestCase):
     def test_number_of_days_in_month(self):
@@ -135,5 +136,34 @@ class TestIsYearChange(unittest.TestCase):
 
 class TestYieldMinutesSeconds(unittest.TestCase):
     def test_yield_hours_on_day(self):
-        result = yield_hours_on_day(2022, 6, 15)
-        self.assertEqual(len(result), 23)
+        results = list(yield_hours_on_day(2022, 6, 15))
+        # Check how many results we generate
+        self.assertEqual(len(results), 24)
+        # Check if its all the correct day
+        for result in results:
+            self.assertIsInstance(result, datetime)
+            self.assertEqual(result.year, 2022)
+            self.assertEqual(result.month, 6)
+            self.assertEqual(result.day, 15)
+
+    def test_yield_minutes_on_day(self):
+        results = list(yield_minutes_on_day(2022, 6, 15))
+        # Check how many results we generate
+        self.assertEqual(len(results), 24*60)
+        # Check if its all the correct day
+        for result in results:
+            self.assertIsInstance(result, datetime)
+            self.assertEqual(result.year, 2022)
+            self.assertEqual(result.month, 6)
+            self.assertEqual(result.day, 15)
+
+    def test_yield_seconds_on_day(self):
+        results = list(yield_seconds_on_day(2022, 6, 15))
+        # Check how many results we generate
+        self.assertEqual(len(results), 24*60*60)
+        # Check if its all the correct day
+        for result in results:
+            self.assertIsInstance(result, datetime)
+            self.assertEqual(result.year, 2022)
+            self.assertEqual(result.month, 6)
+            self.assertEqual(result.day, 15)

@@ -208,14 +208,13 @@ def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
     :param tz a tzinfo instance to use for the resulting datetime. Optional.
     """
     for hour in range(24):
-        for minute in range(60):
-            yield datetime.datetime(year=year,
-                         month=month,
-                         day=day,
-                         hour=hour,
-                         minute=0,
-                         second=0,
-                         tzinfo=tz)
+        yield datetime(year=year,
+                        month=month,
+                        day=day,
+                        hour=hour,
+                        minute=0,
+                        second=0,
+                        tzinfo=tz)
 
 def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
     """
@@ -236,7 +235,7 @@ def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
     """
     for hour in range(24):
         for minute in range(60):
-            yield datetime.datetime(year=year,
+            yield datetime(year=year,
                          month=month,
                          day=day,
                          hour=hour,
@@ -265,7 +264,7 @@ def yield_seconds_on_day(year=2022, month=6, day=15, tz=None):
     for hour in range(24):
         for minute in range(60):
             for second in range(60):
-                yield datetime.datetime(year=year,
+                yield datetime(year=year,
                             month=month,
                             day=day,
                             hour=hour,
