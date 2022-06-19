@@ -5,7 +5,6 @@ Functions for correlating a dataset with itself and other datasets
 Mainly built for 1D signal analysis.
 Might or might not work for higher-dimensional data.
 """
-import numpy as np
 import scipy.signal
 
 __all__ = ["autocorrelate"]
