@@ -16,18 +16,18 @@ Pull requests and bugreports of any kind are happily accepted.
 
 Run this command on your favourite shell:
 
-```
+```sh
 sudo pip3 install UliEngineering
 ```
 
 In order to install the latest bleeding-edge version, use:
 
-```
+```sh
 sudo pip3 install git+https://github.com/ulikoehler/UliEngineering.git
 ```
 
 We *highly recommend* you also install scipy:
-```
+```sh
 sudo pip3 install scipy
 ```
 (you can also use `sudo apt install python3-scipy` on Debian-based Linux distros).
