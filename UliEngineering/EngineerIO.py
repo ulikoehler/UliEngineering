@@ -47,7 +47,8 @@ def _default_suffices():
 def _length_units(include_m=False):
     """
     All known length units.
-    "m" is not included by default due to 
+    "m" is not included by default due to ambiguity
+    with the milli-"m" (mg = milligram)
     See also Length.py
     """
     units = set([
