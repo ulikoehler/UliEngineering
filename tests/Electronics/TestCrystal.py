@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.Crystal import *
 from UliEngineering.EngineerIO import auto_format
-import numpy as np
 import unittest
 
 class TestCrystal(unittest.TestCase):
