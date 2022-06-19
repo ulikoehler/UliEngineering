@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
-from subprocess import check_output
 from UliEngineering.Economics.Interest import *
 import unittest
-from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-import numpy as np
 
 class TestEquivalentInterest(unittest.TestCase):
     def test_yearly_interest_to_equivalent_monthly_interest(self):
