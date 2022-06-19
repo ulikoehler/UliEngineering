@@ -339,8 +339,8 @@ def select_ranges(ranges, arr):
     arr : array_like
         The array to apply the ranges to
     """
-    for range in ranges:
-        yield arr[range[0]:range[1]]
+    for _range in ranges:
+        yield arr[_range[0]:_range[1]]
 
 
 
