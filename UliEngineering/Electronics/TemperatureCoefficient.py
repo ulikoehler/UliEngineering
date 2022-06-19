@@ -5,11 +5,9 @@ Utilities for computing temperature coefficients
 and their effects
 """
 from UliEngineering.EngineerIO import normalize_numeric, normalize
-from UliEngineering.Units import Unit
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
-from collections import namedtuple
 
 __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
@@ -65,7 +63,7 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     over the entire temperature range.
 
     Optionally, a component tolerance can be given (defaults to "0 %")
-    to also account for static (temperature-independent) differences. 
+    to also account for static (temperature-independent) differences.
     Note that the tolerance is applied to the nominal value before
     applying the temperature coefficient.
 
