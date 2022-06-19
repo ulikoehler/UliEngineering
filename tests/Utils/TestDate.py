@@ -132,3 +132,8 @@ class TestIsYearChange(unittest.TestCase):
         assert_array_equal(is_year_change(generate_days(6, 2021, 1, 30)),
             np.asarray([False, False, False, False, False, False])
         )
+
+class TestYieldMinutesSeconds(unittest.TestCase):
+    def test_yield_hours_on_day(self):
+        result = yield_hours_on_day(2022, 6, 15)
+        self.assertEqual(len(result), 23)

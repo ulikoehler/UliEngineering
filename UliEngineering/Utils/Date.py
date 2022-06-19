@@ -8,7 +8,8 @@ __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
     "generate_days", "generate_years", "generate_months",
     "extract_months", "extract_years", "extract_day_of_month",
     "extract_day_of_week", "is_first_day_of_month", "is_first_day_of_week",
-    "is_month_change", "is_year_change"]
+    "is_month_change", "is_year_change", "yield_hours_on_day",
+    "yield_minutes_on_day", "yield_seconds_on_day"]
 
 Date = namedtuple("Date", ["year", "month", "day"])
 
@@ -188,3 +189,86 @@ def generate_years(nyears, year=2022, month=1, day=1):
         f'{year+i:04d}-{month:02d}-{day:02d}T00:00:00.000000'
         for i in range(nyears)
     ], dtype='datetime64[us]')
+
+def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
+    """
+    For each hour on the given day in the given timezone,
+    yield a Python datetime object representing this timestamp.
+
+    Note that this function is not DST-aware and for a day having 25 hours
+    due to the change, it will still only generate 24*60 timestamps.
+
+    Note that in contrast to other functions in this module, this function
+    does not generate a NumPy array of timestamps directly but instead yields
+    a list of Python datetime objects.
+    
+    :param year The year of the day for which to generate one timestamp each second
+    :param month The month for which to generate one timestamp each second
+    :param day The day of the month for which to generate one timestamp each second
+    :param tz a tzinfo instance to use for the resulting datetime. Optional.
+    """
+    for hour in range(24):
+        for minute in range(60):
+            yield datetime.datetime(year=year,
+                         month=month,
+                         day=day,
+                         hour=hour,
+                         minute=0,
+                         second=0,
+                         tzinfo=tz)
+
+def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
+    """
+    For each minute on the given day in the given timezone,
+    yield a Python datetime object representing this timestamp.
+
+    Note that this function is not DST-aware and for a day having 25 hours
+    due to the change, it will still only generate 24*60 timestamps.
+
+    Note that in contrast to other functions in this module, this function
+    does not generate a NumPy array of timestamps directly but instead yields
+    a list of Python datetime objects.
+    
+    :param year The year of the day for which to generate one timestamp each second
+    :param month The month for which to generate one timestamp each second
+    :param day The day of the month for which to generate one timestamp each second
+    :param tz a tzinfo instance to use for the resulting datetime. Optional.
+    """
+    for hour in range(24):
+        for minute in range(60):
+            yield datetime.datetime(year=year,
+                         month=month,
+                         day=day,
+                         hour=hour,
+                         minute=minute,
+                         second=0,
+                         tzinfo=tz)
+
+def yield_seconds_on_day(year=2022, month=6, day=15, tz=None):
+    """
+    For each second on the given day in the given timezone,
+    yield a Python datetime object representing this timestamp.
+
+    Note that this function is not DST-aware and for a day having 25 hours
+    due to the change, it will still only generate 24*60 timestamps.
+    Furthermore, this function is not leap-second aware.
+
+    Note that in contrast to other functions in this module, this function
+    does not generate a NumPy array of timestamps directly but instead yields
+    a list of Python datetime objects.
+    
+    :param year The year of the day for which to generate one timestamp each second
+    :param month The month for which to generate one timestamp each second
+    :param day The day of the month for which to generate one timestamp each second
+    :param tz a tzinfo instance to use for the resulting datetime. Optional.
+    """
+    for hour in range(24):
+        for minute in range(60):
+            for second in range(60):
+                yield datetime.datetime(year=year,
+                            month=month,
+                            day=day,
+                            hour=hour,
+                            minute=minute,
+                            second=second,
+                            tzinfo=tz)
