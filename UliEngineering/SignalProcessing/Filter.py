@@ -26,6 +26,14 @@ import operator
 from toolz import functoolz
 from toolz.dicttoolz import valmap
 
+import collections
+
+# Some compatibility with Python before 3.3
+try:
+    collectionsAbc = collections.abc
+except AttributeError:
+    collectionsAbc = collections
+
 __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
            "SignalFilter", "ChainedFilter", "SumFilter", "FilterBank"]
 
@@ -49,7 +57,7 @@ def _normalize_frequencies(freqs):
     if freqs is None:
         raise ValueError("Critical frequencies may not be None")
     # Allow multiple frequencies, but only 1 or 2
-    if isinstance(freqs, collections.Iterable) and not isinstance(freqs, str):
+    if isinstance(freqs, collectionsAbc.Iterable) and not isinstance(freqs, str):
         if len(freqs) == 0:
             raise ValueError("Empty frequency list")
         elif len(freqs) == 1:
