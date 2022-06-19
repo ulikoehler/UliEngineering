@@ -34,12 +34,12 @@ sudo pip3 install scipy
 
 While *scipy* is technically optional and listed as an optional dependency, many UliEngineering modules can't be used without it, including (might not be complete!):
 
- * UliEngineering.Length
- * UliEngineering.SignalProcessing.Interpolation
- * UliEngineering.SignalProcessing.Correlation
- * UliEngineering.Physics.JohnsonNyquistNoise
- * Some functions in UliEngineering.SignalProcessing.Simulation
- * Some functions in UliEngineering.SignalProcessing.Selection
+* UliEngineering.Length
+* UliEngineering.SignalProcessing.Interpolation
+* UliEngineering.SignalProcessing.Correlation
+* UliEngineering.Physics.JohnsonNyquistNoise
+* Some functions in UliEngineering.SignalProcessing.Simulation
+* Some functions in UliEngineering.SignalProcessing.Selection
 
 After that you can use UliEngineering from any Python3 instance. Example:
 
