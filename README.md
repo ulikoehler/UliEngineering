@@ -72,6 +72,9 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
    - [How to get number of days in month in Python](https://techoverflow.net/2019/05/16/how-to-get-number-of-days-in-month-in-python/)
    - [How to compute candelas from lumens by apex angle](https://techoverflow.net/2019/08/19/lumen-to-candela-online-calculator-python-code/)
    - [How to compute resistor voltage divider ratio using Python](https://techoverflow.net/2021/12/16/how-to-compute-resistor-voltage-divider-ratio-using-python/)
+   - [How to generate datetime for every hour on a given day in Python](https://techoverflow.net/2022/06/19/how-to-generate-datetime-for-every-hour-on-a-given-day-in-python/)
+   - [How to generate datetime for every minute on a given day in Python](https://techoverflow.net/2022/06/19/how-to-generate-datetime-for-every-minute-on-a-given-day-in-python/)
+   - [How to generate datetime for every second on a given day in Python](https://techoverflow.net/2022/06/19/how-to-generate-datetime-for-every-second-on-a-given-day-in-python/)
 
 ## Testing
 
