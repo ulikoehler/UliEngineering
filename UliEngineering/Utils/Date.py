@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from collections import namedtuple
 from calendar import monthrange
+from configparser import ExtendedInterpolation
 import numpy as np
 from datetime import datetime
 
@@ -9,9 +10,29 @@ __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
     "extract_months", "extract_years", "extract_day_of_month",
     "extract_day_of_week", "is_first_day_of_month", "is_first_day_of_week",
     "is_month_change", "is_year_change", "yield_hours_on_day",
-    "yield_minutes_on_day", "yield_seconds_on_day"]
+    "yield_minutes_on_day", "yield_seconds_on_day",
+    "generate_datetime_filename"]
 
 Date = namedtuple("Date", ["year", "month", "day"])
+
+def generate_datetime_filename(label="data", extension="csv", dt=None):
+    """
+    Generate a filename such as
+
+    mydata-2022-09-02_00-31-50.csv
+    ( 
+    {data}-2022-09-02_00-31-50.csv)
+
+    with cross-OS compatible filenames
+    (e.g. not containing special characters like colons)
+    and lexically sortable filenames.
+    """
+    if dt is None:
+        dt = datetime.now()
+    filename = f"{label}-{dt.year}-{dt.month:02d}-{dt.day:02d}_{dt.hour:02d}-{dt.minute:02d}-{dt.second:02d}"
+    if extension is not None:
+        filename += f".{extension}"
+    return filename
 
 def number_of_days_in_month(year=2019, month=1):
     """
