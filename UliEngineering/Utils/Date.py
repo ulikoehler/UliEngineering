@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from collections import namedtuple
 from calendar import monthrange
-from configparser import ExtendedInterpolation
 import numpy as np
 from datetime import datetime
 
