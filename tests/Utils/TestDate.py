@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import unittest
 from datetime import datetime
-
+import re
+from xmlrpc.client import DateTime
 import numpy as np
 from numpy.testing import (assert_array_equal)
 from UliEngineering.Utils.Date import *
@@ -172,3 +173,29 @@ class TestYieldMinutesSeconds(unittest.TestCase):
             self.assertEqual(result.year, 2022)
             self.assertEqual(result.month, 6)
             self.assertEqual(result.day, 15)
+
+class TestGenerateDatetimeFilename(unittest.TestCase):
+    def test_defaults(self):
+        filename = generate_datetime_filename()
+        self.assertTrue(re.match(r"data-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)
+
+    def test_defaults_no_fractional(self):
+        filename = generate_datetime_filename()
+        self.assertTrue(re.match(r"data-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)
+    
+    def test_custom_label(self):
+        filename = generate_datetime_filename(label="qdata")
+        self.assertTrue(re.match(r"qdata-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)
+
+    def test_no_label(self):
+        filename = generate_datetime_filename(label=None)
+        self.assertTrue(re.match(r"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)
+
+    def test_custom_extension(self):
+        filename = generate_datetime_filename(extension="txt")
+        self.assertTrue(re.match(r"data-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.txt", filename), msg=filename)
+
+    def test_custom_datetime(self):
+        dt = datetime(year=2000, month=1, day=2, hour=3, minute=4, second=5, microsecond=789)
+        filename = generate_datetime_filename(dt=dt)
+        self.assertEqual("data-2000-01-02_03-04-05-000789.csv", filename)
