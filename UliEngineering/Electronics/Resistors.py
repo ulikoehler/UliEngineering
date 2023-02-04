@@ -14,7 +14,7 @@ from UliEngineering.Units import Unit
 
 __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "standard_resistors", "parallel_resistors",
-           "current_through_resistor",
+           "current_through_resistor", "standard_resistors_in_range",
            "power_dissipated_in_resistor_by_current",
            "power_dissipated_in_resistor_by_voltage",
            "voltage_across_resistor",
@@ -119,6 +119,19 @@ def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
+
+def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
+    """
+    Get all standard resistor values in Ω between min_resistor and max_resistor 
+    
+    :return: list of resistor values in Ω
+    """
+    min_resistor = normalize_numeric(min_resistor)
+    max_resistor = normalize_numeric(max_resistor)
+    return [
+        resistor for resistor in standard_resistors(sequence=sequence)
+        if min_resistor <= resistor <= max_resistor
+    ]
 
 def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
     """
