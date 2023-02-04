@@ -5,28 +5,16 @@ on:
   - pull_request
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install tox tox-gh-actions
-    - name: Test with tox
-      run: tox
-    - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v3.2.0
-      env:
-        CC_TEST_REPORTER_ID: 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
-      with:
-        coverageCommand: npm run coverage
-        debug: true
+  python-ci-pipeline:
+    uses: MartinHeinz/workflows/.github/workflows/python-container-ci.yml@v1.0.0
+    with:
+      PYTHON_VERSION: '3.10'
+      DEPENDENCY_MANAGER: 'pip'
+      ENABLE_SONAR: ${​{ false }}
+      ENABLE_CODE_CLIMATE: ${​{ true }}
+      ENABLE_SLACK: ${​{ false }}
+      ENFORCE_PYLINT: ${​{ false }}
+      ENFORCE_BLACK: ${​{ false }}
+      ENFORCE_FLAKE8: ${​{ false }}
+      ENFORCE_BANDIT: ${​{ false }}
+      ENFORCE_DIVE: ${​{ false }}
