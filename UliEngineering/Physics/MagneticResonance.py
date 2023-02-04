@@ -2,6 +2,10 @@
 from UliEngineering.EngineerIO import normalize_numeric, Unit
 import scipy.constants
 
+__all__ = [
+    "NucleusLarmorFrequency",
+    "larmor_frequency"
+]
 
 # Nucleus Larmor frequencies in Hz
 
