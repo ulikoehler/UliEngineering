@@ -10,11 +10,11 @@ jobs:
     with:
       PYTHON_VERSION: '3.10'
       DEPENDENCY_MANAGER: 'pip'
-      ENABLE_SONAR: ${​{ false }}
-      ENABLE_CODE_CLIMATE: ${​{ true }}
-      ENABLE_SLACK: ${​{ false }}
-      ENFORCE_PYLINT: ${​{ false }}
-      ENFORCE_BLACK: ${​{ false }}
-      ENFORCE_FLAKE8: ${​{ false }}
-      ENFORCE_BANDIT: ${​{ false }}
-      ENFORCE_DIVE: ${​{ false }}
+      ENABLE_SONAR: false
+      ENABLE_CODE_CLIMATE: true
+      ENABLE_SLACK: false
+      ENFORCE_PYLINT: false
+      ENFORCE_BLACK: false
+      ENFORCE_FLAKE8: false
+      ENFORCE_BANDIT: false
+      ENFORCE_DIVE: true
