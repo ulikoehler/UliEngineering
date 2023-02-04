@@ -23,3 +23,10 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.2.0
+      env:
+        CC_TEST_REPORTER_ID: 71eb68ef3ba1f85d8e92407d03e43df51deb6f14a870ada23e8530a16d438eae
+      with:
+        coverageCommand: npm run coverage
+        debug: true
