@@ -18,6 +18,14 @@ class TestResistors(unittest.TestCase):
 
     def test_standard_resistors(self):
         self.assertTrue(len(list(standard_resistors())) > 500)
+        
+    def test_standard_resistors_in_range(self):
+        resistors = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
+        resistors2 = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
+        self.assertEqual(resistors, resistors2)
+        
+        self.assertTrue(len(list(resistors)) > 500)
+        self.assertEqual(len([resistor for resistor in resistors if resistor < 1 or resistor > 10e6]), 0)
 
     def test_find_nearest_resistor(self):
         self.assertEqual(nearest_resistor(5000, sequence=e48), 5110.0)
