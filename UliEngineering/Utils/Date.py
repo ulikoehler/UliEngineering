@@ -53,7 +53,7 @@ def number_of_days_in_month(year=2019, month=1):
 def all_dates_in_year(year=2019):
     """
     Iterates all dates in a specific year, taking into account leap days.
-    Yields Date() objects.
+    Yields Date() objects (tuple of year/month/day).
     """
     for month in range(1, 13): # Month is always 1..12
         for day in range(1, number_of_days_in_month(year, month) + 1):
