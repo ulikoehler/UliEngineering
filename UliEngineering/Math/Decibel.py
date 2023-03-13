@@ -103,7 +103,7 @@ def dBuV_to_voltage(v) -> Unit("V"):
     """
     return db_field_to_ratio(v) * 1e-6
 
-def power_to_dBm(v) -> Unit("dBµV"):
+def power_to_dBm(v) -> Unit("dBm"):
     """
     Represent a power in Watts as dB milliwatts.
     """
