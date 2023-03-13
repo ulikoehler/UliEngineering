@@ -27,7 +27,7 @@ class LEDForwardVoltages():
 
     Note that diode testers test the forward voltage with rather low currents
     and the forward voltage might vary slightly at operating current.
-    Take that into account when operating a LED near its maximum values.
+    Take that into account when operating a LED near its maximum allowed current.
     """
     Infrared = 1.5
     Red = 1.6
@@ -37,6 +37,25 @@ class LEDForwardVoltages():
     White = 4.0
 
 def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
+    """
+    Computes the required series resistor for operating a LED with
+    forward voltage [vforward] at current [ioperating] on a
+    supply voltage of [vsupply].
+
+    Tolerances are not taken into account.
+    """
+    vsupply = normalize_numeric(vsupply)
+    ioperating = normalize_numeric(ioperating)
+    vforward = normalize_numeric(vforward)
+    if vforward > vsupply:
+        raise OperationImpossibleException(
+            "Can't operate LED with forward voltage {} on {} supply".format(
+                vsupply, vforward
+            ))
+    return (vsupply - vforward) / ioperating
+
+
+def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     """
     Computes the required series resistor for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
