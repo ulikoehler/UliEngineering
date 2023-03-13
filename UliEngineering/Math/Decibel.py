@@ -6,7 +6,16 @@ import numpy as np
 from UliEngineering.Units import Unit
 from UliEngineering.EngineerIO import normalize_numeric
 
-__all__ = ["ratio_to_db_field", "ratio_to_db_power", "value_to_db_field", "value_to_db_power", "voltage_to_dBuV", "dBuV_to_voltage", "power_to_dBm"]
+__all__ = [
+    "DBFactor",
+    "ratio_to_db",
+    "dB_to_ratio",
+    "value_to_dB",
+    "dB_to_value",
+    "voltage_to_dBuV",
+    "dBuV_to_voltage",
+    "power_to_dBm"
+]
 
 def _safe_log10(v):
     """
@@ -19,70 +28,54 @@ def _safe_log10(v):
             return -np.inf
     return np.log10(v)
 
-def ratio_to_db_field(ratio) -> Unit("dB"):
+class DBFactor:
+    """Pre-set values for factors"""
+    Power = 10.
+    Field = 20.
+
+def ratio_to_db(ratio, factor=DBFactor.Field) -> Unit("dB"):
     """
-    Convert a given ratio to a decibel value for field quantities
+    Convert a given ratio to a decibel value.
+    For power quantities, set factor=DBFactor.Power
+    For field quantities, set factor=DBFactor.Field
 
-    dBs = 20 * log10(ratio)
-
-    Ratio 2 ~= 6 dB
-    Ratio 1 ~= 0 dB
-    Ratio 0.5 ~= -6 dB
+    dB = [factor] * log10(ratio)
 
     Returns -np.inf for negative values
     """
-    return 20 * _safe_log10(ratio)
+    dB = normalize_numeric(dB)
+    return factor * _safe_log10(ratio)
 
-def db_field_to_ratio(db):
+def dB_to_ratio(dB, factor=DBFactor.Field):
     """
-    Convert a given ratio from a decibel value for field quantities to the underlying quantity.
+    Convert a given ratio from a decibel value to the underlying quantity.
     The result is returned as a ratio to the 0 dB value.
+    
+    For power quantities, set factor=DBFactor.Power
+    For field quantities, set factor=DBFactor.Field
     """
-    return 10**(db/20.)
+    dB = normalize_numeric(dB)
+    return 10**(dB/factor)
 
-def ratio_to_db_power(ratio):
+def value_to_dB(v, v0=1.0, factor=DBFactor.Field) -> Unit("dB"):
     """
-    Convert a given ratio to a decibel value for power quantities.
-
-    dB = 20 * log10(ratio)
-
-    Ratio 2 ~= 3 dB
-    Ratio 1 ~= 0 dB
-    Ratio 0.5 ~= -3 dB
-
-    Returns -np.inf for negative values
-    """
-    return 10 * _safe_log10(ratio)
-
-def value_to_db_field(v, v0) -> Unit("dB"):
-    """
-    Convert a given field quantity v to dB
-    in reference to a given reference quantity v0.
-
-    dB = 20 * log10(v / v0)
-
-    Can also interpret engineering strings
-
+    Convert a given quantity [v] to dB, with 0dB being [v0].
+    
     Returns -np.inf for negative values
     """
     v = normalize_numeric(v)
     v0 = normalize_numeric(v0)
-    return ratio_to_db_field(v / v0)
+    return ratio_to_db(v / v0, factor=factor)
 
-def value_to_db_power(p, p0) -> Unit("dB"):
+def dB_to_value(dB, v0=1.0, factor=DBFactor.Field):
     """
-    Convert a given field quantity v to dB
-    in reference to a given reference quantity v0.
-
-    dB = 20 * log10(v / v0)
-
-    Can also interpret engineering strings
-
+    Convert a given decibel value [dB] to dB, with 0 dB being [v0].
+    
     Returns -np.inf for negative values
     """
-    p = normalize_numeric(p)
-    p0 = normalize_numeric(p0)
-    return ratio_to_db_power(p / p0)
+    dB = normalize_numeric(dB)
+    v0 = normalize_numeric(v0)
+    return dB_to_ratio(dB, factor=factor) * v0
 
 # Utility functions
 def voltage_to_dBuV(v) -> Unit("dBµV"):
@@ -92,7 +85,7 @@ def voltage_to_dBuV(v) -> Unit("dBµV"):
     Also see the online calculator at
     https://techoverflow.net/2019/07/29/volts-to-db%c2%b5v-online-calculator-ampamp-python-code/
     """
-    return value_to_db_field(v, 1e-6)
+    return value_to_dB(v, 1e-6, factor=DBFactor.Field)
 
 def dBuV_to_voltage(v) -> Unit("V"):
     """
@@ -101,13 +94,13 @@ def dBuV_to_voltage(v) -> Unit("V"):
     Also see the online calculator at
     https://techoverflow.net/2019/07/28/db%c2%b5v-to-volts-online-calculator-python-code/
     """
-    return db_field_to_ratio(v) * 1e-6
+    return db_to_ratio(v, factor=DBFactor.Field) * 1e-6
 
 def power_to_dBm(v) -> Unit("dBm"):
     """
     Represent a power in Watts as dB milliwatts.
     """
-    return value_to_db_power(v, 1e-3)
+    return value_to_db_power(v, 1e-3, factor=DBFactor.Power)
 
 #def dbM_to_power(v) -> Unit("dBµV"):
 #    """
