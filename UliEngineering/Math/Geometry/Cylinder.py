@@ -56,7 +56,7 @@ def cylinder_weight_by_diameter(diameter, length, density=8000):
     diameter = normalize_numeric(diameter)
     length = normalize_numeric(length)
     density = normalize_numeric(density)
-    return cylinder_volume(diameter/.2, length) * density
+    return cylinder_volume(diameter/2., length) * density
 
 
 def cylinder_weight_by_radius(radius, length, density=8000):
