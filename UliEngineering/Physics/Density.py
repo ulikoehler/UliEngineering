@@ -11,6 +11,13 @@ Densities = {
     # Various (pure) metals
     "Aluminium": 2700., # Source: https://en.wikipedia.org/wiki/Aluminium
     "Titanium": 4506., # Source: https://en.wikipedia.org/wiki/Titanium
+    # Various alloys
+    "Brass-CuZn10": 8800., # Source: https://www.metal-rolling-services.com/cuzn10-en
+    "Brass-CuZn10": 8750., # Source: https://www.metal-rolling-services.com/cuzn15-en
+    "Brass-CuZn30": 8550., # Source: https://www.metal-rolling-services.com/cuzn30-en
+    "Brass-CuZn33": 8500., # Source: https://www.metal-rolling-services.com/cuzn33-en
+    "Brass-CuZn36": 8450., # Source: https://www.metal-rolling-services.com/cuzn36-en
+    "Brass-CuZn37": 8440., # Source: https://www.metal-rolling-services.com/cuzn37-en
     # Steel
     "S235JR": 7850., # Source: https://de.materials4me.com/media/pdf/e7/7d/30/Werkstoffdatenblatt_zum_Werkstoff_S235JR.pdf
     # Stainless steels
