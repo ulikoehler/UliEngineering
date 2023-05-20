@@ -10,7 +10,8 @@ import numpy as np
 
 __all__ = [
     "cylinder_volume", "cylinder_side_surface_area", "cylinder_surface_area",
-    "hollow_cylinder_volume", "hollow_cylinder_inner_radius_by_volume"
+    "hollow_cylinder_volume", "hollow_cylinder_inner_radius_by_volume",
+    "cylinder_weight_by_diameter"
 ]
 
 def cylinder_volume(radius, height) -> Unit("m³"):
@@ -42,6 +43,19 @@ def hollow_cylinder_volume(outer_radius, inner_radius, height) -> Unit("m³"):
     Compute the volume of a hollow cylinder by its height and the inner and outer radii
     """
     return cylinder_volume(outer_radius, height) - cylinder_volume(inner_radius, height)
+
+
+def cylinder_weight_by_diameter(diameter, length, density=8000):
+    """
+    Compute the weight of a cylinder by its diameter, length and density.
+    The density is in kg/m³, the diameter and length must be given in mm.
+
+    The default density is an approximation for steel.
+    """
+    diameter = normalize_numeric(diameter)
+    length = normalize_numeric(length)
+    density = normalize_numeric(density)
+    return cylinder_volume(diameter/.2, length) * density
 
 
 def hollow_cylinder_inner_radius_by_volume(outer_radius, volume, height) -> Unit("m"):
