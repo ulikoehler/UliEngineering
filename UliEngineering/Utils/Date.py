@@ -14,7 +14,7 @@ __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
 
 Date = namedtuple("Date", ["year", "month", "day"])
 
-def generate_datetime_filename(label="data", extension="csv", fractional=True, dt=None):
+def generate_datetime_filename(label="data", extension="csv", postfix=None, fractional=True, dt=None):
     """
     Generate a filename such as
 
@@ -39,6 +39,8 @@ def generate_datetime_filename(label="data", extension="csv", fractional=True, d
     filename = "" if label is None else f"{label}-"
     fractional_str = f"-{dt.microsecond:06d}" if fractional is True else ""
     filename += f"{dt.year}-{dt.month:02d}-{dt.day:02d}_{dt.hour:02d}-{dt.minute:02d}-{dt.second:02d}{fractional_str}"
+    if postfix is not None:
+        filename += f"-{postfix}"
     if extension is not None:
         filename += f".{extension}"
     return filename
