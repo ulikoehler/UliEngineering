@@ -26,7 +26,7 @@ __mode_map = {
 	"rt": "rt", "wt": "wt", "xt": "xt", "at": "at"
 }
 
-def auto_open(filename, mode="r", charset="utf8", **kwargs):
+def auto_open(filename, mode="r", **kwargs):
 	"""
 	Automatically open a potentially compressed file using the right
 	library variant of open().
@@ -37,7 +37,7 @@ def auto_open(filename, mode="r", charset="utf8", **kwargs):
 	extension = os.path.splitext(filename)[1]
 	if extension not in __open_map:
 		raise ValueError(
-			"Unable to find correct decompression for extension '{0}' in filename {1}".format(extension, filename))
+			f"Unable to find correct decompression for extension '{extension}' in filename {filename}")
 	open_fn = __open_map[extension]
 	mode = __mode_map[mode] if extension else mode
 	return open_fn(filename, mode, **kwargs)
