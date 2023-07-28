@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose, raises
+from numpy.testing import assert_allclose
 from UliEngineering.Electronics.PowerFactor import *
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
