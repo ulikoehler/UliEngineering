@@ -3,9 +3,8 @@
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
 from UliEngineering.SignalProcessing.Utils import *
 from parameterized import parameterized
-import concurrent.futures
 import numpy as np
-import datetime
+import pytest
 import unittest
 
 unstairMethods = [
@@ -16,11 +15,14 @@ unstairMethods = [
 ]
 
 class TestRemoveMean(unittest.TestCase):
+    @pytest.mark.filterwarnings("ignore: invalid value encountered in scalar divide")
+    @pytest.mark.filterwarnings("ignore: Mean of empty slice")
     def testRemoveMean(self):
         assert_allclose(remove_mean([]), [])
         assert_allclose(remove_mean([1.0, 2.0, 3.0]), [-1.0, 0.0, 1.0])
 
-class TestRMS(unittest.TestCase):
+    @pytest.mark.filterwarnings("ignore: invalid value encountered in scalar divide")
+    @pytest.mark.filterwarnings("ignore: Mean of empty slice")
     def testRMS(self):
         assert_allclose(rms([]), [])
         assert_allclose(rms([1.0, 2.0, 3.0]), np.sqrt(np.mean([1*1, 2*2, 3*3])))

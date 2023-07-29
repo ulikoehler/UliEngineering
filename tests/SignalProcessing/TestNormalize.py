@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
+from numpy.testing import assert_allclose
 from UliEngineering.SignalProcessing.Normalize import *
-from parameterized import parameterized
-import concurrent.futures
 import numpy as np
-import datetime
 import unittest
+import pytest
 
 class TestNormalize(unittest.TestCase):
+    
+    @pytest.mark.filterwarnings("ignore: invalid value encountered in scalar divide")
+    @pytest.mark.filterwarnings("ignore: Mean of empty slice")
     def test_center_to_zero(self):
         assert_allclose(center_to_zero([]).data, [])
         assert_allclose(center_to_zero(np.asarray([0.])).data, [0.])

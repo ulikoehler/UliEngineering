@@ -7,6 +7,7 @@ from UliEngineering.SignalProcessing.Window import *
 from UliEngineering.SignalProcessing.Utils import rms
 from parameterized import parameterized
 import unittest
+import pytest
 
 class TestChunkGeneration(unittest.TestCase):
     def setUp(self):
