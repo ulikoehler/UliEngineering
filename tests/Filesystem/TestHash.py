@@ -3,10 +3,18 @@
 import unittest
 from UliEngineering.Filesystem.Hash import *
 import tempfile
+import hashlib
 import os
 import shutil
 
 class TestHashFile(unittest.TestCase):
+    def test_hash_file_native(self):
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            f.write(b"Hello, world!")
+            file_path = f.name
+        assert hash_file_native(file_path) == hashlib.sha256(b"Hello, world!").hexdigest()
+        os.unlink(file_path)
+
     def test_hash_file_sha256(self):
         with tempfile.NamedTemporaryFile(delete=False) as f:
             f.write(b"Hello, world!")

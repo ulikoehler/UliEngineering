@@ -8,7 +8,8 @@ __all__ = [
     "hash_file_sha256",
     "hash_file_md5",
     "hash_file_sha1",
-    "hash_directory"
+    "hash_directory",
+    "hash_file_native"
 ]
 
 def hash_file_native(file_path, tool="sha256sum"):
@@ -21,8 +22,8 @@ def hash_file_native(file_path, tool="sha256sum"):
     
     This function does not neccessarily work in an OS-independent manner.
     """
-    output = subprocess.check_output([tool, file_path])
-    return output.decode("utf-8").strip()
+    output = subprocess.check_output([tool, file_path], shell=False)
+    return output.decode("utf-8").partition(" ")[0].strip()
 
 def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=65536):
     """
