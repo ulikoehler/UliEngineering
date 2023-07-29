@@ -26,6 +26,7 @@ jobs:
     - name: List files
       run: ls -v 
     - name: Upload coverage to Codecov.io
+      if: matrix.python-version == '3.11'
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
