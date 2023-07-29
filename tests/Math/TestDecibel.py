@@ -3,7 +3,6 @@
 from numpy.testing import assert_allclose
 from UliEngineering.Math.Decibel import *
 from parameterized import parameterized
-import functools
 import numpy as np
 import unittest
 import pytest
@@ -66,3 +65,15 @@ class TestDecibel(unittest.TestCase):
         self.assertAlmostEqual(dB_to_value(-20), 0.1)
         self.assertAlmostEqual(dB_to_value(20, v0=100), 1000.0)
         self.assertAlmostEqual(dB_to_value(-20, v0=100), 10.0)
+
+    def test_voltage_to_dBuV(self):
+        self.assertAlmostEqual(voltage_to_dBuV(1e-6), 0)
+        self.assertAlmostEqual(voltage_to_dBuV(10e-6), 20)
+        self.assertAlmostEqual(voltage_to_dBuV(1e-7), -20)
+        self.assertAlmostEqual(voltage_to_dBuV(-1), -np.inf)
+
+    def test_power_to_dBm(self):
+        self.assertAlmostEqual(power_to_dBm(1e-3), 0)
+        self.assertAlmostEqual(power_to_dBm(100e-3), 20)
+        self.assertAlmostEqual(power_to_dBm(0.01e-3), -20)
+        self.assertAlmostEqual(power_to_dBm(-1), -np.inf)
