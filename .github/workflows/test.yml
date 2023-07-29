@@ -30,6 +30,7 @@ jobs:
         path: .coverage.*
 
   coverage:
+    runs-on: ubuntu-latest
     name: Coverage
     needs: tests
     steps:
