@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.LED import *
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.EngineerIO import auto_format
 import unittest
+import pytest
 
 class TestLEDSeriesResistors(unittest.TestCase):
     def test_led_series_resistor(self):
@@ -18,3 +19,15 @@ class TestLEDSeriesResistors(unittest.TestCase):
         # Forward voltage too high for supply voltage
         with self.assertRaises(OperationImpossibleException):
             assert_approx_equal(led_series_resistor("1V", "20 mA", "1.6V"), 520.)
+
+    def test_led_series_resistor_power(self):
+        # Values checked using https://www.pollin.de/led-vorwiderstands-rechner
+        self.assertEqual(auto_format(led_series_resistor_power, "5V", "20mA", "2V"), "60.0 mW")
+        self.assertEqual(auto_format(led_series_resistor_power, "5V", "20mA", "3V"), "40.0 mW")
+        self.assertEqual(auto_format(led_series_resistor_power, "5V", "10mA", "2V"), "30.0 mW")
+        self.assertEqual(auto_format(led_series_resistor_power, "5V", "10mA", "3V"), "20.0 mW")
+        self.assertEqual(auto_format(led_series_resistor_power, "12V", "10mA", "2V"), "100 mW")
+        
+    def test_led_series_resistor_power_invalid(self):
+        with pytest.raises(OperationImpossibleException):
+            led_series_resistor_power("2V", "20mA", "3V")

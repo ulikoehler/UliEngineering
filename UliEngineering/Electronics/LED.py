@@ -14,7 +14,11 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.Units import Unit
 
-__all__ = ["LEDForwardVoltages", "led_series_resistor"]
+__all__ = [
+    "LEDForwardVoltages",
+    "led_series_resistor",
+    "led_series_resistor_power"
+]
 
 
 class LEDForwardVoltages():
@@ -54,21 +58,20 @@ def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
             ))
     return (vsupply - vforward) / ioperating
 
-
 def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     """
-    Computes the required series resistor for operating a LED with
+    Computes the required series resistor power for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
     supply voltage of [vsupply].
-
+    
+    The resulting power value is the minimum rated value for the resistor
+    for continous operation
+ 
     Tolerances are not taken into account.
     """
     vsupply = normalize_numeric(vsupply)
     ioperating = normalize_numeric(ioperating)
     vforward = normalize_numeric(vforward)
-    if vforward > vsupply:
-        raise OperationImpossibleException(
-            "Can't operate LED with forward voltage {} on {} supply".format(
-                vsupply, vforward
-            ))
-    return (vsupply - vforward) / ioperating
+    # Will raise OperationImpossibleException if vforward > vsupply
+    resistor_value = led_series_resistor(vsupply, ioperating, vforward)
+    return resistor_value * ioperating * ioperating
