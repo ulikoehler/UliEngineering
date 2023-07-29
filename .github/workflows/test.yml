@@ -23,6 +23,11 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: python -m tox
+    - name: Generate coverage report
+      run: |
+        python -m coverage combine
+        python -m coverage report -m --skip-covered
+        python -m coverage xml
     - name: List files
       run: ls -v 
     - name: Upload coverage to Codecov.io
