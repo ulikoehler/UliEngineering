@@ -8,6 +8,7 @@ from parameterized import parameterized
 import functools
 import numpy as np
 import unittest
+import pytest
 
 class TestEngineerIO(unittest.TestCase):
     def setUp(self):
@@ -231,6 +232,7 @@ class TestEngineerIO(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.io.auto_format(None)
 
+    @pytest.mark.filterwarnings("ignore: divide by zero encountered in log10")
     def test_auto_suffix_1d(self):
         arr = np.arange(-4., 5., .5)
         self.assertEqual(self.io.auto_suffix_1d(arr), (1., ""))
