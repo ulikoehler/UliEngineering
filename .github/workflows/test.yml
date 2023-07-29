@@ -25,8 +25,7 @@ jobs:
       run: python -m tox
     - name: Generate coverage report
       run: |
-        pip install pytest
-        pip install pytest-cov
+        python -m pip install pytest pytest-cov -r requirements.txt
         pytest --cov=./ --cov-report=xml
     - name: List files
       run: ls -v 
