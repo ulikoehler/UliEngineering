@@ -23,19 +23,8 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: python -m tox
-    - name: "Upload coverage data"
-      uses: actions/upload-artifact@v3
-      with:
-        name: covdata
-        path: .coverage.*
-
-  coverage:
-    runs-on: ubuntu-latest
-    name: Coverage
-    needs: tests
-    steps:
-    - uses: actions/checkout@master
-    - uses: codecov/codecov-action@v3
+    - name: Upload coverage to Codecov.io
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml # optional
