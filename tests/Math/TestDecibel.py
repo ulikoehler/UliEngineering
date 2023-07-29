@@ -6,6 +6,7 @@ from parameterized import parameterized
 import functools
 import numpy as np
 import unittest
+import pytest
 
 class TestDecibel(unittest.TestCase):
     def test_ratio_to_db(self):
@@ -19,6 +20,7 @@ class TestDecibel(unittest.TestCase):
         assert_allclose(-3, ratio_to_dB(0.5, factor=dBFactor.Power), 0.05)
         assert_allclose(-6, ratio_to_dB(0.25, factor=dBFactor.Power), 0.05)
 
+    @pytest.mark.filterwarnings("ignore:divide by zero encountered in log10")
     def test_ratio_to_dB_infinite(self):
         self.assertEqual(-np.inf, ratio_to_dB(0))
         self.assertEqual(-np.inf, ratio_to_dB(0, factor=dBFactor.Power))
