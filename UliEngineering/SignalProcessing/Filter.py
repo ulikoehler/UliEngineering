@@ -256,7 +256,7 @@ class ChainedFilter(object):
 
     def frequency_response(self, n=10000):
         fx, _ = self.filters[0].frequency_response(n)
-        fy = np.product(np.asarray([f.frequency_response(n)[1] for f in self.filters]), axis=0)
+        fy = np.prod(np.asarray([f.frequency_response(n)[1] for f in self.filters]), axis=0)
         return fx, fy
 
     def is_stable(self):
