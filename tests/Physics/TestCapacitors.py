@@ -20,3 +20,8 @@ class TestCapacitors(unittest.TestCase):
     def test_numpy_arrays(self):
         l = np.asarray([1.5, 0.1])
         assert_allclose(capacitor_energy(l, 5.0), [18.75, 1.25])
+
+    def test_capacitor_lifetime(self):
+        self.assertAlmostEqual(capacitor_lifetime(105, "2000 h", "105 °C", A=10), 2000)
+        self.assertAlmostEqual(capacitor_lifetime(115, "2000 h", "105 °C", A=10), 1000)
+        self.assertAlmostEqual(capacitor_lifetime(95, "2000 h", "105 °C", A=10), 4000)
