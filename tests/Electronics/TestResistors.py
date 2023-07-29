@@ -4,12 +4,19 @@ from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.Resistors import *
 from UliEngineering.EngineerIO import *
 import unittest
+import numpy as np
 
 class TestResistors(unittest.TestCase):
     def test_parallel_resistors(self):
         assert_approx_equal(parallel_resistors(1000.0, 1000.0), 500.0)
         assert_approx_equal(parallel_resistors(1000.0, 1000.0, 500.0), 250.0)
         assert_approx_equal(parallel_resistors("1kΩ", "1kΩ"), 500.0)
+        
+    def test_parallel_resistors_special_cases(self):
+        assert_approx_equal(parallel_resistors(), np.inf)
+        assert_approx_equal(parallel_resistors(0.0, 150.0), 0.)
+        assert_approx_equal(parallel_resistors("0", 150.0), 0.)
+        assert_approx_equal(parallel_resistors(150.0, "0k", 150.0), 0.)
 
     def test_series_resistors(self):
         assert_approx_equal(series_resistors(1000.0, 1000.0), 2000.0)

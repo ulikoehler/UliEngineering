@@ -145,7 +145,10 @@ def parallel_resistors(*args) -> Unit("Ω"):
     the value in Ohms.
     """
     resistors = np.asarray(list(map(normalize_numeric, args)))
-    # Check for zeros
+    # If there is no resistor, the value of the string is infinite Ohms
+    if len(resistors) == 0:
+        return np.inf
+    # If there is any zero resistor, the value of the string is zero Ohms
     if len(np.nonzero(resistors)[0]) != len(resistors):
         return 0.0
     return 1.0 / np.sum(np.reciprocal(resistors.astype(float)))
