@@ -13,6 +13,11 @@ Usage example:
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 
+__all__ = [
+    "summing_amplifier_noninv",
+    "noninverting_amplifier_gain"
+]
+
 def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Unit("V"):
     """
     Computes the output voltage of a non-inverting summing amplifier:
@@ -28,3 +33,18 @@ def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Unit("V"):
     rfb1 = normalize_numeric(rfb1)
     rfb2 = normalize_numeric(rfb2)
     return (1.0 + rfb2 / rfb1) * (v1 * (r2 / (r1 + r2)) + v2 * (r1 / (r1 + r2)))
+
+def noninverting_amplifier_gain(r1, r2) -> Unit("V/V"):
+    """
+    Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
+    
+    # 2D ASCII graphic with rectangular opamp
+    
+    R1 is the resistor connected between the OpAmp output and the OpAmp IN(-).
+    R2 is the resistor connected between the OpAmp IN(-) and GND.
+    
+    R2 can also be infinity (np.inf), in which case the gain is 1.0.
+    """
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    return 1.0 + r1 / r2
