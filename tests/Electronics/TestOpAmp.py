@@ -15,7 +15,7 @@ class TestOpAmp(unittest.TestCase):
         self.assertEqual(auto_format(summing_amplifier_noninv, 2.5, 0.5, 1e3, 1e3, 300, 1e3), "6.50 V")
 
     def test_noninverting_amplifier_gain(self):
-        # Test cases checked using 
+        # Test cases checked using https://circuitdigest.com/calculators/op-amp-gain-calculator
         assert_approx_equal(noninverting_amplifier_gain("1kΩ", "1kΩ"), 2.0)
         assert_approx_equal(noninverting_amplifier_gain(1e3, 1e3), 2.0)
         assert_approx_equal(noninverting_amplifier_gain("2kΩ", "1kΩ"), 3.0)
@@ -23,7 +23,7 @@ class TestOpAmp(unittest.TestCase):
         # Check auto_format
         self.assertEqual(auto_format(noninverting_amplifier_gain, 2e3, 1e3), "3.00 V/V")
         self.assertEqual(auto_format(noninverting_amplifier_gain, 1e3, 1e3), "2.00 V/V")
-        self.assertEqual(auto_format(noninverting_amplifier_gain, "1kΩ", "1kΩ"), "2.00 V/V")
+        self.assertEqual(auto_format(noninverting_amplifier_gain, "1kΩ", "x1kΩ"), "2.00 V/V")
         # Test case with not-as-round numbers
         assert_approx_equal(noninverting_amplifier_gain("390kΩ", "15kΩ"), 27.0)
         assert_approx_equal(noninverting_amplifier_gain(390e3, 15e3), 27.0)
