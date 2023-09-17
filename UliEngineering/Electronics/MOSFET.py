@@ -7,7 +7,9 @@ import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
 
-__all__ = ["mosfet_gate_charge_losses", "mosfet_gate_charge_loss_per_cycle"]
+__all__ = [
+    "mosfet_gate_charge_losses", "mosfet_gate_charge_loss_per_cycle",
+    "mosfet_gate_capacitance_from_gate_charge"]
 
 def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz") -> Unit("W"):
     """
@@ -52,3 +54,21 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply) -> Unit("J"):
     total_gate_charge = normalize_numeric(total_gate_charge)
     vsupply = normalize_numeric(vsupply)
     return total_gate_charge * vsupply
+
+def mosfet_gate_capacitance_from_gate_charge(total_gate_charge, vsupply) -> Unit("F"):
+    """
+    Compute the gate capacitance of a MOSFET in a switch-mode
+    power-supply application.
+    
+    Parameters
+    ----------
+    total_gate_charge: number or Engineer string
+        The total gate charge in Coulomb.
+        For multiple MOSFETs such as in synchronous applications,
+        add their gate charges together.
+    vsupply: number or Engineer string
+        The gate driver supply voltage in Volts
+    """
+    total_gate_charge = normalize_numeric(total_gate_charge)
+    vsupply = normalize_numeric(vsupply)
+    return total_gate_charge / vsupply

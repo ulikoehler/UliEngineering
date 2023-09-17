@@ -12,3 +12,7 @@ class TestLEDSeriesResistors(unittest.TestCase):
         # Also verified at https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-led-series-resistor
         assert_approx_equal(mosfet_gate_charge_losses(39.0e-9, 10, 300e3), 0.117)
         assert_approx_equal(mosfet_gate_charge_losses("39nC", "10V", "300 kHz"), 0.117)
+        
+    def test_mosfet_gate_capacitance_from_gate_charge(self):
+        assert_approx_equal(mosfet_gate_capacitance_from_gate_charge(39.0e-9, 10), 3.9e-9)
+        assert_approx_equal(mosfet_gate_capacitance_from_gate_charge("39nC", "10V"), 3.9e-9)
