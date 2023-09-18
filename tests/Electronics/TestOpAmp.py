@@ -23,7 +23,7 @@ class TestOpAmp(unittest.TestCase):
         # Check auto_format
         self.assertEqual(auto_format(noninverting_amplifier_gain, 2e3, 1e3), "3.00 V/V")
         self.assertEqual(auto_format(noninverting_amplifier_gain, 1e3, 1e3), "2.00 V/V")
-        self.assertEqual(auto_format(noninverting_amplifier_gain, "1kΩ", "x1kΩ"), "2.00 V/V")
+        self.assertEqual(auto_format(noninverting_amplifier_gain, "1kΩ", "1kΩ"), "2.00 V/V")
         # Test case with not-as-round numbers
         assert_approx_equal(noninverting_amplifier_gain("390kΩ", "15kΩ"), 27.0)
         assert_approx_equal(noninverting_amplifier_gain(390e3, 15e3), 27.0)
