@@ -20,3 +20,15 @@ class TestFilter(unittest.TestCase):
         assert_approx_equal(rc_cutoff_frequency("124k", "100pF"), 12835.07605579801)
         # Test with numeric input
         assert_approx_equal(rc_cutoff_frequency(124e3, 100e-12), 12835.07605579801)
+
+    def test_rc_feedforward_pole_and_zero(self):
+        """
+        Test the rc_feedforward_pole_and_zero function
+        """
+        # Verified using https://www.omnicalculator.com/physics/low-pass-filter
+        # Test with string input
+        assert_approx_equal(rc_feedforward_pole_and_zero("124k", "100k", "100pF")[0], 31830.98861837907)
+        assert_approx_equal(rc_feedforward_pole_and_zero("124k", "100k", "100pF")[1], 12835.07605579801)
+        # Test with numeric input
+        assert_approx_equal(rc_feedforward_pole_and_zero(124e3, 100e3, 100e-12)[0], 31830.98861837907)
+        assert_approx_equal(rc_feedforward_pole_and_zero(124e3, 100e3, 100e-12)[1], 12835.07605579801)
