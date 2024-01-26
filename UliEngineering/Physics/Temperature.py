@@ -15,8 +15,9 @@ except:
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",
            "normalize_temperature_celsius",
+           "normalize_temperature_kelvin",
            "temperature_with_dissipation",
-           "fahrenheit_to_celsius"]
+           "fahrenheit_to_celsius", "zero_Celsius"]
 
 def celsius_to_kelvin(c) -> Unit("K"):
     c = normalize_numeric(c)
@@ -56,6 +57,8 @@ def normalize_temperature(t, default_unit="°C") -> Unit("K"):
         return fahrenheit_to_kelvin(t)
     else:
         raise InvalidUnitException("Unknown temperature unit: '{}'".format(unit))
+
+normalize_temperature_kelvin = normalize_temperature
 
 def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
