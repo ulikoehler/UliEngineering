@@ -11,7 +11,13 @@ from UliEngineering.Units import Unit
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
 from UliEngineering.Exceptions import InvalidUnitException
 import numpy as np
+from UliEngineering.Physics.Temperature import zero_Celsius, kelvin_to_celsius
 
+
+__all__ = [
+    "thermistor_b_value",
+    "thermistor_temperature",
+]
 
 def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     """
@@ -33,5 +39,23 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     print(t1, t2, r1, r2)
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
+
+def thermistor_temperature(resistance, beta=3950.0, c=0.0, R0=100000., T0=25.0) -> Unit("°C"):
+    """
+    Calculate the temperature of a NTC thermistor using the Beta parameter model.
     
+    Parameters:
+    - resistance: The measured resistance of the thermistor in Ohms, for which to calculate the temperature.
+    - beta: The Beta constant of the thermistor.
+    - c: An additional constant, currently unused.
+    - R0: The resistance of the thermistor at reference temperature T0 (default is 10kOhms).
+    - T0: The reference temperature in Celsius (default is 25°C).
     
+    Returns:
+    - Temperature in degrees.
+    """
+    resistance = normalize_numeric(resistance)
+    R0 = normalize_numeric(R0)
+    T0 = normalize_temperature_kelvin(T0)
+    temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
+    return kelvin_to_celsius(temperature_kelvin)
