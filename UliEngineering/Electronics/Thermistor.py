@@ -17,6 +17,7 @@ from UliEngineering.Physics.Temperature import zero_Celsius, kelvin_to_celsius
 __all__ = [
     "thermistor_b_value",
     "thermistor_temperature",
+    "thermistor_resistance",
 ]
 
 def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
@@ -40,7 +41,7 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
-def thermistor_temperature(resistance, beta=3950.0, c=0.0, R0=100000., T0=25.0) -> Unit("°C"):
+def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("°C"):
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
     
@@ -59,3 +60,21 @@ def thermistor_temperature(resistance, beta=3950.0, c=0.0, R0=100000., T0=25.0) 
     T0 = normalize_temperature_kelvin(T0)
     temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
     return kelvin_to_celsius(temperature_kelvin)
+
+def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0) -> Unit("Ω"):
+    """
+    Calculate the resistance of a thermistor given its temperature.
+
+    Parameters:
+    temperature (float): The temperature in Kelvin
+    A, B, C (float): The Steinhart-Hart coefficients for the thermistor
+
+    Returns:
+    float: The resistance of the thermistor
+    """
+    temperature_kelvin = normalize_temperature_kelvin(temperature)
+    t0_kelvin = normalize_temperature_kelvin(T0)
+    # Calculate the resistance using the inverse Steinhart-Hart equation
+    # Wolfram Alpha: solve K = 1 / (1/T + (1/b) * log(R/R0)) for R
+    resistance = R0 * np.exp(beta * (1/temperature_kelvin - 1/t0_kelvin))
+    return resistance
