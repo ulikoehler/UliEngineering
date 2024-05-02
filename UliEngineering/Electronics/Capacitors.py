@@ -6,6 +6,13 @@ from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np
 
+__all__ = [
+    "capacitor_lifetime",
+    "capacitor_energy",
+    "capacitor_charge",
+    "parallel_plate_capacitors_capacitance"
+]
+
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
     """
     Estimate the lifetime of a capacitor given
@@ -46,3 +53,21 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     capacitance = normalize_numeric(capacitance)
     voltage = normalize_numeric(voltage)
     return capacitance * voltage
+
+def parallel_plate_capacitors_capacitance(area, distance, epsilon) -> Unit("F"):
+    """
+    Compute the capacitance of two parallel plate capacitors in parallel
+    given the area, distance, and permittivity of the dielectric.
+
+    Parameters:
+    - area: The area of the capacitor plates in square meters.
+    - distance: The distance between the capacitor plates in meters.
+    - epsilon: The permittivity of the dielectric material between the capacitor plates.
+
+    Returns:
+    The capacitance of the parallel plate capacitors in farads (F).
+    """
+    area = normalize_numeric(area)
+    distance = normalize_numeric(distance)
+    epsilon = normalize_numeric(epsilon)
+    return epsilon * area / distance
