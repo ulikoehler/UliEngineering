@@ -130,7 +130,7 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(2.3456789e-6, "V"), '2.35 µV')
         self.assertEqual(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.346 µ°C')
-        self.assertEqual(self.io.format(np.NaN, "V"), '- V')
+        self.assertEqual(self.io.format(np.nan, "V"), '- V')
         # More significant digits
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.3457 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.34568 µ°C')
