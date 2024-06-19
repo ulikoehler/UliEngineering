@@ -34,6 +34,9 @@ class TestCapacitors(unittest.TestCase):
         current = 1e-3  # 1 mA
         expected_time = 1 # seconds
 
+        # Charge should be the same
         discharge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current)
-
         self.assertAlmostEqual(discharge_time, expected_time, places=2)
+        
+        charge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current)
+        self.assertAlmostEqual(charge_time, expected_time, places=2)

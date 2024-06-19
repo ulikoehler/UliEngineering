@@ -11,7 +11,8 @@ __all__ = [
     "capacitor_energy",
     "capacitor_charge",
     "parallel_plate_capacitors_capacitance",
-    "capacitor_constant_current_discharge_time"
+    "capacitor_constant_current_charge_time",
+    "capacitor_constant_current_discharge_time",
 ]
 
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
@@ -55,16 +56,46 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     voltage = normalize_numeric(voltage)
     return capacitance * voltage
 
-def capacitor_constant_current_discharge_time(capacitance, voltage, current) -> Unit("s"):
+def capacitor_constant_current_discharge_time(capacitance, target_voltage, current, initial_voltage="0V") -> Unit("s"):
     """
-    Compute the time it takes to discharge a capacitor to 0V
+    Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
-    The time is returned in seconds.
+    
+    Keyword arguments:
+    - capacitance: The capacitance of the capacitor in farads.
+    - voltage: The initial voltage of the capacitor in volts.
+    - current: The charge current in amperes.
+    - target_voltage: The target voltage to discharge the capacitor to.
+    
+    Returns: The time in seconds.
     """
     capacitance = normalize_numeric(capacitance)
-    voltage = normalize_numeric(voltage)
+    initial_voltage = normalize_numeric(initial_voltage)
+    target_voltage = normalize_numeric(target_voltage)
     current = normalize_numeric(current)
-    return capacitance * voltage / current
+    # Use charge function with negative current
+    # Since from the view of the charge function, its generating a negative
+    # voltage charge, this will result in a positive time
+    return capacitor_constant_current_charge_time(capacitance, initial_voltage, -current, target_voltage)
+    
+def capacitor_constant_current_charge_time(capacitance, initial_voltage, current, target_voltage="0v") -> Unit("s"):
+    """
+    Compute the time it takes to charge a capacitor to [target_voltage]
+    using a constant current.
+    
+    Keyword arguments:
+    - capacitance: The capacitance of the capacitor in farads.
+    - initial_voltage: The initial voltage of the capacitor in volts.
+    - current: The discharge current in amperes.
+    - target_voltage: The target voltage to discharge the capacitor to.
+    
+    Returns: The time in seconds.
+    """
+    capacitance = normalize_numeric(capacitance)
+    initial_voltage = normalize_numeric(initial_voltage)
+    target_voltage = normalize_numeric(target_voltage)
+    current = normalize_numeric(current)
+    return capacitance * (initial_voltage - target_voltage) / current
 
 def parallel_plate_capacitors_capacitance(area, distance, epsilon) -> Unit("F"):
     """
