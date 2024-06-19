@@ -63,7 +63,7 @@ class VoltageDividerPower(namedtuple("VoltageDividerPower", [
             format_value(self.total, "W")
         )
 
-def voltage_divider_power(rtop, rbot, vin, rload=np.inf):
+def voltage_divider_power(rtop, rbot, vin, rload=np.inf) -> Unit("W"):
     """
     Compute the power dissipated in a voltage divider.
 
