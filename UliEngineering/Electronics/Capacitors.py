@@ -76,7 +76,7 @@ def capacitor_constant_current_discharge_time(capacitance, target_voltage, curre
     # Use charge function with negative current
     # Since from the view of the charge function, its generating a negative
     # voltage charge, this will result in a positive time
-    return capacitor_constant_current_charge_time(capacitance, initial_voltage, -current, target_voltage)
+    return capacitor_constant_current_charge_time(capacitance, initial_voltage, current, target_voltage)
     
 def capacitor_constant_current_charge_time(capacitance, initial_voltage, current, target_voltage="0v") -> Unit("s"):
     """
