@@ -6,6 +6,8 @@ from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np
 
+__all__ = ["capacitor_lifetime", "capacitor_energy", "capacitor_charge", "capacitor_constant_current_discharge_time"]
+
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
     """
     Estimate the lifetime of a capacitor given
@@ -46,3 +48,14 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     capacitance = normalize_numeric(capacitance)
     voltage = normalize_numeric(voltage)
     return capacitance * voltage
+
+def capacitor_constant_current_discharge_time(capacitance, voltage, current) -> Unit("s"):
+    """
+    Compute the time it takes to discharge a capacitor to 0V
+    using a constant current.
+    The time is returned in seconds.
+    """
+    capacitance = normalize_numeric(capacitance)
+    voltage = normalize_numeric(voltage)
+    current = normalize_numeric(current)
+    return capacitance * voltage / current

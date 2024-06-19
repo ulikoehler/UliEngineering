@@ -25,3 +25,13 @@ class TestCapacitors(unittest.TestCase):
         self.assertAlmostEqual(capacitor_lifetime(105, "2000 h", "105 °C", A=10), 2000)
         self.assertAlmostEqual(capacitor_lifetime(115, "2000 h", "105 °C", A=10), 1000)
         self.assertAlmostEqual(capacitor_lifetime(95, "2000 h", "105 °C", A=10), 4000)
+        
+    def test_capacitor_constant_current_discharge_time(self):
+        capacitance = 100e-6  # 100 uF
+        voltage = 10  # 10 V
+        current = 1e-3  # 1 mA
+        expected_time = 100  # 100 seconds
+
+        discharge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current)
+
+        self.assertAlmostEqual(discharge_time, expected_time, places=2)
