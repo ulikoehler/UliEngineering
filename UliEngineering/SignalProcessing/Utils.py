@@ -10,6 +10,11 @@ import warnings
 from .Selection import find_true_runs
 from UliEngineering.EngineerIO import normalize_numeric
 
+try:
+    from numpy import RankWarning
+except ImportError:
+    from numpy.exceptions import RankWarning
+
 __all__ = ["remove_mean", "rms", "peak_to_peak", "unstair", "optimum_polyfit", "LinRange", "aggregate", "zero_crossings", "rms_to_peak_to_peak"]
 
 _unstep_reduction_methods = {
@@ -101,7 +106,7 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
     scores = np.empty(max_degree - 1, dtype=np.float64)
     # Ignore rank warnings now, but do not ignore for the final polynomial if not early returning
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore', np.RankWarning)
+        warnings.simplefilter('ignore', RankWarning)
         for deg in range(1, max_degree):
             # Set score to max float value
             try:
