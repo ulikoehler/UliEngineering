@@ -27,10 +27,12 @@ class TestCapacitors(unittest.TestCase):
         self.assertAlmostEqual(capacitor_lifetime(95, "2000 h", "105 °C", A=10), 4000)
         
     def test_capacitor_constant_current_discharge_time(self):
+        # verified using https://www.circuits.dk/calculator_capacitor_discharge.htm
+        # with Vcapmax=10, Vcapmin=1e-9, size=100e-6, ESR=1e-9, Imax=1000uA
         capacitance = 100e-6  # 100 uF
         voltage = 10  # 10 V
         current = 1e-3  # 1 mA
-        expected_time = 100  # 100 seconds
+        expected_time = 1 # seconds
 
         discharge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current)
 
