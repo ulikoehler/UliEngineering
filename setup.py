@@ -8,7 +8,7 @@ if sys.version_info < (3, 0):
     sys.exit(1)
 
 setup(name='UliEngineering',
-      version='0.4.12',
+      version='0.4.13',
       description='Computational tools for electronics engineering',
       author='Uli Köhler',
       author_email='ukoehler@techoverflow.net',
@@ -17,9 +17,6 @@ setup(name='UliEngineering',
       packages=find_packages(exclude=['tests*']),
       include_package_data=True,
       install_requires=['numpy (>= 1.5)', 'toolz (>= 0.5)'],
-      extras_require= {
-        'SciPy functionality': ['scipy (>= 0.5)']
-      },
       test_suite='tests',
       tests_require=['coverage', 'mock', 'parameterized'],
       platforms="any",
