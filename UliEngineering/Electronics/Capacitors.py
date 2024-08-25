@@ -56,7 +56,7 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     voltage = normalize_numeric(voltage)
     return capacitance * voltage
 
-def capacitor_constant_current_discharge_time(capacitance, target_voltage, current, initial_voltage="0V") -> Unit("s"):
+def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V") -> Unit("s"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
@@ -73,12 +73,12 @@ def capacitor_constant_current_discharge_time(capacitance, target_voltage, curre
     initial_voltage = normalize_numeric(initial_voltage)
     target_voltage = normalize_numeric(target_voltage)
     current = normalize_numeric(current)
-    # Use charge function with negative current
+    # Use charge function with "negative current"
     # Since from the view of the charge function, its generating a negative
     # voltage charge, this will result in a positive time
-    return capacitor_constant_current_charge_time(capacitance, initial_voltage, current, target_voltage)
+    return capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage)
     
-def capacitor_constant_current_charge_time(capacitance, initial_voltage, current, target_voltage="0v") -> Unit("s"):
+def capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage="0V") -> Unit("s"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.

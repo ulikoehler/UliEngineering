@@ -40,3 +40,12 @@ class TestCapacitors(unittest.TestCase):
         
         charge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current)
         self.assertAlmostEqual(charge_time, expected_time, places=2)
+        
+        # Check with keyword arguments
+        discharge_time = capacitor_constant_current_discharge_time(capacitance=capacitance, initial_voltage=voltage, current=current)
+        self.assertAlmostEqual(discharge_time, expected_time, places=2)
+
+        # Check with nonzero target voltage (half voltage => half time)
+        charge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current, target_voltage=voltage/2)
+        self.assertAlmostEqual(charge_time, expected_time/2, places=2)
+        
