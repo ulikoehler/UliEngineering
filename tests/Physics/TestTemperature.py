@@ -29,10 +29,11 @@ class TestTemperature(unittest.TestCase):
 
     def testAutoFormatTemperature(self):
         self.assertEqual(auto_format(normalize_temperature, "-200°C"), "73.1 K")
-        self.assertEqual(auto_format(normalize_temperature_celsius, "-200°C"), "-200.000 °C")
-        self.assertEqual(auto_format(normalize_temperature_celsius, "-111 °C"), "-111.000 °C")
-        self.assertEqual(auto_format(normalize_temperature_celsius, "0 °K"), "-273.150 °C")
-        self.assertEqual(auto_format(normalize_temperature_celsius, "0 K"), "-273.150 °C")
+        self.assertEqual(auto_format(normalize_temperature_celsius, "200°C"), "200 °C")
+        self.assertEqual(auto_format(normalize_temperature_celsius, "-200°C"), "-200 °C")
+        self.assertEqual(auto_format(normalize_temperature_celsius, "-111 °C"), "-111 °C")
+        self.assertEqual(auto_format(normalize_temperature_celsius, "0 °K"), "-273 °C")
+        self.assertEqual(auto_format(normalize_temperature_celsius, "0 K"), "-273 °C")
 
     def test_temperature_with_dissipation(self):
         assert_approx_equal(temperature_with_dissipation("1 W", "1 °C/W"), 26.)
@@ -52,7 +53,7 @@ class TestTemperatureConversion(unittest.TestCase):
         assert_approx_equal(fahrenheit_to_celsius(11.), -11.666666667)
         assert_approx_equal(fahrenheit_to_celsius("20 °F"), -6.66666667)
         assert_approx_equal(fahrenheit_to_celsius(20.), -6.666666667)
-        self.assertEqual(auto_format(fahrenheit_to_celsius, "20 °F"), "-6.667 °C")
+        self.assertEqual(auto_format(fahrenheit_to_celsius, "20 °F"), "-6.67 °C")
 
     def test_fahrenheit_to_kelvin(self):
         assert_approx_equal(fahrenheit_to_kelvin("11 °F"), 261.483333333)

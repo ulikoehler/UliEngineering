@@ -129,12 +129,31 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(2345.6789e12, "V"), '2.35 EV')
         self.assertEqual(self.io.format(2.3456789e-6, "V"), '2.35 µV')
         self.assertEqual(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.346 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
         self.assertEqual(self.io.format(np.nan, "V"), '- V')
         # More significant digits
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.3457 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.34568 µ°C')
-        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.35 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
+        
+        
+    def test_format_negative(self):
+        self.assertEqual(self.io.format(-1.0e-15, "V"), '-1.00 fV')
+        self.assertEqual(self.io.format(-234.6789e-3, "V"), '-235 mV')
+        self.assertEqual(self.io.format(-234.6789, "V"), '-235 V')
+        self.assertEqual(self.io.format(-2345.6789, "V"), '-2.35 kV')
+        self.assertEqual(self.io.format(-2345.6789e6, "V"), '-2.35 GV')
+        self.assertEqual(self.io.format(-2345.6789e12, "V"), '-2.35 EV')
+        self.assertEqual(self.io.format(-2.3456789e-6, "V"), '-2.35 µV')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
+        self.assertEqual(self.io.format(np.nan, "V"), '- V')
+        # More significant digits
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e3, "°C", 4), '-2.346 k°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
+        self.assertEqual(self.io.format(-2.3456789e3, "°C", 5), '-2.3457 k°C')
+        self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
+        self.assertEqual(self.io.format(-100, "°C", 1), '-100 °C')
 
     def test_format_invalid(self):
         with self.assertRaises(ValueError):
