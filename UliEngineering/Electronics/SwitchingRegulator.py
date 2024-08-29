@@ -6,6 +6,8 @@ Utilities for computing switching regulator parameters
 from UliEngineering.EngineerIO import normalize_numeric, Unit
 from collections import namedtuple
 
+__all__ = ["buck_regulator_inductance", "buck_regulator_inductor_current", "InductorCurrent"]
+
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
     Compute the optimal inductance for use in a buck regulator
