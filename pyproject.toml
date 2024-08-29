@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "UliEngineering"
+version = "0.4.14"
+description = "Computational tools for electronics engineering"
+authors = ["Uli Köhler <ukoehler@techoverflow.net>"]
+license = "Apache-2.0"
+homepage = "https://techoverflow.net/"
+readme = "README.md"
+keywords = ["electronics", "engineering", "computational tools"]
+packages = [
+    { include = "UliEngineering" },
+    { include = "UliEngineering/*" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Information Technology",
+    "License :: DFSG approved",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Information Analysis"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.0"
+numpy = ">=1.5"
+toolz = ">=0.5"
+
+[tool.poetry.dev-dependencies]
+coverage = "*"
+mock = "*"
+parameterized = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
