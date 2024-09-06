@@ -44,6 +44,15 @@ class TestGenerateMonths(unittest.TestCase):
                 np.datetime64('2022-04-01T00:00:00.000000'),
                 np.datetime64('2022-05-01T00:00:00.000000')
             ], dtype='datetime64[us]'))
+    def test_year_wrap(self):
+        assert_array_equal(generate_months(5, 2022, 10, 1),
+            np.asarray([
+                np.datetime64('2022-10-01T00:00:00.000000'),
+                np.datetime64('2022-11-01T00:00:00.000000'),
+                np.datetime64('2022-12-01T00:00:00.000000'),
+                np.datetime64('2023-01-01T00:00:00.000000'),
+                np.datetime64('2023-02-01T00:00:00.000000')
+            ], dtype='datetime64[us]'))
 
 class TestGenerateYears(unittest.TestCase):
     def test_empty(self):

@@ -198,7 +198,7 @@ def generate_months(nmonths, year=2022, month=1, day=1):
      '2022-05-01T00:00:00.000000']
     """
     return np.asarray([
-        f'{year:04d}-{month+i:02d}-{day:02d}T00:00:00.000000'
+        f'{(year + (month + i-1) // 12):04d}-{((month+i-1) % 12 + 1):02d}-{day:02d}T00:00:00.000000'
         for i in range(nmonths)
     ], dtype='datetime64[us]')
 
