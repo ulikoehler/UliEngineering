@@ -9,7 +9,7 @@ from collections import namedtuple
 __all__ = [
     "buck_regulator_inductance", "buck_regulator_inductor_current", "InductorCurrent",
     "buck_regulator_duty_cycle", "buck_regulator_inductor_ripple_current",
-    "buck_regulator_inductor_current_rating"]
+    "buck_regulator_inductor_peak_current", "buck_regulator_inductor_rms_current"]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
@@ -108,7 +108,7 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
     return InductorCurrent(peak=Ilpeak, rms=Ilrms)
 
-def buck_regulator_inductor_current_rating(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
+def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
     """
     Compute the peak inductor current rating
     
@@ -135,3 +135,31 @@ def buck_regulator_inductor_current_rating(vin, vout, inductance, frequency, iou
     ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilpeak = ioutmax + ΔIL / 2
     return Ilpeak * safety_factor
+
+def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
+    """
+    Compute the RMS inductor current rating
+    
+    This can be used to determine the RMS current rating of the inductor.
+    The required RMS current rating is typically lower than the peak current rating,
+    and this fact can be used to select a smaller-sized inductor.
+    
+    The formula is:
+    
+    Ilrms = sqrt(Ioutmax^2 + ΔIL^2 / 12)
+    where ΔIL = (Vin - Vout) * D / (L * frequency)
+    and D = Vout/Vin
+    
+    Returns the RMS inductor current rating in Ampere,
+    including the safety factor.
+    """
+    vin = normalize_numeric(vin)
+    vout = normalize_numeric(vout)
+    inductance = normalize_numeric(inductance)
+    frequency = normalize_numeric(frequency)
+    ioutmax = normalize_numeric(ioutmax)
+    safety_factor = normalize_numeric(safety_factor)
+    D = buck_regulator_duty_cycle(vin, vout)
+    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
+    Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
+    return Ilrms * safety_factor
