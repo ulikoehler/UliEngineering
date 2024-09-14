@@ -113,6 +113,8 @@ def buck_regulator_inductor_current_rating(vin, vout, inductance, frequency, iou
     Compute the peak inductor current rating
     
     This can be used to determine the saturation current rating of the inductor.
+    Especially ferrite core inductors should have sufficient saturation current rating
+    to accomodate the maximum peak current for the worst-case operating condition.
     
     The formula is:
     
