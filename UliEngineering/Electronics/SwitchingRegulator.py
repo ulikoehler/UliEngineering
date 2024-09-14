@@ -6,7 +6,9 @@ Utilities for computing switching regulator parameters
 from UliEngineering.EngineerIO import normalize_numeric, Unit
 from collections import namedtuple
 
-__all__ = ["buck_regulator_inductance", "buck_regulator_inductor_current", "InductorCurrent"]
+__all__ = [
+    "buck_regulator_inductance", "buck_regulator_inductor_current", "InductorCurrent",
+    "buck_regulator_duty_cycle", "buck_regulator_inductor_ripple_current"]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
@@ -45,6 +47,37 @@ def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H")
 
 InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms"])
 
+def buck_regulator_duty_cycle(vin, vout) -> float:
+    """
+    Estimate the duty cycle of a buck regulator
+
+    D = Vout/Vin
+    """
+    vin = normalize_numeric(vin)
+    vout = normalize_numeric(vout)
+    return vout / vin
+
+def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax) -> Unit("A"):
+    """
+    Compute the ripple current ΔIL in the inductor
+    
+    This can be used to determine the peak current rating of the inductor.
+    
+    The formula is:
+    
+    ΔIL = (Vin - Vout) * D / (L * frequency)
+    where D = Vout/Vin
+    
+    Returns the ripple current in Amperes
+    """
+    vin = normalize_numeric(vin)
+    vout = normalize_numeric(vout)
+    inductance = normalize_numeric(inductance)
+    frequency = normalize_numeric(frequency)
+    ioutmax = normalize_numeric(ioutmax)
+    D = buck_regulator_duty_cycle(vin, vout)
+    return (vin - vout) * D / (inductance * frequency)
+
 def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -> InductorCurrent:
     """
     Compute an estimation for the peak inductor current.
@@ -68,8 +101,8 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     inductance = normalize_numeric(inductance)
     frequency = normalize_numeric(frequency)
     ioutmax = normalize_numeric(ioutmax)
-    D = vout / vin
-    ΔIL = (vin - vout) * D / (inductance * frequency)
+    D = buck_regulator_duty_cycle(vin, vout)
+    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax
     Ilpeak = ioutmax + ΔIL / 2
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
     return InductorCurrent(peak=Ilpeak, rms=Ilrms)
