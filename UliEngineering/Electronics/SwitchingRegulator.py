@@ -103,7 +103,7 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     frequency = normalize_numeric(frequency)
     ioutmax = normalize_numeric(ioutmax)
     D = buck_regulator_duty_cycle(vin, vout)
-    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax
+    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilpeak = ioutmax + ΔIL / 2
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
     return InductorCurrent(peak=Ilpeak, rms=Ilrms)
