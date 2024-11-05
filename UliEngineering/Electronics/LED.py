@@ -17,7 +17,8 @@ from UliEngineering.Units import Unit
 __all__ = [
     "LEDForwardVoltages",
     "led_series_resistor",
-    "led_series_resistor_power"
+    "led_series_resistor_power",
+    "led_series_resistor_maximum_current",
 ]
 
 
@@ -75,3 +76,15 @@ def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     # Will raise OperationImpossibleException if vforward > vsupply
     resistor_value = led_series_resistor(vsupply, ioperating, vforward)
     return resistor_value * ioperating * ioperating
+
+def led_series_resistor_maximum_current(vsupply, ioperating, power_rating) -> Unit("A"):
+    """
+    Compute the maximum current through a LED + series resistor combination,
+    so that the power rating of the resistor is not exceeded.
+    """
+    vsupply = normalize_numeric(vsupply)
+    ioperating = normalize_numeric(ioperating)
+    power_rating = normalize_numeric(power_rating)
+    # Will raise OperationImpossibleException if vforward > vsupply
+    resistor_value = led_series_resistor(vsupply, ioperating, vforward)
+    return power_rating / (resistor_value * resistor_value)
