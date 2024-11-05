@@ -11,6 +11,7 @@ import itertools
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Units import Unit
+from collections import namedtuple
 
 __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "standard_resistors", "parallel_resistors",
@@ -20,7 +21,9 @@ __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "voltage_across_resistor",
            "series_resistors", "nearest_resistor",
            "resistor_by_voltage_and_current",
-           "next_higher_resistor", "next_lower_resistor",]
+           "next_higher_resistor", "next_lower_resistor",
+           "resistor_current_by_power", "ResistorTolerance",
+           "resistor_tolerance"]
 
 # Standard resistor sequences
 e96 = np.asarray([
@@ -183,3 +186,23 @@ def resistor_by_voltage_and_current(voltage, current) -> Unit("Ω"):
     voltage = normalize_numeric(voltage)
     current = normalize_numeric(current)
     return voltage / current
+
+def resistor_current_by_power(resistor, power) -> Unit("A"):
+    """
+    Compute the current that flows through a resistor
+    given its resistance and the power dissipated in it.
+    """
+    resistor = normalize_numeric(resistor)
+    power = normalize_numeric(power)
+    return np.sqrt(power / resistor)
+
+ResistorTolerance = namedtuple("ResistorTolerance", ["lower", "nominal", "upper"])
+
+def resistor_tolerance(resistance, tolerance="1%") -> ResistorTolerance:
+    """
+    Compute the lower, nominal and upper bound of a resistor value
+    given the nominal value and the tolerance.
+    """
+    value = normalize_numeric(resistance)
+    tolerance = normalize_numeric(tolerance)
+    return ResistorTolerance(value - value * tolerance, value, value + value * tolerance)

@@ -272,6 +272,8 @@ class TestEngineerIO(unittest.TestCase):
         Test ppm, ppb and %
         """
         # %
+        assert_approx_equal(self.io.normalize_numeric_safe("1%"), 0.01)
+        assert_approx_equal(self.io.normalize_numeric_safe("5%"), 0.01)
         assert_approx_equal(self.io.normalize_numeric_safe("1.25"), 1.25)
         assert_approx_equal(self.io.normalize_numeric_safe("125 %"), 1.25)
         assert_approx_equal(self.io.normalize_numeric_safe("125.0 %"), 1.25)
