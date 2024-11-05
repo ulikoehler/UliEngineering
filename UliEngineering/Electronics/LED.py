@@ -81,6 +81,8 @@ def led_series_resistor_maximum_current(vsupply, ioperating, power_rating) -> Un
     """
     Compute the maximum current through a LED + series resistor combination,
     so that the power rating of the resistor is not exceeded.
+
+    Tolerances are not taken into account.
     """
     vsupply = normalize_numeric(vsupply)
     ioperating = normalize_numeric(ioperating)
