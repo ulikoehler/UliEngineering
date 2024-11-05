@@ -31,3 +31,9 @@ class TestLEDSeriesResistors(unittest.TestCase):
     def test_led_series_resistor_power_invalid(self):
         with pytest.raises(OperationImpossibleException):
             led_series_resistor_power("2V", "20mA", "3V")
+
+    def test_led_series_resistor_maximum_current(self):
+        # Test with valid inputs
+        # Verified using https://www.omnicalculator.com/physics/ohms-law
+        assert_approx_equal(led_series_resistor_maximum_current(10, 0.25), 0.1581139)
+        assert_approx_equal(led_series_resistor_maximum_current(1, 2.56), 1.6)
