@@ -19,7 +19,8 @@ __all__ = ["e96", "e48", "e24", "e12", "resistor_range",
            "power_dissipated_in_resistor_by_voltage",
            "voltage_across_resistor",
            "series_resistors", "nearest_resistor",
-           "resistor_by_voltage_and_current"]
+           "resistor_by_voltage_and_current",
+           "next_higher_resistor", "next_lower_resistor",]
 
 # Standard resistor sequences
 e96 = np.asarray([
@@ -138,6 +139,18 @@ def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
     Find the standard reistor value with the minimal difference to the given value
     """
     return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
+
+def next_higher_resistor(value, sequence=e96) -> Unit("Ω"):
+    """
+    Find the next higher standard resistor value
+    """
+    return min((r for r in standard_resistors(sequence=sequence) if r > value), default=None)
+
+def next_lower_resistor(value, sequence=e96) -> Unit("Ω"):
+    """
+    Find the next lower standard resistor value
+    """
+    return max((r for r in standard_resistors(sequence=sequence) if r < value), default=None)
 
 def parallel_resistors(*args) -> Unit("Ω"):
     """
