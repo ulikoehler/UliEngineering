@@ -454,6 +454,106 @@ class EngineerIO(object):
         for i, elem in enumerate(arg):
             ret[i] = self.normalize(elem).value
         return ret
+    
+    def normalize_timespan(self, arg, reference=_default_timespan_units):
+        """
+        Normalize a given timespan to SI units (seconds).
+        Numeric inputs are assumed to be in seconds.
+        """
+        if isinstance(arg, (int, float, np.generic)):
+            return arg
+        if isinstance(arg, (str, bytes)):
+            remainder, unit = self.split_input(arg)
+        raise ValueError(f"Can't normalize '{arg}'")
+
+_default_timespan_units = {
+    # Attoseconds
+    'as': 1e-18,
+    'asec': 1e-18,
+    'asecs': 1e-18,
+    'attosecond': 1e-18,
+    'attoseconds': 1e-18,
+    # Femtoseconds
+    'fs': 1e-15,
+    'fsec': 1e-15,
+    'fsecs': 1e-15,
+    'femtosecond': 1e-15,
+    'femtoseconds': 1e-15,
+    # Picoseconds
+    'ps': 1e-12,
+    'psec': 1e-12,
+    'psecs': 1e-12,
+    'picosecond': 1e-12,
+    'picoseconds': 1e-12,
+    # Nanoseconds
+    'ns': 1e-9,
+    'nsec': 1e-9,
+    'nsecs': 1e-9,
+    'nanosecond': 1e-9,
+    'nanoseconds': 1e-9,
+    # Microseconds
+    'µs': 1e-6,
+    'us': 1e-6,
+    'µsec': 1e-6,
+    'usec': 1e-6,
+    'microsecond': 1e-6,
+    'microseconds': 1e-6,
+    'µsecond': 1e-6,
+    # Milliseconds
+    'ms': 0.001,
+    'millisecond': 0.001,
+    'milliseconds': 0.001,
+    # seconds
+    's': 1,
+    'sec': 1,
+    'secs': 1,
+    'second': 1,
+    'seconds': 1,
+    # Minutes
+    'm': 60,
+    'min': 60,
+    # hours
+    'h': 3600,
+    'hour': 3600,
+    'hours': 3600,
+    # days
+    'd': 86400,
+    'day': 86400,
+    'days': 86400,
+    # weeks
+    'w': 604800,
+    'week': 604800,
+    'weeks': 604800,
+    # Months (we're using the average duration of a month)
+    'mo': 2629746,  # 1/12th of a year, see below for the definition of a year
+    'month': 2629746,
+    'months': 2629746,
+    # years (365.2425 days on average)
+    'y': 31556952,
+    'year': 31556952,
+    'years': 31556952,
+    # Decades
+    'decade': 315569520,
+    'decades': 315569520,
+    # Centuries
+    'century': 3155695200,
+    'centuries': 3155695200,
+    # Millenia
+    'millenium': 31556952000,
+    'millenia': 31556952000,
+    # Megayears
+    'My': 31556952000,
+    'Myr': 31556952000,
+    'Myrs': 31556952000,
+    # Gigayears
+    'Gy': 31556952000000,
+    'Gyr': 31556952000000,
+    'Gyrs': 31556952000000,
+    # Terayears
+    'Ty': 31556952000000000,
+    'Tyr': 31556952000000000,
+    'Tyrs': 31556952000000000,
+}
 
 # Initialize global instance
 EngineerIO.instance = EngineerIO()
