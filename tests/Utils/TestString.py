@@ -50,3 +50,15 @@ class TestSplitNth(unittest.TestCase):
         with self.assertRaises(ValueError):
             split_nth("abc,def", nth=3)
 
+class TestStringUtils(unittest.TestCase):
+    def test_partition_at_numeric_to_nonnumeric_boundary(self):
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("foo.123bar"), ("foo.123", "bar"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("123s"), ("123", "s"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("123"), ("123", ""))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("foo"), ("foo", ""))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("foo1bar"), ("foo1", "bar"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("foo.123"), ("foo.123", ""))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("foo123bar"), ("foo123", "bar"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("123foo456"), ("123", "foo456"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s=""), ("", ""))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s="123.456km"), ("123.456", "km"))
