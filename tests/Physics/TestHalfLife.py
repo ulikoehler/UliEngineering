@@ -1,5 +1,5 @@
 import unittest
-from UliEngineering.Physics.HalfLife import half_lifes_passed, fraction_remaining, fraction_decayed, remaining_quantity, decayed_quantity
+from UliEngineering.Physics.HalfLife import *
 
 class TestHalfLife(unittest.TestCase):
     def test_half_lifes_passed(self):
@@ -26,3 +26,13 @@ class TestHalfLife(unittest.TestCase):
         self.assertAlmostEqual(decayed_quantity("1h", "1h", 100), 50.0)
         self.assertAlmostEqual(decayed_quantity("2h", "1h", 100), 75.0)
         self.assertAlmostEqual(decayed_quantity("1h", "2h", 100), 29.289321881, places=6)
+   
+    def test_half_life_from_decay_constant(self):
+        # Test with decay constant 0.1
+        self.assertAlmostEqual(half_life_from_decay_constant(0.1), 6.9314718056, places=10)
+        # Test with decay constant 1.0
+        self.assertAlmostEqual(half_life_from_decay_constant(1.0), 0.69314718056, places=10)
+        # Test with decay constant 0.5
+        self.assertAlmostEqual(half_life_from_decay_constant(0.5), 1.38629436112, places=10)
+        # Test with decay constant 2.0
+        self.assertAlmostEqual(half_life_from_decay_constant(2.0), 0.34657359028, places=10)
