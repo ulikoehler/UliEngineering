@@ -36,3 +36,69 @@ class TestHalfLife(unittest.TestCase):
         self.assertAlmostEqual(half_life_from_decay_constant(0.5), 1.38629436112, places=10)
         # Test with decay constant 2.0
         self.assertAlmostEqual(half_life_from_decay_constant(2.0), 0.34657359028, places=10)
+
+    def test_half_life_from_remaining_quantity(self):
+        self.assertAlmostEqual(
+            half_life_from_remaining_quantity("1h", 50, 100),
+            3600,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_remaining_quantity("2h", 25, 100),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_remaining_quantity(7200, 25, 100),
+            3600.0,
+            places=5
+        )
+
+    def test_half_life_from_decayed_quantity(self):
+        self.assertAlmostEqual(
+            half_life_from_decayed_quantity("1h", 50, 100),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_decayed_quantity("2h", 75, 100),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_decayed_quantity(7200, 75, 100),
+            3600.0,
+            places=5
+        )
+
+    def test_half_life_from_fraction_remaining(self):
+        self.assertAlmostEqual(
+            half_life_from_fraction_remaining(3600, 0.5),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_fraction_remaining("2h", 0.25),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_fraction_remaining(7200, 0.25),
+            3600.0,
+            places=5
+        )
+
+    def test_half_life_from_fraction_decayed(self):
+        self.assertAlmostEqual(
+            half_life_from_fraction_decayed(3600, 0.5),
+            3600.0,
+            places=5
+        )
+        self.assertAlmostEqual(
+            half_life_from_fraction_decayed("2h", 0.75),
+            3600.0,
+        )
+        self.assertAlmostEqual(
+            half_life_from_fraction_decayed(7200, 0.75),
+            3600.0,
+        )
