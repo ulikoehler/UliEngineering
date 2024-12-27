@@ -33,7 +33,7 @@ from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_li
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "normalize_numeric_verify_unit", "SplitResult"]
+           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
 
 UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
@@ -671,6 +671,9 @@ def normalize_numeric(v):
 
 def normalize(v):
     return EngineerIO.instance.normalize(v)
+
+def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+    return EngineerIO.instance.normalize_timespan(v)
 
 def auto_format(v, *args, **kwargs):
     return EngineerIO.instance.auto_format(v, *args, **kwargs)
