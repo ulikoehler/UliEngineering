@@ -42,7 +42,7 @@ def suffix_list(s: str) -> List[str]:
     """
     return [s[-i:] for i in range(1, len(s) + 1)]
 
-_numeric_to_nonnumeric_boundary_regex = re.compile(r"([\.\d]+)(\D+)")
+_numeric_to_nonnumeric_boundary_regex = re.compile(r"([-\.\d]+)([^\d\.]+)")
 
 def partition_at_numeric_to_nonnumeric_boundary(s: str) -> Tuple[str, str]:
     """
@@ -61,5 +61,4 @@ def partition_at_numeric_to_nonnumeric_boundary(s: str) -> Tuple[str, str]:
     if m is None:
         # No such boundary found
         return s, ""
-    print(s, m.groups(), m.span(1), s[:m.span(1)[1]], s[m.span(1)[1]:])
     return s[:m.span(1)[1]], s[m.span(1)[1]:]

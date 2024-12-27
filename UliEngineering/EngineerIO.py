@@ -19,14 +19,16 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
+from typing import Tuple
 import math
 import re
 import itertools
+from git import Optional
 from toolz import functoolz
 import numpy as np
 from collections import namedtuple
 from .Units import *
-from .Utils.String import suffix_list
+from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
@@ -81,6 +83,98 @@ def _default_units(include_m=False):
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
     ]).union(_length_units(include_m=include_m))
 
+
+def _default_timespan_units():
+    return {
+        # Attoseconds
+        'as': 1e-18,
+        'asec': 1e-18,
+        'asecs': 1e-18,
+        'attosecond': 1e-18,
+        'attoseconds': 1e-18,
+        # Femtoseconds
+        'fs': 1e-15,
+        'fsec': 1e-15,
+        'fsecs': 1e-15,
+        'femtosecond': 1e-15,
+        'femtoseconds': 1e-15,
+        # Picoseconds
+        'ps': 1e-12,
+        'psec': 1e-12,
+        'psecs': 1e-12,
+        'picosecond': 1e-12,
+        'picoseconds': 1e-12,
+        # Nanoseconds
+        'ns': 1e-9,
+        'nsec': 1e-9,
+        'nsecs': 1e-9,
+        'nanosecond': 1e-9,
+        'nanoseconds': 1e-9,
+        # Microseconds
+        'µs': 1e-6,
+        'us': 1e-6,
+        'µsec': 1e-6,
+        'usec': 1e-6,
+        'microsecond': 1e-6,
+        'microseconds': 1e-6,
+        'µsecond': 1e-6,
+        # Milliseconds
+        'ms': 0.001,
+        'millisecond': 0.001,
+        'milliseconds': 0.001,
+        # seconds
+        's': 1,
+        'sec': 1,
+        'secs': 1,
+        'second': 1,
+        'seconds': 1,
+        # Minutes
+        'm': 60,
+        'min': 60,
+        # hours
+        'h': 3600,
+        'hour': 3600,
+        'hours': 3600,
+        # days
+        'd': 86400,
+        'day': 86400,
+        'days': 86400,
+        # weeks
+        'w': 604800,
+        'week': 604800,
+        'weeks': 604800,
+        # Months (we're using the average duration of a month)
+        'mo': 2629746,  # 1/12th of a year, see below for the definition of a year
+        'month': 2629746,
+        'months': 2629746,
+        # years (365.2425 days on average)
+        'y': 31556952,
+        'year': 31556952,
+        'years': 31556952,
+        # Decades
+        'decade': 315569520,
+        'decades': 315569520,
+        # Centuries
+        'century': 3155695200,
+        'centuries': 3155695200,
+        # Millenia
+        'millenium': 31556952000,
+        'millenia': 31556952000,
+        # Megayears
+        'My': 31556952000,
+        'Myr': 31556952000,
+        'Myrs': 31556952000,
+        # Gigayears
+        'Gy': 31556952000000,
+        'Gyr': 31556952000000,
+        'Gyrs': 31556952000000,
+        # Terayears
+        'Ty': 31556952000000000,
+        'Tyr': 31556952000000000,
+        'Tyrs': 31556952000000000,
+    }
+
+
 def _default_prefixes():
     return ["Δ", "±"]
 
@@ -91,7 +185,8 @@ def _default_unit_prefixes():
 _numeric_allowed = set("+0123456789-e.")
 
 class EngineerIO(object):
-    instance = None
+    instance: Optional["EngineerIO"] = None
+    length_instance: Optional["EngineerIO"] = None
     """
     Default instance, used for global functions. Initialized on first use
 
@@ -101,6 +196,7 @@ class EngineerIO(object):
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
                  suffices=_default_suffices(),
+                 timespan_units=_default_timespan_units(),
                  first_suffix_exp=-24):
         """
         Initialize a new EngineerIO instance with default or custom suffix
@@ -125,6 +221,7 @@ class EngineerIO(object):
         """
         self.units = set(units)
         self.suffices = suffices
+        self.timespan_units = timespan_units
         self.first_suffix_exp = first_suffix_exp
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
@@ -455,105 +552,30 @@ class EngineerIO(object):
             ret[i] = self.normalize(elem).value
         return ret
     
-    def normalize_timespan(self, arg, reference=_default_timespan_units):
+    def normalize_timespan(self, arg: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
         """
         Normalize a given timespan to SI units (seconds).
         Numeric inputs are assumed to be in seconds.
         """
+        if isinstance(arg, bytes):
+            arg = arg.decode("utf8")
         if isinstance(arg, (int, float, np.generic)):
-            return arg
-        if isinstance(arg, (str, bytes)):
-            remainder, unit = self.split_input(arg)
-        raise ValueError(f"Can't normalize '{arg}'")
-
-_default_timespan_units = {
-    # Attoseconds
-    'as': 1e-18,
-    'asec': 1e-18,
-    'asecs': 1e-18,
-    'attosecond': 1e-18,
-    'attoseconds': 1e-18,
-    # Femtoseconds
-    'fs': 1e-15,
-    'fsec': 1e-15,
-    'fsecs': 1e-15,
-    'femtosecond': 1e-15,
-    'femtoseconds': 1e-15,
-    # Picoseconds
-    'ps': 1e-12,
-    'psec': 1e-12,
-    'psecs': 1e-12,
-    'picosecond': 1e-12,
-    'picoseconds': 1e-12,
-    # Nanoseconds
-    'ns': 1e-9,
-    'nsec': 1e-9,
-    'nsecs': 1e-9,
-    'nanosecond': 1e-9,
-    'nanoseconds': 1e-9,
-    # Microseconds
-    'µs': 1e-6,
-    'us': 1e-6,
-    'µsec': 1e-6,
-    'usec': 1e-6,
-    'microsecond': 1e-6,
-    'microseconds': 1e-6,
-    'µsecond': 1e-6,
-    # Milliseconds
-    'ms': 0.001,
-    'millisecond': 0.001,
-    'milliseconds': 0.001,
-    # seconds
-    's': 1,
-    'sec': 1,
-    'secs': 1,
-    'second': 1,
-    'seconds': 1,
-    # Minutes
-    'm': 60,
-    'min': 60,
-    # hours
-    'h': 3600,
-    'hour': 3600,
-    'hours': 3600,
-    # days
-    'd': 86400,
-    'day': 86400,
-    'days': 86400,
-    # weeks
-    'w': 604800,
-    'week': 604800,
-    'weeks': 604800,
-    # Months (we're using the average duration of a month)
-    'mo': 2629746,  # 1/12th of a year, see below for the definition of a year
-    'month': 2629746,
-    'months': 2629746,
-    # years (365.2425 days on average)
-    'y': 31556952,
-    'year': 31556952,
-    'years': 31556952,
-    # Decades
-    'decade': 315569520,
-    'decades': 315569520,
-    # Centuries
-    'century': 3155695200,
-    'centuries': 3155695200,
-    # Millenia
-    'millenium': 31556952000,
-    'millenia': 31556952000,
-    # Megayears
-    'My': 31556952000,
-    'Myr': 31556952000,
-    'Myrs': 31556952000,
-    # Gigayears
-    'Gy': 31556952000000,
-    'Gyr': 31556952000000,
-    'Gyrs': 31556952000000,
-    # Terayears
-    'Ty': 31556952000000000,
-    'Tyr': 31556952000000000,
-    'Tyrs': 31556952000000000,
-}
+            return arg # Already a number. Just return!
+        elif isinstance(arg, (str)):
+            s, unit = partition_at_numeric_to_nonnumeric_boundary(arg) # Remove unit
+            s, unit = s.strip(), unit.strip()
+            if not s:
+                raise ValueError(f"Empty value in timespan: {arg}")
+            if not unit: # Assume seconds (SI unit of time)
+                return float(s)
+            # Check if unit exists in timespan_units
+            if unit not in self.timespan_units:
+                raise ValueError(f"Invalid timespan unit '{unit}' in '{arg}'. Expected one of {list(self.timespan_units.keys())}")
+            return float(s) * self.timespan_units[unit]
+        elif isinstance(arg, (np.ndarray, list)):
+            return np.vectorize(self.normalize_timespan)(arg)
+        else:
+            raise ValueError(f"Unsupported type for normalization: {type(arg)}")
 
 # Initialize global instance
 EngineerIO.instance = EngineerIO()

@@ -62,3 +62,8 @@ class TestStringUtils(unittest.TestCase):
         self.assertEqual(partition_at_numeric_to_nonnumeric_boundary("123foo456"), ("123", "foo456"))
         self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s=""), ("", ""))
         self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s="123.456km"), ("123.456", "km"))
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s="1."), ("1.", ""))
+
+    def test_negative_partition_at_numeric_to_nonnumeric_boundary(self):
+        self.assertEqual(partition_at_numeric_to_nonnumeric_boundary(s="-123.456km"), ("-123.456", "km"))
+
