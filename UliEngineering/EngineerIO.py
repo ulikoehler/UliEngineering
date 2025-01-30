@@ -23,7 +23,7 @@ from typing import Tuple
 import math
 import re
 import itertools
-from git import Optional
+from typing import Optional
 from toolz import functoolz
 import numpy as np
 from collections import namedtuple
