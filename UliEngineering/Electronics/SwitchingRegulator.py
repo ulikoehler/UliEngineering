@@ -11,7 +11,8 @@ __all__ = [
     "buck_regulator_duty_cycle", "buck_regulator_inductor_ripple_current",
     "buck_regulator_inductor_peak_current", "buck_regulator_inductor_rms_current",
     "buck_regulator_min_capacitance_method1", "buck_regulator_min_capacitance_method2",
-    "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance"]
+    "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance",
+    "buck_regulator_output_capacitor_max_esr"]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
@@ -280,3 +281,23 @@ def buck_regulator_min_capacitance(
     
     # Return the maximum of all calculations
     return max(c1, c2, c3)
+
+def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current):
+    """
+    Compute the maximum ESR of the output capacitor
+    
+    This is based on the formula:
+    
+    ESR < ΔVout / ΔIL
+    
+    where ΔVout is the permissible output voltage ripple,
+    and ΔIL is the inductor ripple current.
+    
+    Returns the maximum ESR in Ohm
+    
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 38
+    """
+    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
+    ripple_current = normalize_numeric(ripple_current)
+    return output_voltage_ripple / ripple_current
