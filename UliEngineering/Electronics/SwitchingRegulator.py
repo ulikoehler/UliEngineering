@@ -12,7 +12,8 @@ __all__ = [
     "buck_regulator_inductor_peak_current", "buck_regulator_inductor_rms_current",
     "buck_regulator_min_capacitance_method1", "buck_regulator_min_capacitance_method2",
     "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance",
-    "buck_regulator_output_capacitor_max_esr"]
+    "buck_regulator_output_capacitor_max_esr", "buck_regulator_output_capacitor_rms_current",
+]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
@@ -301,3 +302,30 @@ def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_curren
     output_voltage_ripple = normalize_numeric(output_voltage_ripple)
     ripple_current = normalize_numeric(ripple_current)
     return output_voltage_ripple / ripple_current
+
+def buck_regulator_output_capacitor_rms_current(
+    input_voltage_max,
+    output_voltage,
+    inductance,
+    switching_frequency,
+):
+    """
+    Compute the RMS current rating of the output capacitor
+    This is based on the formula:
+    
+    Irms = (Vout * (Vinmax-Vout)) / (sqrt(12) * Vinmax * L * fsw)
+    
+    where Vout is the output voltage, Vinmax is the maximum input voltage,
+    L is the inductance, and fsw is the switching frequency.
+        
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 39
+    """
+    input_voltage_max = normalize_numeric(input_voltage_max)
+    output_voltage = normalize_numeric(output_voltage)
+    inductance = normalize_numeric(inductance)
+    switching_frequency = normalize_numeric(switching_frequency)
+    
+    return (output_voltage * (input_voltage_max - output_voltage)) / (
+        (12**0.5) * input_voltage_max * inductance * switching_frequency
+    )
