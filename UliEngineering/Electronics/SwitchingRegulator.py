@@ -9,7 +9,9 @@ from collections import namedtuple
 __all__ = [
     "buck_regulator_inductance", "buck_regulator_inductor_current", "InductorCurrent",
     "buck_regulator_duty_cycle", "buck_regulator_inductor_ripple_current",
-    "buck_regulator_inductor_peak_current", "buck_regulator_inductor_rms_current"]
+    "buck_regulator_inductor_peak_current", "buck_regulator_inductor_rms_current",
+    "buck_regulator_min_capacitance_method1", "buck_regulator_min_capacitance_method2",
+    "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance"]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
@@ -163,3 +165,118 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
     return Ilrms * safety_factor
+
+def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
+    """
+    Basic output capacitance calculation, based on the formula:
+    C > 2*ΔIL / (fsw * ΔVout)
+    where ΔIL is the inductor ripple current, fsw is the switching frequency,
+    and ΔVout is the permissible ripple voltage.
+    
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 35
+    """
+    ripple_current = normalize_numeric(ripple_current)
+    permissible_ripple_voltage = normalize_numeric(permissible_ripple_voltage)
+    frequency = normalize_numeric(frequency)
+    return (2 * ripple_current) / (frequency * permissible_ripple_voltage)
+
+def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current):
+    """
+    Compute the minimum capacitance required for a buck regulator
+    based on the load current and the peak permissible output voltage.
+    
+    Cout > L * (Ioutmax² - Ioutmin²) / (Vpeak² - Vnom²)
+    
+    with Vpeak = Vnominal + output_voltage_ripple/2
+    
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 36
+    """
+    inductance = normalize_numeric(inductance)
+    nominal_output_voltage = normalize_numeric(nominal_output_voltage)
+    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
+    max_load_current = normalize_numeric(max_load_current)
+    # Compute secondary parameters
+    peak_output_voltage = nominal_output_voltage + output_voltage_ripple / 2
+    # Compute the minimum capacitance
+    return inductance * (max_load_current**2 - light_load_current**2) / (peak_output_voltage**2 - nominal_output_voltage**2)
+
+def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current):
+    """
+    Compute the minimum capacitance required for a buck regulator
+    based on the load current and the peak permissible output voltage.
+    
+    Cout > 1/(8 * fsw) * 1/ (ΔVout / ΔIL)
+    
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 37
+    """
+    switching_frequency = normalize_numeric(switching_frequency)
+    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
+    ripple_current = normalize_numeric(ripple_current)
+    return 1 / (8 * switching_frequency) * 1 / (output_voltage_ripple / ripple_current)
+
+def buck_regulator_min_capacitance(
+    ripple_current,
+    output_voltage_ripple,
+    switching_frequency,
+    inductance,
+    nominal_output_voltage,
+    max_load_current,
+    light_load_current
+) -> Unit("F"):
+    """
+    Calculate the minimum capacitance required for a buck regulator by taking
+    the maximum of three different calculation methods.
+    
+    This conservative approach ensures all design constraints are met by using
+    the largest capacitance value calculated from the three methods.
+    
+    Parameters
+    ----------
+    ripple_current : float
+        The inductor ripple current (ΔIL)
+    output_voltage_ripple : float
+        The permissible output voltage ripple (ΔVout)
+    switching_frequency : float
+        The switching frequency of the regulator
+    inductance : float
+        The inductance value used for method 2
+    nominal_output_voltage : float
+        The nominal output voltage used for method 2
+    max_load_current : float
+        The maximum load current used for method 2
+    light_load_current : float
+        The light load current used for method 2
+        
+    Returns
+    -------
+    float
+        The minimum required output capacitance in Farads
+    """
+    # Calculate using method 1
+    c1 = buck_regulator_min_capacitance_method1(
+        ripple_current, 
+        output_voltage_ripple,
+        switching_frequency
+    )
+    
+    # Calculate using method 2
+    c2 = buck_regulator_min_capacitance_method2(
+        inductance, 
+        nominal_output_voltage, 
+        output_voltage_ripple, 
+        max_load_current, 
+        light_load_current
+    )
+    
+    # Calculate using method 3
+    c3 = buck_regulator_min_capacitance_method3(
+        switching_frequency, 
+        output_voltage_ripple, 
+        ripple_current
+    )
+    
+    # Return the maximum of all calculations
+    return max(c1, c2, c3)
