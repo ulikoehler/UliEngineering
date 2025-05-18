@@ -129,16 +129,9 @@ def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutm
     Returns the peak inductor current rating in Ampere,
     including the safety factor.
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
-    inductance = normalize_numeric(inductance)
-    frequency = normalize_numeric(frequency)
-    ioutmax = normalize_numeric(ioutmax)
-    safety_factor = normalize_numeric(safety_factor)
-    D = buck_regulator_duty_cycle(vin, vout)
-    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
-    Ilpeak = ioutmax + ΔIL / 2
-    return Ilpeak * safety_factor
+    return buck_regulator_inductor_current(
+        vin, vout, inductance, frequency, ioutmax
+    ).peak * safety_factor
 
 def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
     """
@@ -157,16 +150,9 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     Returns the RMS inductor current rating in Ampere,
     including the safety factor.
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
-    inductance = normalize_numeric(inductance)
-    frequency = normalize_numeric(frequency)
-    ioutmax = normalize_numeric(ioutmax)
-    safety_factor = normalize_numeric(safety_factor)
-    D = buck_regulator_duty_cycle(vin, vout)
-    ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
-    Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
-    return Ilrms * safety_factor
+    return buck_regulator_inductor_current(
+        vin, vout, inductance, frequency, ioutmax
+    ).rms * safety_factor
 
 def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
     """
