@@ -50,7 +50,7 @@ def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H")
     K = normalize_numeric(K)
     return ((vin - vout) * (vout) / (frequency * K * ioutmax)) * (vout/vin)
 
-InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms"])
+InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms", "ripple"])
 
 def buck_regulator_duty_cycle(vin, vout) -> float:
     """
@@ -85,7 +85,8 @@ def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, iou
 
 def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -> InductorCurrent:
     """
-    Compute an estimation for the peak inductor current.
+    Compute an estimation for the peak, RMS & ripple inductor current.
+    This does not include any safety factors
     
     This can be used to determine inductor value
 
@@ -110,9 +111,9 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilpeak = ioutmax + ΔIL / 2
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
-    return InductorCurrent(peak=Ilpeak, rms=Ilrms)
+    return InductorCurrent(peak=Ilpeak, rms=Ilrms, ripple=ΔIL)
 
-def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
+def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.0) -> Unit("A"):
     """
     Compute the peak inductor current rating
     
@@ -127,7 +128,7 @@ def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutm
     and D = Vout/Vin
     
     Returns the peak inductor current rating in Ampere,
-    including the safety factor.
+    including the safety factor (default: 1.0).
     """
     return buck_regulator_inductor_current(
         vin, vout, inductance, frequency, ioutmax
@@ -153,6 +154,7 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     return buck_regulator_inductor_current(
         vin, vout, inductance, frequency, ioutmax
     ).rms * safety_factor
+    
 
 def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
     """
