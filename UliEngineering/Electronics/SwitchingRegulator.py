@@ -13,6 +13,7 @@ __all__ = [
     "buck_regulator_min_capacitance_method1", "buck_regulator_min_capacitance_method2",
     "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance",
     "buck_regulator_output_capacitor_max_esr", "buck_regulator_output_capacitor_rms_current",
+    "buck_regulator_catch_diode_power",
 ]
 
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
@@ -317,3 +318,29 @@ def buck_regulator_output_capacitor_rms_current(
     return (output_voltage * (input_voltage_max - output_voltage)) / (
         (12**0.5) * input_voltage_max * inductance * switching_frequency
     )
+
+def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF"):
+    """
+    Compute the minimum required power rating of the catch diode
+    for non-synchronous buck regulators.
+    
+    P_D = ((Vinmax - Vout) * Iout * Vd) / (Vinmax) + (Cj * fsw * (Vin + Vd)²)/2
+    where:
+    * Vinmax is the maximum input voltage
+    * Vout is the output voltage
+    * Iout is the output current
+    * Vd is the forward voltage drop of the diode
+    * Cj is the junction capacitance of the diode (at Vinmax)
+    * fsw is the switching frequency
+    
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
+    Formula 40
+    """
+    vinmax = normalize_numeric(vinmax)
+    vout = normalize_numeric(vout)
+    iout = normalize_numeric(iout)
+    fsw = normalize_numeric(fsw)
+    v_d = normalize_numeric(v_d)
+    c_j = normalize_numeric(c_j)
+    
+    return ((vinmax - vout) * iout * v_d) / (vinmax) + (c_j * fsw * (vinmax + v_d)**2) / 2
