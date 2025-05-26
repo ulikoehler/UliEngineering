@@ -13,6 +13,7 @@ __all__ = [
     "parallel_plate_capacitors_capacitance",
     "capacitor_constant_current_charge_time",
     "capacitor_constant_current_discharge_time",
+    "capacitor_voltage_by_energy",
 ]
 
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
@@ -44,7 +45,6 @@ def capacitor_energy(capacitance, voltage) -> Unit("J"):
     voltage = normalize_numeric(voltage)
     return 0.5 * capacitance * np.square(voltage)
 
-
 def capacitor_charge(capacitance, voltage) -> Unit("C"):
     """
     Compute the total charge stored in a capacitor given:
@@ -55,6 +55,21 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     capacitance = normalize_numeric(capacitance)
     voltage = normalize_numeric(voltage)
     return capacitance * voltage
+
+def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V") -> Unit("V"):
+    """
+    Compute the voltage of a capacitor given:
+    - The capacitance in farads
+    - The energy stored in joules
+    The voltage is returned in volts.
+    """
+    capacitance = normalize_numeric(capacitance)
+    energy = normalize_numeric(energy)
+    starting_voltage = normalize_numeric(starting_voltage)
+    # Compute starting energy
+    starting_energy = capacitor_energy(capacitance, starting_voltage)
+    # Compute voltage
+    return np.sqrt(2 * (energy + starting_energy) / capacitance)
 
 def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V") -> Unit("s"):
     """

@@ -48,4 +48,30 @@ class TestCapacitors(unittest.TestCase):
         # Check with nonzero target voltage (half voltage => half time)
         charge_time = capacitor_constant_current_discharge_time(capacitance, voltage, current, target_voltage=voltage/2)
         self.assertAlmostEqual(charge_time, expected_time/2, places=2)
+    
+    def test_capacitor_voltage_by_energy(self):
+        # Basic test with zero starting voltage
+        capacitance = 1.5  # F
+        voltage = 5.0     # V
+        energy = capacitor_energy(capacitance, voltage)
+        calculated_voltage = capacitor_voltage_by_energy(capacitance, energy)
+        self.assertAlmostEqual(calculated_voltage, voltage, places=10)
         
+        # Test with non-zero starting voltage
+        starting_voltage = 2.0  # V
+        # Calculate additional energy needed to reach target voltage
+        additional_energy = capacitor_energy(capacitance, voltage) - capacitor_energy(capacitance, starting_voltage)
+        calculated_voltage = capacitor_voltage_by_energy(capacitance, additional_energy, starting_voltage)
+        self.assertAlmostEqual(calculated_voltage, voltage, places=10)
+        
+        # Test with engineering notation
+        energy = capacitor_energy("100 mF", "5.0 V")
+        calculated_voltage = capacitor_voltage_by_energy("100 mF", energy)
+        self.assertAlmostEqual(calculated_voltage, 5.0, places=10)
+        
+        # Test with zero energy (should return starting_voltage)
+        calculated_voltage = capacitor_voltage_by_energy(capacitance, 0, "3V")
+        self.assertAlmostEqual(calculated_voltage, 3.0, places=10)
+        
+        # Test with auto_format
+        self.assertEqual(auto_format(capacitor_voltage_by_energy, "1.5 F", "18.75 J"), "5.00 V")
