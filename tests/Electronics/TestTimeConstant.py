@@ -28,6 +28,7 @@ class TestTimeConstant(unittest.TestCase):
         # Test RC cutoff frequency calculation
         # fc = 1 / (2π × R × C)
         # For R=1kΩ, C=1µF: fc = 1/(2π × 1000 × 1e-6) ≈ 159.15 Hz
+        # Verified using http://sim.okawa-denshi.jp/en/CRtool.php
         assert_approx_equal(rc_cutoff_frequency(1000, 1e-6), 159.154943, significant=6)
         assert_approx_equal(rc_cutoff_frequency("1kΩ", "1µF"), 159.154943, significant=6)
         
