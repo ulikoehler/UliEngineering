@@ -19,7 +19,6 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
-from typing import Tuple
 import math
 import re
 import itertools
@@ -33,7 +32,8 @@ from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_li
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
+           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan",
+           "normalize_numeric_args"]
 
 UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
@@ -680,3 +680,35 @@ def auto_format(v, *args, **kwargs):
 
 def auto_print(*args, **kwargs):
     return EngineerIO.instance.auto_print(*args, **kwargs)
+
+def normalize_numeric_args(func):
+    """
+    Decorator that applies normalize_numeric to all arguments (args & kwargs) 
+    of the decorated function before calling it.
+    
+    This allows functions to accept engineer notation strings and automatically
+    convert them to numeric values.
+    
+    Example:
+        @normalize_numeric_args
+        def add(a, b):
+            return a + b
+        
+        result = add("1.5k", "2.3k")  # Will convert to add(1500.0, 2300.0)
+    """
+    def wrapper(*args, **kwargs):
+        # Normalize all positional arguments
+        normalized_args = tuple(normalize_numeric(arg) for arg in args)
+        
+        # Normalize all keyword arguments
+        normalized_kwargs = {key: normalize_numeric(value) for key, value in kwargs.items()}
+        
+        # Call the original function with normalized arguments
+        return func(*normalized_args, **normalized_kwargs)
+    
+    # Preserve function metadata
+    wrapper.__name__ = func.__name__
+    wrapper.__doc__ = func.__doc__
+    wrapper.__annotations__ = func.__annotations__
+    
+    return wrapper

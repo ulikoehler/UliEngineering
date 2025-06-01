@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
@@ -33,7 +33,7 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
     tdelta = temp - nominal_lifetime_temperature
     return nominal_lifetime * 2**(-(tdelta/A))
 
-
+@normalize_numeric_args
 def capacitor_energy(capacitance, voltage) -> Unit("J"):
     """
     Compute the total energy stored in a capacitor given:
@@ -41,10 +41,9 @@ def capacitor_energy(capacitance, voltage) -> Unit("J"):
     - The voltage the capacitor is charged to
     The energy is returned as joules.
     """
-    capacitance = normalize_numeric(capacitance)
-    voltage = normalize_numeric(voltage)
     return 0.5 * capacitance * np.square(voltage)
 
+@normalize_numeric_args
 def capacitor_charge(capacitance, voltage) -> Unit("C"):
     """
     Compute the total charge stored in a capacitor given:
@@ -52,10 +51,9 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     - The voltage the capacitor is charged to
     The charge is returned in coulombs.
     """
-    capacitance = normalize_numeric(capacitance)
-    voltage = normalize_numeric(voltage)
     return capacitance * voltage
 
+@normalize_numeric_args
 def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V") -> Unit("V"):
     """
     Compute the voltage of a capacitor given:
@@ -63,14 +61,12 @@ def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V") -> U
     - The energy stored in joules
     The voltage is returned in volts.
     """
-    capacitance = normalize_numeric(capacitance)
-    energy = normalize_numeric(energy)
-    starting_voltage = normalize_numeric(starting_voltage)
     # Compute starting energy
     starting_energy = capacitor_energy(capacitance, starting_voltage)
     # Compute voltage
     return np.sqrt(2 * (energy + starting_energy) / capacitance)
 
+@normalize_numeric_args
 def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V") -> Unit("s"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
@@ -84,15 +80,12 @@ def capacitor_constant_current_discharge_time(capacitance, initial_voltage, curr
     
     Returns: The time in seconds.
     """
-    capacitance = normalize_numeric(capacitance)
-    initial_voltage = normalize_numeric(initial_voltage)
-    target_voltage = normalize_numeric(target_voltage)
-    current = normalize_numeric(current)
     # Use charge function with "negative current"
     # Since from the view of the charge function, its generating a negative
     # voltage charge, this will result in a positive time
     return capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage)
-    
+
+@normalize_numeric_args
 def capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage="0V") -> Unit("s"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
@@ -106,12 +99,9 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     
     Returns: The time in seconds.
     """
-    capacitance = normalize_numeric(capacitance)
-    initial_voltage = normalize_numeric(initial_voltage)
-    target_voltage = normalize_numeric(target_voltage)
-    current = normalize_numeric(current)
     return capacitance * (initial_voltage - target_voltage) / current
 
+@normalize_numeric_args
 def parallel_plate_capacitors_capacitance(area, distance, epsilon) -> Unit("F"):
     """
     Compute the capacitance of two parallel plate capacitors in parallel
@@ -125,7 +115,4 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon) -> Unit("F"):
     Returns:
     The capacitance of the parallel plate capacitors in farads (F).
     """
-    area = normalize_numeric(area)
-    distance = normalize_numeric(distance)
-    epsilon = normalize_numeric(epsilon)
     return epsilon * area / distance
