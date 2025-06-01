@@ -185,8 +185,8 @@ def _default_unit_prefixes():
 _numeric_allowed = set("+0123456789-e.")
 
 class EngineerIO(object):
-    instance: "EngineerIO" = EngineerIO()
-    length_instance: "EngineerIO" = EngineerIO(units=_default_units(include_m=True))
+    instance: Optional["EngineerIO"] = None
+    length_instance: Optional["EngineerIO"] = None
     """
     Default instance, used for global functions. Initialized on first use
 
@@ -576,6 +576,10 @@ class EngineerIO(object):
             return np.vectorize(self.normalize_timespan)(arg)
         else:
             raise ValueError(f"Unsupported type for normalization: {type(arg)}")
+
+# Initialize global instance
+EngineerIO.instance = EngineerIO()
+EngineerIO.length_instance = EngineerIO(units=_default_units(include_m=True))
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """
