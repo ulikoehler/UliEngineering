@@ -3,7 +3,7 @@
 """
 Crystal oscillator utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 
 __all__ = [
@@ -15,6 +15,7 @@ __all__ = [
     "crystal_deviation_seconds_per_year"
 ]
 
+@normalize_numeric_args
 def load_capacitors(cload, cpin="3 pF", cstray="2 pF") -> Unit("F"):
     """
     Compute the load capacitors which should be used for a given crystal,
@@ -38,14 +39,12 @@ def load_capacitors(cload, cpin="3 pF", cstray="2 pF") -> Unit("F"):
     cpin : float
         The capacitance of one of the oscillator pins of the connected device
     """
-    cload = normalize_numeric(cload)
-    cstray = normalize_numeric(cstray)
-    cpin = normalize_numeric(cpin)
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
     # => solve A = ((B+P)*(B+P)) / ((B+P)+(B+P)) + C for B
     return (2 * (cload - cstray)) - cpin
 
+@normalize_numeric_args
 def actual_load_capacitance(cext, cpin="3 pF", cstray="2 pF") -> Unit("F"):
     """
     Compute the actual load capacitance of a crystal given:
@@ -73,20 +72,18 @@ def actual_load_capacitance(cext, cpin="3 pF", cstray="2 pF") -> Unit("F"):
     cpin : float
         The capacitance of one of the oscillator pins of the connected device
     """
-    cext = normalize_numeric(cext)
-    cstray = normalize_numeric(cstray)
-    cpin = normalize_numeric(cpin)
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
     # => solve A = ((B+P)*(B+P)) / ((B+P)+(B+P)) + C for B
     ctotal = cext + cpin
     return cstray + ((ctotal * ctotal) / (ctotal + ctotal))
 
-def _crystal_deviation_seconds_per_x(deviation, nsecs) -> Unit("s"):
+@normalize_numeric_args
+def _crystal_deviation_seconds_per_x(deviation, n_secs) -> Unit("s"):
     """Internal common function"""
-    deviation = normalize_numeric(deviation) # ppm -> e-6
-    return deviation * nsecs
+    return deviation * n_secs
 
+@normalize_numeric_args
 def crystal_deviation_seconds_per_minute(deviation) -> Unit("s"):
     """
     Compute how many seconds a crystal with given ppm
@@ -103,6 +100,7 @@ def crystal_deviation_seconds_per_minute(deviation) -> Unit("s"):
     """
     return _crystal_deviation_seconds_per_x(deviation, 60)
 
+@normalize_numeric_args
 def crystal_deviation_seconds_per_hour(deviation) -> Unit("s"):
     """
     Compute how many seconds a crystal with given ppm
@@ -119,6 +117,7 @@ def crystal_deviation_seconds_per_hour(deviation) -> Unit("s"):
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600)
 
+@normalize_numeric_args
 def crystal_deviation_seconds_per_day(deviation) -> Unit("s"):
     """
     Compute how many seconds a crystal with given ppm
@@ -135,6 +134,7 @@ def crystal_deviation_seconds_per_day(deviation) -> Unit("s"):
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24)
     
+@normalize_numeric_args
 def crystal_deviation_seconds_per_month(deviation) -> Unit("s"):
     """
     Compute how many seconds a crystal with given ppm
@@ -151,6 +151,7 @@ def crystal_deviation_seconds_per_month(deviation) -> Unit("s"):
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24*31)
 
+@normalize_numeric_args
 def crystal_deviation_seconds_per_year(deviation) -> Unit("s"):
     """
     Compute how many seconds a crystal with given ppm
