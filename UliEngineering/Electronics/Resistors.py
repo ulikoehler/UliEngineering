@@ -116,7 +116,7 @@ def resistor_range(multiplicator, sequence=e96):
 
 def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     """
-    Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
+    Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
     exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
@@ -124,9 +124,9 @@ def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
 @normalize_numeric_args
 def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
     """
-    Get all standard resistor values in Ω between min_resistor and max_resistor 
+    Get all standard resistor values in Ω between min_resistor and max_resistor 
     
-    :return: list of resistor values in Ω
+    :return: list of resistor values in Ω
     """
     min_resistor = normalize_numeric(min_resistor)
     max_resistor = normalize_numeric(max_resistor)

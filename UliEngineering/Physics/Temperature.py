@@ -10,7 +10,7 @@ from UliEngineering.Exceptions import InvalidUnitException
 try:
     from scipy.constants import zero_Celsius
 except:
-    zero_Celsius = 273.15 # Defined to that value
+    zero_Celsius = 273.15 # Defined constant for 0 °C in Kelvin
 
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",

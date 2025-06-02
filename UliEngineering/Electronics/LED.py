@@ -7,7 +7,7 @@ Usage example:
 >>> from UliEngineering.Electronics.OpAmp import summing_amplifier_noninv
 >>> # Example: sum 2.5V and 0.5V with a total sum-referred gain of 1.0
 >>> formatValue(summing_amplifier_noninv(
-        "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
+        "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
@@ -44,7 +44,7 @@ class LEDForwardVoltages():
     White = 4.0
 
 @normalize_numeric_args
-def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
+def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
     """
     Computes the required series resistor for operating a LED with
     forward voltage [vforward] at current [ioperating] on a

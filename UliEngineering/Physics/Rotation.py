@@ -29,7 +29,7 @@ rpm_to_rps = rpm_to_Hz
 @normalize_numeric_args
 def angular_speed(speed: Unit("Hz")) -> Unit("1/s"):
     """
-    Compute ω, the angular speed of a centrifugal system
+    Compute Ω, the angular speed of a centrifugal system
     """
     return 2*np.pi*speed
 

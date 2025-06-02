@@ -55,7 +55,7 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
 
 def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %", tmin="-40 °C", tmax="85 °C", tref="25 °C", significant_digits=4):
     """
-    Given a component which has a nominal value (e.g. "1 kΩ")
+    Given a component which has a nominal value (e.g. "1 kΩ")
     at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
 
     Computes the mininimum and maximum possible value of that component
@@ -81,7 +81,7 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     Keyword arguments
     -----------------
     nominal : number or string
-        The nominal value of the component e.g. 1023 or "1.023 kΩ"
+        The nominal value of the component e.g. 1023 or "1.023 kΩ"
     coefficient : number or string or 2-tuple (see above)
         The temperature coefficient of the component per °C
         e.g. "100 ppm", "1 %" or 100e-6
@@ -106,7 +106,7 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     Returns
     -------
     A ValueRange() instance containing strings with the correct unit, if any.
-    Example: ValueRange("99.5 Ω", "100.5 Ω")
+    Example: ValueRange("99.5 Ω", "100.5 Ω")
     Use .min and .max to get the min/max value
     """
     # NOTE: These will be in Kelvin after normalization!

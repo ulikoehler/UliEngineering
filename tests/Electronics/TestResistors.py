@@ -10,7 +10,7 @@ class TestResistors(unittest.TestCase):
     def test_parallel_resistors(self):
         assert_approx_equal(parallel_resistors(1000.0, 1000.0), 500.0)
         assert_approx_equal(parallel_resistors(1000.0, 1000.0, 500.0), 250.0)
-        assert_approx_equal(parallel_resistors("1kΩ", "1kΩ"), 500.0)
+        assert_approx_equal(parallel_resistors("1kΩ", "1kΩ"), 500.0)
         
     def test_parallel_resistors_special_cases(self):
         assert_approx_equal(parallel_resistors(), np.inf)
@@ -21,14 +21,14 @@ class TestResistors(unittest.TestCase):
     def test_series_resistors(self):
         assert_approx_equal(series_resistors(1000.0, 1000.0), 2000.0)
         assert_approx_equal(series_resistors(1000.0, 1000.0, 500.0), 2500.0)
-        assert_approx_equal(series_resistors("1kΩ", "1kΩ"), 2000.0)
+        assert_approx_equal(series_resistors("1kΩ", "1kΩ"), 2000.0)
 
     def test_standard_resistors(self):
         self.assertTrue(len(list(standard_resistors())) > 500)
         
     def test_standard_resistors_in_range(self):
-        resistors = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
-        resistors2 = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
+        resistors = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
+        resistors2 = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
         self.assertEqual(resistors, resistors2)
         
         self.assertTrue(len(list(resistors)) > 500)
@@ -41,9 +41,9 @@ class TestResistors(unittest.TestCase):
     def test_current_through_resistor(self):
         assert_approx_equal(current_through_resistor("1k", "1V"), 1e-3)
         assert_approx_equal(current_through_resistor(1e3, 2), 2e-3)
-        assert_approx_equal(current_through_resistor("1Ω", "2V"), 2)
+        assert_approx_equal(current_through_resistor("1Ω", "2V"), 2)
 
     def test_resistor_by_voltage_and_current(self):
         assert_approx_equal(resistor_by_voltage_and_current("2.5 V", "1 uA"), 2.5e6)
-        self.assertEqual(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
+        self.assertEqual(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
 

@@ -10,9 +10,9 @@ import unittest
 class TestValueRangeOverTolerance(unittest.TestCase):
     def test_value_range_over_tolerance(self):
         # Test with simple ppm input
-        self.assertEqual(str(value_range_over_tolerance("1 kΩ", "1 %")),
-            str(ValueRange(990, 1010, "Ω"))
+        self.assertEqual(str(value_range_over_tolerance("1 kΩ", "1 %")),
+            str(ValueRange(990, 1010, "Ω"))
         )
-        self.assertEqual(str(value_range_over_tolerance("1 kΩ", "1000 ppm")),
-            str(ValueRange(999., 1001.0, "Ω"))
+        self.assertEqual(str(value_range_over_tolerance("1 kΩ", "1000 ppm")),
+            str(ValueRange(999., 1001.0, "Ω"))
         )

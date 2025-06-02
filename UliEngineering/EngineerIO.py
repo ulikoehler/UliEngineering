@@ -5,17 +5,17 @@ A python script to normalize a wide variety of value notations
 from electronics engineering.
 
 Examples of valid notations include:
-    1,234.56kΩ
+    1,234.56kΩ
     1k234
-    1k234Ω
-    1,234.56Ω
+    1k234Ω
+    1,234.56Ω
     4µA
     4e6A
     4e6nA
 
 Usage example:
-    >>> print(normalize_engineer_notation("1µ234 Ω"))
-    (1.234e-6, 'Ω')
+    >>> print(normalize_engineer_notation("1µ234 Ω"))
+    (1.234e-6, 'Ω')
 
 Originally published at techoverflow.net.
 """

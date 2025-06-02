@@ -7,7 +7,7 @@ Usage example:
 >>> from UliEngineering.Electronics.OpAmp import summing_amplifier_noninv
 >>> # Example: sum 2.5V and 0.5V with a total sum-referred gain of 1.0
 >>> formatValue(summing_amplifier_noninv(
-        "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
+        "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
 from UliEngineering.EngineerIO import normalize_numeric

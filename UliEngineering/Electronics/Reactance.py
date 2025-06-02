@@ -12,7 +12,7 @@ from UliEngineering.Units import Unit
 __all__ = ["capacitive_reactance", "inductive_reactance"]
 
 @normalize_numeric_args
-def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
+def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
@@ -20,7 +20,7 @@ def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
 
 
 @normalize_numeric_args
-def inductive_reactance(l, f=1000.0) -> Unit("Ω"):
+def inductive_reactance(l, f=1000.0) -> Unit("Ω"):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """
