@@ -10,7 +10,7 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.Units import Unit
 from UliEngineering.Electronics.Resistors import resistor_current_by_power
@@ -43,6 +43,7 @@ class LEDForwardVoltages():
     Blue = 2.9
     White = 4.0
 
+@normalize_numeric_args
 def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
     """
     Computes the required series resistor for operating a LED with
@@ -51,15 +52,13 @@ def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
 
     Tolerances are not taken into account.
     """
-    vsupply = normalize_numeric(vsupply)
-    ioperating = normalize_numeric(ioperating)
-    vforward = normalize_numeric(vforward)
     if vforward > vsupply:
         raise OperationImpossibleException(
             f"Can't operate LED with forward voltage {vforward} on {vsupply} supply"
         )
     return (vsupply - vforward) / ioperating
 
+@normalize_numeric_args
 def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     """
     Computes the required series resistor power for operating a LED with
@@ -71,9 +70,6 @@ def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
  
     Tolerances are not taken into account.
     """
-    vsupply = normalize_numeric(vsupply)
-    ioperating = normalize_numeric(ioperating)
-    vforward = normalize_numeric(vforward)
     if vforward > vsupply:
         raise OperationImpossibleException(
             f"Can't operate LED with forward voltage {vforward} on {vsupply} supply"
@@ -82,6 +78,7 @@ def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     resistor_value = led_series_resistor(vsupply, ioperating, vforward)
     return resistor_value * ioperating * ioperating
 
+@normalize_numeric_args
 def led_series_resistor_maximum_current(resistance, power_rating) -> Unit("A"):
     """
     Compute the maximum current through a LED + series resistor combination,
@@ -96,6 +93,7 @@ def led_series_resistor_maximum_current(resistance, power_rating) -> Unit("A"):
     current = resistor_current_by_power(resistance, power_rating)
     return current
 
+@normalize_numeric_args
 def led_series_resistor_current(vsupply, resistance, vforward) -> Unit("A"):
     """
     Compute the current that flows through a LED + series resistor combination
@@ -103,9 +101,6 @@ def led_series_resistor_current(vsupply, resistance, vforward) -> Unit("A"):
 
     Tolerances are not taken into account.
     """
-    vsupply = normalize_numeric(vsupply)
-    resistance = normalize_numeric(resistance)
-    vforward = normalize_numeric(vforward)
     if vforward > vsupply:
         raise OperationImpossibleException(
             f"Can't operate LED with forward voltage {vforward} on {vsupply} supply"

@@ -9,7 +9,7 @@ Originally published at techoverflow.net
 """
 import itertools
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 from collections import namedtuple
 
@@ -43,6 +43,7 @@ e24 = np.asarray([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0,
                   3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1])
 e12 = np.asarray([1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2])
 
+@normalize_numeric_args
 def current_through_resistor(resistor, voltage) -> Unit("A"):
     """
     Compute the current that flows through a resistor
@@ -55,10 +56,9 @@ def current_through_resistor(resistor, voltage) -> Unit("A"):
     voltage : float or Engineer string
         The voltage across the resistor
     """
-    resistor = normalize_numeric(resistor)
-    voltage = normalize_numeric(voltage)
     return voltage / resistor
 
+@normalize_numeric_args
 def voltage_across_resistor(resistor, current) -> Unit("A"):
     """
     Compute the voltage that is dropped across
@@ -71,10 +71,9 @@ def voltage_across_resistor(resistor, current) -> Unit("A"):
     current : float or Engineer string
         The current flowing through the resistor
     """
-    resistor = normalize_numeric(resistor)
-    current = normalize_numeric(current)
     return resistor * current
 
+@normalize_numeric_args
 def power_dissipated_in_resistor_by_current(resistor, current) -> Unit("W"):
     """
     Compute the power that is dissipated in
@@ -88,10 +87,9 @@ def power_dissipated_in_resistor_by_current(resistor, current) -> Unit("W"):
     current : float or Engineer string
         The current flowing through the resistor
     """
-    resistor = normalize_numeric(resistor)
-    current = normalize_numeric(current)
     return np.abs(resistor * current * current)
 
+@normalize_numeric_args
 def power_dissipated_in_resistor_by_voltage(resistor, voltage) -> Unit("W"):
     """
     Compute the power that is dissipated in
@@ -105,7 +103,6 @@ def power_dissipated_in_resistor_by_voltage(resistor, voltage) -> Unit("W"):
     current : float or Engineer string
         The current flowing through the resistor
     """
-    resistor = normalize_numeric(resistor)
     voltage = normalize_numeric(voltage)
     current = current_through_resistor(resistor, voltage)
     return np.abs(current * voltage)
@@ -124,7 +121,8 @@ def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
 
-def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
+@normalize_numeric_args
+def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
     """
     Get all standard resistor values in Ω between min_resistor and max_resistor 
     
@@ -137,30 +135,34 @@ def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequ
         if min_resistor <= resistor <= max_resistor
     ]
 
-def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
+@normalize_numeric_args
+def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the standard reistor value with the minimal difference to the given value
     """
     return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
 
-def next_higher_resistor(value, sequence=e96) -> Unit("Ω"):
+@normalize_numeric_args
+def next_higher_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the next higher standard resistor value
     """
     return min((r for r in standard_resistors(sequence=sequence) if r > value), default=None)
 
-def next_lower_resistor(value, sequence=e96) -> Unit("Ω"):
+@normalize_numeric_args
+def next_lower_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the next lower standard resistor value
     """
     return max((r for r in standard_resistors(sequence=sequence) if r < value), default=None)
 
-def parallel_resistors(*args) -> Unit("Ω"):
+@normalize_numeric_args
+def parallel_resistors(*args) -> Unit("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
     """
-    resistors = np.asarray(list(map(normalize_numeric, args)))
+    resistors = np.asarray(list(args))
     # If there is no resistor, the value of the string is infinite Ohms
     if len(resistors) == 0:
         return np.inf
@@ -169,35 +171,34 @@ def parallel_resistors(*args) -> Unit("Ω"):
         return 0.0
     return 1.0 / np.sum(np.reciprocal(resistors.astype(float)))
 
-def series_resistors(*args) -> Unit("Ω"):
+@normalize_numeric_args
+def series_resistors(*args) -> Unit("Ω"):
     """
     Compute the total resistance of n parallel resistors and return
     the value in Ohms.
     """
-    resistors = list(map(normalize_numeric, args))
+    resistors = list(args)
     return sum(resistors)
 
-
-def resistor_by_voltage_and_current(voltage, current) -> Unit("Ω"):
+@normalize_numeric_args
+def resistor_by_voltage_and_current(voltage, current) -> Unit("Ω"):
     """
     Compute the resistance value in Ohms that draws the given amount of
     current if the given voltage is across it.
     """
-    voltage = normalize_numeric(voltage)
-    current = normalize_numeric(current)
     return voltage / current
 
+@normalize_numeric_args
 def resistor_current_by_power(resistor, power) -> Unit("A"):
     """
     Compute the current that flows through a resistor
     given its resistance and the power dissipated in it.
     """
-    resistor = normalize_numeric(resistor)
-    power = normalize_numeric(power)
     return np.sqrt(power / resistor)
 
 ResistorTolerance = namedtuple("ResistorTolerance", ["lower", "nominal", "upper"])
 
+@normalize_numeric_args
 def resistor_tolerance(resistance, tolerance="1%") -> ResistorTolerance:
     """
     Compute the lower, nominal and upper bound of a resistor value

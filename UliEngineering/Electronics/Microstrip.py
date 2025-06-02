@@ -7,7 +7,7 @@ import numpy as np
 import math
 import numpy as np
 from collections import namedtuple
-from UliEngineering.Length import normalize_length
+from UliEngineering.EngineerIO import normalize_numeric_args
 from UliEngineering.Units import Unit
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
@@ -34,7 +34,8 @@ class DielectricHeight():
     https://www.multi-circuit-boards.eu/en/pcb-design-aid/layer-buildup/standard-buildup.html
     """
 
-def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
+@normalize_numeric_args
+def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
     """
     Compute the impedance of a single-eded
     outer-layer microstrip using its width, height and
@@ -56,9 +57,6 @@ def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=Relativ
     e_r : number or engineer string
         Relative permittivity of the dielectric
     """
-    w = normalize_length(w)
-    h = normalize_length(h)
-    t = normalize_length(t)
     # Formula from https://www.allaboutcircuits.com/tools/microstrip-impedance-calculator/
     Y0 = np.square(t / (w * math.pi + 1.1 * t * math.pi))
     Y1 = math.sqrt(np.square(t / h) + Y0)
@@ -78,7 +76,8 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
     "odd_mode_impedance"
 ])
 
-def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
+@normalize_numeric_args
+def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
     """
     Compute the impedance of a differential (edge-coupled)
     outer-layer microstrip using its width, height, the distance
@@ -111,10 +110,6 @@ def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 �
     """
     # Formula from https://www.allaboutcircuits.com/tools/edge-coupled-microstrip-impedance-calculator/
     # Secondary source: https://www.eeweb.com/tools/edge-coupled-microstrip-impedance
-    w = normalize_length(w)
-    h = normalize_length(h)
-    d = normalize_length(d)
-    t = normalize_length(t)
     # NOTE: Uppercase first-letter variables are just utilitarian
     # and do not have a separate formula on the paper
     # Simple variables & parameters

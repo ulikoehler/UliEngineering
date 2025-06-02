@@ -4,13 +4,14 @@
 Utilities for computing temperature coefficients
 and their effects
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize
+from UliEngineering.EngineerIO import normalize_numeric_args, normalize
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
 
 __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
+@normalize_numeric_args
 def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°C"):
     """
     Given a component with a nominal value (nominal) at a reference temperature (tref)
@@ -22,7 +23,7 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
     Keyword arguments
     -----------------
     nominal : number or string
-        The nominal value of the component e.g. 1023 or "1.023 kΩ"
+        The nominal value of the component e.g. 1023 or "1.023 kΩ"
     coefficient : number or string
         The temperature coefficient of the component per °C
         e.g. "100 ppm", "1 %" or 100e-6
@@ -43,9 +44,7 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
     A unit-less value representing the value of the component at the given temperature 
     """
     # Note: MIL-STD-202: R-T characteristic: (R2 - R1)/ (R1 * (t2 - t1))
-    # Normalize all values
-    nominal = normalize_numeric(nominal)
-    coefficient = normalize_numeric(coefficient)
+    # Normalize temperatures separately (they need special handling)
     temperature = normalize_temperature(temperature)
     tref = normalize_temperature(tref)
     # Compute (t2 - t1). Might be negative.
@@ -141,4 +140,4 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     max_temp = max(args)
  
     return ValueRange(min_temp, max_temp, unit, significant_digits)
-    
+

@@ -3,7 +3,7 @@
 """
 Electronic filter and time constant utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 from collections import namedtuple
 import numpy as np
@@ -18,6 +18,7 @@ __all__ = [
     "rlc_bandwidth"
 ]
 
+@normalize_numeric_args
 def lc_cutoff_frequency(l, c) -> Unit("Hz"):
     """
     Compute the resonance frequency of an LC oscillator circuit
@@ -33,10 +34,9 @@ def lc_cutoff_frequency(l, c) -> Unit("Hz"):
     c : float
         The capacitance in Farad
     """
-    l = normalize_numeric(l)
-    c = normalize_numeric(c)
     return 1. / (2 * np.pi * np.sqrt(l * c))
 
+@normalize_numeric_args
 def rc_cutoff_frequency(r, c) -> Unit("Hz"):
     """
     Compute the corner frequency of an RC filter given the resistance
@@ -49,12 +49,11 @@ def rc_cutoff_frequency(r, c) -> Unit("Hz"):
     c : float
         The capacitance in Farad
     """
-    r = normalize_numeric(r)
-    c = normalize_numeric(c)
     return 1. / (2 * np.pi * r * c)
 
 PoleAndZero = namedtuple("PoleAndZero", ["pole", "zero"])
 
+@normalize_numeric_args
 def rc_feedforward_pole_and_zero(r1, r2, cff):
     """
     Compute the pole and zero of a resistor divider with a feedforward capacitor.
@@ -75,14 +74,12 @@ def rc_feedforward_pole_and_zero(r1, r2, cff):
     cff : float
         The capacitance of the feedforward path in Farad
     """
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    cff = normalize_numeric(cff)
     return PoleAndZero(
         zero=rc_cutoff_frequency(r1, cff),
         pole=(1./r1 + 1./r2)/(2*np.pi*cff)
     )
 
+@normalize_numeric_args
 def rc_time_constant(resistance, capacitance) -> Unit("s"):
     """
     Calculate the time constant (τ) of an RC circuit.
@@ -105,10 +102,9 @@ def rc_time_constant(resistance, capacitance) -> Unit("s"):
     float
         Time constant in seconds
     """
-    resistance = normalize_numeric(resistance)
-    capacitance = normalize_numeric(capacitance)
     return resistance * capacitance
 
+@normalize_numeric_args
 def rl_time_constant(resistance, inductance) -> Unit("s"):
     """
     Calculate the time constant (τ) of an RL circuit.
@@ -131,10 +127,9 @@ def rl_time_constant(resistance, inductance) -> Unit("s"):
     float
         Time constant in seconds
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
     return inductance / resistance
 
+@normalize_numeric_args
 def rl_cutoff_frequency(resistance, inductance) -> Unit("Hz"):
     """
     Calculate the cutoff frequency (fc) of an RL circuit.
@@ -156,10 +151,9 @@ def rl_cutoff_frequency(resistance, inductance) -> Unit("Hz"):
     float
         Cutoff frequency in Hz
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
     return resistance / (2 * np.pi * inductance)
 
+@normalize_numeric_args
 def rc_charge_time(resistance, capacitance, initial_voltage, final_voltage, target_voltage) -> Unit("s"):
     """
     Calculate the time required for a capacitor to charge from initial_voltage
@@ -185,8 +179,6 @@ def rc_charge_time(resistance, capacitance, initial_voltage, final_voltage, targ
     float
         Time in seconds
     """
-    resistance = normalize_numeric(resistance)
-    capacitance = normalize_numeric(capacitance)
     initial_voltage = normalize_numeric(initial_voltage)
     final_voltage = normalize_numeric(final_voltage)
     target_voltage = normalize_numeric(target_voltage)
@@ -198,6 +190,7 @@ def rc_charge_time(resistance, capacitance, initial_voltage, final_voltage, targ
     
     return -resistance * capacitance * np.log((target_voltage - final_voltage) / (initial_voltage - final_voltage))
 
+@normalize_numeric_args
 def rc_discharge_time(resistance, capacitance, initial_voltage, target_voltage) -> Unit("s"):
     """
     Calculate the time required for a capacitor to discharge from initial_voltage
@@ -223,6 +216,7 @@ def rc_discharge_time(resistance, capacitance, initial_voltage, target_voltage) 
     """
     return rc_charge_time(resistance, capacitance, initial_voltage, 0.0, target_voltage)
 
+@normalize_numeric_args
 def rl_current_rise_time(resistance, inductance, final_current, target_current) -> Unit("s"):
     """
     Calculate the time required for current through an inductor to rise
@@ -246,8 +240,6 @@ def rl_current_rise_time(resistance, inductance, final_current, target_current) 
     float
         Time in seconds
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
     final_current = normalize_numeric(final_current)
     target_current = normalize_numeric(target_current)
     
@@ -258,6 +250,7 @@ def rl_current_rise_time(resistance, inductance, final_current, target_current) 
     
     return -(inductance / resistance) * np.log((final_current - target_current) / final_current)
 
+@normalize_numeric_args
 def rl_current_fall_time(resistance, inductance, initial_current, target_current) -> Unit("s"):
     """
     Calculate the time required for current through an inductor to fall
@@ -281,8 +274,6 @@ def rl_current_fall_time(resistance, inductance, initial_current, target_current
     float
         Time in seconds
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
     initial_current = normalize_numeric(initial_current)
     target_current = normalize_numeric(target_current)
     
@@ -293,6 +284,7 @@ def rl_current_fall_time(resistance, inductance, initial_current, target_current
     
     return -(inductance / resistance) * np.log(target_current / initial_current)
 
+@normalize_numeric_args
 def rc_step_response(resistance, capacitance, time, initial_voltage=0, final_voltage=1) -> Unit("V"):
     """
     Calculate the voltage across a capacitor at a given time after a step input.
@@ -317,15 +309,10 @@ def rc_step_response(resistance, capacitance, time, initial_voltage=0, final_vol
     float
         Voltage across capacitor at time t in Volts
     """
-    resistance = normalize_numeric(resistance)
-    capacitance = normalize_numeric(capacitance)
-    time = normalize_numeric(time)
-    initial_voltage = normalize_numeric(initial_voltage)
-    final_voltage = normalize_numeric(final_voltage)
-    
     tau = resistance * capacitance
     return final_voltage + (initial_voltage - final_voltage) * np.exp(-time / tau)
 
+@normalize_numeric_args
 def rl_step_response(resistance, inductance, time, final_current=1) -> Unit("A"):
     """
     Calculate the current through an inductor at a given time after a step input.
@@ -348,14 +335,10 @@ def rl_step_response(resistance, inductance, time, final_current=1) -> Unit("A")
     float
         Current through inductor at time t in Amperes
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
-    time = normalize_numeric(time)
-    final_current = normalize_numeric(final_current)
-    
     tau = inductance / resistance
     return final_current * (1 - np.exp(-time / tau))
 
+@normalize_numeric_args
 def rlc_resonant_frequency(inductance, capacitance) -> Unit("Hz"):
     """
     Calculate the resonant frequency of an RLC circuit.
@@ -374,10 +357,9 @@ def rlc_resonant_frequency(inductance, capacitance) -> Unit("Hz"):
     float
         Resonant frequency in Hz
     """
-    inductance = normalize_numeric(inductance)
-    capacitance = normalize_numeric(capacitance)
     return 1.0 / (2 * np.pi * np.sqrt(inductance * capacitance))
 
+@normalize_numeric_args
 def rlc_quality_factor(resistance, inductance, capacitance) -> float:
     """
     Calculate the quality factor (Q) of an RLC circuit.
@@ -398,11 +380,9 @@ def rlc_quality_factor(resistance, inductance, capacitance) -> float:
     float
         Quality factor (dimensionless)
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
-    capacitance = normalize_numeric(capacitance)
     return (1.0 / resistance) * np.sqrt(inductance / capacitance)
 
+@normalize_numeric_args
 def rlc_damping_ratio(resistance, inductance, capacitance) -> float:
     """
     Calculate the damping ratio (ζ) of an RLC circuit.
@@ -426,11 +406,9 @@ def rlc_damping_ratio(resistance, inductance, capacitance) -> float:
         ζ = 1: critically damped  
         ζ > 1: overdamped
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
-    capacitance = normalize_numeric(capacitance)
     return (resistance / 2.0) * np.sqrt(capacitance / inductance)
 
+@normalize_numeric_args
 def rlc_bandwidth(resistance, inductance) -> Unit("Hz"):
     """
     Calculate the 3dB bandwidth of an RLC circuit.
@@ -449,6 +427,4 @@ def rlc_bandwidth(resistance, inductance) -> Unit("Hz"):
     float
         Bandwidth in Hz
     """
-    resistance = normalize_numeric(resistance)
-    inductance = normalize_numeric(inductance)
     return resistance / (2 * np.pi * inductance)

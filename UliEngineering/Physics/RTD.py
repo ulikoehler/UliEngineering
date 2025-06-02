@@ -16,7 +16,7 @@ For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 from UliEngineering.Units import Unit
 import functools
 from collections import namedtuple
@@ -36,13 +36,14 @@ pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
                              1.80282972e-03, -1.61875985e-01, 4.84112370e+00])
 
 
-def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
+def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
     """
     Compute the PTx resistance at a given temperature.
     The reference for the test code is a DIN PT1000.
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
+    r0 = normalize_numeric(r0)
     t = normalize_temperature_celsius(t)
     A, B = standard.a, standard.b
     # C := 0 for t > 0, else std.c. This also works for numpy arrays
@@ -53,6 +54,7 @@ def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
 
+@normalize_numeric_args
 def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
     """
     Compute the PTx temperature at a given temperature.
@@ -64,7 +66,6 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
-    r = normalize_numeric(r)
     A, B = standard.a, standard.b
     # Select
     if poly is None:
@@ -83,7 +84,7 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
     return t
 
 
-def checkCorrectionPolynomialQuality(r0, reftemp, poly):
+def check_correction_polynomial_quality(r0, reftemp, poly):
     """
     Get a difference array for a given correction polynomial.
     Return (resistances, diffarray, peak-to-peak scalar)
@@ -95,7 +96,7 @@ def checkCorrectionPolynomialQuality(r0, reftemp, poly):
     quality = np.max([np.abs(tempdiff.max()), np.abs(tempdiff.min())])
     return (resistances, tempdiff, quality)
 
-def computeCorrectionPolynomial(r0, order=5, n=1000000):
+def compute_correction_polynomial(r0, order=5, n=1000000):
     """
     Compute a correction polynomial that can be applied to the resistance
     to get an additive correction coefficient that approximately corrects
@@ -111,7 +112,7 @@ def computeCorrectionPolynomial(r0, order=5, n=1000000):
     """
     # Compute values with no correct
     reftemp = np.linspace(-200.0, 0.0, n)
-    resistances, tempdiff, _ = checkCorrectionPolynomialQuality(r0, reftemp, poly=noCorrection)
+    resistances, tempdiff, _ = check_correction_polynomial_quality(r0, reftemp, poly=noCorrection)
     # Compute best polynomial
     return np.poly1d(np.polyfit(resistances, tempdiff, order))
 

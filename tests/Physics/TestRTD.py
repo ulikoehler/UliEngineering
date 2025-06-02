@@ -120,15 +120,15 @@ class TestRTDPolynomialComputation(unittest.TestCase):
     def test_optimize_check_polynomial(self):
         # Basically the code from techoverflow.net without matplotlib
         temp = np.linspace(-200.0, 0.0, 1000)
-        x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=noCorrection)
+        x, y, pkdev = check_correction_polynomial_quality(1000.0, temp, poly=noCorrection)
         self.assertEqual(x.shape, temp.shape)
         self.assertEqual(y.shape, temp.shape)
         # Peak deviation w/o correction should be around 2.4 .. 2.5 °C
         assert_allclose(pkdev, 2.45, rtol=0.05)
         # Correct
-        mypoly = computeCorrectionPolynomial(1000.0, n=5000)
+        mypoly = compute_correction_polynomial(1000.0, n=5000)
         self.assertTrue(isinstance(mypoly, np.poly1d))
-        x, y, pkdev = checkCorrectionPolynomialQuality(1000.0, temp, poly=mypoly)
+        x, y, pkdev = check_correction_polynomial_quality(1000.0, temp, poly=mypoly)
         # pkdev should not exceed 0.1 m°C
         assert_array_less([pkdev], [1e-4])
         assert_array_less(y, np.full(y.shape, 1e-4))

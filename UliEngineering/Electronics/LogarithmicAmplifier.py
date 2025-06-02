@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 import numpy as np
 
 __all__ = [
@@ -7,6 +7,7 @@ __all__ = [
     "logarithmic_amplifier_input_current"
 ]
 
+@normalize_numeric_args
 def logarithmic_amplifier_output_voltage(ipd, gain, intercept):
     """
     Compute the logarithmic output voltage of a ADL5303 (probably its more general than that)
@@ -24,11 +25,9 @@ def logarithmic_amplifier_output_voltage(ipd, gain, intercept):
         
     Returns: The output voltage in Volts
     """
-    gain = normalize_numeric(gain)
-    ipd = normalize_numeric(ipd)
-    intercept = normalize_numeric(intercept)
     return gain * np.log10(ipd / intercept)
 
+@normalize_numeric_args
 def logarithmic_amplifier_input_current(vout, gain, intercept):
     """
     Compute the input current based on the output voltage of a logarithmic amplifier
@@ -45,7 +44,4 @@ def logarithmic_amplifier_input_current(vout, gain, intercept):
     intercept : float
         The intercept point (in Amperes)
     """
-    vout = normalize_numeric(vout)
-    gain = normalize_numeric(gain)
-    intercept = normalize_numeric(intercept)
     return intercept * np.power(10, vout / gain)

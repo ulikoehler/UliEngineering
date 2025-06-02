@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO import normalize_numeric, Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, Unit
 
 __all__ = ["Densities", "density_by_volume_and_weight"]
 
 """
 Pre-defined densities for various materials in kg/m³
 """
-Densities = {
+Densities: dict[str, float] = {
     # Various (pure) metals
     "Aluminium": 2700., # Source: https://en.wikipedia.org/wiki/Aluminium
     "Titanium": 4506., # Source: https://en.wikipedia.org/wiki/Titanium
     # Various alloys
     "Brass-CuZn10": 8800., # Source: https://www.metal-rolling-services.com/cuzn10-en
-    "Brass-CuZn10": 8750., # Source: https://www.metal-rolling-services.com/cuzn15-en
+    "Brass-CuZn15": 8750., # Source: https://www.metal-rolling-services.com/cuzn15-en
     "Brass-CuZn30": 8550., # Source: https://www.metal-rolling-services.com/cuzn30-en
     "Brass-CuZn33": 8500., # Source: https://www.metal-rolling-services.com/cuzn33-en
     "Brass-CuZn36": 8450., # Source: https://www.metal-rolling-services.com/cuzn36-en
@@ -52,6 +52,7 @@ Densities = {
     "PEEK": 1320., # Source: https://en.wikipedia.org/wiki/Polyether_ether_ketone
 }
 
+@normalize_numeric_args
 def density_by_volume_and_weight(volume, weight) -> Unit("kg/m³"):
     """
     Calculates the density of a material by its volume and weight.
@@ -68,6 +69,4 @@ def density_by_volume_and_weight(volume, weight) -> Unit("kg/m³"):
     float
         Density of the material in kg/m³.
     """
-    weight = normalize_numeric(weight)
-    volume = normalize_numeric(volume)
     return weight / volume

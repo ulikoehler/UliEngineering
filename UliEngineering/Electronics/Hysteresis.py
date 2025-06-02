@@ -5,7 +5,7 @@ Utilities regarding comparator / opamp hysteresis
 
 For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a.pdf
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 from UliEngineering.Electronics.Resistors import parallel_resistors
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio
 
@@ -17,6 +17,7 @@ __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_resistor"]
 
 
+@normalize_numeric_args
 def hysteresis_threshold_ratios(r1, r2, rh):
     """
     Calculates hysteresis threshold factors for push-pull comparators
@@ -43,10 +44,6 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
     # Compute r1, r2 in parallel with rh
     r1rh = parallel_resistors(r1, rh)
     r2rh = parallel_resistors(r2, rh)
@@ -56,6 +53,7 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     return (thl, thu)
 
 
+@normalize_numeric_args
 def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     """
     Same as hysteresis_threshold_ratios(), but for open-drain comparators.
@@ -71,10 +69,6 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
     # Compute r1, r2 in parallel with rh
     r2rh = parallel_resistors(r2, rh)
     # Compute thresholds
@@ -82,13 +76,13 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     thu = voltage_divider_ratio(r1, r2)
     return (thl, thu)
 
+@normalize_numeric_args
 def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
     """Internal push-pull & open-drain common code"""
-    vcc = normalize_numeric(vcc)
     thl, thu = fn(r1, r2, rh)
     return (thl * vcc, thu * vcc)
 
-
+@normalize_numeric_args
 def hysteresis_threshold_voltages(r1, r2, rh, vcc):
     """
     Same as hysteresis_threshold_ratios(), but calculates actual
@@ -111,6 +105,7 @@ def hysteresis_threshold_voltages(r1, r2, rh, vcc):
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios)
 
+@normalize_numeric_args
 def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     """
     Same as hysteresis_threshold_ratios_opendrain(), but calculates actual
@@ -133,20 +128,16 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios_opendrain)
 
-
+@normalize_numeric_args
 def __hysteresis_threshold_factors(r1, r2, rh, fn):
     """Internal push-pull & open-drain common code"""
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
     # Compute thresholds
     thl, thu = fn(r1, r2, rh)
     # Compute factors
     thnom = voltage_divider_ratio(r1, r2)
     return (thl / thnom, thu / thnom)
 
-
+@normalize_numeric_args
 def hysteresis_threshold_factors(r1, r2, rh):
     """
     Same as hysteresis_threshold_ratios(), but calculates the
@@ -169,7 +160,7 @@ def hysteresis_threshold_factors(r1, r2, rh):
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios)
 
-
+@normalize_numeric_args
 def hysteresis_threshold_factors_opendrain(r1, r2, rh):
     """
     Same as hysteresis_threshold_ratios_opendrain(), but calculates the
@@ -192,7 +183,7 @@ def hysteresis_threshold_factors_opendrain(r1, r2, rh):
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios_opendrain)
 
-
+@normalize_numeric_args
 def hysteresis_resistor(r1, r2, fh=0.05):
     """
     Computes the hysteresis resistor Rh for a given
@@ -219,10 +210,6 @@ def hysteresis_resistor(r1, r2, fh=0.05):
         The deviation factor (e.g. 0.05 for 5% one-sided hysteresis
          deviation from the nominal r1/r2 value)
     """
-    # Normalize inputs
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    fh = normalize_numeric(fh)
     # NOTE: We compute rh for the lower threshold only
     thnom = voltage_divider_ratio(r1, r2)
     ratio_target = thnom * (1. - fh)

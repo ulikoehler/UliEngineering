@@ -2,12 +2,13 @@
 """
 Utilities to compute the power factor
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 from UliEngineering.Units import Unit
 import numpy as np
 
 __all__ = ["power_factor_by_phase_angle"]
 
+@normalize_numeric_args
 def power_factor_by_phase_angle(angle="10°", unit="degrees") -> Unit(""):
     """
     Compute the power factor given the phase angle between current and voltage
@@ -21,7 +22,6 @@ def power_factor_by_phase_angle(angle="10°", unit="degrees") -> Unit(""):
     unit : "degrees", "deg" or "radians", "rad", "radiant"
         The unit to interpret angle as
     """
-    angle = normalize_numeric(angle)
     if unit in ["degrees", "deg"]:
         angle = np.deg2rad(angle)
     elif unit in ["radians", "rad", "radiant"]:

@@ -3,10 +3,8 @@
 """
 Utilities for computing tolerances
 """
-from UliEngineering.Units import Unit
 from UliEngineering.EngineerIO import normalize
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
-from collections import namedtuple
 
 __all__ = ["value_range_over_tolerance"]
 

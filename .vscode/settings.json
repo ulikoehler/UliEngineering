@@ -13,5 +13,6 @@
         "**/*.pyc": true,
         "**/__pycache__": true,
         ".eggs": true
-    }
+    },
+    "idf.pythonInstallPath": "/usr/bin/python3"
 }

@@ -3,7 +3,7 @@
 """
 Utilities for computations related to noise density
 """
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 from UliEngineering.Units import Unit
 import numpy as np
 
@@ -11,6 +11,7 @@ __all__ = [
      'quality_factor', 'resonant_impedance', 'resonant_frequency',
      'resonant_inductance']
 
+@normalize_numeric_args
 def quality_factor(frequency, bandwidth) -> Unit(""):
     """
     Compute the quality factor of a resonant circuit
@@ -23,10 +24,9 @@ def quality_factor(frequency, bandwidth) -> Unit(""):
     >>> quality_factor("8.000 MHz", "1 kHz")
     8000.0
     """
-    frequency = normalize_numeric(frequency)
-    bandwidth = normalize_numeric(bandwidth)
     return frequency / bandwidth
 
+@normalize_numeric_args
 def resonant_impedance(L, C, Q=100.) -> Unit("Ω"):
     """
     Compute the resonant impedance of a resonant circuit
@@ -40,10 +40,9 @@ def resonant_impedance(L, C, Q=100.) -> Unit("Ω"):
     >>> auto_format(resonant_impedance, "100 uH", "10 nF", Q=30.0)
     '3.33 Ω'
     """
-    L = normalize_numeric(L)
-    C = normalize_numeric(C)
     return np.sqrt(L / C) / Q
 
+@normalize_numeric_args
 def resonant_frequency(L, C) -> Unit("Hz"):
     """
     Compute the resonant frequency of a resonant circuit
@@ -58,10 +57,9 @@ def resonant_frequency(L, C) -> Unit("Hz"):
     >>> auto_format(resonant_frequency, "100 uH", "10 nF")
     '159 kHz'
     """
-    L = normalize_numeric(L)
-    C = normalize_numeric(C)
     return 1 / (2 * np.pi * np.sqrt(L * C))
 
+@normalize_numeric_args
 def resonant_inductance(fres, C) -> Unit("H"):
     """
     Compute the inductance of a resonant circuit
@@ -76,6 +74,4 @@ def resonant_inductance(fres, C) -> Unit("H"):
     >>> auto_format(resonant_inductance, "250 kHz", "10 nF")
     '40.5 µH'
     """
-    fres = normalize_numeric(fres)
-    C = normalize_numeric(C)
     return 1 / (4 * np.pi**2 * fres**2 * C)

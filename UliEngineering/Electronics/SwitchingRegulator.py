@@ -3,7 +3,7 @@
 """
 Utilities for computing switching regulator parameters
 """
-from UliEngineering.EngineerIO import normalize_numeric, Unit
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, Unit
 from collections import namedtuple
 
 __all__ = [
@@ -16,6 +16,7 @@ __all__ = [
     "buck_regulator_catch_diode_power",
 ]
 
+@normalize_numeric_args
 def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
     """
     Compute the optimal inductance for use in a buck regulator
@@ -44,25 +45,20 @@ def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H")
     For reference see e.g. TI at https://www.ti.com/lit/ds/symlink/lmr36006.pdf#page=22,
     section 9.2.1.2.4: Inductor Selection.
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
-    frequency = normalize_numeric(frequency)
-    ioutmax = normalize_numeric(ioutmax)
-    K = normalize_numeric(K)
     return ((vin - vout) / (frequency * K * ioutmax)) * (vout/vin)
 
 InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms", "ripple"])
 
+@normalize_numeric_args
 def buck_regulator_duty_cycle(vin, vout) -> float:
     """
     Estimate the duty cycle of a buck regulator
 
     D = Vout/Vin
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
     return vout / vin
 
+@normalize_numeric_args
 def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax) -> Unit("A"):
     """
     Compute the ripple current ΔIL in the inductor
@@ -76,14 +72,10 @@ def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, iou
     
     Returns the ripple current in Amperes
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
-    inductance = normalize_numeric(inductance)
-    frequency = normalize_numeric(frequency)
-    ioutmax = normalize_numeric(ioutmax)
     D = buck_regulator_duty_cycle(vin, vout)
     return (vin - vout) * D / (inductance * frequency)
 
+@normalize_numeric_args
 def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -> InductorCurrent:
     """
     Compute an estimation for the peak, RMS & ripple inductor current.
@@ -103,17 +95,13 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     
     Returns an InductorCurrent namedtuple with the peak and RMS current (unit: Amperes)
     """
-    vin = normalize_numeric(vin)
-    vout = normalize_numeric(vout)
-    inductance = normalize_numeric(inductance)
-    frequency = normalize_numeric(frequency)
-    ioutmax = normalize_numeric(ioutmax)
     D = buck_regulator_duty_cycle(vin, vout)
     ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilpeak = ioutmax + ΔIL / 2
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5
     return InductorCurrent(peak=Ilpeak, rms=Ilrms, ripple=ΔIL)
 
+@normalize_numeric_args
 def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.0) -> Unit("A"):
     """
     Compute the peak inductor current rating
@@ -135,6 +123,7 @@ def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutm
         vin, vout, inductance, frequency, ioutmax
     ).peak * safety_factor
 
+@normalize_numeric_args
 def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
     """
     Compute the RMS inductor current rating
@@ -157,6 +146,7 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     ).rms * safety_factor
     
 
+@normalize_numeric_args
 def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
     """
     Basic output capacitance calculation, based on the formula:
@@ -167,11 +157,9 @@ def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_vo
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 35
     """
-    ripple_current = normalize_numeric(ripple_current)
-    permissible_ripple_voltage = normalize_numeric(permissible_ripple_voltage)
-    frequency = normalize_numeric(frequency)
     return (2 * ripple_current) / (frequency * permissible_ripple_voltage)
 
+@normalize_numeric_args
 def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current):
     """
     Compute the minimum capacitance required for a buck regulator
@@ -184,15 +172,12 @@ def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, o
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 36
     """
-    inductance = normalize_numeric(inductance)
-    nominal_output_voltage = normalize_numeric(nominal_output_voltage)
-    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
-    max_load_current = normalize_numeric(max_load_current)
     # Compute secondary parameters
     peak_output_voltage = nominal_output_voltage + output_voltage_ripple / 2
     # Compute the minimum capacitance
     return inductance * (max_load_current**2 - light_load_current**2) / (peak_output_voltage**2 - nominal_output_voltage**2)
 
+@normalize_numeric_args
 def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current):
     """
     Compute the minimum capacitance required for a buck regulator
@@ -203,11 +188,9 @@ def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_r
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 37
     """
-    switching_frequency = normalize_numeric(switching_frequency)
-    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
-    ripple_current = normalize_numeric(ripple_current)
     return 1 / (8 * switching_frequency) * 1 / (output_voltage_ripple / ripple_current)
 
+@normalize_numeric_args
 def buck_regulator_min_capacitance(
     ripple_current,
     output_voltage_ripple,
@@ -272,6 +255,7 @@ def buck_regulator_min_capacitance(
     # Return the maximum of all calculations
     return max(c1, c2, c3)
 
+@normalize_numeric_args
 def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current):
     """
     Compute the maximum ESR of the output capacitor
@@ -288,10 +272,9 @@ def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_curren
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 38
     """
-    output_voltage_ripple = normalize_numeric(output_voltage_ripple)
-    ripple_current = normalize_numeric(ripple_current)
     return output_voltage_ripple / ripple_current
 
+@normalize_numeric_args
 def buck_regulator_output_capacitor_rms_current(
     input_voltage_max,
     output_voltage,
@@ -310,15 +293,11 @@ def buck_regulator_output_capacitor_rms_current(
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 39
     """
-    input_voltage_max = normalize_numeric(input_voltage_max)
-    output_voltage = normalize_numeric(output_voltage)
-    inductance = normalize_numeric(inductance)
-    switching_frequency = normalize_numeric(switching_frequency)
-    
     return (output_voltage * (input_voltage_max - output_voltage)) / (
         (12**0.5) * input_voltage_max * inductance * switching_frequency
     )
 
+@normalize_numeric_args
 def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF"):
     """
     Compute the minimum required power rating of the catch diode

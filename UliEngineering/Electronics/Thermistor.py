@@ -6,12 +6,11 @@ Thermistor computations
 For reference see e.g.
 https://www.electronics-tutorials.ws/io/thermistors.html
 """
-from UliEngineering.EngineerIO import normalize_engineer_notation, normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
-from UliEngineering.Exceptions import InvalidUnitException
 import numpy as np
-from UliEngineering.Physics.Temperature import zero_Celsius, kelvin_to_celsius
+from UliEngineering.Physics.Temperature import kelvin_to_celsius
 
 
 __all__ = [
@@ -20,6 +19,7 @@ __all__ = [
     "thermistor_resistance",
 ]
 
+@normalize_numeric_args
 def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     """
     Compute the B value of a thermistor given its resistance at two temperatures
@@ -32,15 +32,14 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     
     Returns the B value (unitless)
     """
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    # Normalize to Kelvin
+    # Normalize to Kelvin (temperature needs special handling)
     t1 = normalize_temperature_kelvin(t1)
     t2 = normalize_temperature_kelvin(t2)
     print(t1, t2, r1, r2)
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
+@normalize_numeric_args
 def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("°C"):
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
@@ -55,12 +54,12 @@ def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("
     Returns:
     - Temperature in degrees.
     """
-    resistance = normalize_numeric(resistance)
     R0 = normalize_numeric(R0)
     T0 = normalize_temperature_kelvin(T0)
     temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
     return kelvin_to_celsius(temperature_kelvin)
 
+@normalize_numeric_args
 def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0) -> Unit("Ω"):
     """
     Calculate the resistance of a thermistor given its temperature.

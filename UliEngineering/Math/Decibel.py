@@ -4,7 +4,7 @@ Utilities for FFT computation and visualization
 """
 import numpy as np
 from UliEngineering.Units import Unit
-from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO import normalize_numeric_args
 
 __all__ = [
     "dBFactor",
@@ -33,6 +33,7 @@ class dBFactor:
     Power = 10.
     Field = 20.
 
+@normalize_numeric_args
 def ratio_to_dB(ratio, factor=dBFactor.Field) -> Unit("dB"):
     """
     Convert a given ratio to a decibel value.
@@ -43,9 +44,9 @@ def ratio_to_dB(ratio, factor=dBFactor.Field) -> Unit("dB"):
 
     Returns -np.inf for negative values
     """
-    ratio = normalize_numeric(ratio)
     return factor * _safe_log10(ratio)
 
+@normalize_numeric_args
 def dB_to_ratio(dB, factor=dBFactor.Field):
     """
     Convert a given ratio from a decibel value to the underlying quantity.
@@ -54,30 +55,28 @@ def dB_to_ratio(dB, factor=dBFactor.Field):
     For power quantities, set factor=dBFactor.Power
     For field quantities, set factor=dBFactor.Field
     """
-    dB = normalize_numeric(dB)
     return 10**(dB/factor)
 
+@normalize_numeric_args
 def value_to_dB(v, v0=1.0, factor=dBFactor.Field) -> Unit("dB"):
     """
     Convert a given quantity [v] to dB, with 0dB being [v0].
     
     Returns -np.inf for negative values
     """
-    v = normalize_numeric(v)
-    v0 = normalize_numeric(v0)
     return ratio_to_dB(v / v0, factor=factor)
 
+@normalize_numeric_args
 def dB_to_value(dB, v0=1.0, factor=dBFactor.Field):
     """
     Convert a given decibel value [dB] to dB, with 0 dB being [v0].
     
     Returns -np.inf for negative values
     """
-    dB = normalize_numeric(dB)
-    v0 = normalize_numeric(v0)
     return dB_to_ratio(dB, factor=factor) * v0
 
 # Utility functions
+@normalize_numeric_args
 def voltage_to_dBuV(v) -> Unit("dBµV"):
     """
     Represent a voltage as dB microvolts.
@@ -87,6 +86,7 @@ def voltage_to_dBuV(v) -> Unit("dBµV"):
     """
     return value_to_dB(v, 1e-6, factor=dBFactor.Field)
 
+@normalize_numeric_args
 def dBuV_to_voltage(v) -> Unit("V"):
     """
     Represent a dB microvolt voltage in volt.
@@ -96,14 +96,9 @@ def dBuV_to_voltage(v) -> Unit("V"):
     """
     return dB_to_ratio(v, factor=dBFactor.Field) * 1e-6
 
+@normalize_numeric_args
 def power_to_dBm(v) -> Unit("dBm"):
     """
     Represent a power in Watts as dB milliwatts.
     """
     return value_to_dB(v, 1e-3, factor=dBFactor.Power)
-
-#def dbM_to_power(v) -> Unit("dBµV"):
-#    """
-#    Represent a power in Watts as dB milliwatts.
-#    """
-#    return db_power_to_ratio(v) * 1e-6
