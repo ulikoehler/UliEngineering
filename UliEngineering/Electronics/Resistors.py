@@ -121,7 +121,6 @@ def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
 
-@normalize_numeric_args
 def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
     """
     Get all standard resistor values in Ω between min_resistor and max_resistor 
@@ -135,25 +134,25 @@ def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequen
         if min_resistor <= resistor <= max_resistor
     ]
 
-@normalize_numeric_args
 def nearest_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the standard reistor value with the minimal difference to the given value
     """
+    value = normalize_numeric(value)
     return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
 
-@normalize_numeric_args
 def next_higher_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the next higher standard resistor value
     """
+    value = normalize_numeric(value)
     return min((r for r in standard_resistors(sequence=sequence) if r > value), default=None)
 
-@normalize_numeric_args
 def next_lower_resistor(value, sequence=e96) -> Unit("Ω"):
     """
     Find the next lower standard resistor value
     """
+    value = normalize_numeric(value)
     return max((r for r in standard_resistors(sequence=sequence) if r < value), default=None)
 
 @normalize_numeric_args
@@ -204,6 +203,4 @@ def resistor_tolerance(resistance, tolerance="1%") -> ResistorTolerance:
     Compute the lower, nominal and upper bound of a resistor value
     given the nominal value and the tolerance.
     """
-    value = normalize_numeric(resistance)
-    tolerance = normalize_numeric(tolerance)
     return ResistorTolerance(value - value * tolerance, value, value + value * tolerance)

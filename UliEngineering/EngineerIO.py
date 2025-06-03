@@ -26,6 +26,8 @@ from typing import Optional
 from toolz import functoolz
 import numpy as np
 from collections import namedtuple
+import functools
+import inspect
 from .Units import *
 from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
 
@@ -696,6 +698,27 @@ def normalize_numeric_args(func):
         
         result = add("1.5k", "2.3k")  # Will convert to add(1500.0, 2300.0)
     """
+    # Get the function signature
+    sig = inspect.signature(func)
+    
+    # Create new parameters with normalized default values
+    new_params = []
+    for param in sig.parameters.values():
+        if param.default != inspect.Parameter.empty and isinstance(param.default, str):
+            # Normalize string default values
+            try:
+                normalized_default = normalize_numeric(param.default)
+                new_param = param.replace(default=normalized_default)
+            except:
+                # If normalization fails, keep the original default
+                new_param = param
+        else:
+            new_param = param
+        new_params.append(new_param)
+    
+    # Create new signature with normalized defaults
+    new_sig = sig.replace(parameters=new_params)
+    
     def wrapper(*args, **kwargs):
         # Normalize all positional arguments
         normalized_args = tuple(normalize_numeric(arg) for arg in args)
@@ -703,12 +726,17 @@ def normalize_numeric_args(func):
         # Normalize all keyword arguments
         normalized_kwargs = {key: normalize_numeric(value) for key, value in kwargs.items()}
         
-        # Call the original function with normalized arguments
-        return func(*normalized_args, **normalized_kwargs)
+        # Bind arguments to new signature to get all parameters with defaults applied
+        bound_args = new_sig.bind(*normalized_args, **normalized_kwargs)
+        bound_args.apply_defaults()
+        
+        print(args, kwargs, normalized_args, normalized_kwargs)
+        
+        # Call the original function with all normalized arguments (including defaults)
+        return func(*bound_args.args, **bound_args.kwargs)
     
     # Preserve function metadata
-    wrapper.__name__ = func.__name__
-    wrapper.__doc__ = func.__doc__
-    wrapper.__annotations__ = func.__annotations__
+    functools.update_wrapper(wrapper, func)
+    wrapper.__signature__ = new_sig
     
     return wrapper

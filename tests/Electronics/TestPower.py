@@ -21,4 +21,5 @@ class TestPower(unittest.TestCase):
         assert_allclose(power_by_current_and_voltage(0.2, 230), 0.2 * 230, atol=1e-15)
         assert_allclose(power_by_current_and_voltage(0.2), 0.2 * 230, atol=1e-15)
         assert_allclose(power_by_current_and_voltage("0.2 A", "230 V"), 0.2 * 230, atol=1e-15)
+        assert_allclose(power_by_current_and_voltage(0.2, "230 V"), 0.2 * 230, atol=1e-15)
 

@@ -2,6 +2,7 @@
 """
 Utilities to compute the power of a device
 """
+from inspect import signature
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Units import Unit
 
@@ -14,7 +15,6 @@ def current_by_power(power="25 W", voltage="230 V") -> Unit("A"):
     it runs on, compute how much current it will draw.
     """
     return power / voltage
-
 
 @normalize_numeric_args
 def power_by_current_and_voltage(current="1.0 A", voltage="230 V") -> Unit("W"):
