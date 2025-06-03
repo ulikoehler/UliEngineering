@@ -54,7 +54,6 @@ def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
 
-@normalize_numeric_args
 def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
     """
     Compute the PTx temperature at a given temperature.
@@ -66,6 +65,8 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
+    r0 = normalize_numeric(r0)
+    r = normalize_numeric(r)
     A, B = standard.a, standard.b
     # Select
     if poly is None:
