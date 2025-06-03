@@ -186,6 +186,15 @@ def _default_unit_prefixes():
 # Valid unit designators. Ensure no SI suffix is added here
 _numeric_allowed = set("+0123456789-e.")
 
+def none_to_nan(value):
+    """
+    Convert None to NaN, otherwise return the value unchanged.
+    This is useful for normalizing values in arrays.
+    """
+    if value is None:
+        return np.nan
+    return value
+
 class EngineerIO(object):
     instance: Optional["EngineerIO"] = None
     length_instance: Optional["EngineerIO"] = None
@@ -477,6 +486,30 @@ class EngineerIO(object):
 
     def auto_print(self, *args, **kwargs):
         print(self.auto_format(*args, **kwargs))
+        
+    def normalize_iterable(self, arg, func):
+        """
+        Normalize an iterable (works for lists, tuples, numpy arrays and generators)
+        """
+        size = len(arg)
+        resize_step = 1000 # Default size if size is indeterminate
+        size_indeterminate = size < 1
+        # If size is invalid, we use a default array of size 100 to prevent frequent reallocation
+        ret = np.zeros(resize_step if size_indeterminate else size, dtype=float)
+        n = 0
+        for i, elem in enumerate(arg):
+            if i > len(arg):
+                # Resize arg to at least [i]
+                # This might be slow, but better than crashing, and
+                # we can't expect the generator to be iterable twice
+                # NOTE: This resizes only every 1000th element
+                ret = np.resize(ret, i + resize_step)
+            ret[i] = func(elem).value
+            n = i + 1
+        if size_indeterminate:
+            # If the size was indeterminate, we return a view of the array
+            return ret[:n]
+        return ret
 
     def normalize_numeric_safe(self, arg):
         """
@@ -498,11 +531,7 @@ class EngineerIO(object):
             v = self.safe_normalize(arg)
             return None if v is None else v.value
         # It's an iterable
-        ret = np.zeros(len(arg))
-        for i, elem in enumerate(arg):
-            v = self.safe_normalize(elem)
-            ret[i] = np.nan if v is None else v.value
-        return ret
+        return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.safe_normalize(v)))
 
     def normalize_numeric(self, arg):
         """
@@ -524,10 +553,7 @@ class EngineerIO(object):
         if isinstance(arg, (str, bytes)):
             return self.normalize(arg).value
         # It's an iterable
-        ret = np.zeros(len(arg))
-        for i, elem in enumerate(arg):
-            ret[i] = self.normalize(elem).value
-        return ret
+        return self.normalize_iterable(arg, func=self.normalize)
 
     def normalize_numeric_verify_unit(self, arg, reference: Unit):
         """
@@ -549,10 +575,7 @@ class EngineerIO(object):
                 raise InvalidUnitInContextException(f"Invalid unit: Expected {reference} but found {normalize_result.unit} in source string '{arg}'")
             return normalize_result.value
         # It's an iterable
-        ret = np.zeros(len(arg))
-        for i, elem in enumerate(arg):
-            ret[i] = self.normalize(elem).value
-        return ret
+        return self.normalize_iterable(arg, func=self.normalize)
     
     def normalize_timespan(self, arg: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
         """
