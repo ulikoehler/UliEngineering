@@ -20,7 +20,7 @@ def split_nth(s, delimiter=",", nth=1):
     Throws ValueError if the nth delimiter has not been found.
     """
     if nth <= 0:
-        raise ValueError("Invalid nth parameter: Must be >= 0 but value is {0}".format(nth))
+        raise ValueError(f"Invalid nth parameter: Must be >= 0 but value is {nth}")
     startidx = 0
     # Startidx is 0 if we want the first field
     if nth > 1:

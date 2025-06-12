@@ -17,6 +17,7 @@ Features include:
     - SumFilter and ChainedFilter are arbitrarily combinable
     - Intuitive, readable error messages for non-mathematicians
 """
+from collections.abc import Iterable
 from UliEngineering.EngineerIO import normalize_numeric
 from scipy import signal
 import numpy as np
@@ -57,7 +58,7 @@ def _normalize_frequencies(freqs):
     if freqs is None:
         raise ValueError("Critical frequencies may not be None")
     # Allow multiple frequencies, but only 1 or 2
-    if isinstance(freqs, collectionsAbc.Iterable) and not isinstance(freqs, str):
+    if isinstance(freqs, Iterable) and not isinstance(freqs, str):
         if len(freqs) == 0:
             raise ValueError("Empty frequency list")
         elif len(freqs) == 1:
@@ -69,12 +70,12 @@ def _normalize_frequencies(freqs):
 def _check_filter_type(btype, freqs):
     if btype == "lowpass" or btype == "highpass":
         if not isinstance(freqs, numbers.Number):
-            raise ValueError("Pass-type {0} requires a single critical frequency, not {1}".format(btype, freqs))
+            raise ValueError(f"Pass-type {btype} requires a single critical frequency, not {freqs}")
     elif btype == "bandpass" or btype == "bandstop":
         if isinstance(freqs, numbers.Number) or len(freqs) != 2:
-            raise ValueError("Pass-type {0} requires a two critical frequencies, not {1}".format(btype, freqs))
+            raise ValueError(f"Pass-type {btype} requires a two critical frequencies, not {freqs}")
     else:
-        raise ValueError("Invalid pass type '{0}': Use lowpass, highpass, bandpass or bandstop!".format(btype))
+        raise ValueError(f"Invalid pass type '{btype}': Use lowpass, highpass, bandpass or bandstop!")
 
 
 class SignalFilter(object):

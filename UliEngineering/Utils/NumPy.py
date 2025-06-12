@@ -195,7 +195,7 @@ def timedelta64_resolution(tdelta):
     s = str(tdelta.dtype) # e.g. 'timedelta64[us]'
     match = _resolution_re.match(s)
     if match is None:
-        raise ValueError("Data type {} is not supported for ..._resolution!".format(s))
+        raise ValueError(f"Data type {s} is not supported for ..._resolution!")
     else:
         return match.group(1)
 

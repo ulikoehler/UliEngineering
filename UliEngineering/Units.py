@@ -66,6 +66,7 @@ def find_returned_unit(fn):
         unit = annotatedFN.__annotations__["return"]
         # Assume it's a Unit namedtuple
         return unit.unit
-    except KeyError: # No return annotation
+    except KeyError as exc: # No return annotation
         raise UnannotatedReturnValueError(
-            "Function {} does not have an annotated return value".format(fn))
+            f"Function {fn} does not have an annotated return value"
+        ) from exc

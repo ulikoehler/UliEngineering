@@ -337,18 +337,18 @@ class EngineerIO(object):
             else:  # suffixCount == 1 => correct
                 # Suffix-as-decimal-separator --> there must be no other decimal separator
                 if "." in s:  # Commata already handled by normalize_interpunctation
-                    raise ValueError("Suffix as decimal separator, but dot is also in string: {}".format(s))
+                    raise ValueError(f"Suffix as decimal separator, but dot is also in string: {s}")
                 suffixIndex = isSuffixList.index(True)
                 # Suffix must NOT be first character
                 if suffixIndex == 0:
-                    raise ValueError("Suffix in '{}' must not be the first char".format(s))
+                    raise ValueError(f"Suffix in '{s}' must not be the first char")
                 suffix = s[suffixIndex]
                 s = s.replace(suffix, ".")
         # Handle unit prefix (if any). Not allowable if no unit is present
         s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError("Remainder of string is not purely numeric: {}".format(s))
+            raise ValueError(f"Remainder of string is not purely numeric: {s}")
         return SplitResult(prefix, s, suffix, unit_prefix, unit)
 
     def split_unit(self, s):
@@ -452,7 +452,7 @@ class EngineerIO(object):
         suffixMapIdx = int(math.floor(exp / 3.))
         #Ensure we're in range
         if not self.exp_map_min < suffixMapIdx < self.exp_map_max:
-            raise ValueError("Value out of range: {}".format(v))
+            raise ValueError(f"Value out of range: {v}")
         #Pre-multiply the value
         v = v * (10.0 ** -(suffixMapIdx * 3))
         #Delegate the rest of the task to the helper
@@ -694,15 +694,15 @@ def _format_with_suffix(v, suffix="", significant_digits=3):
     if np.isnan(v):
         res = "-"
     elif abs_v < 1.0:
-        res = ("{:." + str(significant_digits - 0) + "f}").format(v)
+        res = f"{v:.{significant_digits - 0}f}"
     elif abs_v < 10.0:
-        res = ("{:." + str(significant_digits - 1) + "f}").format(v)
+        res = f"{v:.{significant_digits - 1}f}"
     elif abs_v < 100.0:
-        res = ("{:." + str(significant_digits - 2) + "f}").format(v)
+        res = f"{v:.{significant_digits - 2}f}"
     else:  # Should only happen if v < 1000
         res = str(int(round(v)))
     #Avoid appending whitespace if there is no suffix
-    return "{} {}".format(res, suffix) if suffix else res
+    return f"{res} {suffix}" if suffix else res
 
 def normalize_engineer_notation(s, encoding="utf8"):
     return EngineerIO.instance.normalize(s, encoding=encoding)
