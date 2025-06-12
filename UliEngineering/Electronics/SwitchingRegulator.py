@@ -13,7 +13,7 @@ __all__ = [
     "buck_regulator_min_capacitance_method1", "buck_regulator_min_capacitance_method2",
     "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance",
     "buck_regulator_output_capacitor_max_esr", "buck_regulator_output_capacitor_rms_current",
-    "buck_regulator_catch_diode_power",
+    "buck_regulator_catch_diode_power", "buck_regulator_min_output_voltage",
 ]
 
 @normalize_numeric_args
@@ -323,3 +323,19 @@ def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="2
     c_j = normalize_numeric(c_j)
     
     return ((vinmax - vout) * iout * v_d) / (vinmax) + (c_j * fsw * (vinmax + v_d)**2) / 2
+
+@normalize_numeric_args
+def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency) -> float:
+    """
+    Compute the minimum output voltage of a buck regulator given its minimum on time.
+    
+    The formula is:
+        Vout_min = Vin * (t_on_min * f_sw)
+    where:
+        Vin = input voltage
+        t_on_min = minimum on time (seconds)
+        f_sw = switching frequency (Hz)
+    
+    Returns the minimum output voltage in the same units as Vin.
+    """
+    return vin * t_on_min * switching_frequency
