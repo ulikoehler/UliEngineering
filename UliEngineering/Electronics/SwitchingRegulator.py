@@ -147,7 +147,7 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
+def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency) -> Unit("F"):
     """
     Basic output capacitance calculation, based on the formula:
     C > 2*ΔIL / (fsw * ΔVout)
@@ -160,7 +160,7 @@ def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_vo
     return (2 * ripple_current) / (frequency * permissible_ripple_voltage)
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current):
+def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current) -> Unit("F"):
     """
     Compute the minimum capacitance required for a buck regulator
     based on the load current and the peak permissible output voltage.
@@ -178,7 +178,7 @@ def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, o
     return inductance * (max_load_current**2 - light_load_current**2) / (peak_output_voltage**2 - nominal_output_voltage**2)
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current):
+def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current) -> Unit("F"):
     """
     Compute the minimum capacitance required for a buck regulator
     based on the load current and the peak permissible output voltage.
@@ -256,7 +256,7 @@ def buck_regulator_min_capacitance(
     return max(c1, c2, c3)
 
 @normalize_numeric_args
-def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current):
+def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current) -> Unit("Ω"):
     """
     Compute the maximum ESR of the output capacitor
     
@@ -280,7 +280,7 @@ def buck_regulator_output_capacitor_rms_current(
     output_voltage,
     inductance,
     switching_frequency,
-):
+) -> Unit("A"):
     """
     Compute the RMS current rating of the output capacitor
     This is based on the formula:
@@ -298,7 +298,7 @@ def buck_regulator_output_capacitor_rms_current(
     )
 
 @normalize_numeric_args
-def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF"):
+def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF") -> Unit("W"):
     """
     Compute the minimum required power rating of the catch diode
     for non-synchronous buck regulators.
@@ -325,7 +325,7 @@ def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="2
     return ((vinmax - vout) * iout * v_d) / (vinmax) + (c_j * fsw * (vinmax + v_d)**2) / 2
 
 @normalize_numeric_args
-def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency) -> float:
+def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency) -> Unit("V"):
     """
     Compute the minimum output voltage of a buck regulator given its minimum on time.
     
