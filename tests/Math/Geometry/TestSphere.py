@@ -5,7 +5,6 @@ from UliEngineering.Math.Geometry.Sphere import *
 from parameterized import parameterized
 import numpy as np
 import unittest
-from UliEngineering.EngineerIO import normalize_numeric, Unit
 
 
 class TestSphere(unittest.TestCase):
@@ -36,5 +35,3 @@ class TestSphere(unittest.TestCase):
         assert_approx_equal(sphere_surface_area_by_diameter(radius*2), area)
         assert_approx_equal(sphere_surface_area_by_radius(f"{radius}"), area)
         assert_approx_equal(sphere_surface_area_by_diameter(radius*2), area)
-
-

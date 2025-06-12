@@ -28,9 +28,9 @@ import numpy as np
 from collections import namedtuple
 import functools
 import inspect
-import functoolz
+from toolz import functoolz
 
-from UliEngineering.Units import InvalidUnitInContextException
+from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
 from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
@@ -498,7 +498,9 @@ class EngineerIO(object):
         Auto-format a value by leveraging a custom @returns_unit annotation.
         The function's return value is expected to be annotated with @returns_unit("unit").
         """
-        unit = getattr(fn, "_returns_unit", None) or ""
+        unit = getattr(fn, "_returns_unit", None)
+        if unit is None:
+            raise UnannotatedReturnValueError("Function must be annotated with @returns_unit('...')")
         return self.format(fn(*args, **kwargs), unit=unit, significant_digits=significant_digits)
 
     def auto_print(self, *args, **kwargs):

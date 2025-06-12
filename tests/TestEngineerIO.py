@@ -234,7 +234,8 @@ class TestEngineerIO(unittest.TestCase):
     # Just basic tests for autoFormat. Specific tests in other modules that have annotated functions
 
     def testAutoFormatValid(self):
-        def testfn(n=1.0) -> Unit("V"): return n
+        @returns_unit("V")
+        def testfn(n=1.0): return n
         self.assertEqual(self.io.auto_format(testfn), "1.00 V")
         # Test functools.partial() behaviour
         testfn2 = functools.partial(testfn, n=2.0)
@@ -245,11 +246,15 @@ class TestEngineerIO(unittest.TestCase):
 
     def testAutoFormatInvalid1(self):
         with self.assertRaises(UnannotatedReturnValueError):
-            self.io.auto_format(self.io.format) # Callable but not annotated
+            self.io.auto_format(lambda: 0) # Callable but not annotated
 
     def testAutoFormatInvalid2(self):
-        with self.assertRaises(ValueError):
-            self.io.auto_format(None)
+        with self.assertRaises(UnannotatedReturnValueError):
+            self.io.auto_format(None) # Not even callable
+            
+    def testAutoFormatInvalid3(self):
+        with self.assertRaises(UnannotatedReturnValueError):
+            self.io.auto_format(7.5) # Not even callable
 
     @pytest.mark.filterwarnings("ignore: divide by zero encountered in log10")
     def test_auto_suffix_1d(self):
