@@ -55,6 +55,7 @@ def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("
     """
     R0 = normalize_numeric(R0)
     T0 = normalize_temperature_kelvin(T0)
+    resistance = normalize_numeric(resistance)
     temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
     return kelvin_to_celsius(temperature_kelvin)
 
