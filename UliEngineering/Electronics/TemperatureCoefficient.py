@@ -122,7 +122,7 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     normalized = normalize(nominal)
     if normalized is None:
         raise ValueError("The nominal value must be a valid number or EngineerIO string.")
-    elif isinstance(normalized, Iterable):
+    elif isinstance(normalized, Iterable) and not isinstance(normalized, NormalizeResult):
         if len(normalized) == 1 and isinstance(normalized[0], NormalizeResult):
             normalized = normalized[0]
         else:
