@@ -5,7 +5,7 @@ Utilities regarding comparator / opamp hysteresis
 
 For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a.pdf
 """
-from UliEngineering.EngineerIO import normalize_numeric_args
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Electronics.Resistors import parallel_resistors
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio
 
@@ -52,8 +52,6 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     thu = voltage_divider_ratio(r1rh, r2)
     return (thl, thu)
 
-
-@normalize_numeric_args
 def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     """
     Same as hysteresis_threshold_ratios(), but for open-drain comparators.
@@ -76,9 +74,12 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     thu = voltage_divider_ratio(r1, r2)
     return (thl, thu)
 
-@normalize_numeric_args
 def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
     """Internal push-pull & open-drain common code"""
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    rh = normalize_numeric(rh)
+    vcc = normalize_numeric(vcc)
     thl, thu = fn(r1, r2, rh)
     return (thl * vcc, thu * vcc)
 
@@ -128,9 +129,11 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios_opendrain)
 
-@normalize_numeric_args
 def __hysteresis_threshold_factors(r1, r2, rh, fn):
     """Internal push-pull & open-drain common code"""
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
+    rh = normalize_numeric(rh)
     # Compute thresholds
     thl, thu = fn(r1, r2, rh)
     # Compute factors
