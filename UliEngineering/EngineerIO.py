@@ -477,11 +477,10 @@ class EngineerIO(object):
 
     def auto_format(self, fn, *args, significant_digits=3, **kwargs):
         """
-        Auto-format a value by leveraging function annotations.
-        For example this can be used to format using UliEngineering Physics quantities
-        The function's return value is expected to a be annotated with a Quantity() value.
+        Auto-format a value by leveraging a custom @returns_unit annotation.
+        The function's return value is expected to be annotated with @returns_unit("unit").
         """
-        unit = find_returned_unit(fn)
+        unit = getattr(fn, "_returns_unit", None) or ""
         return self.format(fn(*args, **kwargs), unit=unit, significant_digits=significant_digits)
 
     def auto_print(self, *args, **kwargs):
@@ -711,6 +710,16 @@ def auto_format(v, *args, **kwargs):
 def auto_print(*args, **kwargs):
     return EngineerIO.instance.auto_print(*args, **kwargs)
 
+def returns_unit(unit):
+    """
+    Decorator to annotate a function with a custom return unit string.
+    Usage: @returns_unit("A")
+    """
+    def decorator(fn):
+        fn._returns_unit = unit
+        return fn
+    return decorator
+
 def normalize_numeric_args(func):
     """
     Decorator that applies normalize_numeric to all arguments (args & kwargs) 
@@ -766,5 +775,7 @@ def normalize_numeric_args(func):
     # Preserve function metadata
     functools.update_wrapper(wrapper, func)
     wrapper.__signature__ = new_sig
+    wrapper._returns_unit = getattr(func, "_returns_unit", None)
     
     return wrapper
+
