@@ -3,7 +3,6 @@
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
 from UliEngineering.Length import *
-from UliEngineering.Units import UnknownUnitInContextException
 import unittest
 
 class TestLength(unittest.TestCase):
