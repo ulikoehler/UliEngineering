@@ -34,7 +34,8 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     # Normalize to Kelvin (temperature needs special handling)
     t1 = normalize_temperature_kelvin(t1)
     t2 = normalize_temperature_kelvin(t2)
-    print(t1, t2, r1, r2)
+    r1 = normalize_numeric(r1)
+    r2 = normalize_numeric(r2)
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
