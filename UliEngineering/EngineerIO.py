@@ -19,11 +19,11 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
+from collections.abc import Iterable
 import math
 import re
 import itertools
 from typing import Optional
-from toolz import functoolz
 import numpy as np
 from collections import namedtuple
 import functools
@@ -191,6 +191,22 @@ def none_to_nan(value):
     Convert None to NaN, otherwise return the value unchanged.
     This is useful for normalizing values in arrays.
     """
+    # NOTE: string is iterable, so we need to check for that first
+    if isinstance(value, str):
+        return np.nan if value.strip() == '' else value.strip()
+    # NOTE: NormalizeResult is a namedtuple i.e. iterable, so we need to handle it separately
+    if isinstance(value, NormalizeResult):
+        return NormalizeResult(
+            value.prefix,
+            none_to_nan(value.value),
+            value.unit_prefix,
+            value.unit
+        )
+    if isinstance(value, Iterable):
+        # If it's an iterable, convert each element
+        print(value)
+        return [none_to_nan(elem) for elem in value]
+    # Else: Assume a simple value
     if value is None:
         return np.nan
     return value
@@ -533,8 +549,14 @@ class EngineerIO(object):
         # If it's stringlike, apply directly
         if isinstance(arg, str) or isinstance(arg, bytes):
             v = self.safe_normalize(arg)
-            return None if v is None else v.value
+            if v is None:
+                return None
+            if isinstance(v, NormalizeResult):
+                return v.value
+            else:
+                return v
         # It's an iterable
+        print(arg, self.safe_normalize(arg), none_to_nan(self.safe_normalize(arg)))
         return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.safe_normalize(v)))
 
     def normalize_numeric(self, arg):
