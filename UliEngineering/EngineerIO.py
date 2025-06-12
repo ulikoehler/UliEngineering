@@ -492,13 +492,26 @@ class EngineerIO(object):
         # Pre-multiply the value
         multiplier = 10.0 ** -(suffix_idx * 3)
         return multiplier, self.exp_suffix_map[suffix_idx]
+    
+    def extract_return_unit(self, fn):
+        """
+        Extract the return unit from a function's annotation.
+        """
+        unit = getattr(fn, "_returns_unit", None)
+        # Special rule for functools.partial or similar
+        if unit is None and hasattr(fn, "func"):
+            # Access next function level inside possibly nested partials
+            # NOTE: Any of the nested function levels may have the annotation!
+            return self.extract_return_unit(fn.func)
+        return unit
 
     def auto_format(self, fn, *args, significant_digits=3, **kwargs):
         """
         Auto-format a value by leveraging a custom @returns_unit annotation.
         The function's return value is expected to be annotated with @returns_unit("unit").
         """
-        unit = getattr(fn, "_returns_unit", None)
+        # Try to get the direct function's return value unit
+        unit = self.extract_return_unit(fn)
         if unit is None:
             raise UnannotatedReturnValueError("Function must be annotated with @returns_unit('...')")
         return self.format(fn(*args, **kwargs), unit=unit, significant_digits=significant_digits)
