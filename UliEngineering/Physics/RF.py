@@ -3,16 +3,16 @@
 """
 Utilities for computations related to noise density
 """
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 import numpy as np
 
 __all__ = [
      'quality_factor', 'resonant_impedance', 'resonant_frequency',
      'resonant_inductance']
 
+@returns_unit("")
 @normalize_numeric_args
-def quality_factor(frequency, bandwidth) -> Unit(""):
+def quality_factor(frequency, bandwidth):
     """
     Compute the quality factor of a resonant circuit
     from the frequency and the bandwidth:
@@ -26,8 +26,9 @@ def quality_factor(frequency, bandwidth) -> Unit(""):
     """
     return frequency / bandwidth
 
+@returns_unit("Ω")
 @normalize_numeric_args
-def resonant_impedance(L, C, Q=100.) -> Unit("Ω"):
+def resonant_impedance(L, C, Q=100.):
     """
     Compute the resonant impedance of a resonant circuit
 
@@ -42,8 +43,9 @@ def resonant_impedance(L, C, Q=100.) -> Unit("Ω"):
     """
     return np.sqrt(L / C) / Q
 
+@returns_unit("Hz")
 @normalize_numeric_args
-def resonant_frequency(L, C) -> Unit("Hz"):
+def resonant_frequency(L, C):
     """
     Compute the resonant frequency of a resonant circuit
     given the inductance and capacitance.
@@ -59,8 +61,9 @@ def resonant_frequency(L, C) -> Unit("Hz"):
     """
     return 1 / (2 * np.pi * np.sqrt(L * C))
 
+@returns_unit("H")
 @normalize_numeric_args
-def resonant_inductance(fres, C) -> Unit("H"):
+def resonant_inductance(fres, C):
     """
     Compute the inductance of a resonant circuit
     given the resonant frequency and its capacitance.

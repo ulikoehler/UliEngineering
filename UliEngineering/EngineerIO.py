@@ -28,7 +28,9 @@ import numpy as np
 from collections import namedtuple
 import functools
 import inspect
-from .Units import *
+import functoolz
+
+from UliEngineering.Units import InvalidUnitInContextException
 from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
 
 __all__ = ["normalize_interpunctation", "EngineerIO",

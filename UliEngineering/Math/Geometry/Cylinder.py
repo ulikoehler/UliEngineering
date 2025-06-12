@@ -4,7 +4,7 @@
 Geometry functions for cylinders and hollow cylinders
 """
 import math
-from UliEngineering.EngineerIO import normalize_numeric_args, Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 from .Circle import circle_area
 import numpy as np
 
@@ -16,28 +16,32 @@ __all__ = [
 ]
 
 @normalize_numeric_args
-def cylinder_volume(radius, height) -> Unit("m³"):
+@returns_unit("m³")
+def cylinder_volume(radius, height):
     """
     Compute the volume of a cylinder by its radius and height
     """
     return math.pi * (radius**2) * height
 
 @normalize_numeric_args
-def cylinder_side_surface_area(radius, height) -> Unit("m²"):
+@returns_unit("m²")
+def cylinder_side_surface_area(radius, height):
     """
     Compute the surface area of the side (also called ")
     """
     return 2 * math.pi * radius * height
 
 @normalize_numeric_args
-def cylinder_surface_area(radius, height) -> Unit("m²"):
+@returns_unit("m²")
+def cylinder_surface_area(radius, height):
     """
     Compute the surface area (side + top + bottom)
     """
     return cylinder_side_surface_area(radius, height) + 2 * circle_area(radius)
 
 @normalize_numeric_args
-def hollow_cylinder_volume(outer_radius, inner_radius, height) -> Unit("m³"):
+@returns_unit("m³")
+def hollow_cylinder_volume(outer_radius, inner_radius, height):
     """
     Compute the volume of a hollow cylinder by its height and the inner and outer radii
     """
@@ -74,7 +78,8 @@ def cylinder_weight_by_cross_sectional_area(area, length, density=8000):
     return area * length * density
 
 @normalize_numeric_args
-def hollow_cylinder_inner_radius_by_volume(outer_radius, volume, height) -> Unit("m"):
+@returns_unit("m")
+def hollow_cylinder_inner_radius_by_volume(outer_radius, volume, height):
     """
     Given the outer radius, the height and the inner radius of a hollow cylinder,
     compute the inner radius

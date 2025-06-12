@@ -16,7 +16,7 @@ For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from UliEngineering.Units import Unit
 import functools
 from collections import namedtuple
@@ -36,7 +36,8 @@ pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
                              1.80282972e-03, -1.61875985e-01, 4.84112370e+00])
 
 
-def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
+@returns_unit("Ω")
+def ptx_resistance(r0, t, standard=ptxITS90):
     """
     Compute the PTx resistance at a given temperature.
     The reference for the test code is a DIN PT1000.
@@ -54,7 +55,8 @@ def ptx_resistance(r0, t, standard=ptxITS90) -> Unit("Ω"):
     return r0 * (1.0 + A * t + B * t * t + C * (t - 100.0) * t * t * t)
 
 
-def ptx_temperature(r0, r, standard=ptxITS90, poly=None) -> Unit("°C"):
+@returns_unit("°C")
+def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
     """
     Compute the PTx temperature at a given temperature.
 
@@ -97,7 +99,7 @@ def check_correction_polynomial_quality(r0, reftemp, poly):
     quality = np.max([np.abs(tempdiff.max()), np.abs(tempdiff.min())])
     return (resistances, tempdiff, quality)
 
-def compute_correction_polynomial(r0, order=5, n=1000000):
+def compute_correction_polynomial(r0, order=5, n=1000000) -> np.poly1d:
     """
     Compute a correction polynomial that can be applied to the resistance
     to get an additive correction coefficient that approximately corrects

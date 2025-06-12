@@ -3,8 +3,7 @@
 """
 Utilities regarding temperatures
 """
-from UliEngineering.EngineerIO import normalize_engineer_notation, normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_engineer_notation, normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import InvalidUnitException
 
 try:
@@ -19,22 +18,27 @@ __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "temperature_with_dissipation",
            "fahrenheit_to_celsius", "zero_Celsius"]
 
+@returns_unit("K")
 @normalize_numeric_args
-def celsius_to_kelvin(c) -> Unit("K"):
+def celsius_to_kelvin(c):
     return c + zero_Celsius
 
+@returns_unit("°C")
 @normalize_numeric_args
-def kelvin_to_celsius(c) -> Unit("°C"):
+def kelvin_to_celsius(c):
     return c - zero_Celsius
 
+@returns_unit("K")
 @normalize_numeric_args
-def fahrenheit_to_kelvin(f) -> Unit("K"):
+def fahrenheit_to_kelvin(f):
     return (f + 459.67) * 5.0 / 9.0
 
-def fahrenheit_to_celsius(f) -> Unit("°C"):
+@returns_unit("°C")
+def fahrenheit_to_celsius(f):
     return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
-def normalize_temperature(t, default_unit="°C") -> Unit("K"):
+@returns_unit("K")
+def normalize_temperature(t, default_unit="°C"):
     """
     Normalize a temperature to kelvin.
     If it is a number or it has no unit, assume it is a default unit
@@ -60,12 +64,14 @@ def normalize_temperature(t, default_unit="°C") -> Unit("K"):
 
 normalize_temperature_kelvin = normalize_temperature
 
-def normalize_temperature_celsius(t, default_unit="°C") -> Unit("°C"):
+@returns_unit("°C")
+def normalize_temperature_celsius(t, default_unit="°C"):
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
     return kelvin_to_celsius(normalize_temperature(t, default_unit))
 
+@returns_unit("°C")
 @normalize_numeric_args
-def temperature_with_dissipation(power_dissipated="1 W", theta="50 °C/W", t_ambient="25 °C") -> Unit("°C"):
+def temperature_with_dissipation(power_dissipated="1 W", theta="50 °C/W", t_ambient="25 °C"):
     """
     Compute the temperature of a component, given its thermal resistance (theta),
     its dissipated power and 

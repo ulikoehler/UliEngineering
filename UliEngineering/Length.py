@@ -4,7 +4,7 @@
 Utilities for length
 """
 import scipy.constants
-from .EngineerIO import EngineerIO
+from .EngineerIO import EngineerIO, returns_unit
 from .Units import UnknownUnitInContextException, Unit
 
 __all__ = ["normalize_length", "convert_length_to_meters"]
@@ -47,7 +47,8 @@ _length_factors = {
     'angstrom': scipy.constants.angstrom,
 }
 
-def convert_length_to_meters(value, unit, instance=EngineerIO.length_instance) -> Unit("m"):
+@returns_unit("m")
+def convert_length_to_meters(value, unit, instance=EngineerIO.length_instance):
     """
     Given a number or Engineer string (unit ignored) <value>
     in <unit>, convert it to meters.
@@ -55,7 +56,8 @@ def convert_length_to_meters(value, unit, instance=EngineerIO.length_instance) -
     # Currently a hack, but doing it directly will not parse SI units
     return normalize_length("{} {}".format(value, unit), instance=instance)
 
-def normalize_length(s, instance=EngineerIO.length_instance) -> Unit("m"):
+@returns_unit("m")
+def normalize_length(s, instance=EngineerIO.length_instance):
     """
     Normalize a length to meters.
     Returns the numeric value in m or None.
