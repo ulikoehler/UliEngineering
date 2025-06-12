@@ -559,7 +559,7 @@ class EngineerIO(object):
         # It's an iterable
         return self.normalize_iterable(arg, func=self.normalize)
 
-    def normalize_numeric_verify_unit(self, arg, reference: Unit):
+    def normalize_numeric_verify_unit(self, arg, reference):
         """
         Normalize a value. If it is a string
         verify if its unit matches the reference unit.
@@ -689,7 +689,7 @@ def format_value(v, unit="", significant_digits=3):
 def print_value(v, unit="", significant_digits=3):
     return EngineerIO.instance.print(v, unit, significant_digits=significant_digits)
 
-def normalize_numeric_verify_unit(self, arg, reference: Unit):
+def normalize_numeric_verify_unit(self, arg, reference):
     return EngineerIO.instance.normalize_numeric_verify_unit(arg, reference)
 
 def normalize_engineer_notation_safe(v, unit=""):

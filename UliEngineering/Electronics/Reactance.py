@@ -6,13 +6,13 @@ Utility to calculate idealized reactances.
 Originally published at techoverflow.net
 """
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["capacitive_reactance", "inductive_reactance"]
 
 @normalize_numeric_args
-def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
+@returns_unit("Ω")
+def capacitive_reactance(c, f=1000.0):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
@@ -20,7 +20,8 @@ def capacitive_reactance(c, f=1000.0) -> Unit("Ω"):
 
 
 @normalize_numeric_args
-def inductive_reactance(l, f=1000.0) -> Unit("Ω"):
+@returns_unit("Ω")
+def inductive_reactance(l, f=1000.0):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """
