@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np
@@ -16,7 +15,8 @@ __all__ = [
     "capacitor_voltage_by_energy",
 ]
 
-def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.) -> Unit("h"):
+@returns_unit("h")
+def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.):
     """
     Estimate the lifetime of a capacitor given
     * Its working temperature (i.e. internal temperature)
@@ -33,8 +33,9 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
     tdelta = temp - nominal_lifetime_temperature
     return nominal_lifetime * 2**(-(tdelta/A))
 
+@returns_unit("J")
 @normalize_numeric_args
-def capacitor_energy(capacitance, voltage) -> Unit("J"):
+def capacitor_energy(capacitance, voltage):
     """
     Compute the total energy stored in a capacitor given:
     - The capacitance in farads
@@ -43,8 +44,9 @@ def capacitor_energy(capacitance, voltage) -> Unit("J"):
     """
     return 0.5 * capacitance * np.square(voltage)
 
+@returns_unit("C")
 @normalize_numeric_args
-def capacitor_charge(capacitance, voltage) -> Unit("C"):
+def capacitor_charge(capacitance, voltage):
     """
     Compute the total charge stored in a capacitor given:
     - The capacitance in farads
@@ -53,8 +55,9 @@ def capacitor_charge(capacitance, voltage) -> Unit("C"):
     """
     return capacitance * voltage
 
+@returns_unit("V")
 @normalize_numeric_args
-def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V") -> Unit("V"):
+def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V"):
     """
     Compute the voltage of a capacitor given:
     - The capacitance in farads
@@ -66,8 +69,9 @@ def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V") -> U
     # Compute voltage
     return np.sqrt(2 * (energy + starting_energy) / capacitance)
 
+@returns_unit("s")
 @normalize_numeric_args
-def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V") -> Unit("s"):
+def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
@@ -85,8 +89,9 @@ def capacitor_constant_current_discharge_time(capacitance, initial_voltage, curr
     # voltage charge, this will result in a positive time
     return capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage)
 
+@returns_unit("s")
 @normalize_numeric_args
-def capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage="0V") -> Unit("s"):
+def capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage="0V"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
@@ -101,8 +106,9 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     """
     return capacitance * (initial_voltage - target_voltage) / current
 
+@returns_unit("F")
 @normalize_numeric_args
-def parallel_plate_capacitors_capacitance(area, distance, epsilon) -> Unit("F"):
+def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     """
     Compute the capacitance of two parallel plate capacitors in parallel
     given the area, distance, and permittivity of the dielectric.
