@@ -504,7 +504,12 @@ class EngineerIO(object):
                 # we can't expect the generator to be iterable twice
                 # NOTE: This resizes only every 1000th element
                 ret = np.resize(ret, i + resize_step)
-            ret[i] = func(elem).value
+            func_result = func(elem)
+            # If it has .value, return .value, otherwise return the value directly
+            if hasattr(func_result, 'value'):
+                ret[i] = func_result.value
+            else:
+                ret[i] = func_result
             n = i + 1
         if size_indeterminate:
             # If the size was indeterminate, we return a view of the array
