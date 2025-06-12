@@ -3,13 +3,13 @@
 """
 Utilities for frequencies
 """
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["frequency_to_period", "period_to_frequency"]
 
+@returns_unit("s")
 @normalize_numeric_args
-def frequency_to_period(frequency) -> Unit("s"):
+def frequency_to_period(frequency):
     """
     Compute the period associated with a frequency.
 
@@ -20,8 +20,9 @@ def frequency_to_period(frequency) -> Unit("s"):
     """
     return 1./frequency
 
+@returns_unit("Hz")
 @normalize_numeric_args
-def period_to_frequency(period) -> Unit("Hz"):
+def period_to_frequency(period):
     """
     Compute the frequency associated with a period.
 

@@ -10,15 +10,16 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import returns_unit, normalize_numeric_args
 
 __all__ = [
     "summing_amplifier_noninv",
     "noninverting_amplifier_gain"
 ]
 
-def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Unit("V"):
+@returns_unit("V")
+@normalize_numeric_args
+def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
     """
     Computes the output voltage of a non-inverting summing amplifier:
     V1 connected via R1 to IN+
@@ -26,15 +27,11 @@ def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2) -> Unit("V"):
     IN- connected via RFB1 to GND
     IN- connected via RFB2 to VOut
     """
-    v1 = normalize_numeric(v1)
-    v2 = normalize_numeric(v2)
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rfb1 = normalize_numeric(rfb1)
-    rfb2 = normalize_numeric(rfb2)
     return (1.0 + rfb2 / rfb1) * (v1 * (r2 / (r1 + r2)) + v2 * (r1 / (r1 + r2)))
 
-def noninverting_amplifier_gain(r1, r2) -> Unit("V/V"):
+@returns_unit("V/V")
+@normalize_numeric_args
+def noninverting_amplifier_gain(r1, r2):
     """
     Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
     
@@ -45,6 +42,4 @@ def noninverting_amplifier_gain(r1, r2) -> Unit("V/V"):
     
     R2 can also be infinity (np.inf), in which case the gain is 1.0.
     """
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
     return 1.0 + r1 / r2

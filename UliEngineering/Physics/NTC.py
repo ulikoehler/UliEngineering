@@ -16,7 +16,7 @@ __all__ = ["ntc_resistance", "ntc_resistances"]
 @normalize_numeric_args
 def ntc_resistance(r25, b25, t) -> Unit("Ω"):
     """
-    Compute the NTC resistance by  temperature and NTC parameters
+    Compute the NTC resistance by temperature and NTC parameters
 
     Parameters
     ----------
@@ -27,10 +27,11 @@ def ntc_resistance(r25, b25, t) -> Unit("Ω"):
     t : temperature
         The temperature. Will be interpreted using normalize_temperature()
     """
-    t = normalize_temperature(t) # t is now in Kelvins
+    t = normalize_temperature(t)  # t is now in Kelvins
     # Compute resistance
-    return r25 * np.exp(b25 * (1./t - 1./(25. + zero_Celsius)))
+    return r25 * np.exp(b25 * (1.0 / t - 1.0 / (25.0 + zero_Celsius)))
 
+@normalize_numeric_args
 def ntc_resistances(r25, b25, t0=-40, t1=85, resolution=0.1):
     """
     Compute the resistances over a temperature range with a given resolution.

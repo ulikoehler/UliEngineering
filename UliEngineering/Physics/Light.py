@@ -3,14 +3,14 @@
 """
 Utilities for computations related to noise density
 """
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 import numpy as np
 
 __all__ = ["lumen_to_candela_by_apex_angle"]
 
+@returns_unit("cd")
 @normalize_numeric_args
-def lumen_to_candela_by_apex_angle(flux, angle) -> Unit("cd"):
+def lumen_to_candela_by_apex_angle(flux, angle):
     """
     Compute the luminous intensity from the luminous flux,
     assuming that the flux of <flux> is distributed equally around
@@ -29,3 +29,4 @@ def lumen_to_candela_by_apex_angle(flux, angle) -> Unit("cd"):
     """
     solid_angle = 2*np.pi*(1.-np.cos(np.deg2rad(angle)/2.0))
     return flux / solid_angle
+    

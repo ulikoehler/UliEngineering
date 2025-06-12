@@ -3,15 +3,15 @@
 """
 Utility to calculate MOSFETs
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 
 __all__ = [
     "mosfet_gate_charge_losses", "mosfet_gate_charge_loss_per_cycle",
     "mosfet_gate_capacitance_from_gate_charge"]
 
+@returns_unit("W")
 @normalize_numeric_args
-def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz") -> Unit("W"):
+def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz"):
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application as a total power (integrated per second).
@@ -33,8 +33,9 @@ def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz") -
     return mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply) * frequency
 
 
+@returns_unit("J")
 @normalize_numeric_args
-def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply) -> Unit("J"):
+def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply):
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application per switching cycle.
@@ -53,8 +54,9 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply) -> Unit("J"):
     """
     return total_gate_charge * vsupply
 
+@returns_unit("F")
 @normalize_numeric_args
-def mosfet_gate_capacitance_from_gate_charge(total_gate_charge, vsupply) -> Unit("F"):
+def mosfet_gate_capacitance_from_gate_charge(total_gate_charge, vsupply):
     """
     Compute the gate capacitance of a MOSFET in a switch-mode
     power-supply application.

@@ -10,8 +10,7 @@ Johnson Nyquist noise utilities for both voltage and current noise
 >>> print(autoFormat(johnson_nyquist_noise_voltage, "10 MΩ", 1000, 25))
 """
 from .Temperature import normalize_temperature
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 import math
 
 __all__ = ["johnson_nyquist_noise_current", "johnson_nyquist_noise_voltage"]
@@ -22,8 +21,9 @@ except ModuleNotFoundError:
     # Exact defined value: https://physics.nist.gov/cgi-bin/cuu/Value?k
     boltzmann_k = 1.380649e-23
 
+@returns_unit("A")
 @normalize_numeric_args
-def johnson_nyquist_noise_current(r, delta_f, T) -> Unit("A"):
+def johnson_nyquist_noise_current(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.
@@ -33,8 +33,9 @@ def johnson_nyquist_noise_current(r, delta_f, T) -> Unit("A"):
     # Support celsius and kelvin inputs
     return math.sqrt((4 * boltzmann_k * t_kelvin * delta_f)/r)
 
+@returns_unit("V")
 @normalize_numeric_args
-def johnson_nyquist_noise_voltage(r, delta_f, T) -> Unit("V"):
+def johnson_nyquist_noise_voltage(r, delta_f, T):
     """
     Compute the Johnson Nyquist noise voltage in volts
     T must be given in °C whereas r must be given in Ohms.

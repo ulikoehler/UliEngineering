@@ -35,7 +35,7 @@ __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
            "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan",
-           "normalize_numeric_args"]
+           "normalize_numeric_args", "returns_unit"]
 
 UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])

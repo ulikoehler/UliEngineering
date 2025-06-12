@@ -8,7 +8,7 @@ from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
 
 __all__ = ["value_range_over_tolerance"]
 
-def value_range_over_tolerance(nominal, tolerance="1 %"):
+def value_range_over_tolerance(nominal, tolerance="1 %") -> ValueRange:
     """
     Compute the minimum and maximum value of a given component,
     given its nominal value and its tolerance.

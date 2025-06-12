@@ -3,15 +3,15 @@
 """
 Functions for Multi-Pixel photon counters (MPPCs)
 """
-from UliEngineering.Units import Unit
-from UliEngineering.EngineerIO import normalize_numeric_args
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = [
     "pixel_capacitance_from_terminal_capacitance"
 ]
 
 @normalize_numeric_args
-def pixel_capacitance_from_terminal_capacitance(terminal_capacitance="900pF", npixels=14331) -> Unit("F"):
+@returns_unit("F")
+def pixel_capacitance_from_terminal_capacitance(terminal_capacitance="900pF", npixels=14331):
     """
     Estimate a MPPC's individual pixel's capacitance from the terminal capacitance.
     

@@ -10,9 +10,8 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import OperationImpossibleException
-from UliEngineering.Units import Unit
 from UliEngineering.Electronics.Resistors import resistor_current_by_power
 
 __all__ = [
@@ -43,8 +42,9 @@ class LEDForwardVoltages():
     Blue = 2.9
     White = 4.0
 
+@returns_unit("Ω")
 @normalize_numeric_args
-def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
+def led_series_resistor(vsupply, ioperating, vforward):
     """
     Computes the required series resistor for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
@@ -58,8 +58,9 @@ def led_series_resistor(vsupply, ioperating, vforward) -> Unit("Ω"):
         )
     return (vsupply - vforward) / ioperating
 
+@returns_unit("W")
 @normalize_numeric_args
-def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
+def led_series_resistor_power(vsupply, ioperating, vforward):
     """
     Computes the required series resistor power for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
@@ -78,8 +79,9 @@ def led_series_resistor_power(vsupply, ioperating, vforward) -> Unit("W"):
     resistor_value = led_series_resistor(vsupply, ioperating, vforward)
     return resistor_value * ioperating * ioperating
 
+@returns_unit("A")
 @normalize_numeric_args
-def led_series_resistor_maximum_current(resistance, power_rating) -> Unit("A"):
+def led_series_resistor_maximum_current(resistance, power_rating):
     """
     Compute the maximum current through a LED + series resistor combination,
     so that the power rating of the resistor is not exceeded
@@ -93,8 +95,9 @@ def led_series_resistor_maximum_current(resistance, power_rating) -> Unit("A"):
     current = resistor_current_by_power(resistance, power_rating)
     return current
 
+@returns_unit("A")
 @normalize_numeric_args
-def led_series_resistor_current(vsupply, resistance, vforward) -> Unit("A"):
+def led_series_resistor_current(vsupply, resistance, vforward):
     """
     Compute the current that flows through a LED + series resistor combination
     when connected to a supply voltage [vsupply] and a series resistor of [resistance].

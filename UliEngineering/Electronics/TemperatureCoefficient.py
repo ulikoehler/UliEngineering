@@ -4,7 +4,8 @@
 Utilities for computing temperature coefficients
 and their effects
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, normalize
+from collections.abc import Iterable
+from UliEngineering.EngineerIO import NormalizeResult, normalize_numeric_args, normalize
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
@@ -119,6 +120,13 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     tdelta_neg = tmin - tref
     tdelta_pos = tmax - tref
     normalized = normalize(nominal)
+    if normalized is None:
+        raise ValueError("The nominal value must be a valid number or EngineerIO string.")
+    elif isinstance(normalized, Iterable):
+        if len(normalized) == 1 and isinstance(normalized[0], NormalizeResult):
+            normalized = normalized[0]
+        else:
+            raise ValueError("The nominal value must be a single number or EngineerIO string, not a list or array of such objects.")
     nominal, unit = normalized.value, normalized.unit
     # Compute nominal factors by static tolerance
     tol_min_value, tol_max_value, _ = value_range_over_tolerance(nominal, tolerance)

@@ -5,10 +5,8 @@ Microstrip utilities
 import scipy.constants
 import numpy as np
 import math
-import numpy as np
 from collections import namedtuple
-from UliEngineering.EngineerIO import normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
            "RelativePermittivity", "DielectricHeight"]
@@ -34,8 +32,9 @@ class DielectricHeight():
     https://www.multi-circuit-boards.eu/en/pcb-design-aid/layer-buildup/standard-buildup.html
     """
 
+@returns_unit("Ω")
 @normalize_numeric_args
-def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
+def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4):
     """
     Compute the impedance of a single-eded
     outer-layer microstrip using its width, height and
@@ -76,8 +75,9 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
     "odd_mode_impedance"
 ])
 
+@returns_unit("Ω")
 @normalize_numeric_args
-def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4) -> Unit("Ω"):
+def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4):
     """
     Compute the impedance of a differential (edge-coupled)
     outer-layer microstrip using its width, height, the distance
@@ -131,7 +131,7 @@ def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 �
     c0 = b0 - (b0 - 0.207) * math.exp(-0.414 * u);
     d0 = 0.694 * math.exp(-0.562 * u) + 0.593
     # weff
-    Y0 = (t / (w*math.pi + 1.1 * t*math.pi))**2
+    Y0 = (t / (w*math.pi + 1.1 * t *math.pi))**2
     Y1 = math.sqrt((t / h)**2 + Y0)
     Y2 = (er_eff + 1) / (2 * er_eff)
     weff = w + (t / math.pi) * math.log((4 * math.e) / Y1) * Y2

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from UliEngineering.EngineerIO import normalize_numeric_args, Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 import scipy.constants
 
 __all__ = [
@@ -14,8 +14,9 @@ class NucleusLarmorFrequency:
     H1 = scipy.constants.physical_constants['shielded proton gyromag. ratio in MHz/T'][0]
     He3 = scipy.constants.physical_constants['shielded helion gyromag. ratio in MHz/T'][0]
 
+@returns_unit("Hz")
 @normalize_numeric_args
-def larmor_frequency(b0, nucleus_larmor_frequency=NucleusLarmorFrequency.H1) -> Unit("Hz"):
+def larmor_frequency(b0, nucleus_larmor_frequency=NucleusLarmorFrequency.H1):
     """
     Get the magnetic resonance frequency (larmor frequency)
     for a given nucleus in a given magnetic field strength B0

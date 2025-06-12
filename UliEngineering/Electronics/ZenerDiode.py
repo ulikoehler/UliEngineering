@@ -3,14 +3,13 @@
 """
 Utilities for computing different aspects and complexities of voltage dividers
 """
-from UliEngineering.EngineerIO import normalize_numeric_args
-from .Resistors import *
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["zener_diode_power_dissipation"]
 
+@returns_unit("W")
 @normalize_numeric_args
-def zener_diode_power_dissipation(zener_voltage, current) -> Unit("W"):
+def zener_diode_power_dissipation(zener_voltage, current):
     """
     Compute the power dissipated in a zener diode
     given the zener voltage and the current through it.

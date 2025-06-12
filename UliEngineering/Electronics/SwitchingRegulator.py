@@ -3,7 +3,7 @@
 """
 Utilities for computing switching regulator parameters
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, Unit
+from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 from collections import namedtuple
 
 __all__ = [
@@ -17,7 +17,8 @@ __all__ = [
 ]
 
 @normalize_numeric_args
-def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3) -> Unit("H"):
+@returns_unit("H")
+def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3):
     """
     Compute the optimal inductance for use in a buck regulator
     
@@ -59,7 +60,8 @@ def buck_regulator_duty_cycle(vin, vout) -> float:
     return vout / vin
 
 @normalize_numeric_args
-def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax) -> Unit("A"):
+@returns_unit("A")
+def buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax):
     """
     Compute the ripple current ΔIL in the inductor
     
@@ -102,7 +104,8 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     return InductorCurrent(peak=Ilpeak, rms=Ilrms, ripple=ΔIL)
 
 @normalize_numeric_args
-def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.0) -> Unit("A"):
+@returns_unit("A")
+def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.0):
     """
     Compute the peak inductor current rating
     
@@ -124,7 +127,8 @@ def buck_regulator_inductor_peak_current(vin, vout, inductance, frequency, ioutm
     ).peak * safety_factor
 
 @normalize_numeric_args
-def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2) -> Unit("A"):
+@returns_unit("A")
+def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutmax, safety_factor=1.2):
     """
     Compute the RMS inductor current rating
     
@@ -147,7 +151,8 @@ def buck_regulator_inductor_rms_current(vin, vout, inductance, frequency, ioutma
     
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency) -> Unit("F"):
+@returns_unit("F")
+def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_voltage, frequency):
     """
     Basic output capacitance calculation, based on the formula:
     C > 2*ΔIL / (fsw * ΔVout)
@@ -160,7 +165,8 @@ def buck_regulator_min_capacitance_method1(ripple_current, permissible_ripple_vo
     return (2 * ripple_current) / (frequency * permissible_ripple_voltage)
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current) -> Unit("F"):
+@returns_unit("F")
+def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, output_voltage_ripple, max_load_current, light_load_current):
     """
     Compute the minimum capacitance required for a buck regulator
     based on the load current and the peak permissible output voltage.
@@ -178,7 +184,8 @@ def buck_regulator_min_capacitance_method2(inductance, nominal_output_voltage, o
     return inductance * (max_load_current**2 - light_load_current**2) / (peak_output_voltage**2 - nominal_output_voltage**2)
 
 @normalize_numeric_args
-def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current) -> Unit("F"):
+@returns_unit("F")
+def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_ripple, ripple_current):
     """
     Compute the minimum capacitance required for a buck regulator
     based on the load current and the peak permissible output voltage.
@@ -191,6 +198,7 @@ def buck_regulator_min_capacitance_method3(switching_frequency, output_voltage_r
     return 1 / (8 * switching_frequency) * 1 / (output_voltage_ripple / ripple_current)
 
 @normalize_numeric_args
+@returns_unit("F")
 def buck_regulator_min_capacitance(
     ripple_current,
     output_voltage_ripple,
@@ -199,7 +207,7 @@ def buck_regulator_min_capacitance(
     nominal_output_voltage,
     max_load_current,
     light_load_current
-) -> Unit("F"):
+):
     """
     Calculate the minimum capacitance required for a buck regulator by taking
     the maximum of three different calculation methods.
@@ -256,7 +264,8 @@ def buck_regulator_min_capacitance(
     return max(c1, c2, c3)
 
 @normalize_numeric_args
-def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current) -> Unit("Ω"):
+@returns_unit("Ω")
+def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_current):
     """
     Compute the maximum ESR of the output capacitor
     
@@ -275,12 +284,13 @@ def buck_regulator_output_capacitor_max_esr(output_voltage_ripple, ripple_curren
     return output_voltage_ripple / ripple_current
 
 @normalize_numeric_args
+@returns_unit("A")
 def buck_regulator_output_capacitor_rms_current(
     input_voltage_max,
     output_voltage,
     inductance,
     switching_frequency,
-) -> Unit("A"):
+):
     """
     Compute the RMS current rating of the output capacitor
     This is based on the formula:
@@ -298,7 +308,8 @@ def buck_regulator_output_capacitor_rms_current(
     )
 
 @normalize_numeric_args
-def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF") -> Unit("W"):
+@returns_unit("W")
+def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="200pF"):
     """
     Compute the minimum required power rating of the catch diode
     for non-synchronous buck regulators.
@@ -315,17 +326,11 @@ def buck_regulator_catch_diode_power(vinmax, vout, iout, fsw, v_d="0.7V", c_j="2
     Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
     Formula 40
     """
-    vinmax = normalize_numeric(vinmax)
-    vout = normalize_numeric(vout)
-    iout = normalize_numeric(iout)
-    fsw = normalize_numeric(fsw)
-    v_d = normalize_numeric(v_d)
-    c_j = normalize_numeric(c_j)
-    
     return ((vinmax - vout) * iout * v_d) / (vinmax) + (c_j * fsw * (vinmax + v_d)**2) / 2
 
 @normalize_numeric_args
-def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency) -> Unit("V"):
+@returns_unit("V")
+def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency):
     """
     Compute the minimum output voltage of a buck regulator given its minimum on time.
     

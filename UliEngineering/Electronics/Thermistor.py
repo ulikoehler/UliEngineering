@@ -6,8 +6,7 @@ Thermistor computations
 For reference see e.g.
 https://www.electronics-tutorials.ws/io/thermistors.html
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
 import numpy as np
 from UliEngineering.Physics.Temperature import kelvin_to_celsius
@@ -39,7 +38,8 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
-def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("°C"):
+@returns_unit("°C")
+def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0):
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
     
@@ -59,7 +59,8 @@ def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0) -> Unit("
     temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
     return kelvin_to_celsius(temperature_kelvin)
 
-def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0) -> Unit("Ω"):
+@returns_unit("Ω")
+def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0):
     """
     Calculate the resistance of a thermistor given its temperature.
 
@@ -68,7 +69,7 @@ def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0) -> Unit("
     A, B, C (float): The Steinhart-Hart coefficients for the thermistor
 
     Returns:
-    float: The resistance of the thermistor
+    float: The resistance of the thermistor in Ohms
     """
     temperature_kelvin = normalize_temperature_kelvin(temperature)
     t0_kelvin = normalize_temperature_kelvin(T0)
