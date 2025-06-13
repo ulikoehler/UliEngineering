@@ -124,8 +124,8 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         # These tests may need adjustment based on actual E-series implementation
         
         # For now, test that non-standard values get high cost
-        assert_approx_equal(functor("7.32Ω"), 100.0)   # Definitely not standard
-        assert_approx_equal(functor("43.21Ω"), 100.0)  # Definitely not standard
+        assert_approx_equal(functor("7.39162Ω"), 100.0)   # Definitely not standard
+        assert_approx_equal(functor("46.219Ω"), 100.0)  # Definitely not standard
 
     def test_boundary_values(self):
         """Test values at the boundaries of tolerance"""
@@ -207,7 +207,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         
         functor = ResistorSeriesCostFunctor(weights=weights)
         assert_approx_equal(functor("10Ω"), 0.1)      # Modified E6 weight
-        assert_approx_equal(functor("123Ω"), 1000.0)  # Modified non_series weight
+        assert_approx_equal(functor("123.45Ω"), 1000.0)  # Modified non_series weight
 
 class TestResistorAroundValueCostFunctor(unittest.TestCase):
     

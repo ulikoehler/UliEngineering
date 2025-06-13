@@ -71,10 +71,13 @@ class ResistorSeriesCostFunctor(object):
             candidates.append(series_values[idx])
         if idx > 0:
             candidates.append(series_values[idx-1])
+            
+        print("X<--", value, "candidates:", candidates)
         
         # Check if any candidate is within tolerance
         for candidate in candidates:
             relative_error = abs(value - candidate) / candidate
+            print("  Y<--", value, candidate, relative_error)
             if relative_error <= self.tolerance:
                 return True
         return False

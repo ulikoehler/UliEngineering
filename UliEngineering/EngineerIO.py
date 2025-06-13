@@ -75,6 +75,7 @@ def _default_units(include_m=False):
     return set([
         # NOTE: These Ω symbols are NOT identical !
         'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        'R', # Ohms, but without having to copynpaste the Ω symbol
         # Time
         's', 'h', 'min',
         # Fraction
