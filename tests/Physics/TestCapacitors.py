@@ -167,9 +167,10 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
     def test_boundary_conditions(self):
         """Test boundary conditions and numerical stability"""
         # Zero energy case (should give infinite capacitance when starting voltage equals final voltage)
-        calculated_capacitance = capacitor_capacitance_by_energy(0, "5V", "5V")
-        # This should actually raise a division by zero error or return inf
-        self.assertTrue(np.isinf(calculated_capacitance) or np.isnan(calculated_capacitance))
+        with np.errstate(divide='ignore', invalid='ignore'):
+            calculated_capacitance = capacitor_capacitance_by_energy(0, "5V", "5V")
+            # This should actually raise a division by zero error or return inf
+            self.assertTrue(np.isinf(calculated_capacitance) or np.isnan(calculated_capacitance))
         
         # Test with very close voltages (numerical stability)
         energy = 1e-6  # µJ
