@@ -369,8 +369,8 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         functor = ResistorAroundValueCostFunctor(1000.0)
         
         # Test very small differences
-        assert_approx_equal(functor(1001.0), 0.0004342, significant=4)
-        assert_approx_equal(functor(999.0), 0.0004342, significant=4)
+        assert_approx_equal(functor(1001.0), 0.00043407, significant=4)
+        assert_approx_equal(functor(999.0), 0.00043451, significant=4)
         
         # Test that very small differences are much less than 1
         self.assertLess(functor(1100.0), 0.1)
