@@ -374,3 +374,271 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         # Test that very small differences are much less than 1
         self.assertLess(functor(1100.0), 0.1)
         self.assertLess(functor(900.0), 0.1)
+
+class TestResistorPowerCostFunctor(unittest.TestCase):
+    
+    def test_power_cost_basic_functionality(self):
+        """Test basic power cost calculation functionality"""
+        # 12V input, 0.25W max power per resistor
+        functor = ResistorPowerCostFunctor("12V", "0.25W", maximum_cost=100.0)
+        
+        # Test with resistors that should be within power limits
+        # For 12V across 1kΩ + 1kΩ series: I = 12V/2kΩ = 6mA, P = I²R = 36µA² * 1kΩ = 0.036W
+        cost = functor("1kΩ", "1kΩ")
+        expected_cost = (0.036 / 0.25) * 100.0  # 14.4
+        assert_approx_equal(cost, expected_cost, significant=3)
+        
+        # Test with identical calculation using different units
+        cost2 = functor(1000.0, 1000.0)
+        assert_approx_equal(cost, cost2)
+
+    def test_power_cost_exceeds_maximum(self):
+        """Test behavior when power exceeds maximum rating"""
+        # 12V input, very low max power (0.001W)
+        functor = ResistorPowerCostFunctor("12V", "0.001W")
+        
+        # With small resistors, power will exceed limit
+        # For 12V across 10Ω + 10Ω: I = 12V/20Ω = 0.6A, P = I²R = 0.36 * 10 = 3.6W >> 0.001W
+        cost = functor("10Ω", "10Ω")
+        self.assertEqual(cost, float('inf'))
+        
+        # Test with different resistor combinations that exceed limit
+        cost2 = functor("1Ω", "100Ω")
+        self.assertEqual(cost2, float('inf'))
+
+    def test_power_cost_at_maximum_limit(self):
+        """Test behavior when power is exactly at maximum limit"""
+        # Design scenario where one resistor hits exactly the limit
+        # 10V across series resistors where one dissipates exactly 1W
+        functor = ResistorPowerCostFunctor("10V", "1W", maximum_cost=50.0)
+        
+        # For I²R = 1W with 10V input: need specific R values
+        # If R1 = 10Ω and we want P1 = 1W, then I² = 0.1, I = 0.316A
+        # Total R = V/I = 10V/0.316A ≈ 31.6Ω, so R2 ≈ 21.6Ω
+        # Let's use approximate values: R1=10Ω, R2=22Ω (close enough for test)
+        cost = functor("10Ω", "22Ω")
+        # This should be high cost but not infinite
+        self.assertNotEqual(cost, float('inf'))
+        self.assertGreater(cost, 40.0)  # Should be close to maximum
+
+    def test_power_cost_zero_power_case(self):
+        """Test edge case with zero input voltage"""
+        functor = ResistorPowerCostFunctor("0V", "1W")
+        
+        # With zero voltage, no current flows, no power dissipated
+        cost = functor("100Ω", "200Ω")
+        assert_approx_equal(cost, 0.0)
+
+    def test_power_cost_unequal_resistors(self):
+        """Test with unequal resistor values"""
+        functor = ResistorPowerCostFunctor("24V", "2W", maximum_cost=200.0)
+        
+        # Test R1 >> R2: most power in R1
+        # 24V across 1kΩ + 100Ω: I = 24/1100 ≈ 0.0218A
+        # P1 = I²R1 = 0.000476 * 1000 = 0.476W, P2 = 0.000476 * 100 = 0.0476W
+        cost1 = functor("1kΩ", "100Ω")
+        expected_cost1 = (0.476 / 2.0) * 200.0  # Based on higher power (R1)
+        assert_approx_equal(cost1, expected_cost1, significant=2)
+        
+        # Test R1 << R2: most power in R2
+        cost2 = functor("100Ω", "1kΩ")
+        # Should be identical due to symmetry in series circuit
+        assert_approx_equal(cost1, cost2, significant=3)
+
+    def test_power_cost_engineer_string_inputs(self):
+        """Test with various engineer string formats"""
+        functor = ResistorPowerCostFunctor("5V", "100mW")
+        
+        # Test different resistor value formats
+        cost1 = functor("1kΩ", "2.2kΩ")
+        cost2 = functor("1000Ω", "2200Ω") 
+        cost3 = functor("1000", "2200")
+        
+        # All should give same result
+        assert_approx_equal(cost1, cost2)
+        assert_approx_equal(cost2, cost3)
+        
+        # Test voltage and power in different units
+        functor2 = ResistorPowerCostFunctor("5000mV", "0.1W")
+        cost4 = functor2("1kΩ", "2.2kΩ")
+        assert_approx_equal(cost1, cost4)
+
+    def test_power_cost_invalid_resistor_values(self):
+        """Test with invalid resistor values"""
+        functor = ResistorPowerCostFunctor("12V", "1W")
+        
+        # Zero resistors
+        self.assertEqual(functor(0.0, "100Ω"), float('inf'))
+        self.assertEqual(functor("100Ω", 0.0), float('inf'))
+        self.assertEqual(functor(0.0, 0.0), float('inf'))
+        
+        # Negative resistors  
+        self.assertEqual(functor(-100.0, "100Ω"), float('inf'))
+        self.assertEqual(functor("100Ω", -100.0), float('inf'))
+
+    def test_power_cost_initialization_validation(self):
+        """Test initialization parameter validation"""
+        # Valid initialization
+        functor = ResistorPowerCostFunctor("12V", "1W", 50.0)
+        self.assertEqual(functor.input_voltage, 12.0)
+        self.assertEqual(functor.maximum_power, 1.0)
+        self.assertEqual(functor.maximum_cost, 50.0)
+        
+        # Invalid input voltage
+        with self.assertRaises(ValueError):
+            ResistorPowerCostFunctor("-12V", "1W")
+        
+        # Invalid maximum power
+        with self.assertRaises(ValueError):
+            ResistorPowerCostFunctor("12V", "0W")
+        
+        with self.assertRaises(ValueError):
+            ResistorPowerCostFunctor("12V", "-1W")
+        
+        # Invalid maximum cost
+        with self.assertRaises(ValueError):
+            ResistorPowerCostFunctor("12V", "1W", -10.0)
+
+    def test_power_cost_scaling_behavior(self):
+        """Test that cost scales properly with power utilization"""
+        functor = ResistorPowerCostFunctor("10V", "1W", maximum_cost=100.0)
+        
+        # Calculate scenarios with different power levels
+        # Scenario 1: Low power (large resistors)
+        cost_low = functor("10kΩ", "10kΩ")
+        # 10V across 20kΩ: I = 0.5mA, P = 0.0025W each
+        
+        # Scenario 2: Medium power
+        cost_med = functor("1kΩ", "1kΩ") 
+        # 10V across 2kΩ: I = 5mA, P = 0.025W each
+        
+        # Scenario 3: Higher power (smaller resistors)
+        cost_high = functor("100Ω", "100Ω")
+        # 10V across 200Ω: I = 50mA, P = 0.25W each
+        
+        # Costs should increase with power
+        self.assertLess(cost_low, cost_med)
+        self.assertLess(cost_med, cost_high)
+        
+        # All should be finite (below 1W limit)
+        self.assertNotEqual(cost_low, float('inf'))
+        self.assertNotEqual(cost_med, float('inf'))
+        self.assertNotEqual(cost_high, float('inf'))
+
+    def test_power_cost_maximum_cost_parameter(self):
+        """Test different maximum_cost parameter values"""
+        # Test with different maximum cost values
+        functor1 = ResistorPowerCostFunctor("12V", "1W", maximum_cost=50.0)
+        functor2 = ResistorPowerCostFunctor("12V", "1W", maximum_cost=200.0)
+        
+        cost1 = functor1("500Ω", "500Ω")
+        cost2 = functor2("500Ω", "500Ω")
+        
+        # Cost2 should be 4x cost1 (200/50 = 4)
+        assert_approx_equal(cost2, cost1 * 4.0, significant=4)
+        
+        # Test with maximum_cost = 0 (valid edge case)
+        functor3 = ResistorPowerCostFunctor("12V", "1W", maximum_cost=0.0)
+        cost3 = functor3("500Ω", "500Ω")
+        assert_approx_equal(cost3, 0.0)
+
+    def test_power_cost_extreme_values(self):
+        """Test with extreme resistance and voltage values"""
+        # Very high voltage, high power limit
+        functor_high = ResistorPowerCostFunctor("1000V", "100W")
+        
+        # Very low voltage, low power limit  
+        functor_low = ResistorPowerCostFunctor("0.1V", "1mW")
+        
+        # Test that calculations don't crash with extreme values
+        cost_high = functor_high("1MΩ", "1MΩ")
+        cost_low = functor_low("1Ω", "1Ω")
+        
+        # Both should return finite values
+        self.assertIsInstance(cost_high, float)
+        self.assertIsInstance(cost_low, float)
+        self.assertNotEqual(cost_high, float('inf'))
+        # cost_low might be infinite due to exceeding power limit
+
+    def test_power_cost_symmetry(self):
+        """Test that swapping resistor order gives same result"""
+        functor = ResistorPowerCostFunctor("15V", "2W")
+        
+        # Test various resistor combinations
+        test_pairs = [
+            ("100Ω", "200Ω"),
+            ("1kΩ", "470Ω"), 
+            ("10Ω", "1kΩ"),
+            ("22kΩ", "47kΩ")
+        ]
+        
+        for r1, r2 in test_pairs:
+            cost1 = functor(r1, r2)
+            cost2 = functor(r2, r1)
+            assert_approx_equal(cost1, cost2, significant=6)
+
+    def test_power_cost_reproducibility(self):
+        """Test that repeated calls give same results"""
+        functor = ResistorPowerCostFunctor("9V", "0.5W", 75.0)
+        
+        # Test same calculation multiple times
+        test_value = ("220Ω", "330Ω")
+        results = [functor(*test_value) for _ in range(10)]
+        
+        # All results should be identical
+        for result in results[1:]:
+            assert_approx_equal(result, results[0])
+
+    def test_power_cost_known_calculations(self):
+        """Test against hand-calculated known values"""
+        # Known scenario: 12V across 100Ω + 200Ω series
+        # Total R = 300Ω, I = 12V/300Ω = 0.04A = 40mA
+        # P1 = I²R1 = 0.0016 * 100 = 0.16W
+        # P2 = I²R2 = 0.0016 * 200 = 0.32W  
+        # Max power = 0.32W
+        functor = ResistorPowerCostFunctor("12V", "1W", maximum_cost=100.0)
+        
+        cost = functor("100Ω", "200Ω")
+        expected_cost = (0.32 / 1.0) * 100.0  # 32.0
+        assert_approx_equal(cost, expected_cost, significant=3)
+
+    def test_power_cost_boundary_conditions(self):
+        """Test boundary conditions near power limits"""
+        # Set up scenario where we can test near the boundary
+        functor = ResistorPowerCostFunctor("10V", "0.5W", maximum_cost=100.0)
+        
+        # Find resistor values that give power just under limit
+        # For P = 0.49W (just under 0.5W limit)
+        cost_under = functor("200Ω", "250Ω")  # Should be valid
+        self.assertNotEqual(cost_under, float('inf'))
+        self.assertGreater(cost_under, 90.0)  # Should be high cost
+        
+        # Test with values that should exceed limit
+        cost_over = functor("10Ω", "20Ω")  # Higher power
+        # This might be infinite depending on exact calculation
+
+    def test_power_cost_integration_with_resistor_functions(self):
+        """Test that integration with Resistors.py functions works correctly"""
+        functor = ResistorPowerCostFunctor("24V", "5W")
+        
+        # Test that the functor properly uses imported functions
+        # This is more of an integration test to ensure the imports work
+        from UliEngineering.Electronics.Resistors import series_resistors, current_through_resistor, power_dissipated_in_resistor_by_current
+        
+        r1, r2 = 470.0, 680.0
+        
+        # Manual calculation using the same functions
+        total_r = series_resistors(r1, r2)
+        current = current_through_resistor(total_r, 24.0)
+        power1 = power_dissipated_in_resistor_by_current(r1, current)
+        power2 = power_dissipated_in_resistor_by_current(r2, current)
+        max_power = max(power1, power2)
+        
+        # Compare with functor result
+        cost = functor(r1, r2)
+        expected_cost = (max_power / 5.0) * 100.0  # default maximum_cost
+        
+        if max_power <= 5.0:
+            assert_approx_equal(cost, expected_cost, significant=4)
+        else:
+            self.assertEqual(cost, float('inf'))

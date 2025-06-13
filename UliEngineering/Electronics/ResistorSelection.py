@@ -3,12 +3,13 @@ import numpy as np
 from dataclasses import dataclass
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
-from UliEngineering.Electronics.Resistors import ESeries, standard_resistors
+from UliEngineering.Electronics.Resistors import ESeries, standard_resistors, power_dissipated_in_resistor_by_current, series_resistors, current_through_resistor
 
 __all__ = [
     'ResistorSeriesWeights',
     'ResistorSeriesCostFunctor',
     'ResistorAroundValueCostFunctor',
+    'ResistorPowerCostFunctor',
     'resistor_selection_error_matrix',
     'feedback_network_error',
 ]
@@ -234,4 +235,79 @@ class ResistorAroundValueCostFunctor(object):
         log_ratio = abs(np.log(value / self.target_value) / np.log(self.base))
         
         return log_ratio
+
+class ResistorPowerCostFunctor(object):
+    """
+    Cost functor that evaluates resistor combinations based on power dissipation
+    when connected in series with a given input voltage.
+    
+    Returns infinite cost if any resistor exceeds maximum power rating,
+    otherwise returns a cost scaled from 0 to maximum_cost based on the
+    highest power dissipation among the resistors.
+    """
+    
+    def __init__(self, input_voltage, maximum_power, maximum_cost=100.0):
+        """
+        Initialize the power cost functor.
+        
+        Parameters
+        ----------
+        input_voltage : float or Engineer string
+            Input voltage applied across the series resistor combination
+        maximum_power : float or Engineer string
+            Maximum allowable power dissipation for any single resistor
+        maximum_cost : float, optional
+            Maximum cost value to return when power is at the limit.
+            Default is 100.0.
+        """
+        self.input_voltage = normalize_numeric(input_voltage)
+        self.maximum_power = normalize_numeric(maximum_power)
+        self.maximum_cost = float(maximum_cost)
+        
+        if self.input_voltage < 0:
+            raise ValueError("Input voltage must be non-negative")
+        if self.maximum_power <= 0:
+            raise ValueError("Maximum power must be positive")
+        if self.maximum_cost < 0:
+            raise ValueError("Maximum cost must be non-negative")
+    
+    def __call__(self, r1, r2):
+        """
+        Evaluate the power-based cost for two resistors in series.
+        
+        Parameters
+        ----------
+        r1 : float or Engineer string
+            First resistor value in Ohms
+        r2 : float or Engineer string
+            Second resistor value in Ohms
+            
+        Returns
+        -------
+        float
+            Cost value: infinity if any resistor exceeds max power,
+            otherwise 0 to maximum_cost based on highest power dissipation
+        """
+        r1_val = normalize_numeric(r1)
+        r2_val = normalize_numeric(r2)
+        
+        if r1_val <= 0 or r2_val <= 0:
+            return float('inf')  # Invalid resistor values
+        
+        # Calculate total series resistance and current using functions from Resistors.py
+        total_resistance = series_resistors(r1_val, r2_val)
+        current = current_through_resistor(total_resistance, self.input_voltage)
+        
+        # Calculate power dissipated in each resistor using functions from Resistors.py
+        power_r1 = power_dissipated_in_resistor_by_current(r1_val, current)
+        power_r2 = power_dissipated_in_resistor_by_current(r2_val, current)
+        
+        # Check if either resistor exceeds maximum power
+        max_power_dissipated = max(power_r1, power_r2)
+        if max_power_dissipated > self.maximum_power:
+            return float('inf')
+        
+        # Scale cost from 0 to maximum_cost based on power utilization
+        power_ratio = max_power_dissipated / self.maximum_power
+        return power_ratio * self.maximum_cost
 
