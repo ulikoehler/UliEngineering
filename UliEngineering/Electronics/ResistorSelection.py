@@ -329,7 +329,8 @@ def select_resistors(
     error_cutoff: float,
     r1_options: Sequence[float],
     r2_options: Sequence[float],
-    cost_functions: List[Callable[[float, float, float], float]]
+    cost_functions: List[Callable[[float, float, float], float]],
+    cost_cutoff: float = 100.0
 ) -> List[ResistorSelection]:
     """
     Select optimal resistor combinations based on error and cost criteria.
@@ -340,6 +341,7 @@ def select_resistors(
         r1_options: Sequence of possible R1 values
         r2_options: Sequence of possible R2 values
         cost_functions: List of cost functions taking (r1, r2, error) as arguments
+        cost_cutoff: Maximum acceptable total cost value. Default is 100.0.
     
     Returns:
         List of ResistorSelection objects sorted by total cost (ascending)
@@ -355,12 +357,14 @@ def select_resistors(
             # Compute total cost as sum of all cost functions
             total_cost = sum(cost_func(r1, r2, error) for cost_func in cost_functions)
             
-            results.append(ResistorSelection(
-                r1=r1,
-                r2=r2,
-                error=error,
-                total_cost=total_cost
-            ))
+            # Only consider combinations below cost cutoff
+            if total_cost <= cost_cutoff:
+                results.append(ResistorSelection(
+                    r1=r1,
+                    r2=r2,
+                    error=error,
+                    total_cost=total_cost
+                ))
     
     # Sort by total cost (ascending)
     results.sort(key=lambda x: x.total_cost)
