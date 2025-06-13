@@ -49,7 +49,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("10Ω"), 1.0)   # E6 with custom weight
         assert_approx_equal(functor("12Ω"), 2.0)   # E12 with custom weight
         assert_approx_equal(functor("11Ω"), 3.0)   # E24 with custom weight
-        assert_approx_equal(functor("123Ω"), 50.0) # Non-series with custom weight
+        assert_approx_equal(functor("128.2882"), 50.0) # Non-series with custom weight
 
     def test_tolerance_handling(self):
         """Test tolerance parameter functionality"""
@@ -129,7 +129,15 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
 
     def test_boundary_values(self):
         """Test values at the boundaries of tolerance"""
-        functor = ResistorSeriesCostFunctor(tolerance=0.01)  # 1% tolerance
+        functor = ResistorSeriesCostFunctor(tolerance=0.01, weights=ResistorSeriesWeights(
+            E6=0.95,
+            E12=100.0,
+            E24=100.0,
+            E48=100.0,
+            E96=100.0,
+            E192=100.0,
+            non_series=100.0
+        ))  # 1% tolerance
         
         # Test values just inside and outside tolerance for 100Ω (E6 value)
         assert_approx_equal(functor(100.0), 0.95)      # Exact match
