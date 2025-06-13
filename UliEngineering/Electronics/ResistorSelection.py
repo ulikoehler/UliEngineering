@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+import numpy as np
+from dataclasses import dataclass
+from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
+from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
+from UliEngineering.Electronics.Resistors import ESeries, standard_resistors
+
+__all__ = [
+    'ResistorSeriesWeights',
+    'ResistorSeriesCostFunctor',
+    'ResistorAroundValueCostFunctor',
+    'resistor_selection_error_matrix',
+    'feedback_network_error',
+]
+
+@dataclass
+class ResistorSeriesWeights:
+    """Weights for different resistor series."""
+    E6: float = 0.95
+    E12: float = 1.0
+    E24: float = 2.0
+    E48: float = 4.0
+    E96: float = 8.0
+    E192: float = 16.0
+    non_series: float = 100.0
+
+class ResistorSeriesCostFunctor(object):
+    """
+    Cost functor that assigns costs to resistors based on their E-series membership.
+    Uses precomputed lookup structures for fast evaluation.
+    """
+    
+    def __init__(self, weights=None, tolerance=0.001):
+        """
+        Initialize the cost functor.
+        
+        Parameters
+        ----------
+        weights : ResistorSeriesWeights, optional
+            Weights for different E-series. If None, uses default weights.
+        tolerance : float
+            Tolerance for matching resistor values (as fraction, e.g. 0.001 = 0.1%)
+        """
+        self.weights = weights if weights is not None else ResistorSeriesWeights()
+        self.tolerance = tolerance
+        
+        # Precompute lookup sets for fast membership testing
+        self._build_lookup_tables()
+    
+    def _build_lookup_tables(self):
+        """Build optimized lookup tables for E-series membership testing."""
+        # Use standard_resistors() to generate complete lists
+        self.e6_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E6))))
+        self.e12_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E12))))
+        self.e24_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E24))))
+        self.e48_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E48))))
+        self.e96_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E96))))
+        self.e192_values = np.array(sorted(list(standard_resistors(sequence=ESeries.E192))))
+    
+    def _is_in_series(self, value, series_values):
+        """Check if a value is in a series within tolerance using binary search."""
+        value = normalize_numeric(value)
+        
+        # Use binary search to find closest values
+        idx = np.searchsorted(series_values, value)
+        
+        # Check value at idx and idx-1
+        candidates = []
+        if idx < len(series_values):
+            candidates.append(series_values[idx])
+        if idx > 0:
+            candidates.append(series_values[idx-1])
+        
+        # Check if any candidate is within tolerance
+        for candidate in candidates:
+            relative_error = abs(value - candidate) / candidate
+            if relative_error <= self.tolerance:
+                return True
+        return False
+    
+    def __call__(self, resistor_value):
+        """
+        Evaluate the cost of a resistor value based on its E-series membership.
+        
+        Parameters
+        ----------
+        resistor_value : float or Engineer string
+            The resistor value to evaluate
+            
+        Returns
+        -------
+        float
+            Cost value based on series membership
+        """
+        # Check series membership in order of preference (E6 first as most common/cheapest)
+        if self._is_in_series(resistor_value, self.e6_values):
+            return self.weights.E6
+        if self._is_in_series(resistor_value, self.e12_values):
+            return self.weights.E12
+        if self._is_in_series(resistor_value, self.e24_values):
+            return self.weights.E24
+        if self._is_in_series(resistor_value, self.e48_values):
+            return self.weights.E48
+        if self._is_in_series(resistor_value, self.e96_values):
+            return self.weights.E96
+        if self._is_in_series(resistor_value, self.e192_values):
+            return self.weights.E192
+        else:
+            return self.weights.non_series
+
+def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
+    """
+    Compute an error matrix for selecting two resistors.
+    
+    Parameters:
+    -----------
+    error_function : callable
+        Function that takes (r1, r2) and returns the percentage deviation 
+        from the desired value
+    r1_sequence : array-like
+        Sequence of resistor values for the first resistor
+    r2_sequence : array-like
+        Sequence of resistor values for the second resistor
+        
+    Returns:
+    --------
+    numpy.ndarray
+        2D array where rows represent r1_sequence and columns represent r2_sequence.
+        Each element contains the error percentage for that resistor combination.
+    """
+    # Normalize resistor values to floats
+    r1_values = np.array([normalize_numeric(r) for r in r1_sequence])
+    r2_values = np.array([normalize_numeric(r) for r in r2_sequence])
+    
+    # Create meshgrid for broadcasting
+    r1_mesh, r2_mesh = np.meshgrid(r1_values, r2_values, indexing='ij')
+    
+    # Vectorize the error function to work with numpy arrays
+    vectorized_error = np.vectorize(error_function)
+    
+    # Compute error matrix using broadcasting
+    error_matrix = vectorized_error(r1_mesh, r2_mesh)
+    
+    return error_matrix
+
+@normalize_numeric_args
+def feedback_network_error(r1, r2, input_voltage, target_voltage, load=None):
+    """
+    Calculate the percentage deviation of a feedback network output voltage
+    from the target voltage.
+    
+    In a typical feedback network, r1 is the upper resistor (connected to input)
+    and r2 is the lower resistor (connected to ground). The feedback voltage
+    is taken from the junction between r1 and r2.
+    
+    Parameters
+    ----------
+    r1 : float or Engineer string
+        Upper resistor value in Ohms
+    r2 : float or Engineer string  
+        Lower resistor value in Ohms
+    input_voltage : float or Engineer string
+        Input voltage to the feedback network
+    target_voltage : float or Engineer string
+        Desired output voltage at the feedback point
+    load : float or Engineer string, optional
+        Load resistance in parallel with r2. If None, no load is considered.
+        
+    Returns
+    -------
+    float
+        Percentage deviation from target voltage (positive = higher, negative = lower)
+    """
+    # Use voltage divider function with optional load
+    rload = load if load is not None else np.inf
+    actual_voltage = voltage_divider_voltage(r1, r2, input_voltage, rload=rload)
+    
+    # Calculate percentage deviation
+    deviation_percent = ((actual_voltage - target_voltage) / target_voltage) * 100
+    
+    return deviation_percent
+
+class ResistorAroundValueCostFunctor(object):
+    """
+    Cost functor that evaluates how close a resistor value is to a target value
+    using logarithmic criteria with configurable base.
+    
+    Returns the absolute difference in "orders of magnitude" between the
+    resistor value and target value.
+    """
+    
+    def __init__(self, target_value, base=10.0):
+        """
+        Initialize the functor.
+        
+        Parameters
+        ----------
+        target_value : float or Engineer string
+            The target resistor value to compare against
+        base : float, optional
+            Base for logarithmic calculation. Default is 10.0 for orders of magnitude.
+            Use 2.0 for powers of 2, e for natural logarithm, etc.
+        """
+        self.target_value = normalize_numeric(target_value)
+        self.base = float(base)
+        
+        if self.target_value <= 0:
+            raise ValueError("Target value must be positive")
+        if self.base <= 0 or self.base == 1:
+            raise ValueError("Base must be positive and not equal to 1")
+    
+    def __call__(self, resistor_value):
+        """
+        Evaluate how far a resistor value is from the target value.
+        
+        Parameters
+        ----------
+        resistor_value : float or Engineer string
+            The resistor value to evaluate
+            
+        Returns
+        -------
+        float
+            Absolute difference in logarithmic units (e.g., orders of magnitude).
+            0 means exact match, 1 means 10x different (if base=10), 
+            2 means 100x different (if base=10), etc.
+        """
+        value = normalize_numeric(resistor_value)
+        
+        if value <= 0:
+            return float('inf')  # Invalid resistor value
+        
+        # Calculate logarithmic distance
+        log_ratio = abs(np.log(value / self.target_value) / np.log(self.base))
+        
+        return log_ratio
+
