@@ -12,17 +12,19 @@ import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from collections import namedtuple
 
-__all__ = ["e192", "e96", "e48", "e24", "e12", "e6", "resistor_range",
-           "standard_resistors", "parallel_resistors",
-           "current_through_resistor", "standard_resistors_in_range",
-           "power_dissipated_in_resistor_by_current",
-           "power_dissipated_in_resistor_by_voltage",
-           "voltage_across_resistor",
-           "series_resistors", "nearest_resistor",
-           "resistor_by_voltage_and_current",
-           "next_higher_resistor", "next_lower_resistor",
-           "resistor_current_by_power", "ResistorTolerance",
-           "resistor_tolerance"]
+__all__ = [
+    "e192", "e96", "e48", "e24", "e12", "e6", "resistor_range",
+    "standard_resistors", "parallel_resistors",
+    "current_through_resistor", "standard_resistors_in_range",
+    "power_dissipated_in_resistor_by_current",
+    "power_dissipated_in_resistor_by_voltage",
+    "voltage_across_resistor",
+    "series_resistors", "nearest_resistor",
+    "resistor_by_voltage_and_current",
+    "next_higher_resistor", "next_lower_resistor",
+    "resistor_current_by_power", "ResistorTolerance",
+    "resistor_tolerance", "resistor_value_by_voltage_and_power"
+]
 
 #
 # Standard resistor sequences
@@ -262,3 +264,33 @@ def resistor_tolerance(resistance, tolerance="1%") -> ResistorTolerance:
         nominal=resistance,
         upper=resistance + (resistance * tolerance)
     )
+
+@normalize_numeric_args
+@returns_unit("Ω")
+def resistor_value_by_voltage_and_power(voltage, power):
+    """
+    Compute resistor value given voltage across it and power dissipated.
+    
+    Uses the formula: R = V² / P
+    
+    This function does not perform any validity checks on the inputs,
+    hence voltage and/or power can be zero or negative.
+    
+    Parameters
+    ----------
+    voltage : float
+        Voltage across the resistor in volts
+    power : float
+        Power dissipated by the resistor in watts
+        
+    Returns
+    -------
+    float
+        Resistance value in ohms
+        
+    Raises
+    ------
+    ValueError
+        If power is zero or negative
+    """
+    return voltage ** 2 / power
