@@ -207,7 +207,6 @@ def none_to_nan(value):
         )
     if isinstance(value, Iterable):
         # If it's an iterable, convert each element
-        print(value)
         return [none_to_nan(elem) for elem in value]
     # Else: Assume a simple value
     if value is None:
@@ -468,7 +467,7 @@ class EngineerIO(object):
         Like format_value, but also prints the value
         """
         s = self.format(v, unit, significant_digits)
-        print(s)
+        print(s) # This is not a debug print.
         return s
 
 
@@ -835,8 +834,6 @@ def normalize_numeric_args(func=None, *, exclude=None):
             # Bind arguments to new signature to get all parameters with defaults applied
             bound_args = new_sig.bind(*normalized_args, **normalized_kwargs)
             bound_args.apply_defaults()
-            
-            print(args, kwargs, normalized_args, normalized_kwargs)
             
             # Call the original function with all normalized arguments (including defaults)
             return func(*bound_args.args, **bound_args.kwargs)
