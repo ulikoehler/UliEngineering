@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
 import numpy as np
 from dataclasses import dataclass
+from typing import List, Callable, Sequence
+import itertools
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
 from UliEngineering.Electronics.Resistors import ESeries, standard_resistors, power_dissipated_in_resistor_by_current, series_resistors, current_through_resistor
 
 __all__ = [
+    'ResistorSelection',
     'ResistorSeriesWeights',
     'ResistorSeriesCostFunctor',
     'ResistorAroundValueCostFunctor',
     'ResistorPowerCostFunctor',
     'resistor_selection_error_matrix',
     'feedback_network_error',
+    'select_resistors',
 ]
+
+@dataclass
+class ResistorSelection:
+    """Result of resistor selection containing the resistor values, error, and total cost."""
+    r1: float
+    r2: float
+    error: float
+    total_cost: float
 
 @dataclass
 class ResistorSeriesWeights:
@@ -311,3 +323,46 @@ class ResistorPowerCostFunctor(object):
         power_ratio = max_power_dissipated / self.maximum_power
         return power_ratio * self.maximum_cost
 
+
+def select_resistors(
+    error_function: Callable[[float, float], float],
+    error_cutoff: float,
+    r1_options: Sequence[float],
+    r2_options: Sequence[float],
+    cost_functions: List[Callable[[float, float, float], float]]
+) -> List[ResistorSelection]:
+    """
+    Select optimal resistor combinations based on error and cost criteria.
+    
+    Args:
+        error_function: Function that computes error given (r1, r2)
+        error_cutoff: Maximum acceptable error value
+        r1_options: Sequence of possible R1 values
+        r2_options: Sequence of possible R2 values
+        cost_functions: List of cost functions taking (r1, r2, error) as arguments
+    
+    Returns:
+        List of ResistorSelection objects sorted by total cost (ascending)
+    """
+    results = []
+    
+    # Compute all combinations and their errors
+    for r1, r2 in itertools.product(r1_options, r2_options):
+        error = error_function(r1, r2)
+        
+        # Only consider combinations below error cutoff
+        if error <= error_cutoff:
+            # Compute total cost as sum of all cost functions
+            total_cost = sum(cost_func(r1, r2, error) for cost_func in cost_functions)
+            
+            results.append(ResistorSelection(
+                r1=r1,
+                r2=r2,
+                error=error,
+                total_cost=total_cost
+            ))
+    
+    # Sort by total cost (ascending)
+    results.sort(key=lambda x: x.total_cost)
+    
+    return results
