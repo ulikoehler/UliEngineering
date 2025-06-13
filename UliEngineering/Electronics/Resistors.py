@@ -161,7 +161,11 @@ def resistor_range(multiplicator, sequence=e96):
     Get a single range of resistors of a given sequence,
     e.g. for 1k to <10k use multiplicator = 1000.
     """
-    return sequence * multiplicator
+    # Multiply ndarrays directly for performance
+    if isinstance(sequence, np.ndarray):
+        return sequence * multiplicator
+    # Otherwise, use list comprehension
+    return [r * multiplicator for r in sequence]
 
 def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
     """
