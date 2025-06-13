@@ -11,7 +11,6 @@ import itertools
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
 from collections import namedtuple
-from dataclasses import dataclass, field
 
 __all__ = ["e192", "e96", "e48", "e24", "e12", "e6", "resistor_range",
            "standard_resistors", "parallel_resistors",
