@@ -75,3 +75,107 @@ class TestCapacitors(unittest.TestCase):
         
         # Test with auto_format
         self.assertEqual(auto_format(capacitor_voltage_by_energy, "1.5 F", "18.75 J"), "5.00 V")
+
+class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
+    def test_basic_functionality_zero_starting_voltage(self):
+        """Test basic capacitance calculation with zero starting voltage"""
+        energy = 18.75  # J
+        voltage = 5.0   # V
+        expected_capacitance = 1.5  # F
+        calculated_capacitance = capacitor_capacitance_by_energy(energy, voltage)
+        self.assertAlmostEqual(calculated_capacitance, expected_capacitance, places=10)
+
+    def test_non_zero_starting_voltage(self):
+        """Test capacitance calculation with non-zero starting voltage"""
+        starting_voltage = "2.0 V"
+        final_voltage = "5.0 V"
+        capacitance = 1.5       # F
+        # Calculate energy difference between final and starting voltage
+        energy_diff = capacitor_energy(capacitance, final_voltage) - capacitor_energy(capacitance, starting_voltage)
+        calculated_capacitance = capacitor_capacitance_by_energy(energy_diff, final_voltage, starting_voltage)
+        self.assertAlmostEqual(calculated_capacitance, capacitance, places=10)
+
+    def test_engineering_notation(self):
+        """Test with engineering notation units"""
+        # Test with mJ and V
+        calculated_capacitance = capacitor_capacitance_by_energy("1.25 mJ", "5.0 V")
+        self.assertAlmostEqual(calculated_capacitance, 0.1e-3, places=12)  # 0.1 mF
+        
+        # Test with all string parameters
+        calculated_capacitance = capacitor_capacitance_by_energy("72.0 mJ", "1.2 V", "0V")
+        self.assertAlmostEqual(calculated_capacitance, 0.1, places=10)  # 100 mF
+
+    def test_consistency_with_capacitor_energy(self):
+        """Test mathematical consistency with capacitor_energy function"""
+        test_capacitance = 2.2e-6  # 2.2 µF
+        test_voltage = 12.0        # V
+        test_energy = capacitor_energy(test_capacitance, test_voltage)
+        calculated_capacitance = capacitor_capacitance_by_energy(test_energy, test_voltage)
+        self.assertAlmostEqual(calculated_capacitance, test_capacitance, places=12)
+
+    def test_numpy_arrays(self):
+        """Test with numpy arrays"""
+        energies = np.array([18.75, 1.25])  # J
+        voltages = np.array([5.0, 5.0])     # V
+        expected_capacitances = np.array([1.5, 0.1])  # F
+        calculated_capacitances = capacitor_capacitance_by_energy(energies, voltages)
+        assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-10)
+        
+        # Test with mixed arrays and scalars
+        calculated_capacitances = capacitor_capacitance_by_energy(energies, 5.0)
+        assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-10)
+
+    def test_edge_cases(self):
+        """Test edge cases with very small and large values"""
+        # Very small energy
+        small_energy = 1e-12  # pJ
+        voltage = 1.0         # V
+        calculated_capacitance = capacitor_capacitance_by_energy(small_energy, voltage)
+        self.assertAlmostEqual(calculated_capacitance, 2e-12, places=15)  # 2 pF
+        
+        # Large values
+        large_energy = 1000  # J
+        voltage = 100        # V
+        calculated_capacitance = capacitor_capacitance_by_energy(large_energy, voltage)
+        self.assertAlmostEqual(calculated_capacitance, 0.2, places=10)  # 200 mF
+
+    def test_starting_voltage_effects(self):
+        """Test how different starting voltages affect required capacitance"""
+        energy = 10  # J
+        final_voltage = 10  # V
+        
+        # Case 1: Starting from 0V
+        cap1 = capacitor_capacitance_by_energy(energy, final_voltage, "0V")
+        
+        # Case 2: Starting from 5V (should require larger capacitance for same energy addition)
+        cap2 = capacitor_capacitance_by_energy(energy, final_voltage, "5V")
+        
+        # cap2 should be larger than cap1
+        self.assertGreater(cap2, cap1)
+        
+        # Verify the math: for starting voltage = 5V, final = 10V
+        # Energy = 0.5 * C * (10² - 5²) = 0.5 * C * 75 = 37.5 * C
+        # So C = 10 / 37.5 = 0.2667 F
+        expected_cap2 = 10.0 / 37.5
+        self.assertAlmostEqual(cap2, expected_cap2, places=10)
+
+    def test_auto_format_functionality(self):
+        """Test auto_format integration"""
+        self.assertEqual(auto_format(capacitor_capacitance_by_energy, "18.75 J", "5.0 V"), "1.50 F")
+        self.assertEqual(auto_format(capacitor_capacitance_by_energy, "1.25 mJ", "5.0 V"), "100 µF")
+
+    def test_boundary_conditions(self):
+        """Test boundary conditions and numerical stability"""
+        # Zero energy case (should give infinite capacitance when starting voltage equals final voltage)
+        calculated_capacitance = capacitor_capacitance_by_energy(0, "5V", "5V")
+        # This should actually raise a division by zero error or return inf
+        self.assertTrue(np.isinf(calculated_capacitance) or np.isnan(calculated_capacitance))
+        
+        # Test with very close voltages (numerical stability)
+        energy = 1e-6  # µJ
+        final_voltage = "1.0001 V"
+        starting_voltage = "1.0000 V"
+        calculated_capacitance = capacitor_capacitance_by_energy(energy, final_voltage, starting_voltage)
+        # Should be finite and positive
+        self.assertTrue(np.isfinite(calculated_capacitance))
+        self.assertGreater(calculated_capacitance, 0)

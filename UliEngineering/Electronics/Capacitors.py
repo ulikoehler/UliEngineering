@@ -13,6 +13,7 @@ __all__ = [
     "capacitor_constant_current_charge_time",
     "capacitor_constant_current_discharge_time",
     "capacitor_voltage_by_energy",
+    "capacitor_capacitance_by_energy",
 ]
 
 @returns_unit("h")
@@ -122,3 +123,21 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     The capacitance of the parallel plate capacitors in farads (F).
     """
     return epsilon * area / distance
+
+@returns_unit("F")
+@normalize_numeric_args
+def capacitor_capacitance_by_energy(energy, voltage, starting_voltage="0V"):
+    """
+    Compute the capacitance of a capacitor given:
+    - The energy stored in joules
+    - The voltage the capacitor is charged to
+    - The starting voltage (optional, default 0V)
+    
+    The capacitance is returned in farads.
+    
+    The formula accounts for the energy difference between the final and starting voltages:
+    Energy = 0.5 * C * (V_final^2 - V_starting^2)
+    Therefore: C = 2 * Energy / (V_final^2 - V_starting^2)
+    """
+    voltage_squared_diff = np.square(voltage) - np.square(starting_voltage)
+    return 2 * energy / voltage_squared_diff
