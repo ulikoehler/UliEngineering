@@ -113,6 +113,93 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         calculated_capacitance = capacitor_capacitance_by_energy(test_energy, test_voltage)
         self.assertAlmostEqual(calculated_capacitance, test_capacitance, places=12)
 
+    def test_round_trip_with_capacitor_energy(self):
+        """Test round-trip calculations between capacitor_energy and capacitor_capacitance_by_energy"""
+        # Test various capacitance and voltage combinations
+        test_cases = [
+            (1e-6, 5.0),    # 1 µF, 5V
+            (100e-6, 12.0), # 100 µF, 12V
+            (1e-3, 3.3),    # 1 mF, 3.3V
+            (0.47, 24.0),   # 470 mF, 24V
+            (2.2, 1.5),     # 2.2 F, 1.5V
+        ]
+        
+        for original_capacitance, voltage in test_cases:
+            with self.subTest(capacitance=original_capacitance, voltage=voltage):
+                # Forward: capacitance + voltage -> energy
+                energy = capacitor_energy(original_capacitance, voltage)
+                
+                # Backward: energy + voltage -> capacitance
+                calculated_capacitance = capacitor_capacitance_by_energy(energy, voltage)
+                
+                # Should match original capacitance
+                self.assertAlmostEqual(calculated_capacitance, original_capacitance, places=12)
+
+    def test_round_trip_with_starting_voltage(self):
+        """Test round-trip calculations with non-zero starting voltages"""
+        test_cases = [
+            (100e-6, 2.0, 10.0),  # 100 µF, 2V->10V
+            (1e-3, 1.0, 5.0),     # 1 mF, 1V->5V
+            (0.22, 3.0, 12.0),    # 220 mF, 3V->12V
+        ]
+        
+        for original_capacitance, start_voltage, end_voltage in test_cases:
+            with self.subTest(capacitance=original_capacitance, start_v=start_voltage, end_v=end_voltage):
+                # Calculate energy difference
+                end_energy = capacitor_energy(original_capacitance, end_voltage)
+                start_energy = capacitor_energy(original_capacitance, start_voltage)
+                energy_diff = end_energy - start_energy
+                
+                # Calculate capacitance from energy difference
+                calculated_capacitance = capacitor_capacitance_by_energy(
+                    energy_diff, f"{end_voltage}V", f"{start_voltage}V"
+                )
+                
+                # Should match original capacitance
+                self.assertAlmostEqual(calculated_capacitance, original_capacitance, places=12)
+
+    def test_energy_calculation_verification(self):
+        """Test that calculated capacitance produces correct energy when used with capacitor_energy"""
+        test_energies = [1e-9, 1e-6, 1e-3, 1.0, 100.0]  # nJ to 100J
+        test_voltages = [1.0, 3.3, 5.0, 12.0, 24.0]     # Various voltages
+        
+        for energy in test_energies:
+            for voltage in test_voltages:
+                with self.subTest(energy=energy, voltage=voltage):
+                    # Calculate required capacitance
+                    capacitance = capacitor_capacitance_by_energy(energy, voltage)
+                    
+                    # Verify that this capacitance at this voltage gives the expected energy
+                    calculated_energy = capacitor_energy(capacitance, voltage)
+                    
+                    # Should match original energy
+                    self.assertAlmostEqual(calculated_energy, energy, places=12)
+
+    def test_energy_verification_with_starting_voltage(self):
+        """Test energy calculations with starting voltages match expected results"""
+        capacitance = 100e-6  # 100 µF
+        start_voltage = 2.0   # V
+        end_voltage = 8.0     # V
+        
+        # Calculate actual energy difference
+        actual_energy_diff = (
+            capacitor_energy(capacitance, end_voltage) - 
+            capacitor_energy(capacitance, start_voltage)
+        )
+        
+        # Calculate required capacitance for this energy difference
+        calculated_capacitance = capacitor_capacitance_by_energy(
+            actual_energy_diff, f"{end_voltage}V", f"{start_voltage}V"
+        )
+        
+        # Should match original capacitance
+        self.assertAlmostEqual(calculated_capacitance, capacitance, places=12)
+        
+        # Verify the energy calculation is correct
+        # Energy difference should be 0.5 * C * (V_end² - V_start²)
+        expected_energy_diff = 0.5 * capacitance * (end_voltage**2 - start_voltage**2)
+        self.assertAlmostEqual(actual_energy_diff, expected_energy_diff, places=12)
+
     def test_numpy_arrays(self):
         """Test with numpy arrays"""
         energies = np.array([18.75, 1.25])  # J
