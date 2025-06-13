@@ -29,8 +29,8 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("13Ω"), 2.0)   # E24 but not E12/E6
         
         # Test non-standard values
-        assert_approx_equal(functor("7.5Ω"), 100.0)  # Not in any standard series
-        assert_approx_equal(functor("123Ω"), 100.0)  # Not in any standard series
+        assert_approx_equal(functor("7.3928Ω"), 100.0)  # Not in any standard series
+        assert_approx_equal(functor("128.291Ω"), 100.0)  # Not in any standard series
 
     def test_custom_weights(self):
         """Test with custom weight configuration"""
