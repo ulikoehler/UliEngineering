@@ -47,3 +47,13 @@ class TestResistors(unittest.TestCase):
         assert_approx_equal(resistor_by_voltage_and_current("2.5 V", "1 uA"), 2.5e6)
         self.assertEqual(auto_format(resistor_by_voltage_and_current, "2.5 V", "1 uA"), "2.50 MΩ")
 
+    def test_resistor_value_by_voltage_and_power(self):
+        # Test basic calculation: R = V²/P
+        assert_approx_equal(resistor_value_by_voltage_and_power("12V", "1W"), 144.0)  # 12²/1 = 144Ω
+        assert_approx_equal(resistor_value_by_voltage_and_power("5V", "0.5W"), 50.0)  # 5²/0.5 = 50Ω
+        assert_approx_equal(resistor_value_by_voltage_and_power("3.3V", "100mW"), 108.9)  # 3.3²/0.1 = 108.9Ω
+        
+        # Test with different units
+        assert_approx_equal(resistor_value_by_voltage_and_power("1000mV", "10mW"), 100.0)  # 1²/0.01 = 100Ω
+        self.assertEqual(auto_format(resistor_value_by_voltage_and_power, "12V", "1W"), "144 Ω")
+

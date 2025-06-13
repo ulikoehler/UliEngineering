@@ -3,6 +3,7 @@
 from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.ResistorSelection import *
 from UliEngineering.EngineerIO import *
+from UliEngineering.Electronics.Resistors import resistor_value_by_voltage_and_power
 import unittest
 import numpy as np
 
@@ -412,14 +413,12 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         # 10V across series resistors where one dissipates exactly 1W
         functor = ResistorPowerCostFunctor("10V", "1W", maximum_cost=50.0)
         
-        # For I²R = 1W with 10V input: need specific R values
-        # If R1 = 10Ω and we want P1 = 1W, then I² = 0.1, I = 0.316A
-        # Total R = V/I = 10V/0.316A ≈ 31.6Ω, so R2 ≈ 21.6Ω
-        # Let's use approximate values: R1=10Ω, R2=22Ω (close enough for test)
-        cost = functor("10Ω", "22Ω")
+        # Compute resistor values. 2W split onto two resistors
+        r = resistor_value_by_voltage_and_power("10V", 1*2)
+        cost = functor(r/2, r/2)
         # This should be high cost but not infinite
         self.assertNotEqual(cost, float('inf'))
-        self.assertGreater(cost, 40.0)  # Should be close to maximum
+        self.assertGreater(cost, 49.0)  # Should be close to maximum
 
     def test_power_cost_zero_power_case(self):
         """Test edge case with zero input voltage"""
@@ -602,20 +601,26 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         expected_cost = (0.32 / 1.0) * 100.0  # 32.0
         assert_approx_equal(cost, expected_cost, significant=3)
 
-    def test_power_cost_boundary_conditions(self):
-        """Test boundary conditions near power limits"""
-        # Set up scenario where we can test near the boundary
+    def test_power_cost_just_under_limit(self):
+        """Test power cost just under the limit"""
         functor = ResistorPowerCostFunctor("10V", "0.5W", maximum_cost=100.0)
         
-        # Find resistor values that give power just under limit
-        # For P = 0.49W (just under 0.5W limit)
-        cost_under = functor("200Ω", "250Ω")  # Should be valid
+        # Two resistors in series must EACH have 0.49W power.
+        r_under = resistor_value_by_voltage_and_power("10V", 0.49*2)  # ~51Ω
+        # Split the one calculated resistor into two equal resistors
+        cost_under = functor(r_under/2, r_under/2)
         self.assertNotEqual(cost_under, float('inf'))
         self.assertGreater(cost_under, 90.0)  # Should be high cost
+
+    def test_power_cost_just_over_limit(self):
+        """Test power cost just over the limit"""
+        functor = ResistorPowerCostFunctor("10V", "0.5W", maximum_cost=100.0)
         
-        # Test with values that should exceed limit
-        cost_over = functor("10Ω", "20Ω")  # Higher power
-        # This might be infinite depending on exact calculation
+        # For power just over limit: 0.51W per resistor, for two resistors -> double the power
+        r_over = resistor_value_by_voltage_and_power("10V", 0.51*2)  # ~49Ω
+        # Split into two equal resistors
+        cost_over = functor(r_over/2, r_over/2)
+        self.assertEqual(cost_over, float('inf'))  # Should exceed limit
 
     def test_power_cost_integration_with_resistor_functions(self):
         """Test that integration with Resistors.py functions works correctly"""
