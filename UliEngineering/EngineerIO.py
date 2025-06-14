@@ -56,27 +56,27 @@ __all__ = ["normalize_interpunctation", "EngineerIO",
 
 @dataclass
 class UnitSplitResult:
-    remainder: str
-    unit_prefix: str
-    unit: str
+    remainder: str = ''
+    unit_prefix: str = ''
+    unit: str = ''
 
 @dataclass
 class SplitResult:
-    prefix: str
-    number: str
-    unit_prefix_char: str
-    unit_prefix: str
-    unit: str
+    prefix: str = ''
+    number: str = ''
+    unit_prefix_char: str = ''
+    unit_prefix: str = ''
+    unit: str = ''
 
 @dataclass
 class NormalizeResult:
-    prefix: str
-    value: float
-    original_number: float
-    unit_prefix: str
-    unit: str
+    prefix: str = ''
+    value: float = 0.0
+    original_number: float = 0.0
+    unit_prefix: str = ''
+    unit: str = ''
     # Multiplier from prefix
-    prefix_multiplier: float
+    prefix_multiplier: float = 1.0
 
 def _default_unit_prefix_map(include_length_unit_prefixes=False):
     """
@@ -433,7 +433,7 @@ class EngineerIO(object):
         s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}'")
+            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', split result {split_result}")
         return SplitResult(
             prefix=prefix,
             number=s,
@@ -754,7 +754,7 @@ EngineerIO.length_instance = EngineerIO(
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 EngineerIO.area_instance = EngineerIO(
-    units=_area_units().union(_default_units(include_m=False)),
+    units=_area_units(),
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 
