@@ -22,7 +22,6 @@ Originally published at techoverflow.net.
 from collections.abc import Iterable
 import math
 import re
-import itertools
 from typing import Optional
 import numpy as np
 from collections import namedtuple
