@@ -14,6 +14,9 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(normalize_length("5.0 meters"), 5.0)
         assert_approx_equal(normalize_length("3 m"), 3)
         assert_approx_equal(normalize_length("1.0 mm"), 1e-3)
+        assert_approx_equal(normalize_length("1.0 cm"), 1e-2)
+        assert_approx_equal(normalize_length("2.5 dm"), 0.25)
+        assert_approx_equal(normalize_length("1.5 km"), 1500.0)
         assert_approx_equal(normalize_length("1.0 nm"), 1e-9) # NO, NOT nautical mile!
         assert_approx_equal(normalize_length("2.0 mil"), 2*2.54e-5)
         assert_approx_equal(normalize_length("1.0 in"), 0.0254)
@@ -56,6 +59,9 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(convert_length_to_meters(5.0, "meters"), 5.0)
         assert_approx_equal(convert_length_to_meters(3, "m"), 3)
         assert_approx_equal(convert_length_to_meters(1.0, "mm"), 1e-3)
+        assert_approx_equal(convert_length_to_meters(1.0, "cm"), 1e-2)
+        assert_approx_equal(convert_length_to_meters(2.5, "dm"), 0.25)
+        assert_approx_equal(convert_length_to_meters(1.5, "km"), 1500.0)
         assert_approx_equal(convert_length_to_meters(1.0, "nm"), 1e-9) # NO, NOT nautical mile!
         assert_approx_equal(convert_length_to_meters(2.0, "mil"), 2*2.54e-5)
         assert_approx_equal(convert_length_to_meters(1.0, "in"), 0.0254)

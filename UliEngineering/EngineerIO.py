@@ -42,11 +42,11 @@ UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "un
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
 NormalizeResult = namedtuple("NormalizeResult", ["prefix", "value", "unit_prefix", "unit"])
 
-def _default_suffix_map():
+def _default_suffix_map(include_length_suffixes=False):
     """
     The default suffix to exponent mapping
     """
-    return {
+    suffixes = {
         'y': -24,
         'z': -21,
         'a': -18,
@@ -64,6 +64,14 @@ def _default_suffix_map():
         'Z': 18,
         'Y': 21
     }
+    
+    if include_length_suffixes:
+        suffixes.update({
+            'c': -2,  # e.g. centimeter
+            'd': -1   # e.g. decimeter
+        })
+    
+    return suffixes
 
 def _length_units(include_m=False):
     """
@@ -662,7 +670,10 @@ class EngineerIO(object):
 
 # Initialize global instance
 EngineerIO.instance = EngineerIO()
-EngineerIO.length_instance = EngineerIO(units=_default_units(include_m=True))
+EngineerIO.length_instance = EngineerIO(
+    units=_default_units(include_m=True),
+    suffix_map=_default_suffix_map(include_length_suffixes=True)
+)
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """
