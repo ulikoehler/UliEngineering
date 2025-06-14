@@ -39,10 +39,11 @@ import math
 import re
 from typing import Optional
 import numpy as np
-from collections import namedtuple
 import functools
 import inspect
+import scipy as sp
 from toolz import functoolz
+from dataclasses import dataclass
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
 from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
@@ -53,9 +54,29 @@ __all__ = ["normalize_interpunctation", "EngineerIO",
            "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan",
            "normalize_numeric_args", "returns_unit"]
 
-UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
-SplitResult = namedtuple("SplitResult", ["prefix", "number", "unit_prefix_char", "unit_prefix", "unit"])
-NormalizeResult = namedtuple("NormalizeResult", ["prefix", "value", "unit_prefix", "unit"])
+@dataclass
+class UnitSplitResult:
+    remainder: str
+    unit_prefix: str
+    unit: str
+
+@dataclass
+class SplitResult:
+    prefix: str
+    number: str
+    unit_prefix_char: str
+    unit_prefix: str
+    unit: str
+
+@dataclass
+class NormalizeResult:
+    prefix: str
+    value: float
+    original_number: float
+    unit_prefix: str
+    unit: str
+    # Multiplier from prefix
+    prefix_multiplier: float
 
 def _default_unit_prefix_map(include_length_unit_prefixes=False):
     """
@@ -121,7 +142,16 @@ def _area_units():
         'ft²', 'ft^2', 'square foot', 'square feet', 'sq ft',
         'yd²', 'yd^2', 'square yard', 'square yards', 'sq yd',
         'acre', 'acres', 'hectare', 'hectares', 'ha', 'are', 'ares',
-        'barn', 'barns', 'b', 'square meter', 'square meters', 'sq m', 'sqm'
+        'barn', 'barns', 'b', 'square meter', 'square meters', 'sq m', 'sqm',
+        # Spelled out SI prefixed meters
+        'square millimeter', 'square millimeters', 'square mm', 'sq mm', 'mm sq', 'mm squared', 'millimeter squared',
+        'square centimeter', 'square centimeters', 'square cm', 'sq cm', 'cm sq', 'cm squared', 'centimeter squared', 'centimeters squared',
+        'square decimeter', 'square decimeters', 'square dm', 'sq dm', 'dm sq', 'dm squared', 'decimeter squared', 'decimeters squared',
+        'square micrometer', 'square micrometers', 'square µm' 'sq µm', 'sq um', 'um sq', 'µm sq', 'µm squared', 'micrometer squared', 'micrometers squared',
+        'square nanometer', 'square nanometer', 'square nm', 'sq nm', 'nm sq', 'nm squared', 'nanometers squared',
+        'square kilometer', 'square kilometers', 'square km', 'sq km', 'km squared', 'km sq', 'kilometers sq', 'kilometers squared',
+        # Different 'µ'
+        'square µm' 'sq µm', 'µm sq', 'µm squared',
     ])
     return units
 
@@ -362,7 +392,9 @@ class EngineerIO(object):
         orig_str = s
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s)
-        s, unit_prefix, unit = self.split_unit(s) # Remove unit
+        split_result = self.split_unit(s) # Remove unit
+        # Print remainder
+        s = split_result.remainder
         s = s.replace(" ", "")
         # Try to split prefix
         prefix_hit = self.prefix_re.search(s)
@@ -384,7 +416,7 @@ class EngineerIO(object):
             # Ensure only ONE unit prefix occurs in the string
             unitPrefixCount = sum(isUnitPrefixList)
             if unitPrefixCount > 1:
-                raise ValueError("More than one SI unit prefix in the string")
+                raise ValueError(f"More than one SI unit prefix in the string '{s}'. Orig str: {orig_str}, Detected unit_prefix '{isUnitPrefixList}'")
             elif unitPrefixCount == 0:
                 unit_prefix_char = ""
             else:  # unitPrefixCount == 1 => correct
@@ -402,7 +434,13 @@ class EngineerIO(object):
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
             raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}'")
-        return SplitResult(prefix, s, unit_prefix_char, unit_prefix, unit)
+        return SplitResult(
+            prefix=prefix,
+            number=s,
+            unit_prefix_char=unit_prefix_char,
+            unit_prefix=split_result.unit_prefix,
+            unit=split_result.unit
+        )
 
     def split_unit(self, s):
         """
@@ -443,18 +481,20 @@ class EngineerIO(object):
         value_str = value_str.rstrip(self.strippable)
         return UnitSplitResult(value_str, unit_prefix, unit)
 
-    def normalize(self, s, encoding="utf8"):
+    def normalize(self, s, encoding="utf8", prefix_exponent=1.0):
         """
         Converts an engineer's input of a wide variety of formats to a numeric
         value.
 
         Returns a NormalizeResult() or None if the conversion could not be performed.
+        
+        prefix_exponent is used for converting area & volume units etc
 
         See split_input() for further details on supported formats
         """
         # Scalars get returned directly
         if isinstance(s, (int, float, np.generic)):
-            return NormalizeResult('', s, '', '')
+            return NormalizeResult('', s, '', '', '', 1.0)
         # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
@@ -462,9 +502,10 @@ class EngineerIO(object):
         if isinstance(s, (list, tuple, np.ndarray)):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
-        prefix, num, unit_prefix_char, unit_prefix, unit = self.split_input(s.strip())
-        mul = (10 ** self.unit_prefix_exp_map[unit_prefix_char]) if unit_prefix_char else 1
+        split_result = self.split_input(s.strip())
+        mul = (10 ** self.unit_prefix_exp_map[split_result.unit_prefix_char])**prefix_exponent if split_result.unit_prefix_char else 1
         # Handle ppm and ppb: They are listed as units
+        unit = split_result.unit
         if unit == '%':
             mul /= 100
             unit = ''
@@ -474,7 +515,15 @@ class EngineerIO(object):
         elif unit == 'ppb':
             mul /= 1e9
             unit = ''
-        return NormalizeResult(prefix, float(num) * mul, unit_prefix, unit)
+        num = float(split_result.number)
+        return NormalizeResult(
+            prefix=split_result.prefix,
+            value=num * mul,
+            prefix_multiplier=mul,
+            original_number=num,
+            unit_prefix=split_result.unit_prefix,
+            unit=split_result.unit
+        )
 
     def safe_normalize(self, s, encoding="utf8"):
         """

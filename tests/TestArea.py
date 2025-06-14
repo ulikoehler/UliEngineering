@@ -30,36 +30,82 @@ class TestArea(unittest.TestCase):
         assert_approx_equal(normalize_area("5.0 m²"), 5.0)
         assert_approx_equal(normalize_area("3 m²"), 3)
         
-        # Square millimeters
+        # Square millimeters - all variations
         assert_approx_equal(normalize_area("1.0 mm²"), 1e-6)
         assert_approx_equal(normalize_area("1.0 mm^2"), 1e-6)
         assert_approx_equal(normalize_area("1.0 square millimeter"), 1e-6)
         assert_approx_equal(normalize_area("1.0 square millimeters"), 1e-6)
+        assert_approx_equal(normalize_area("1.0 square mm"), 1e-6)
         assert_approx_equal(normalize_area("1.0 sq mm"), 1e-6)
+        assert_approx_equal(normalize_area("1.0 mm sq"), 1e-6)
+        assert_approx_equal(normalize_area("1.0 mm squared"), 1e-6)
+        assert_approx_equal(normalize_area("1.0 millimeter squared"), 1e-6)
         assert_approx_equal(normalize_area("1000000 mm²"), 1.0)  # 1 m² = 1,000,000 mm²
         
-        # Square centimeters
+        # Square centimeters - all variations
         assert_approx_equal(normalize_area("1.0 cm²"), 1e-4)
         assert_approx_equal(normalize_area("1.0 cm^2"), 1e-4)
         assert_approx_equal(normalize_area("1.0 square centimeter"), 1e-4)
         assert_approx_equal(normalize_area("1.0 square centimeters"), 1e-4)
+        assert_approx_equal(normalize_area("1.0 square cm"), 1e-4)
         assert_approx_equal(normalize_area("1.0 sq cm"), 1e-4)
+        assert_approx_equal(normalize_area("1.0 cm sq"), 1e-4)
+        assert_approx_equal(normalize_area("1.0 cm squared"), 1e-4)
+        assert_approx_equal(normalize_area("1.0 centimeter squared"), 1e-4)
+        assert_approx_equal(normalize_area("1.0 centimeters squared"), 1e-4)
         assert_approx_equal(normalize_area("10000 cm²"), 1.0)  # 1 m² = 10,000 cm²
         
-        # Square decimeters
+        # Square decimeters - all variations
         assert_approx_equal(normalize_area("1.0 dm²"), 1e-2)
         assert_approx_equal(normalize_area("1.0 dm^2"), 1e-2)
         assert_approx_equal(normalize_area("1.0 square decimeter"), 1e-2)
         assert_approx_equal(normalize_area("1.0 square decimeters"), 1e-2)
+        assert_approx_equal(normalize_area("1.0 square dm"), 1e-2)
         assert_approx_equal(normalize_area("1.0 sq dm"), 1e-2)
+        assert_approx_equal(normalize_area("1.0 dm sq"), 1e-2)
+        assert_approx_equal(normalize_area("1.0 dm squared"), 1e-2)
+        assert_approx_equal(normalize_area("1.0 decimeter squared"), 1e-2)
+        assert_approx_equal(normalize_area("1.0 decimeters squared"), 1e-2)
         assert_approx_equal(normalize_area("100 dm²"), 1.0)  # 1 m² = 100 dm²
         
-        # Square kilometers
+        # Square micrometers - all variations
+        assert_approx_equal(normalize_area("1.0 µm²"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 µm^2"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 um²"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 um^2"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 square micrometer"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 square micrometers"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 square µm"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 sq µm"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 sq um"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 um sq"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 µm sq"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 µm squared"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 micrometer squared"), 1e-12)
+        assert_approx_equal(normalize_area("1.0 micrometers squared"), 1e-12)
+        
+        # Square nanometers - all variations
+        assert_approx_equal(normalize_area("1.0 nm²"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 nm^2"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 square nanometer"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 square nanometers"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 square nm"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 sq nm"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 nm sq"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 nm squared"), 1e-18)
+        assert_approx_equal(normalize_area("1.0 nanometers squared"), 1e-18)
+        
+        # Square kilometers - all variations
         assert_approx_equal(normalize_area("1.0 km²"), 1e6)
         assert_approx_equal(normalize_area("1.0 km^2"), 1e6)
         assert_approx_equal(normalize_area("1.0 square kilometer"), 1e6)
         assert_approx_equal(normalize_area("1.0 square kilometers"), 1e6)
+        assert_approx_equal(normalize_area("1.0 square km"), 1e6)
         assert_approx_equal(normalize_area("1.0 sq km"), 1e6)
+        assert_approx_equal(normalize_area("1.0 km squared"), 1e6)
+        assert_approx_equal(normalize_area("1.0 km sq"), 1e6)
+        assert_approx_equal(normalize_area("1.0 kilometers sq"), 1e6)
+        assert_approx_equal(normalize_area("1.0 kilometers squared"), 1e6)
         assert_approx_equal(normalize_area("0.000001 km²"), 1.0)  # 1 m² = 0.000001 km²
 
     def test_area_normalization_imperial_units(self):
@@ -193,7 +239,8 @@ class TestArea(unittest.TestCase):
         
         # A sheet of A4 paper is approximately 210mm x 297mm ≈ 623.7 cm²
         a4_area = 21.0 * 29.7  # cm²
-        assert_approx_equal(normalize_area(f"{a4_area} cm²"), a4_area * 1e-4)
+        # Verified using Wolfram Alpha: "area of a4 sheet of paper in m²"
+        assert_approx_equal(normalize_area(f"{a4_area} cm²"), 0.06237)
 
     def test_edge_cases(self):
         # Test very small and very large values
@@ -247,6 +294,232 @@ class TestArea(unittest.TestCase):
             result2 = convert_area_to_square_meters(value, unit)
             assert_approx_equal(result1, result2, 
                               err_msg=f"Inconsistent results for {value} {unit}")
+
+    def test_all_area_unit_variations_comprehensive(self):
+        """Test all area unit variations from _area_units() to ensure complete coverage"""
+        # Test all variations that should be equivalent to 1e-6 m² (square millimeters)
+        mm_units = [
+            "mm²", "mm^2", "square millimeter", "square millimeters", 
+            "square mm", "sq mm", "mm sq", "mm squared", "millimeter squared"
+        ]
+        for unit in mm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-6,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-4 m² (square centimeters)
+        cm_units = [
+            "cm²", "cm^2", "square centimeter", "square centimeters",
+            "square cm", "sq cm", "cm sq", "cm squared", 
+            "centimeter squared", "centimeters squared"
+        ]
+        for unit in cm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-4,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-2 m² (square decimeters)
+        dm_units = [
+            "dm²", "dm^2", "square decimeter", "square decimeters",
+            "square dm", "sq dm", "dm sq", "dm squared",
+            "decimeter squared", "decimeters squared"
+        ]
+        for unit in dm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-2,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1.0 m² (square meters)
+        m_units = [
+            "m²", "m^2", "square meter", "square meters", "sq m", "sqm"
+        ]
+        for unit in m_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-12 m² (square micrometers)
+        um_units = [
+            "µm²", "µm^2", "um²", "um^2", "square micrometer", "square micrometers",
+            "square µm", "sq µm", "sq um", "um sq", "µm sq", "µm squared",
+            "micrometer squared", "micrometers squared"
+        ]
+        for unit in um_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-12,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-18 m² (square nanometers)
+        nm_units = [
+            "nm²", "nm^2", "square nanometer", "square nanometers",
+            "square nm", "sq nm", "nm sq", "nm squared", "nanometers squared"
+        ]
+        for unit in nm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-18,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e6 m² (square kilometers)
+        km_units = [
+            "km²", "km^2", "square kilometer", "square kilometers",
+            "square km", "sq km", "km squared", "km sq", 
+            "kilometers sq", "kilometers squared"
+        ]
+        for unit in km_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e6,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all imperial unit variations
+        inch_expected = scipy.constants.inch**2
+        inch_units = ["in²", "in^2", "square inch", "square inches", "sq in"]
+        for unit in inch_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), inch_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        foot_expected = scipy.constants.foot**2
+        foot_units = ["ft²", "ft^2", "square foot", "square feet", "sq ft"]
+        for unit in foot_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), foot_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        yard_expected = scipy.constants.yard**2
+        yard_units = ["yd²", "yd^2", "square yard", "square yards", "sq yd"]
+        for unit in yard_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), yard_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test agricultural units
+        acre_units = ["acre", "acres"]
+        for unit in acre_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 4046.8564224,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        hectare_units = ["hectare", "hectares", "ha"]
+        for unit in hectare_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 10000.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        are_units = ["are", "ares"]
+        for unit in are_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 100.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test scientific units
+        barn_units = ["barn", "barns", "b"]
+        for unit in barn_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-28,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test prefixed barn units
+        assert_approx_equal(normalize_area("1.0 µbarn"), 1e-34)
+        assert_approx_equal(normalize_area("1.0 mbarn"), 1e-31)
+
+    def test_all_area_unit_variations(self):
+        """Test all area unit variations to ensure complete coverage"""
+        # Test all variations that should be equivalent to 1e-6 m² (square millimeters)
+        mm_units = [
+            "mm²", "mm^2", "square millimeter", "square millimeters", 
+            "square mm", "sq mm", "mm sq", "mm squared", "millimeter squared"
+        ]
+        for unit in mm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-6,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-4 m² (square centimeters)
+        cm_units = [
+            "cm²", "cm^2", "square centimeter", "square centimeters",
+            "square cm", "sq cm", "cm sq", "cm squared", 
+            "centimeter squared", "centimeters squared"
+        ]
+        for unit in cm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-4,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-2 m² (square decimeters)
+        dm_units = [
+            "dm²", "dm^2", "square decimeter", "square decimeters",
+            "square dm", "sq dm", "dm sq", "dm squared",
+            "decimeter squared", "decimeters squared"
+        ]
+        for unit in dm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-2,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1.0 m² (square meters)
+        m_units = [
+            "m²", "m^2", "square meter", "square meters", "sq m", "sqm"
+        ]
+        for unit in m_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-12 m² (square micrometers)
+        um_units = [
+            "µm²", "µm^2", "um²", "um^2", "square micrometer", "square micrometers",
+            "square µm", "sq µm", "sq um", "um sq", "µm sq", "µm squared",
+            "micrometer squared", "micrometers squared"
+        ]
+        for unit in um_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-12,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e-18 m² (square nanometers)
+        nm_units = [
+            "nm²", "nm^2", "square nanometer", "square nanometers",
+            "square nm", "sq nm", "nm sq", "nm squared", "nanometers squared"
+        ]
+        for unit in nm_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-18,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all variations that should be equivalent to 1e6 m² (square kilometers)
+        km_units = [
+            "km²", "km^2", "square kilometer", "square kilometers",
+            "square km", "sq km", "km squared", "km sq", 
+            "kilometers sq", "kilometers squared"
+        ]
+        for unit in km_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e6,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test all imperial unit variations
+        inch_expected = scipy.constants.inch**2
+        inch_units = ["in²", "in^2", "square inch", "square inches", "sq in"]
+        for unit in inch_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), inch_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        foot_expected = scipy.constants.foot**2
+        foot_units = ["ft²", "ft^2", "square foot", "square feet", "sq ft"]
+        for unit in foot_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), foot_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        yard_expected = scipy.constants.yard**2
+        yard_units = ["yd²", "yd^2", "square yard", "square yards", "sq yd"]
+        for unit in yard_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), yard_expected,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test agricultural units
+        acre_units = ["acre", "acres"]
+        for unit in acre_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 4046.8564224,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        hectare_units = ["hectare", "hectares", "ha"]
+        for unit in hectare_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 10000.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        are_units = ["are", "ares"]
+        for unit in are_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 100.0,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test scientific units
+        barn_units = ["barn", "barns", "b"]
+        for unit in barn_units:
+            assert_approx_equal(normalize_area(f"1.0 {unit}"), 1e-28,
+                              err_msg=f"Failed for unit: {unit}")
+        
+        # Test prefixed barn units
+        assert_approx_equal(normalize_area("1.0 µbarn"), 1e-34)
+        assert_approx_equal(normalize_area("1.0 mbarn"), 1e-31)
 
 if __name__ == '__main__':
     unittest.main()
