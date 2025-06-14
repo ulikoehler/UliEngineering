@@ -39,14 +39,14 @@ __all__ = ["normalize_interpunctation", "EngineerIO",
            "normalize_numeric_args", "returns_unit"]
 
 UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "unit"])
-SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
+SplitResult = namedtuple("SplitResult", ["prefix", "number", "unit_prefix_char", "unit_prefix", "unit"])
 NormalizeResult = namedtuple("NormalizeResult", ["prefix", "value", "unit_prefix", "unit"])
 
-def _default_suffix_map(include_length_suffixes=False):
+def _default_unit_prefix_map(include_length_unit_prefixes=False):
     """
-    The default suffix to exponent mapping
+    The default unit prefix to exponent mapping
     """
-    suffixes = {
+    unit_prefixes = {
         'y': -24,
         'z': -21,
         'a': -18,
@@ -55,7 +55,7 @@ def _default_suffix_map(include_length_suffixes=False):
         'n': -9,
         'µ': -6, 'μ': -6, 'u': -6,  # micro variants
         'm': -3,
-        # No suffix for base unit (exponent 0)
+        # No unit prefix for base unit (exponent 0)
         'k': 3,
         'M': 6,
         'G': 9,
@@ -65,13 +65,13 @@ def _default_suffix_map(include_length_suffixes=False):
         'Y': 21
     }
     
-    if include_length_suffixes:
-        suffixes.update({
+    if include_length_unit_prefixes:
+        unit_prefixes.update({
             'c': -2,  # e.g. centimeter
             'd': -1   # e.g. decimeter
         })
     
-    return suffixes
+    return unit_prefixes
 
 def _length_units(include_m=False):
     """
@@ -249,10 +249,10 @@ class EngineerIO(object):
     def __init__(self, units=_default_units(),
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
-                 suffix_map=_default_suffix_map(),
+                 unit_prefix_map=_default_unit_prefix_map(),
                  timespan_units=_default_timespan_units()):
         """
-        Initialize a new EngineerIO instance with default or custom suffix
+        Initialize a new EngineerIO instance with default or custom unit prefixes
 
         Parameters:
         -----------
@@ -260,16 +260,16 @@ class EngineerIO(object):
             An iterable of valid units (1-char or 2-char)
         prefixes : string
             A list of prefixes that are ignored (available via normalize()).
-            Constraint: prefixes ∩ suffices == ∅
+            Constraint: prefixes ∩ units == ∅
         unit_prefixes : string
             A list of prefixes that ignored (available via normalize()).
             Constraint: unitPrefixes ∩ units == ∅
-        suffix_map : dict
-            Maps suffix strings to their decimal exponents.
-            For generating strings from numbers, the first suffix in each nested list is  preferred
+        unit_prefix_map : dict
+            Maps unit prefix strings to their decimal exponents.
+            For generating strings from numbers, the first unit prefix in each nested list is  preferred
         """
         self.units = set(units)
-        self.suffix_map = suffix_map
+        self.unit_prefix_map = unit_prefix_map
         self.timespan_units = timespan_units
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
@@ -280,34 +280,34 @@ class EngineerIO(object):
         # Unit prefixes will only be used in strip, so we can strip spaces in one go.
         self.strippable = " \t\n"
         # Compute maps
-        self.all_suffixes = set(self.suffix_map.keys())
-        self._recompute_suffix_maps()
+        self.all_unit_prefixes = set(self.unit_prefix_map.keys())
+        self._recompute_unit_prefix_maps()
 
-    def _recompute_suffix_maps(self):
+    def _recompute_unit_prefix_maps(self):
         """
-        Recompute the exponent -> suffix map from the suffix -> exponent map
+        Recompute the exponent -> unit prefix map from the unit prefix -> exponent map
         """
-        # Direct mapping from suffix to exponent already exists in self.suffix_map
-        # Create the inverse mapping from exponent to suffix
-        self.exp_suffix_map = {}  # Key: exp // 3, Value: suffix
-        self.suffix_exp_map = {'': 0}  # Key: suffix, value: exponent (empty string for no suffix)
+        # Direct mapping from unit prefix to exponent already exists in self.unit_prefix_map
+        # Create the inverse mapping from exponent to unit prefix
+        self.exp_unit_prefix_map = {}  # Key: exp // 3, Value: unit prefix
+        self.unit_prefix_exp_map = {'': 0}  # Key: unit prefix, value: exponent (empty string for no unit prefix)
         
-        # Copy the suffix map and add it to suffix_exp_map
-        for suffix, exponent in self.suffix_map.items():
-            self.suffix_exp_map[suffix] = exponent
-            # For the exp_suffix_map, use the exponent divided by 3 as key
+        # Copy the unit prefix map and add it to unit_prefix_exp_map
+        for unit_prefix, exponent in self.unit_prefix_map.items():
+            self.unit_prefix_exp_map[unit_prefix] = exponent
+            # For the exp_unit_prefix_map, use the exponent divided by 3 as key
             exp_key = exponent // 3
-            # Only store the first suffix for each exponent (for formatting)
-            if exp_key not in self.exp_suffix_map:
-                self.exp_suffix_map[exp_key] = suffix
+            # Only store the first unit prefix for each exponent (for formatting)
+            if exp_key not in self.exp_unit_prefix_map:
+                self.exp_unit_prefix_map[exp_key] = unit_prefix
         
-        # Add empty suffix for base unit (exponent 0)
-        self.exp_suffix_map[0] = ""
+        # Add empty unit prefix for base unit (exponent 0)
+        self.exp_unit_prefix_map[0] = ""
         
         # Compute min/max SI value
-        if self.exp_suffix_map:
-            self.exp_map_min = min(self.exp_suffix_map.keys())
-            self.exp_map_max = max(self.exp_suffix_map.keys())
+        if self.exp_unit_prefix_map:
+            self.exp_map_min = min(self.exp_unit_prefix_map.keys())
+            self.exp_map_max = max(self.exp_unit_prefix_map.keys())
         else:
             self.exp_map_min = 0
             self.exp_map_max = 0
@@ -346,33 +346,33 @@ class EngineerIO(object):
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
-        # Try to find SI suffix at the end or in the middle
-        if s[-1] in self.all_suffixes:
-            s, suffix = s[:-1], s[-1]
-        else:  # Try to find unit anywhere
-            isSuffixList = [ch in self.all_suffixes for ch in s]
-            # Ensure only ONE unit occurs in the string
-            suffixCount = sum(isSuffixList)
-            if suffixCount > 1:
-                raise ValueError("More than one SI suffix in the string")
-            elif suffixCount == 0:
-                suffix = ""
-            else:  # suffixCount == 1 => correct
-                # Suffix-as-decimal-separator --> there must be no other decimal separator
+        # Try to find SI unit prefix at the end or in the middle
+        if s[-1] in self.all_unit_prefixes:
+            s, unit_prefix_char = s[:-1], s[-1]
+        else:  # Try to find unit prefix anywhere
+            isUnitPrefixList = [ch in self.all_unit_prefixes for ch in s]
+            # Ensure only ONE unit prefix occurs in the string
+            unitPrefixCount = sum(isUnitPrefixList)
+            if unitPrefixCount > 1:
+                raise ValueError("More than one SI unit prefix in the string")
+            elif unitPrefixCount == 0:
+                unit_prefix_char = ""
+            else:  # unitPrefixCount == 1 => correct
+                # Unit prefix-as-decimal-separator --> there must be no other decimal separator
                 if "." in s:  # Commata already handled by normalize_interpunctation
-                    raise ValueError(f"Suffix as decimal separator, but dot is also in string: {s}")
-                suffixIndex = isSuffixList.index(True)
-                # Suffix must NOT be first character
-                if suffixIndex == 0:
-                    raise ValueError(f"Suffix in '{s}' must not be the first char")
-                suffix = s[suffixIndex]
-                s = s.replace(suffix, ".")
+                    raise ValueError(f"Unit prefix as decimal separator, but dot is also in string: {s}")
+                unitPrefixIndex = isUnitPrefixList.index(True)
+                # Unit prefix must NOT be first character
+                if unitPrefixIndex == 0:
+                    raise ValueError(f"Unit prefix in '{s}' must not be the first char")
+                unit_prefix_char = s[unitPrefixIndex]
+                s = s.replace(unit_prefix_char, ".")
         # Handle unit prefix (if any). Not allowable if no unit is present
         s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected suffix '{suffix}'")
-        return SplitResult(prefix, s, suffix, unit_prefix, unit)
+            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}'")
+        return SplitResult(prefix, s, unit_prefix_char, unit_prefix, unit)
 
     def split_unit(self, s):
         """
@@ -383,17 +383,17 @@ class EngineerIO(object):
         # Fallback for strings which are too short
         if len(s) <= 1:
             return UnitSplitResult(s, '', '')
-        # Handle unit suffixes: "ppm"
+        # Handle units: "ppm"
         # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
-        for suffix in suffix_list(s):
+        for unit_suffix in suffix_list(s):
             # Is the suffix a unit?
-            if suffix in self.units:
+            if unit_suffix in self.units:
                 # Do not try to find units if encountering the first digit
-                if suffix[0].isnumeric():
+                if unit_suffix[0].isnumeric():
                     break
-                suffix_length = len(suffix)
-                value_str, unit = s[:-suffix_length], s[-suffix_length:]
+                unit_suffix_length = len(unit_suffix)
+                value_str, unit = s[:-unit_suffix_length], s[-unit_suffix_length:]
                 found_unit_suffix = True
         # Fallback: Try to parse as value + optionally SI postfix
         if not found_unit_suffix: # No unit
@@ -420,7 +420,7 @@ class EngineerIO(object):
 
         Returns a NormalizeResult() or None if the conversion could not be performed.
 
-        See splitSuffixSeparator() for further details on supported formats
+        See split_input() for further details on supported formats
         """
         # Scalars get returned directly
         if isinstance(s, (int, float, np.generic)):
@@ -432,8 +432,8 @@ class EngineerIO(object):
         if isinstance(s, (list, tuple, np.ndarray)):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
-        prefix, num, suffix, unit_prefix, unit = self.split_input(s.strip())
-        mul = (10 ** self.suffix_exp_map[suffix]) if suffix else 1
+        prefix, num, unit_prefix_char, unit_prefix, unit = self.split_input(s.strip())
+        mul = (10 ** self.unit_prefix_exp_map[unit_prefix_char]) if unit_prefix_char else 1
         # Handle ppm and ppb: They are listed as units
         if unit == '%':
             mul /= 100
@@ -458,7 +458,7 @@ class EngineerIO(object):
 
     def format(self, v, unit="", significant_digits=3):
         """
-        Format v using SI suffices with optional units.
+        Format v using SI unit_prefixes with optional units.
         Produces a string with 3 visible digits.
         """
         if unit is None:
@@ -470,18 +470,18 @@ class EngineerIO(object):
                 unit,
                 significant_digits=significant_digits
             )
-        #Suffix map is indexed by one third of the decadic logarithm.
+        #Unit_prefix map is indexed by one third of the decadic logarithm.
         exp = 0 if v == 0. else math.log(abs(v), 10.)
-        suffixMapIdx = int(math.floor(exp / 3.))
+        unit_prefixMapIdx = int(math.floor(exp / 3.))
         #Ensure we're in range
-        if not self.exp_map_min < suffixMapIdx < self.exp_map_max:
+        if not self.exp_map_min < unit_prefixMapIdx < self.exp_map_max:
             raise ValueError(f"Value out of range: {v}")
         #Pre-multiply the value
-        v = v * (10.0 ** -(suffixMapIdx * 3))
+        v = v * (10.0 ** -(unit_prefixMapIdx * 3))
         #Delegate the rest of the task to the helper
         return _format_with_suffix(
             v,
-            self.exp_suffix_map[suffixMapIdx] + unit,
+            self.exp_unit_prefix_map[unit_prefixMapIdx] + unit,
             significant_digits=significant_digits
         )
 
@@ -514,7 +514,7 @@ class EngineerIO(object):
         suffix_idx = min(self.exp_map_max, suffix_idx)
         # Pre-multiply the value
         multiplier = 10.0 ** -(suffix_idx * 3)
-        return multiplier, self.exp_suffix_map[suffix_idx]
+        return multiplier, self.exp_unit_prefix_map[suffix_idx]
     
     def extract_return_unit(self, fn):
         """
@@ -672,7 +672,7 @@ class EngineerIO(object):
 EngineerIO.instance = EngineerIO()
 EngineerIO.length_instance = EngineerIO(
     units=_default_units(include_m=True),
-    suffix_map=_default_suffix_map(include_length_suffixes=True)
+    unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 
 __replace_comma_dot = lambda s: s.replace(",", ".")

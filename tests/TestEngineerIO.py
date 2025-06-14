@@ -168,27 +168,27 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(19.99999, ""), '20.0')
         self.assertEqual(self.io.format(199.9999, ""), '200')
 
-    def testIsValidSuffix(self):
+    def testIsValidUnitPrefix(self):
         for c in "fpnuµmkMGT":
-            self.assertIn(c, self.io.suffix_exp_map)
+            self.assertIn(c, self.io.unit_prefix_exp_map)
 
-    def test_exp_suffix_map(self):
-        self.assertEqual(self.io.suffix_exp_map["f"], -15)
-        self.assertEqual(self.io.suffix_exp_map["k"], 3)
-        self.assertEqual(self.io.suffix_exp_map["u"], -6)
-        self.assertEqual(self.io.suffix_exp_map["µ"], -6)
-        self.assertEqual(self.io.suffix_exp_map["T"], 12)
-        self.assertEqual(self.io.suffix_exp_map[""], 0)
+    def test_exp_unit_prefix_map(self):
+        self.assertEqual(self.io.unit_prefix_exp_map["f"], -15)
+        self.assertEqual(self.io.unit_prefix_exp_map["k"], 3)
+        self.assertEqual(self.io.unit_prefix_exp_map["u"], -6)
+        self.assertEqual(self.io.unit_prefix_exp_map["µ"], -6)
+        self.assertEqual(self.io.unit_prefix_exp_map["T"], 12)
+        self.assertEqual(self.io.unit_prefix_exp_map[""], 0)
         # Check "in" operator
-        self.assertIn("k", self.io.suffix_exp_map)
-        # Invalid suffix_exp_map
-        self.assertNotIn("B", self.io.suffix_exp_map)
+        self.assertIn("k", self.io.unit_prefix_exp_map)
+        # Invalid unit_prefix_exp_map
+        self.assertNotIn("B", self.io.unit_prefix_exp_map)
 
-    def test_exp_suffix_map2(self):
-        self.assertEqual("", self.io.exp_suffix_map[0])
-        self.assertEqual("k", self.io.exp_suffix_map[1])
-        self.assertEqual("M", self.io.exp_suffix_map[2])
-        self.assertEqual("n", self.io.exp_suffix_map[-3])
+    def test_exp_unit_prefix_map2(self):
+        self.assertEqual("", self.io.exp_unit_prefix_map[0])
+        self.assertEqual("k", self.io.exp_unit_prefix_map[1])
+        self.assertEqual("M", self.io.exp_unit_prefix_map[2])
+        self.assertEqual("n", self.io.exp_unit_prefix_map[-3])
 
     def test_normalize_numeric_safe(self):
         self.assertEqual(self.io.normalize_numeric_safe(1.25), 1.25)
