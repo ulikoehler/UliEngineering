@@ -309,6 +309,7 @@ class EngineerIO(object):
         Thousands separators and suffix-as-decimal-separators may NOT
         be mixed. Whitespace is removed automatically.
         """
+        orig_str = s
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s)
         s, unit_prefix, unit = self.split_unit(s) # Remove unit
@@ -350,7 +351,7 @@ class EngineerIO(object):
         s = s.strip(self.strippable)
         # Final check: Is there any number left and is it valid?
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError(f"Remainder of string is not purely numeric: {s}")
+            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected suffix '{suffix}'")
         return SplitResult(prefix, s, suffix, unit_prefix, unit)
 
     def split_unit(self, s):
