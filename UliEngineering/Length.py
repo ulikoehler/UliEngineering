@@ -3,7 +3,9 @@
 """
 Utilities for length
 """
+from numpy import ndarray
 import scipy.constants
+import numpy as np
 from .EngineerIO import EngineerIO, returns_unit
 from .Units import UnknownUnitInContextException, Unit
 
@@ -72,8 +74,11 @@ def normalize_length(s, instance=EngineerIO.length_instance):
     - "1.2 M light years" => 1.135287656709696e+22
     - "9.15 kpc" => 2.8233949868947424e+17
     """
+    if isinstance(s, list):
+        return [normalize_length(v) for v in s]
+    if isinstance(s, ndarray):
+        return np.asarray([normalize_length(v) for v in s])
     result = instance.normalize(s)
     if result.unit in _length_factors:
         return result.value * _length_factors[result.unit]
-    else:
-        raise UnknownUnitInContextException("Unknown length unit: {}".format(result.unit))
+    raise UnknownUnitInContextException(f"Unknown length unit: {result.unit}")

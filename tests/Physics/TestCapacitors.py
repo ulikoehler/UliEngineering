@@ -519,3 +519,180 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(base_result, result1, places=10)
         self.assertAlmostEqual(base_result, result2, places=10)
         self.assertAlmostEqual(base_result, result3, places=10)
+
+class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
+    def test_basic_functionality(self):
+        """Test basic parallel plate capacitance calculation"""
+        # Basic test with known values
+        area = 1e-4  # 1 cm² = 1e-4 m²
+        distance = 1e-3  # 1 mm = 1e-3 m
+        epsilon = 8.854e-12  # Vacuum permittivity (F/m)
+        
+        expected_capacitance = epsilon * area / distance
+        calculated_capacitance = parallel_plate_capacitors_capacitance(area, distance, epsilon)
+        self.assertAlmostEqual(calculated_capacitance, expected_capacitance, places=15)
+
+    def test_engineering_notation(self):
+        """Test with engineering notation units"""
+        # Test with string units
+        area = "1 cm²"  # Will be converted to m²
+        distance = "1 mm"  # Will be converted to m
+        epsilon = "8.854 pF/m"  # Vacuum permittivity
+        
+        calculated_capacitance = parallel_plate_capacitors_capacitance(area, distance, epsilon)
+        # Should be approximately 8.854 pF for 1 cm² at 1 mm separation
+        self.assertAlmostEqual(calculated_capacitance, 8.854e-12, places=15)
+
+    def test_vacuum_permittivity(self):
+        """Test calculations with vacuum permittivity"""
+        epsilon_0 = 8.854187817e-12  # F/m (more precise value)
+        
+        test_cases = [
+            (1e-4, 1e-3),    # 1 cm², 1 mm
+            (1e-2, 1e-6),    # 1 cm², 1 µm
+            (1, 1e-3),       # 1 m², 1 mm
+            (1e-6, 1e-9),    # 1 mm², 1 nm
+        ]
+        
+        for area, distance in test_cases:
+            with self.subTest(area=area, distance=distance):
+                expected = epsilon_0 * area / distance
+                calculated = parallel_plate_capacitors_capacitance(area, distance, epsilon_0)
+                self.assertAlmostEqual(calculated, expected, places=12)
+
+    def test_dielectric_materials(self):
+        """Test with different dielectric materials"""
+        area = 1e-4  # 1 cm²
+        distance = 1e-3  # 1 mm
+        epsilon_0 = 8.854e-12  # F/m
+        
+        # Test different dielectric constants
+        dielectric_tests = [
+            (1.0, "vacuum"),      # Vacuum
+            (1.00059, "air"),     # Air at STP
+            (2.1, "teflon"),      # PTFE/Teflon
+            (3.9, "sio2"),        # Silicon dioxide
+            (7.5, "glass"),       # Typical glass
+            (80.0, "water"),      # Water
+            (1000.0, "batio3"),   # Barium titanate (high-k)
+        ]
+        
+        for dielectric_constant, material in dielectric_tests:
+            with self.subTest(material=material):
+                epsilon = epsilon_0 * dielectric_constant
+                calculated = parallel_plate_capacitors_capacitance(area, distance, epsilon)
+                expected = epsilon_0 * dielectric_constant * area / distance
+                self.assertAlmostEqual(calculated, expected, places=12)
+
+    def test_scaling_relationships(self):
+        """Test how capacitance scales with area and distance"""
+        base_area = 1e-4
+        base_distance = 1e-3
+        epsilon = 8.854e-12
+        
+        base_capacitance = parallel_plate_capacitors_capacitance(base_area, base_distance, epsilon)
+        
+        # Doubling area should double capacitance
+        double_area_cap = parallel_plate_capacitors_capacitance(2 * base_area, base_distance, epsilon)
+        self.assertAlmostEqual(double_area_cap, 2 * base_capacitance, places=12)
+        
+        # Halving distance should double capacitance
+        half_distance_cap = parallel_plate_capacitors_capacitance(base_area, base_distance / 2, epsilon)
+        self.assertAlmostEqual(half_distance_cap, 2 * base_capacitance, places=12)
+        
+        # Doubling permittivity should double capacitance
+        double_epsilon_cap = parallel_plate_capacitors_capacitance(base_area, base_distance, 2 * epsilon)
+        self.assertAlmostEqual(double_epsilon_cap, 2 * base_capacitance, places=12)
+
+    def test_numpy_arrays(self):
+        """Test with numpy arrays"""
+        areas = np.array([1e-4, 2e-4, 4e-4])  # Different areas
+        distances = np.array([1e-3, 1e-3, 1e-3])  # Same distance
+        epsilon = 8.854e-12
+        
+        calculated_capacitances = parallel_plate_capacitors_capacitance(areas, distances, epsilon)
+        expected_capacitances = epsilon * areas / distances
+        
+        assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-12)
+        
+        # Test with scalar epsilon and arrays
+        calculated_capacitances = parallel_plate_capacitors_capacitance(areas, 1e-3, epsilon)
+        expected_capacitances = epsilon * areas / 1e-3
+        assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-12)
+
+    def test_realistic_capacitor_values(self):
+        """Test with realistic capacitor dimensions and values"""
+        epsilon_0 = 8.854e-12
+        
+        # Ceramic capacitor (high-k dielectric)
+        ceramic_area = 1e-5  # 1 mm²
+        ceramic_thickness = 10e-6  # 10 µm
+        ceramic_epsilon = epsilon_0 * 1000  # High-k ceramic
+        ceramic_cap = parallel_plate_capacitors_capacitance(ceramic_area, ceramic_thickness, ceramic_epsilon)
+        # Should be in the nF range
+        self.assertTrue(1e-9 < ceramic_cap < 1e-6)  # 1 nF to 1 µF range
+        
+        # Film capacitor (low-k dielectric)
+        film_area = 1e-2  # 1 cm²
+        film_thickness = 1e-6  # 1 µm
+        film_epsilon = epsilon_0 * 3  # Typical polymer film
+        film_cap = parallel_plate_capacitors_capacitance(film_area, film_thickness, film_epsilon)
+        # Should be in the nF range
+        self.assertTrue(1e-10 < film_cap < 1e-6)  # 100 pF to 1 µF range
+
+    def test_edge_cases(self):
+        """Test edge cases and extreme values"""
+        epsilon = 8.854e-12
+        
+        # Very small capacitor
+        tiny_cap = parallel_plate_capacitors_capacitance(1e-12, 1e-9, epsilon)  # pm² area, nm separation
+        self.assertTrue(tiny_cap > 0)
+        self.assertTrue(np.isfinite(tiny_cap))
+        
+        # Very large capacitor
+        huge_cap = parallel_plate_capacitors_capacitance(1, 1e-6, epsilon)  # 1 m² area, µm separation
+        self.assertTrue(huge_cap > 0)
+        self.assertTrue(np.isfinite(huge_cap))
+        
+        # High permittivity material
+        high_k_cap = parallel_plate_capacitors_capacitance(1e-4, 1e-3, epsilon * 10000)
+        self.assertTrue(high_k_cap > 0)
+        self.assertTrue(np.isfinite(high_k_cap))
+
+    def test_auto_format_functionality(self):
+        """Test auto_format integration"""
+        # Test formatting of typical capacitor values
+        result = auto_format(parallel_plate_capacitors_capacitance, "1 cm²", "1 mm", "8.854 pF/m")
+        # Should format as pF since it's a small value
+        self.assertTrue(result.endswith("pF"))
+        
+        # Test with larger capacitance
+        result = auto_format(parallel_plate_capacitors_capacitance, "1 cm²", "1 µm", "8.854 nF/m")
+        # Should format appropriately for the magnitude
+        self.assertTrue(any(unit in result for unit in ["pF", "nF", "µF"]))
+
+    def test_mathematical_consistency(self):
+        """Test mathematical relationships and consistency"""
+        epsilon_0 = 8.854e-12
+        
+        # Test that C = ε₀ * εᵣ * A / d
+        area = 1e-4
+        distance = 1e-3
+        relative_permittivity = 5.0
+        
+        # Calculate using relative permittivity
+        epsilon_total = epsilon_0 * relative_permittivity
+        calculated = parallel_plate_capacitors_capacitance(area, distance, epsilon_total)
+        
+        # Calculate expected value
+        expected = epsilon_0 * relative_permittivity * area / distance
+        self.assertAlmostEqual(calculated, expected, places=15)
+        
+        # Test energy storage consistency (if we had a voltage)
+        # This verifies the capacitance value makes physical sense
+        voltage = 10.0  # V
+        energy = capacitor_energy(calculated, voltage)
+        
+        # Energy should be positive and finite
+        self.assertGreater(energy, 0)
+        self.assertTrue(np.isfinite(energy))

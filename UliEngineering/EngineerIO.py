@@ -69,6 +69,8 @@ def _length_units(include_m=False):
     ])
     if include_m:
         units.add("m")
+        units.add("m²")
+        units.add("m³")
     return units
 
 def _default_units(include_m=False):

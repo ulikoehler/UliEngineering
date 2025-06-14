@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.Length import normalize_length
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np
@@ -109,7 +110,6 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     return capacitance * (initial_voltage - target_voltage) / current
 
 @returns_unit("F")
-@normalize_numeric_args
 def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     """
     Compute the capacitance of two parallel plate capacitors in parallel
@@ -123,6 +123,9 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     Returns:
     The capacitance of the parallel plate capacitors in farads (F).
     """
+    area = normalize_length(area)
+    distance = normalize_length(distance)
+    epsilon = normalize_numeric(epsilon)
     return epsilon * area / distance
 
 @returns_unit("F")
