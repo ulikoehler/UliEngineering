@@ -19,3 +19,32 @@ class OperationImpossibleException(Exception):
     can't work with this specific set of values.
     """
     pass
+
+class EngineerIOException(ValueError):
+    """
+    Baseclass for more specific EngineerIO exceptions
+    """
+    pass
+
+
+class FirstCharacterInStringIsUnitPrefixException(EngineerIOException):
+    """
+    Raised if during parsing, multiple SI prefixes are detected, such as in pfJ,
+    (pico-femto-Joules?!?)
+    """
+    pass
+    
+class MultipleUnitPrefixesException(EngineerIOException):
+    """
+    Raised if during parsing, multiple SI prefixes are detected, such as in pfJ,
+    (pico-femto-Joules?!?)
+    """
+    pass
+
+
+class RemainderOfStringContainsNonNumericCharacters(EngineerIOException):
+    """
+    Raised if, after stripping prefix, unit etc, off the string,
+    there are still non-numeric characters left in the string
+    """
+    pass

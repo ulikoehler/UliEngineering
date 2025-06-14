@@ -37,13 +37,14 @@ Originally published at techoverflow.net.
 from collections.abc import Iterable
 import math
 import re
-from typing import Optional
+from typing import List, Optional
 import numpy as np
 import functools
 import inspect
 import scipy as sp
 from toolz import functoolz
 from dataclasses import dataclass
+from .Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
 from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
@@ -371,6 +372,30 @@ class EngineerIO(object):
         else:
             self.exp_map_min = 0
             self.exp_map_max = 0
+            
+    def all_suffixes(self, s):
+        """
+        Given a string e.g "abc123", return a list of all suffixes in inverted order, shortest first.
+        Example:
+            Input: "abc123"
+            Output: ["3", "23", "123", "c123", "bc123", "abc123"]
+        """
+        return [s[i:] for i in range(len(s) - 1, -1, -1)]
+
+    def has_any_unit_suffix(self, s):
+        """
+        Check if any suffix of the string is a unit prefix.
+        Returns a tuple (has_prefix, unit_prefix_char, remainder) where:
+        - has_prefix: True if a unit prefix suffix was found
+        - unit_prefix_char: the unit prefix character found (or empty string)
+        - remainder: the string with the unit prefix removed (or original string)
+        """
+        for suffix in self.all_suffixes(s):
+            if suffix in self.all_unit_prefixes:
+                # Found a unit prefix suffix
+                remainder = s[:-len(suffix)] if len(suffix) > 0 else s
+                return True, suffix, remainder
+        return False, "", s
 
     def split_input(self, s):
         """
@@ -408,32 +433,58 @@ class EngineerIO(object):
         # Check string
         if not s:
             raise ValueError("Can't split empty string")
-        # Try to find SI unit prefix at the end or in the middle
-        if s[-1] in self.all_unit_prefixes:
-            s, unit_prefix_char = s[:-1], s[-1]
-        else:  # Try to find unit prefix anywhere
-            isUnitPrefixList = [ch in self.all_unit_prefixes for ch in s]
-            # Ensure only ONE unit prefix occurs in the string
-            unitPrefixCount = sum(isUnitPrefixList)
-            if unitPrefixCount > 1:
-                raise ValueError(f"More than one SI unit prefix in the string '{s}'. Orig str: {orig_str}, Detected unit_prefix '{isUnitPrefixList}'")
-            elif unitPrefixCount == 0:
+        # Try to find SI unit prefix using suffix checking
+        string_is_suffixed_by_unit_prefix, unit_prefix_char, remainder = self.has_any_unit_suffix(s)
+        if string_is_suffixed_by_unit_prefix: # e.g. "2.5k" is terminated by "k"
+            s = remainder
+        else:  # Try to find unit prefix anywhere, e.g. in the middle
+            # Check every character in the string for being a SI prefix
+            is_unit_prefix_list: List[bool] = [(ch in self.all_unit_prefixes) for ch in s]
+            # Check if first character in the string is a unit prefix ("k12.5")
+            if is_unit_prefix_list[0]:
+                # "k12" is not a valid engineer string
+                raise FirstCharacterInStringIsUnitPrefixException(f"The first character in '{s}', that is '{s[0]}' is registered as a SI prefix, hence the meaning of that string is not clear")
+            # Handle various cased depending on number of prefix characters in the string
+            unit_prefix_count = sum(is_unit_prefix_list)
+            if unit_prefix_count == 1: # Exactly one SI prefix character 8but it's not at the end
+                unit_prefix_index = is_unit_prefix_list.index(True)
+                unit_prefix_char = s[unit_prefix_index]
+            elif unit_prefix_count > 1:
+                # This case occurs e.g. if you use pnJ, in which case it's not clear what that means.
+                # (pico-nano-Joules??!?)
+                # Special rule for "m" (meters): "cm" must be a valid prefix, plus unit
+                # So if exactly 2 valid prefixes are detected, and the the first one is 
+                detected_prefixes = [ch for ch in s if ch in self.all_unit_prefixes]
+                if len(detected_prefixes) == 2 and detected_prefixes[-1] == 'm':
+                    # for "cm", use "c"
+                    unit_prefix_index = is_unit_prefix_list.index(True)
+                    unit_prefix_char = detected_prefixes[0]
+                    # Leave unitPrefixIndex as the first True index
+                else: # Special rule does not apply => fail!
+                    raise MultipleUnitPrefixesException(f"More than one SI unit prefix in the string '{s}'. Orig str: {orig_str}, Detected unit prefixes: '{detected_prefixes}'")
+            else: # unit_prefix_count == 0
                 unit_prefix_char = ""
-            else:  # unitPrefixCount == 1 => correct
-                # Unit prefix-as-decimal-separator --> there must be no other decimal separator
-                if "." in s:  # Commata already handled by normalize_interpunctation
-                    raise ValueError(f"Unit prefix as decimal separator, but dot is also in string: {s}")
-                unitPrefixIndex = isUnitPrefixList.index(True)
-                # Unit prefix must NOT be first character
-                if unitPrefixIndex == 0:
-                    raise ValueError(f"Unit prefix in '{s}' must not be the first char")
-                unit_prefix_char = s[unitPrefixIndex]
-                s = s.replace(unit_prefix_char, ".")
-        # Handle unit prefix (if any). Not allowable if no unit is present
+                unit_prefix_index = -1
+            # Perform additional checks & conversions for prefix-as-decimal-separator
+            if unit_prefix_char:
+                # Unit prefix found in the middle of the string such as "1k25"
+                # Check if unit prefix is between two digits (prefix-as-decimal-separator)
+                unit_prefix_char = s[unit_prefix_index]
+                is_between_digits = (unit_prefix_index > 0 and unit_prefix_index < len(s) - 1 and
+                                    s[unit_prefix_index - 1].isdigit() and s[unit_prefix_index + 1].isdigit())
+                
+                if is_between_digits:
+                    # Unit prefix-as-decimal-separator --> there must be no other decimal separator
+                    if "." in s:  # Comma-to-dot conversion already handled by normalize_interpunctation
+                        raise ValueError(f"Unit prefix as decimal separator, but dot is also in string: {s}")
+                    # "1k25" => "1.25", also save "k" as unit prefix char
+                    unit_prefix_char = s[unit_prefix_index]
+                    s = s.replace(unit_prefix_char, ".")
+
         s = s.strip(self.strippable)
-        # Final check: Is there any number left and is it valid?
+        # Final check: After applying all rules, the string should be all numbers
         if not all((ch in _numeric_allowed for ch in s)):
-            raise ValueError(f"Remainder of string is not purely numeric: '{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', split result {split_result}")
+            raise RemainderOfStringContainsNonNumericCharacters(f"'{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', split result {split_result}")
         return SplitResult(
             prefix=prefix,
             number=s,
