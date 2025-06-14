@@ -267,3 +267,255 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         # Should be finite and positive
         self.assertTrue(np.isfinite(calculated_capacitance))
         self.assertGreater(calculated_capacitance, 0)
+
+class TestCapacitorChargingEnergy(unittest.TestCase):
+    """Comprehensive tests for capacitor_charging_energy function"""
+    
+    def test_basic_functionality_zero_starting_voltage(self):
+        """Test basic energy calculation from 0V to target voltage"""
+        capacitance = 1.5  # F
+        end_voltage = 5.0  # V
+        # Energy from 0V to 5V should be same as total stored energy
+        expected_energy = capacitor_energy(capacitance, end_voltage)
+        calculated_energy = capacitor_charging_energy(capacitance, end_voltage)
+        self.assertAlmostEqual(calculated_energy, expected_energy, places=10)
+        
+        # Test specific values
+        self.assertAlmostEqual(calculated_energy, 18.75, places=10)  # 0.5 * 1.5 * 25 = 18.75 J
+
+    def test_non_zero_starting_voltage(self):
+        """Test energy calculation with non-zero starting voltage"""
+        capacitance = "1.0 F"  # F
+        starting_voltage = "2.0 V"  # V
+        end_voltage = "6.0 V"  # V
+        
+        # Manual calculation: 0.5 * 1.0 * (6² - 2²) = 0.5 * (36 - 4) = 16 J
+        expected_energy = 0.5 * 1.0 * (6.0**2 - 2.0**2)
+        calculated_energy = capacitor_charging_energy(capacitance, end_voltage, starting_voltage)
+        self.assertAlmostEqual(calculated_energy, expected_energy, places=10)
+        self.assertAlmostEqual(calculated_energy, 16.0, places=10)
+
+    def test_engineering_notation(self):
+        """Test with engineering notation units"""
+        # Test with mF and V
+        calculated_energy = capacitor_charging_energy("100 mF", "1.2 V")
+        expected_energy = 0.5 * 0.1 * (1.2**2)  # 0.072 J = 72 mJ
+        self.assertAlmostEqual(calculated_energy, expected_energy, places=12)
+        
+        # Test with µF and kV
+        calculated_energy = capacitor_charging_energy("10 µF", "1 kV", "500 V")
+        expected_energy = 0.5 * 10e-6 * (1000**2 - 500**2)  # 3.75 J
+        self.assertAlmostEqual(calculated_energy, 3.75, places=10)
+
+    def test_consistency_with_capacitor_energy(self):
+        """Test mathematical consistency with capacitor_energy function"""
+        test_cases = [
+            ("100 µF", "12.0 V", "0.0 V"),    # 100 µF, 0V->12V
+            ("1 mF", "5.0 V", "2.0 V"),       # 1 mF, 2V->5V  
+            ("0.47 F", "24.0 V", "12.0 V"),   # 470 mF, 12V->24V
+            ("2.2 F", "1.5 V", "0.5 V"),      # 2.2 F, 0.5V->1.5V
+        ]
+        
+        for capacitance, end_voltage, start_voltage in test_cases:
+            with self.subTest(capacitance=capacitance, end_v=end_voltage, start_v=start_voltage):
+                # Calculate using capacitor_charging_energy
+                charging_energy = capacitor_charging_energy(capacitance, end_voltage, start_voltage)
+                
+                # Calculate manually using capacitor_energy difference
+                end_energy = capacitor_energy(capacitance, end_voltage)
+                start_energy = capacitor_energy(capacitance, start_voltage)
+                expected_energy = end_energy - start_energy
+                
+                self.assertAlmostEqual(charging_energy, expected_energy, places=12)
+
+    def test_zero_energy_cases(self):
+        """Test cases where no energy is required"""
+        capacitance = 1.0  # F
+        voltage = 5.0     # V
+        
+        # Same starting and ending voltage should require zero energy
+        energy = capacitor_charging_energy(capacitance, voltage, voltage)
+        self.assertAlmostEqual(energy, 0.0, places=12)
+        
+        # Test with string voltages
+        energy = capacitor_charging_energy("1.5 F", "10 V", "10 V")
+        self.assertAlmostEqual(energy, 0.0, places=12)
+
+    def test_negative_energy_discharge(self):
+        """Test that discharging (higher start voltage) gives negative energy"""
+        capacitance = 1.0  # F
+        starting_voltage = 10.0  # V
+        end_voltage = 5.0       # V
+        
+        # Should be negative since we're going from higher to lower voltage
+        energy = capacitor_charging_energy(capacitance, end_voltage, starting_voltage)
+        self.assertLess(energy, 0)
+        
+        # Manual calculation: 0.5 * 1.0 * (5² - 10²) = 0.5 * (25 - 100) = -37.5 J
+        expected_energy = 0.5 * capacitance * (end_voltage**2 - starting_voltage**2)
+        self.assertAlmostEqual(energy, expected_energy, places=10)
+        self.assertAlmostEqual(energy, -37.5, places=10)
+
+    def test_numpy_arrays(self):
+        """Test with numpy arrays"""
+        capacitances = np.array([1.0, 2.0, 0.5])  # F
+        end_voltages = np.array([5.0, 3.0, 4.0])  # V
+        start_voltages = np.array([0.0, 1.0, 2.0]) # V
+        
+        # Expected energies: [12.5, 8.0, 4.0] J
+        expected_energies = 0.5 * capacitances * (end_voltages**2 - start_voltages**2)
+        calculated_energies = capacitor_charging_energy(capacitances, end_voltages, start_voltages)
+        
+        assert_allclose(calculated_energies, expected_energies, rtol=1e-10)
+        
+        # Test with mixed arrays and scalars
+        calculated_energies = capacitor_charging_energy(1.0, end_voltages, 0.0)
+        expected_energies = 0.5 * 1.0 * end_voltages**2
+        assert_allclose(calculated_energies, expected_energies, rtol=1e-10)
+
+    def test_edge_cases_small_values(self):
+        """Test edge cases with very small values"""
+        # Very small capacitance
+        small_capacitance = 1e-12  # pF
+        voltage_change = 1.0       # V
+        energy = capacitor_charging_energy(small_capacitance, voltage_change)
+        expected_energy = 0.5 * small_capacitance * voltage_change**2
+        self.assertAlmostEqual(energy, expected_energy, places=15)
+        self.assertAlmostEqual(energy, 0.5e-12, places=15)  # 0.5 pJ
+
+    def test_edge_cases_large_values(self):
+        """Test edge cases with large values"""
+        # Large capacitance and voltage
+        large_capacitance = 100  # F (supercapacitor range)
+        high_voltage = 1000     # V
+        energy = capacitor_charging_energy(large_capacitance, high_voltage)
+        expected_energy = 0.5 * large_capacitance * high_voltage**2
+        self.assertAlmostEqual(energy, expected_energy, places=5)
+        self.assertAlmostEqual(energy, 50e6, places=5)  # 50 MJ
+
+    def test_symmetry_properties(self):
+        """Test symmetry properties of the function"""
+        capacitance = 1.0  # F
+        voltage_a = 3.0   # V
+        voltage_b = 7.0   # V
+        
+        # Energy to go from A to B should be negative of energy to go from B to A
+        energy_a_to_b = capacitor_charging_energy(capacitance, voltage_b, voltage_a)
+        energy_b_to_a = capacitor_charging_energy(capacitance, voltage_a, voltage_b)
+        
+        self.assertAlmostEqual(energy_a_to_b, -energy_b_to_a, places=12)
+
+    def test_additivity_property(self):
+        """Test that energy is additive for multi-step charging"""
+        capacitance = 1.0  # F
+        voltage_start = 1.0  # V
+        voltage_middle = 4.0 # V  
+        voltage_end = 8.0    # V
+        
+        # Energy from start to end in one step
+        direct_energy = capacitor_charging_energy(capacitance, voltage_end, voltage_start)
+        
+        # Energy from start to middle, then middle to end
+        step1_energy = capacitor_charging_energy(capacitance, voltage_middle, voltage_start)
+        step2_energy = capacitor_charging_energy(capacitance, voltage_end, voltage_middle)
+        total_step_energy = step1_energy + step2_energy
+        
+        self.assertAlmostEqual(direct_energy, total_step_energy, places=12)
+
+    def test_real_world_scenarios(self):
+        """Test realistic capacitor charging scenarios"""
+        # Smartphone camera flash capacitor
+        flash_cap = 100e-6  # 100 µF
+        flash_voltage = 300  # V
+        flash_energy = capacitor_charging_energy(flash_cap, flash_voltage)
+        self.assertAlmostEqual(flash_energy, 4.5, places=10)  # 4.5 J
+        
+        # Car audio system capacitor
+        audio_cap = 1.0     # 1 F
+        audio_voltage = 14.4 # V (car electrical system)
+        audio_energy = capacitor_charging_energy(audio_cap, audio_voltage)
+        self.assertAlmostEqual(audio_energy, 103.68, places=8)  # ~104 J
+        
+        # Defibrillator capacitor
+        defib_cap = 32e-6   # 32 µF
+        defib_voltage = 5000 # V
+        defib_energy = capacitor_charging_energy(defib_cap, defib_voltage)
+        self.assertAlmostEqual(defib_energy, 400, places=5)  # 400 J
+
+    def test_partial_charging_scenarios(self):
+        """Test partial charging from non-zero starting voltages"""
+        capacitance = 470e-6  # 470 µF
+        
+        # Charging from 50% to 100% of rated voltage
+        rated_voltage = 25    # V
+        half_voltage = 12.5   # V
+        
+        partial_energy = capacitor_charging_energy(capacitance, rated_voltage, half_voltage)
+        full_energy = capacitor_charging_energy(capacitance, rated_voltage)
+        half_energy = capacitor_charging_energy(capacitance, half_voltage)
+        
+        # Partial energy should equal full energy minus energy already stored
+        self.assertAlmostEqual(partial_energy, full_energy - half_energy, places=12)
+        
+        # Calculate expected value: 0.5 * 470e-6 * (25² - 12.5²) = 0.11 J
+        expected_partial = 0.5 * capacitance * (rated_voltage**2 - half_voltage**2)
+        self.assertAlmostEqual(partial_energy, expected_partial, places=12)
+
+    def test_auto_format_functionality(self):
+        """Test auto_format integration"""
+        # Test various formats
+        result = auto_format(capacitor_charging_energy, "1.5 F", "5.0 V")
+        self.assertEqual(result, "18.8 J")
+        
+        result = auto_format(capacitor_charging_energy, "100 mF", "1.2 V")
+        self.assertEqual(result, "72.0 mJ")
+        
+        result = auto_format(capacitor_charging_energy, "10 µF", "100 V", "50 V")
+        # 0.5 * 10e-6 * (100² - 50²) = 37.5 mJ
+        self.assertEqual(result, "37.5 mJ")
+
+    def test_mathematical_formulas(self):
+        """Test against known mathematical formulas"""
+        test_cases = [
+            # (capacitance, end_voltage, start_voltage, expected_energy)
+            (1e-6, 10, 0, 50e-6),        # 1µF, 0->10V: 50µJ
+            (100e-6, 5, 3, 800e-6),      # 100µF, 3->5V: 800µJ  
+            (0.001, 12, 8, 40e-3),       # 1mF, 8->12V: 40mJ
+            (1.0, 10, 6, 32),            # 1F, 6->10V: 32J
+        ]
+        
+        for capacitance, end_v, start_v, expected in test_cases:
+            with self.subTest(C=capacitance, V_end=end_v, V_start=start_v):
+                calculated = capacitor_charging_energy(capacitance, end_v, start_v)
+                self.assertAlmostEqual(calculated, expected, places=10)
+
+    def test_error_handling_and_boundary_conditions(self):
+        """Test boundary conditions and numerical stability"""
+        # Very small voltage differences
+        capacitance = 1.0
+        v1 = 1.000000000
+        v2 = 1.000000001
+        
+        energy = capacitor_charging_energy(capacitance, v2, v1)
+        # Should be very small but finite
+        self.assertTrue(np.isfinite(energy))
+        self.assertGreater(energy, 0)
+        self.assertLess(energy, 1e-6)  # Should be very small
+        
+        # Test with zero capacitance
+        zero_energy = capacitor_charging_energy(0, 10, 5)
+        self.assertAlmostEqual(zero_energy, 0.0, places=12)
+
+    def test_units_consistency(self):
+        """Test that function works correctly with various unit combinations"""
+        # All combinations should give same result when properly converted
+        base_result = capacitor_charging_energy(1e-3, 5.0, 0.0)  # 1mF, 5V
+        
+        # Test with different unit representations
+        result1 = capacitor_charging_energy("1 mF", "5 V", "0 V")
+        result2 = capacitor_charging_energy("1000 µF", "5000 mV", "0 mV")
+        result3 = capacitor_charging_energy("0.001 F", "5.0 V")
+        
+        self.assertAlmostEqual(base_result, result1, places=10)
+        self.assertAlmostEqual(base_result, result2, places=10)
+        self.assertAlmostEqual(base_result, result3, places=10)

@@ -14,6 +14,7 @@ __all__ = [
     "capacitor_constant_current_discharge_time",
     "capacitor_voltage_by_energy",
     "capacitor_capacitance_by_energy",
+    "capacitor_charging_energy",
 ]
 
 @returns_unit("h")
@@ -141,3 +142,24 @@ def capacitor_capacitance_by_energy(energy, voltage, starting_voltage="0V"):
     """
     voltage_squared_diff = np.square(voltage) - np.square(starting_voltage)
     return 2 * energy / voltage_squared_diff
+
+@returns_unit("J")
+@normalize_numeric_args
+def capacitor_charging_energy(capacitance, end_voltage, starting_voltage="0V"):
+    """
+    Compute the energy required to charge a capacitor from a starting voltage to an end voltage.
+
+    Parameters:
+    - capacitance: The capacitance of the capacitor in farads.
+    - end_voltage: The target voltage to charge the capacitor to in volts.
+    - starting_voltage: The initial voltage of the capacitor in volts (default "0V").
+
+    Returns:
+    The energy required in joules.
+    
+    The energy required is the difference between the final and initial stored energy:
+    Energy_required = 0.5 * C * (V_end^2 - V_start^2)
+    """
+    end_energy = capacitor_energy(capacitance, end_voltage)
+    start_energy = capacitor_energy(capacitance, starting_voltage)
+    return end_energy - start_energy
