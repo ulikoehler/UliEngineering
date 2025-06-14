@@ -56,7 +56,7 @@ def convert_length_to_meters(value, unit, instance=EngineerIO.length_instance):
     in <unit>, convert it to meters.
     """
     # Currently a hack, but doing it directly will not parse SI units
-    return normalize_length("{} {}".format(value, unit), instance=instance)
+    return normalize_length(f"{value} {unit}", instance=instance)
 
 @returns_unit("m")
 def normalize_length(s, instance=EngineerIO.length_instance):
@@ -74,6 +74,8 @@ def normalize_length(s, instance=EngineerIO.length_instance):
     - "1.2 M light years" => 1.135287656709696e+22
     - "9.15 kpc" => 2.8233949868947424e+17
     """
+    if s is None:
+        return None
     if isinstance(s, list):
         return [normalize_length(v) for v in s]
     if isinstance(s, ndarray):

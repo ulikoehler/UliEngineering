@@ -2,7 +2,22 @@
 # -*- coding: utf-8 -*-
 """
 A python script to normalize a wide variety of value notations
-from electronics engineering.
+from eldef _default_units(include_m=False):
+    return set([
+        # NOTE: These Ω symbols are NOT identical !
+        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        'R', # Ohms, but without having to copynpaste the Ω symbol
+        # Time
+        's', 'h', 'min',
+        # Fraction
+        'ppm', 'ppb', '%',
+        # Lighting
+        'lm', 'lx', 'cd',
+        # Composite units
+        'C/W', '€/km', '€/m',
+        # Currencies
+        '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
+    ]).union(_length_units(include_m=include_m)).union(_area_units(include_m2=include_m))ering.
 
 Examples of valid notations include:
     1,234.56kΩ
@@ -92,8 +107,22 @@ def _length_units(include_m=False):
     ])
     if include_m:
         units.add("m")
-        units.add("m²")
-        units.add("m³")
+    return units
+
+def _area_units():
+    """
+    All known area units.
+    See also Area.py
+    """
+    units = set([
+        # Area units
+        'm²', 'm^2',
+        'in²', 'in^2', 'square inch', 'square inches', 'sq in',
+        'ft²', 'ft^2', 'square foot', 'square feet', 'sq ft',
+        'yd²', 'yd^2', 'square yard', 'square yards', 'sq yd',
+        'acre', 'acres', 'hectare', 'hectares', 'ha', 'are', 'ares',
+        'barn', 'barns', 'b', 'square meter', 'square meters', 'sq m', 'sqm'
+    ])
     return units
 
 def _default_units(include_m=False):
@@ -241,6 +270,7 @@ def none_to_nan(value):
 class EngineerIO(object):
     instance: Optional["EngineerIO"] = None
     length_instance: Optional["EngineerIO"] = None
+    area_instance: Optional["EngineerIO"] = None
     """
     Default instance, used for global functions. Initialized on first use
 
@@ -672,6 +702,10 @@ class EngineerIO(object):
 EngineerIO.instance = EngineerIO()
 EngineerIO.length_instance = EngineerIO(
     units=_default_units(include_m=True),
+    unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
+)
+EngineerIO.area_instance = EngineerIO(
+    units=_area_units().union(_default_units(include_m=False)),
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 
