@@ -106,10 +106,10 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.split_unit("50 °C/W"), UnitSplitResult('50', '°', 'C/W'))
         self.assertEqual(self.io.split_unit(""), UnitSplitResult('', '', ''))
 
-
     def test_normalize(self):
-        self.assertEqual(self.io.normalize("100 kΩ"), NormalizeResult('', 1e5, '', "Ω"))
-        self.assertEqual(self.io.normalize("100 kΩ".encode("utf8")), NormalizeResult('', 1e5, '', "Ω"))
+        self.assertEqual(self.io.normalize("100 kΩ"), NormalizeResult(value=1e5, unit="Ω", prefix_multiplier=1e3, original_number=100))
+        # Test with bytes input
+        self.assertEqual(self.io.normalize("100 kΩ".encode("utf8")), NormalizeResult(value=1e5, unit="Ω", prefix_multiplier=1e3, original_number=100))
 
     def test_format_with_suffix(self):
         self.assertEqual(_format_with_suffix(1.01, "A"), '1.01 A')
