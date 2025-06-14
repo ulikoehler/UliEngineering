@@ -43,12 +43,28 @@ UnitSplitResult = namedtuple("UnitSplitResult", ["remainder", "unit_prefix", "un
 SplitResult = namedtuple("SplitResult", ["prefix", "number", "suffix", "unit_prefix", "unit"])
 NormalizeResult = namedtuple("NormalizeResult", ["prefix", "value", "unit_prefix", "unit"])
 
-def _default_suffices():
+def _default_suffix_map():
     """
-    The default first suffix list with -24 1st exp
+    The default suffix to exponent mapping
     """
-    return [["y"], ["z"], ["a"], ["f"], ["p"], ["n"], ["µ", "μ", "u"], ["m"], [],
-            ["k"], ["M"], ["G"], ["T"], ["E"], ["Z"], ["Y"]]
+    return {
+        'y': -24,
+        'z': -21,
+        'a': -18,
+        'f': -15,
+        'p': -12,
+        'n': -9,
+        'µ': -6, 'μ': -6, 'u': -6,  # micro variants
+        'm': -3,
+        # No suffix for base unit (exponent 0)
+        'k': 3,
+        'M': 6,
+        'G': 9,
+        'T': 12,
+        'E': 15,
+        'Z': 18,
+        'Y': 21
+    }
 
 def _length_units(include_m=False):
     """
@@ -226,9 +242,8 @@ class EngineerIO(object):
     def __init__(self, units=_default_units(),
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
-                 suffices=_default_suffices(),
-                 timespan_units=_default_timespan_units(),
-                 first_suffix_exp=-24):
+                 suffix_map=_default_suffix_map(),
+                 timespan_units=_default_timespan_units()):
         """
         Initialize a new EngineerIO instance with default or custom suffix
 
@@ -242,18 +257,13 @@ class EngineerIO(object):
         unit_prefixes : string
             A list of prefixes that ignored (available via normalize()).
             Constraint: unitPrefixes ∩ units == ∅
-        suffices : list of lists of unit strings
-            For each SI exponent, a list of valid suffix strings for each exponent.
-            Each successive element in the list is 1e3 from the previous one.
+        suffix_map : dict
+            Maps suffix strings to their decimal exponents.
             For generating strings from numbers, the first suffix in each nested list is  preferred
-            The list must not contain the empty string but shall be empty if no suffix shall be used
-        first_suffix_exp : int
-            The decimal exponent of the first suffix in the suffix list.
         """
         self.units = set(units)
-        self.suffices = suffices
+        self.suffix_map = suffix_map
         self.timespan_units = timespan_units
-        self.first_suffix_exp = first_suffix_exp
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
         self.prefix_re = re.compile('^(' + _prefix_set + ')+')
@@ -263,34 +273,37 @@ class EngineerIO(object):
         # Unit prefixes will only be used in strip, so we can strip spaces in one go.
         self.strippable = " \t\n"
         # Compute maps
-        self.all_suffixes = set(itertools.chain(*self.suffices))
+        self.all_suffixes = set(self.suffix_map.keys())
         self._recompute_suffix_maps()
 
     def _recompute_suffix_maps(self):
         """
-        Recompute the exponent -> suffix map and
-        the suffix -> exponent map
+        Recompute the exponent -> suffix map from the suffix -> exponent map
         """
-        # Compute inverse suffix map
+        # Direct mapping from suffix to exponent already exists in self.suffix_map
+        # Create the inverse mapping from exponent to suffix
         self.exp_suffix_map = {}  # Key: exp // 3, Value: suffix
-        self.suffix_exp_map = {'': 0}  # Key: suffix, value: exponent
-        current_exp = self.first_suffix_exp
-        # Iterate over first suffices in each list
-        for current_suffices in self.suffices:
-            if not current_suffices: # No suffix to be used
-                # Do not self suffix exp map
-                self.exp_suffix_map[current_exp // 3] = ""
-                current_exp += 3
-                continue
-            # Compute exponent -> suffix (only first suffix)
-            self.exp_suffix_map[current_exp // 3] = current_suffices[0]
-            # Compute suffix -> exponent
-            for current_suffix in current_suffices:
-                self.suffix_exp_map[current_suffix] = current_exp
-            current_exp += 3
+        self.suffix_exp_map = {'': 0}  # Key: suffix, value: exponent (empty string for no suffix)
+        
+        # Copy the suffix map and add it to suffix_exp_map
+        for suffix, exponent in self.suffix_map.items():
+            self.suffix_exp_map[suffix] = exponent
+            # For the exp_suffix_map, use the exponent divided by 3 as key
+            exp_key = exponent // 3
+            # Only store the first suffix for each exponent (for formatting)
+            if exp_key not in self.exp_suffix_map:
+                self.exp_suffix_map[exp_key] = suffix
+        
+        # Add empty suffix for base unit (exponent 0)
+        self.exp_suffix_map[0] = ""
+        
         # Compute min/max SI value
-        self.exp_map_min = min(self.exp_suffix_map.keys())
-        self.exp_map_max = max(self.exp_suffix_map.keys())
+        if self.exp_suffix_map:
+            self.exp_map_min = min(self.exp_suffix_map.keys())
+            self.exp_map_max = max(self.exp_suffix_map.keys())
+        else:
+            self.exp_map_min = 0
+            self.exp_map_max = 0
 
     def split_input(self, s):
         """
