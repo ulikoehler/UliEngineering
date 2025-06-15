@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
-from UliEngineering.Length import normalize_length
+from UliEngineering.EngineerIO.Length import normalize_length
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np

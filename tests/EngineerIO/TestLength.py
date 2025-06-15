@@ -2,14 +2,24 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.Length import *
+from UliEngineering.EngineerIO.Length import *
 import unittest
 
 class TestLength(unittest.TestCase):
+    def setUp(self):
+        self.length_io = EngineerLengthIO()
+
     def test_length_normalization(self):
+        # Test with functions
         assert_approx_equal(normalize_length(1.0), 1.0)
         assert_approx_equal(normalize_length("1.0 m"), 1.0)
         assert_approx_equal(normalize_length("1.0 meter"), 1.0)
+        
+        # Test with class instance
+        assert_approx_equal(self.length_io.normalize_length(1.0), 1.0)
+        assert_approx_equal(self.length_io.normalize_length("1.0 m"), 1.0)
+        assert_approx_equal(self.length_io.normalize_length("1.0 meter"), 1.0)
+        
         assert_approx_equal(normalize_length("5.0 m"), 5.0)
         assert_approx_equal(normalize_length("5.0 meters"), 5.0)
         assert_approx_equal(normalize_length("3 m"), 3)
@@ -53,8 +63,14 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(normalize_length("3.33 angstrom"), 3.33e-10)
     
     def test_convert_length_to_meters(self):
+        # Test with functions
         assert_approx_equal(convert_length_to_meters(1.0, "m"), 1.0)
         assert_approx_equal(convert_length_to_meters(1.0, "meter"), 1.0)
+        
+        # Test with class instance
+        assert_approx_equal(self.length_io.convert_length_to_meters(1.0, "m"), 1.0)
+        assert_approx_equal(self.length_io.convert_length_to_meters(1.0, "meter"), 1.0)
+        
         assert_approx_equal(convert_length_to_meters(5.0, "m"), 5.0)
         assert_approx_equal(convert_length_to_meters(5.0, "meters"), 5.0)
         assert_approx_equal(convert_length_to_meters(3, "m"), 3)
@@ -97,6 +113,32 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(convert_length_to_meters(3.33, "Angstrom"), 3.33e-10)
         assert_approx_equal(convert_length_to_meters(3.33, "angstrom"), 3.33e-10)
 
+    def test_class_instance_vs_function_consistency(self):
+        """Test that class methods and functions produce identical results"""
+        test_cases = [
+            "1.0 m", "100 mm", "1 ft", "1 inch", "1 ly", "1 AU"
+        ]
+        
+        for case in test_cases:
+            with self.subTest(case=case):
+                function_result = normalize_length(case)
+                class_result = self.length_io.normalize_length(case)
+                assert_approx_equal(function_result, class_result, 
+                                  err_msg=f"Results differ for {case}")
+
+    def test_class_convert_consistency(self):
+        """Test that class convert method and function produce identical results"""
+        test_cases = [
+            (1.0, "m"), (100.0, "mm"), (1.0, "ft"), (1.0, "inch")
+        ]
+        
+        for value, unit in test_cases:
+            with self.subTest(value=value, unit=unit):
+                function_result = convert_length_to_meters(value, unit)
+                class_result = self.length_io.convert_length_to_meters(value, unit)
+                assert_approx_equal(function_result, class_result, 
+                                  err_msg=f"Results differ for {value} {unit}")
+
     @parameterized.expand([
         ("1A",),
         ("xaz",),
@@ -105,3 +147,21 @@ class TestLength(unittest.TestCase):
     def test_invalid_unit(self, unit):
         with self.assertRaises(ValueError):
             normalize_length("6.6 {}".format(unit))
+        with self.assertRaises(ValueError):
+            self.length_io.normalize_length("6.6 {}".format(unit))
+
+    def test_none_handling(self):
+        """Test handling of None input"""
+        self.assertIsNone(normalize_length(None))
+        self.assertIsNone(self.length_io.normalize_length(None))
+
+    def test_list_input(self):
+        """Test list input handling"""
+        input_list = ["1 m", "100 mm", "1 ft"]
+        result_func = normalize_length(input_list)
+        result_class = self.length_io.normalize_length(input_list)
+        
+        expected = [1.0, 0.1, 0.3048]
+        for i, val in enumerate(expected):
+            assert_approx_equal(result_func[i], val)
+            assert_approx_equal(result_class[i], val)
