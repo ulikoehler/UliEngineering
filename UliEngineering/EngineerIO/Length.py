@@ -7,24 +7,23 @@ from numpy import ndarray
 import scipy.constants
 import numpy as np
 from . import EngineerIO, returns_unit
-from ..Units import UnknownUnitInContextException, Unit
+from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_length", "convert_length_to_meters", "EngineerLengthIO"]
+
 
 def _length_units():
     """
     Returns a set of length unit symbols
     """
     return {
-        "m", "meter", "meters",
-        "mm", "cm", "dm", "km", "µm", "um", "nm", "pm", "fm", "am",
-        "mil", "in", "inch", "inches", '"',
-        "ft", "foot", "feet", "yd", "yard",
-        "mile", "miles", "nautical mile", "nautical miles",
-        "pt", "point", "points",
-        "AU", "au", "AUs", "ly", "lightyear", "lightyears", 
-        "light year", "light years", "pc", "parsec", "parsecs",
-        "Å", "Angstrom", "angstrom"
+        "m",
+        "mil", "in",
+        "ft", "yd",
+        "mile", "nautical mile", # NOTE: nm is nanometer, not nautical mile!
+        "pt",
+        "AU", "ly", "pc",
+        "Å"
     }
 
 def _length_unit_aliases():
@@ -32,20 +31,31 @@ def _length_unit_aliases():
     Returns a dictionary mapping length unit aliases to their canonical symbols
     """
     return {
-        # Metric aliases handled by SI prefixes
+        # Metric aliases
+        "meter": "m",
+        "meters": "m",
+        
         # Imperial aliases
-        "inches": "inch",
+        "\"": "in",
+        "inch": "in",
+        "inches": "in",
+        "foot": "ft",
         "feet": "ft", 
-        "yards": "yard",
+        "yard": "yd",
+        "yards": "yd",
         "miles": "mile",
-        "points": "point",
+        "point": "pt",
+        "points": "pt",
         "mils": "mil",
         
         # Astronomical aliases
+        "au": "AU",
         "AUs": "AU",
+        "lightyear": "ly",
         "lightyears": "ly",
         "light years": "ly", 
         "light year": "ly",
+        "parsec": "pc",
         "parsecs": "pc",
         
         # Other aliases
@@ -69,39 +79,18 @@ def _default_unit_prefix_map_length():
 _length_factors = {
     "": 1., # Assumed. It's SI!
     "m": 1.,
-    "meter": 1.,
-    "meters": 1.,
     'mil': 1e-3 * scipy.constants.inch,
     'in': scipy.constants.inch,
-    'inch': scipy.constants.inch,
-    'inches': scipy.constants.inch,
     '\"': scipy.constants.inch,
-    'foot': scipy.constants.foot,
-    'feet': scipy.constants.foot,
     'ft': scipy.constants.foot,
     'yd': scipy.constants.yard,
-    'yard': scipy.constants.yard,
     'mile': scipy.constants.mile,
-    'miles': scipy.constants.mile,
     'nautical mile': scipy.constants.nautical_mile,
-    'nautical miles': scipy.constants.nautical_mile,
     'pt': scipy.constants.point,
-    'point': scipy.constants.point,
-    'points': scipy.constants.point,
     'AU': scipy.constants.astronomical_unit,
-    'au': scipy.constants.astronomical_unit,
-    'AUs': scipy.constants.astronomical_unit,
     'ly': scipy.constants.light_year,
-    'lightyear': scipy.constants.light_year,
-    'lightyears': scipy.constants.light_year,
-    'light year': scipy.constants.light_year,
-    'light years': scipy.constants.light_year,
     'pc': scipy.constants.parsec,
-    'parsec': scipy.constants.parsec,
-    'parsecs': scipy.constants.parsec,
     'Å': scipy.constants.angstrom,
-    'Angstrom': scipy.constants.angstrom,
-    'angstrom': scipy.constants.angstrom,
 }
 
 
@@ -183,6 +172,19 @@ def normalize_length(s, instance=None):
     - "1.2 M light years" => 1.135287656709696e+22
     - "9.15 kpc" => 2.8233949868947424e+17
     """
+    if instance is None:
+        instance = EngineerLengthIO.instance()
+    return instance.normalize_length(s)
+
+@returns_unit("m")
+def convert_length_to_meters(value, unit, instance=None):
+    """
+    Given a number or Engineer string (unit ignored) <value>
+    in <unit>, convert it to meters.
+    """
+    if instance is None:
+        instance = EngineerLengthIO.instance()
+    return instance.convert_length_to_meters(value, unit)
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.normalize_length(s)

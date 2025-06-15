@@ -663,7 +663,7 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.unit, 'm²')
         
         result = self.io.normalize("500cm^2")
-        self.assertEqual(result.value, 5.0)
+        self.assertEqual(result.value, 500.0)
         self.assertEqual(result.unit, 'm²')
         
         result = self.io.normalize("100in²")

@@ -23,6 +23,7 @@ from collections.abc import Iterable
 import math
 import re
 from typing import Dict, List, Optional, Set
+import deprecated
 import numpy as np
 import functools
 import inspect
@@ -95,143 +96,7 @@ def _default_unit_prefix_map(include_length_unit_prefixes=False):
     
     return unit_prefixes
 
-def _length_units(include_m=False):
-    """
-    All known length units.
-    "m" is not included by default due to ambiguity
-    with the milli-"m" (mg = milligram)
-    See also Length.py
-    """
-    units = set([
-        # Length
-        'Å', 'Angstrom', 'angstrom',
-        'meters', 'meter',
-        'mil', 'in', '\"', 'inch', 'inches',
-        'foot', 'feet', 'ft', 'yd', 'yard', 'mile',
-        'miles', 'pt', 'point', 'points', 'au', 'AU', 'AUs',
-        'ly', 'light year', 'lightyear', 'light years', 'lightyears',
-        'nautical mile', 'nautical miles', 'pc', 'parsec', 'parsecs'
-    ])
-    if include_m:
-        units.add("m")
-    return units
-
-def _area_units() -> Set[str]:
-    """
-    All known area units (compact symbols only).
-    See also Area.py
-    """
-    units = set([
-        # Area units
-        'm²', 'm^2',
-        'in²', 'in^2',
-        'ft²', 'ft^2', 
-        'yd²', 'yd^2',
-        'acre', 'ha', 'are',
-        'barn', 'b',
-        # NOTE: Do not list SI-prefixed units such as cm² here!
-        # These must be parsed as m² with SI prefix "c" etc.
-    ])
-    return units
-
-def _area_unit_aliases() -> Dict[str, str]:
-    """
-    Maps verbose area unit names to their compact symbols.
-    """
-    return {
-        # Square inch aliases
-        'square inch': 'in²',
-        'square inches': 'in²', 
-        'sq in': 'in²',
-        
-        # Square foot aliases
-        'square foot': 'ft²',
-        'square feet': 'ft²', 
-        'sq ft': 'ft²',
-        
-        # Square yard aliases  
-        'square yard': 'yd²',
-        'square yards': 'yd²',
-        'sq yd': 'yd²',
-        
-        # Other area aliases
-        'acres': 'acre',
-        'hectare': 'ha', 
-        'hectares': 'ha', 
-        'hectars': 'ha', 
-        'ares': 'are',
-        'barns': 'barn',
-        'square meter': 'm²',
-        'square meters': 'm²', 
-        'sq m': 'm²', 
-        'sqm': 'm²',
-        'm^2': 'm²',  # Caret notation alias
-        
-        # SI prefixed meter aliases
-        'square millimeter': 'mm²',
-        'square millimeters': 'mm²', 
-        'square mm': 'mm²', 
-        'sq mm': 'mm²', 
-        'mm sq': 'mm²', 
-        'mm squared': 'mm²', 
-        'millimeter squared': 'mm²',
-        'mm^2': 'mm²',  # Caret notation alias
-        
-        'square centimeter': 'cm²',
-        'square centimeters': 'cm²', 
-        'square cm': 'cm²', 
-        'sq cm': 'cm²', 
-        'cm sq': 'cm²', 
-        'cm squared': 'cm²', 
-        'centimeter squared': 'cm²', 
-        'centimeters squared': 'cm²',
-        'cm^2': 'cm²',  # Caret notation alias
-        
-        'square decimeter': 'dm²',
-        'square decimeters': 'dm²', 
-        'square dm': 'dm²', 
-        'sq dm': 'dm²', 
-        'dm sq': 'dm²', 
-        'dm squared': 'dm²', 
-        'decimeter squared': 'dm²', 
-        'decimeters squared': 'dm²',
-        'dm^2': 'dm²',  # Caret notation alias
-        
-        'square micrometer': 'µm²',
-        'square micrometers': 'µm²', 
-        'square µm': 'µm²',
-        'sq µm': 'µm²', 
-        'sq um': 'µm²', 
-        'um sq': 'µm²', 
-        'µm sq': 'µm²', 
-        'µm squared': 'µm²', 
-        'micrometer squared': 'µm²', 
-        'micrometers squared': 'µm²',
-        'µm^2': 'µm²',  # Caret notation alias
-        'um^2': 'µm²',  # Caret notation alias
-        
-        'square nanometer': 'nm²',
-        'square nanometers': 'nm²', 
-        'square nm': 'nm²', 
-        'sq nm': 'nm²', 
-        'nm sq': 'nm²', 
-        'nm squared': 'nm²', 
-        'nanometers squared': 'nm²',
-        'nm^2': 'nm²',  # Caret notation alias
-        
-        'square kilometer': 'km²',
-        'square kilometers': 'km²', 
-        'square km': 'km²', 
-        'sq km': 'km²', 
-        'km squared': 'km²', 
-        'km sq': 'km²', 
-        'kilometers sq': 'km²', 
-        'kilometers squared': 'km²',
-        'km^2': 'km²',  # Caret notation alias
-    }
-
-
-def _default_units(include_m=False) -> Set[str]:
+def _default_units() -> Set[str]:
     return {
         # NOTE: These Ω symbols are NOT identical !
         'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
@@ -248,96 +113,6 @@ def _default_units(include_m=False) -> Set[str]:
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
     }
 
-
-def _default_timespan_units():
-    return {
-        # Attoseconds
-        'as': 1e-18,
-        'asec': 1e-18,
-        'asecs': 1e-18,
-        'attosecond': 1e-18,
-        'attoseconds': 1e-18,
-        # Femtoseconds
-        'fs': 1e-15,
-        'fsec': 1e-15,
-        'fsecs': 1e-15,
-        'femtosecond': 1e-15,
-        'femtoseconds': 1e-15,
-        # Picoseconds
-        'ps': 1e-12,
-        'psec': 1e-12,
-        'psecs': 1e-12,
-        'picosecond': 1e-12,
-        'picoseconds': 1e-12,
-        # Nanoseconds
-        'ns': 1e-9,
-        'nsec': 1e-9,
-        'nsecs': 1e-9,
-        'nanosecond': 1e-9,
-        'nanoseconds': 1e-9,
-        # Microseconds
-        'µs': 1e-6,
-        'us': 1e-6,
-        'µsec': 1e-6,
-        'usec': 1e-6,
-        'microsecond': 1e-6,
-        'microseconds': 1e-6,
-        'µsecond': 1e-6,
-        # Milliseconds
-        'ms': 0.001,
-        'millisecond': 0.001,
-        'milliseconds': 0.001,
-        # seconds
-        's': 1,
-        'sec': 1,
-        'secs': 1,
-        'second': 1,
-        'seconds': 1,
-        # Minutes
-        'm': 60,
-        'min': 60,
-        # hours
-        'h': 3600,
-        'hour': 3600,
-        'hours': 3600,
-        # days
-        'd': 86400,
-        'day': 86400,
-        'days': 86400,
-        # weeks
-        'w': 604800,
-        'week': 604800,
-        'weeks': 604800,
-        # Months (we're using the average duration of a month)
-        'mo': 2629746,  # 1/12th of a year, see below for the definition of a year
-        'month': 2629746,
-        'months': 2629746,
-        # years (365.2425 days on average)
-        'y': 31556952,
-        'year': 31556952,
-        'years': 31556952,
-        # Decades
-        'decade': 315569520,
-        'decades': 315569520,
-        # Centuries
-        'century': 3155695200,
-        'centuries': 3155695200,
-        # Millenia
-        'millenium': 31556952000,
-        'millenia': 31556952000,
-        # Megayears
-        'My': 31556952000,
-        'Myr': 31556952000,
-        'Myrs': 31556952000,
-        # Gigayears
-        'Gy': 31556952000000,
-        'Gyr': 31556952000000,
-        'Gyrs': 31556952000000,
-        # Terayears
-        'Ty': 31556952000000000,
-        'Tyr': 31556952000000000,
-        'Tyrs': 31556952000000000,
-    }
 
 def _default_prefixes():
     return ["Δ", "±"]
@@ -374,9 +149,7 @@ def none_to_nan(value):
     return value
 
 class EngineerIO(object):
-    instance: Optional["EngineerIO"] = None
-    length_instance: Optional["EngineerIO"] = None
-    area_instance: Optional["EngineerIO"] = None
+    _instance: Optional["EngineerIO"] = None
     """
     Default instance, used for global functions. Initialized on first use
 
@@ -386,7 +159,7 @@ class EngineerIO(object):
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
                  unit_prefix_map=_default_unit_prefix_map(),
-                 timespan_units=_default_timespan_units(),
+                 timespan_units=None,  # Changed: made optional
                  unit_aliases=None):
         """
         Initialize a new EngineerIO instance with default or custom unit prefixes
@@ -409,7 +182,7 @@ class EngineerIO(object):
         """
         self.units = set(units)
         self.unit_prefix_map = unit_prefix_map
-        self.timespan_units = timespan_units
+        self.timespan_units = timespan_units or {}  # Changed: default to empty dict
         self.unit_aliases = unit_aliases or {}
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
@@ -957,42 +730,14 @@ class EngineerIO(object):
         # It's an iterable
         return self.normalize_iterable(arg, func=self.normalize)
     
-    def normalize_timespan(self, arg: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+    @classmethod
+    def instance(cls):
         """
-        Normalize a given timespan to SI units (seconds).
-        Numeric inputs are assumed to be in seconds.
+        Get the singleton instance of EngineerIO
         """
-        if isinstance(arg, bytes):
-            arg = arg.decode("utf8")
-        if isinstance(arg, (int, float, np.generic)):
-            return arg # Already a number. Just return!
-        elif isinstance(arg, (str)):
-            s, unit = partition_at_numeric_to_nonnumeric_boundary(arg) # Remove unit
-            s, unit = s.strip(), unit.strip()
-            if not s:
-                raise ValueError(f"Empty value in timespan: {arg}")
-            if not unit: # Assume seconds (SI unit of time)
-                return float(s)
-            # Check if unit exists in timespan_units
-            if unit not in self.timespan_units:
-                raise ValueError(f"Invalid timespan unit '{unit}' in '{arg}'. Expected one of {list(self.timespan_units.keys())}")
-            return float(s) * self.timespan_units[unit]
-        elif isinstance(arg, (np.ndarray, list)):
-            return np.vectorize(self.normalize_timespan)(arg)
-        else:
-            raise ValueError(f"Unsupported type for normalization: {type(arg)}")
-
-# Initialize global instance
-EngineerIO.instance = EngineerIO()
-EngineerIO.length_instance = EngineerIO(
-    units=_default_units(include_m=True),
-    unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
-)
-EngineerIO.area_instance = EngineerIO(
-    units=_area_units(),
-    unit_aliases=_area_unit_aliases(),
-    unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
-)
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
 __replace_comma_dot = lambda s: s.replace(",", ".")
 """
@@ -1064,35 +809,106 @@ def _format_with_suffix(v, suffix="", significant_digits=3):
     #Avoid appending whitespace if there is no suffix
     return f"{res} {suffix}" if suffix else res
 
+__replace_comma_dot = lambda s: s.replace(",", ".")
+"""
+Map of a transform to apply to the string
+during interpunctation normalization,
+depending on (commaFound, dotFound, commaFoundFirst).
+Must contain every possible variant
+"""
+_interpunct_transform_map = {
+    # Found nothing or only point -> no modification required
+    (False, False, False): functoolz.identity,
+    (False, False, True): functoolz.identity,
+    (False, True, False): functoolz.identity,
+    (False, True, True): functoolz.identity,
+    # Only comma -> replace and exit
+    (True, False, False): __replace_comma_dot,
+    (True, False, True): __replace_comma_dot,
+    # Below this line: Both comma and dot found
+    # Comma first => comma used as thousands separators
+    (True, True, True): lambda s: s.replace(",", ""),
+    # Dot first => dot used as thousands separator
+    (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
+}
+
+def normalize_interpunctation(s):
+    """
+    Normalize comma to point for float conversion.
+    Correctly handles thousands separators.
+
+    Note that cases like "1,234" are undecidable between
+    "1234" and "1.234". They are treated as "1.234".
+
+    Only points and commata are potentially modified.
+    Other characters and digits are not handled.
+    """
+    commaIdx = s.find(",")
+    pointIdx = s.find(".")
+    foundComma = commaIdx is not None
+    foundPoint = pointIdx is not None
+    commaFirst = commaIdx < pointIdx if (foundComma and foundPoint) else None
+    # Get the appropriate transform function from the map an run it on s
+    return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
+
+
+def _format_with_suffix(v, suffix="", significant_digits=3):
+    """
+    Format a given value with a given suffix.
+    This helper function formats the value to 3 visible digits.
+    v must be pre-multiplied by the factor implied by the suffix.
+
+    Keyword arguments
+    -----------------
+    suffix : string
+        The suffix to append
+    significant_digits : integer
+        The number of overall significant digits to show
+    """
+    abs_v = abs(v)
+    if np.isnan(v):
+        res = "-"
+    elif abs_v < 1.0:
+        res = f"{v:.{significant_digits - 0}f}"
+    elif abs_v < 10.0:
+        res = f"{v:.{significant_digits - 1}f}"
+    elif abs_v < 100.0:
+        res = f"{v:.{significant_digits - 2}f}"
+    else:  # Should only happen if v < 1000
+        res = str(int(round(v)))
+    #Avoid appending whitespace if there is no suffix
+    return f"{res} {suffix}" if suffix else res
+
+@deprecated.deprecated("Use normalize() instead of normalize_engineer_notation()")
 def normalize_engineer_notation(s, encoding="utf8"):
-    return EngineerIO.instance.normalize(s, encoding=encoding)
+    return EngineerIO.instance().normalize(s, encoding=encoding)
 
 def format_value(v, unit="", significant_digits=3):
-    return EngineerIO.instance.format(v, unit, significant_digits=significant_digits)
+    return EngineerIO.instance().format(v, unit, significant_digits=significant_digits)
 
 def print_value(v, unit="", significant_digits=3):
-    return EngineerIO.instance.print(v, unit, significant_digits=significant_digits)
+    return EngineerIO.instance().print(v, unit, significant_digits=significant_digits)
 
 def normalize_numeric_verify_unit(self, arg, reference):
-    return EngineerIO.instance.normalize_numeric_verify_unit(arg, reference)
+    return EngineerIO.instance().normalize_numeric_verify_unit(arg, reference)
 
 def normalize_engineer_notation_safe(v, unit=""):
-    return EngineerIO.instance.safe_normalize(v, unit)
+    return EngineerIO.instance().safe_normalize(v, unit)
 
 def normalize_numeric(v):
-    return EngineerIO.instance.normalize_numeric(v)
+    return EngineerIO.instance().normalize_numeric(v)
 
 def normalize(v):
-    return EngineerIO.instance.normalize(v)
+    return EngineerIO.instance().normalize(v)
 
 def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
-    return EngineerIO.instance.normalize_timespan(v)
+    return EngineerIO.instance().normalize_timespan(v)
 
 def auto_format(v, *args, **kwargs):
-    return EngineerIO.instance.auto_format(v, *args, **kwargs)
+    return EngineerIO.instance().auto_format(v, *args, **kwargs)
 
 def auto_print(*args, **kwargs):
-    return EngineerIO.instance.auto_print(*args, **kwargs)
+    return EngineerIO.instance().auto_print(*args, **kwargs)
 
 def returns_unit(unit):
     """

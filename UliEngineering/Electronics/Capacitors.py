@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Area import normalize_area
 from UliEngineering.EngineerIO.Length import normalize_length
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
@@ -123,7 +124,7 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     Returns:
     The capacitance of the parallel plate capacitors in farads (F).
     """
-    area = normalize_length(area)
+    area = normalize_area(area)
     distance = normalize_length(distance)
     epsilon = normalize_numeric(epsilon)
     return epsilon * area / distance

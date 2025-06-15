@@ -3,6 +3,7 @@
 """
 Utilities for area
 """
+from typing import Dict, Set
 from numpy import ndarray
 import scipy.constants
 import numpy as np
@@ -11,112 +12,118 @@ from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_area", "convert_area_to_square_meters", "EngineerAreaIO"]
 
-def _area_units():
-    """
-    Returns a set of area unit symbols
-    """
-    return {
-        "m²", "m^2",
-        "mm²", "mm^2",
-        "cm²", "cm^2", 
-        "dm²", "dm^2",
-        "km²", "km^2",
-        "µm²", "µm^2", "um²", "um^2",
-        "nm²", "nm^2",
-        "in²", "in^2",
-        "ft²", "ft^2", 
-        "yd²", "yd^2",
-        "acre", "ha", "are", "barn", "barns", "b"
-    }
 
-def _area_unit_aliases():
+def _area_units() -> Set[str]:
     """
-    Returns a dictionary mapping area unit aliases to their canonical symbols
+    All known area units (compact symbols only).
+    """
+    units = set([
+        # Area units
+        'm²', 'm^2',
+        'in²', 'in^2',
+        'ft²', 'ft^2', 
+        'yd²', 'yd^2',
+        'acre', 'ha', 'are',
+        'barn', 'b',
+        # NOTE: Do not list SI-prefixed units such as cm² here!
+        # These must be parsed as m² with SI prefix "c" etc.
+    ])
+    return units
+
+def _area_unit_aliases() -> Dict[str, str]:
+    """
+    Maps verbose area unit names to their compact symbols.
     """
     return {
-        # Square meter aliases
-        "square meter": "m²",
-        "square meters": "m²", 
-        "sq m": "m²",
-        "sqm": "m²",
+        # Square inch aliases
+        'square inch': 'in²',
+        'square inches': 'in²', 
+        'sq in': 'in²',
         
-        # Square millimeter aliases
-        "square millimeter": "mm²",
-        "square millimeters": "mm²",
-        "square mm": "mm²",
-        "sq mm": "mm²",
-        "mm sq": "mm²",
-        "mm squared": "mm²",
-        "millimeter squared": "mm²",
+        # Square foot aliases
+        'square foot': 'ft²',
+        'square feet': 'ft²', 
+        'sq ft': 'ft²',
         
-        # Square centimeter aliases
-        "square centimeter": "cm²",
-        "square centimeters": "cm²",
-        "square cm": "cm²",
-        "sq cm": "cm²",
-        "cm sq": "cm²",
-        "cm squared": "cm²",
-        "centimeter squared": "cm²",
-        "centimeters squared": "cm²",
+        # Square yard aliases  
+        'square yard': 'yd²',
+        'square yards': 'yd²',
+        'sq yd': 'yd²',
         
-        # Square decimeter aliases
-        "square decimeter": "dm²",
-        "square decimeters": "dm²",
-        "square dm": "dm²",
-        "sq dm": "dm²",
-        "dm sq": "dm²",
-        "dm squared": "dm²",
-        "decimeter squared": "dm²",
-        "decimeters squared": "dm²",
+        # Other area aliases
+        'acres': 'acre',
+        'hectare': 'ha', 
+        'hectares': 'ha', 
+        'hectars': 'ha', 
+        'ares': 'are',
+        'barns': 'barn',
+        'square meter': 'm²',
+        'square meters': 'm²', 
+        'sq m': 'm²', 
+        'sqm': 'm²',
+        'm^2': 'm²',  # Caret notation alias
         
-        # Square kilometer aliases
-        "square kilometer": "km²",
-        "square kilometers": "km²",
-        "square km": "km²",
-        "sq km": "km²",
-        "km squared": "km²",
-        "km sq": "km²",
-        "kilometers sq": "km²",
-        "kilometers squared": "km²",
+        # SI prefixed meter aliases
+        'square millimeter': 'mm²',
+        'square millimeters': 'mm²', 
+        'square mm': 'mm²', 
+        'sq mm': 'mm²', 
+        'mm sq': 'mm²', 
+        'mm squared': 'mm²', 
+        'millimeter squared': 'mm²',
+        'mm^2': 'mm²',  # Caret notation alias
         
-        # Square micrometer aliases
-        "square micrometer": "µm²",
-        "square micrometers": "µm²",
-        "square µm": "µm²",
-        "sq µm": "µm²",
-        "sq um": "µm²",
-        "um sq": "µm²",
-        "µm sq": "µm²",
-        "µm squared": "µm²",
-        "micrometer squared": "µm²",
-        "micrometers squared": "µm²",
+        'square centimeter': 'cm²',
+        'square centimeters': 'cm²', 
+        'square cm': 'cm²', 
+        'sq cm': 'cm²', 
+        'cm sq': 'cm²', 
+        'cm squared': 'cm²', 
+        'centimeter squared': 'cm²', 
+        'centimeters squared': 'cm²',
+        'cm^2': 'cm²',  # Caret notation alias
         
-        # Square nanometer aliases
-        "square nanometer": "nm²",
-        "square nanometers": "nm²",
-        "square nm": "nm²",
-        "sq nm": "nm²",
-        "nm sq": "nm²",
-        "nm squared": "nm²",
-        "nanometer squared": "nm²",
-        "nanometers squared": "nm²",
+        'square decimeter': 'dm²',
+        'square decimeters': 'dm²', 
+        'square dm': 'dm²', 
+        'sq dm': 'dm²', 
+        'dm sq': 'dm²', 
+        'dm squared': 'dm²', 
+        'decimeter squared': 'dm²', 
+        'decimeters squared': 'dm²',
+        'dm^2': 'dm²',  # Caret notation alias
         
-        # Imperial units
-        "square inch": "in²",
-        "square inches": "in²",
-        "sq in": "in²",
-        "square foot": "ft²",
-        "square feet": "ft²",
-        "sq ft": "ft²",
-        "square yard": "yd²",
-        "square yards": "yd²",
-        "sq yd": "yd²",
+        'square micrometer': 'µm²',
+        'square micrometers': 'µm²', 
+        'square µm': 'µm²',
+        'sq µm': 'µm²', 
+        'sq um': 'µm²', 
+        'um sq': 'µm²', 
+        'µm sq': 'µm²', 
+        'µm squared': 'µm²', 
+        'micrometer squared': 'µm²', 
+        'micrometers squared': 'µm²',
+        'µm^2': 'µm²',  # Caret notation alias
+        'um^2': 'µm²',  # Caret notation alias
         
-        # Agricultural units
-        "acres": "acre",
-        "hectare": "ha",
-        "hectares": "ha",
-        "ares": "are"
+        'square nanometer': 'nm²',
+        'square nanometers': 'nm²', 
+        'square nm': 'nm²', 
+        'sq nm': 'nm²', 
+        'nm sq': 'nm²', 
+        'nm squared': 'nm²', 
+        'nanometers squared': 'nm²',
+        'nm^2': 'nm²',  # Caret notation alias
+        
+        'square kilometer': 'km²',
+        'square kilometers': 'km²', 
+        'square km': 'km²', 
+        'sq km': 'km²', 
+        'km squared': 'km²', 
+        'km sq': 'km²', 
+        'kilometers sq': 'km²', 
+        'kilometers squared': 'km²',
+        'km^2': 'km²',  # Caret notation alias
     }
 
 def _default_unit_prefix_map(include_length_unit_prefixes=False):
@@ -323,6 +330,113 @@ class EngineerAreaIO(EngineerIO):
         # Currently a hack, but doing it directly will not parse SI units
         return self.normalize_area(f"{value} {unit}")
 
+def _area_units():
+    """
+    Returns a set of area unit symbols
+    """
+    return {
+        "m²", "m^2",
+        "mm²", "mm^2",
+        "cm²", "cm^2", 
+        "dm²", "dm^2",
+        "km²", "km^2",
+        "µm²", "µm^2", "um²", "um^2",
+        "nm²", "nm^2",
+        "in²", "in^2",
+        "ft²", "ft^2", 
+        "yd²", "yd^2",
+        "acre", "ha", "are", "barn", "barns", "b"
+    }
+
+def _area_unit_aliases():
+    """
+    Returns a dictionary mapping area unit aliases to their canonical symbols
+    """
+    return {
+        # Square meter aliases
+        "square meter": "m²",
+        "square meters": "m²", 
+        "sq m": "m²",
+        "sqm": "m²",
+        
+        # Square millimeter aliases
+        "square millimeter": "mm²",
+        "square millimeters": "mm²",
+        "square mm": "mm²",
+        "sq mm": "mm²",
+        "mm sq": "mm²",
+        "mm squared": "mm²",
+        "millimeter squared": "mm²",
+        
+        # Square centimeter aliases
+        "square centimeter": "cm²",
+        "square centimeters": "cm²",
+        "square cm": "cm²",
+        "sq cm": "cm²",
+        "cm sq": "cm²",
+        "cm squared": "cm²",
+        "centimeter squared": "cm²",
+        "centimeters squared": "cm²",
+        
+        # Square decimeter aliases
+        "square decimeter": "dm²",
+        "square decimeters": "dm²",
+        "square dm": "dm²",
+        "sq dm": "dm²",
+        "dm sq": "dm²",
+        "dm squared": "dm²",
+        "decimeter squared": "dm²",
+        "decimeters squared": "dm²",
+        
+        # Square kilometer aliases
+        "square kilometer": "km²",
+        "square kilometers": "km²",
+        "square km": "km²",
+        "sq km": "km²",
+        "km squared": "km²",
+        "km sq": "km²",
+        "kilometers sq": "km²",
+        "kilometers squared": "km²",
+        
+        # Square micrometer aliases
+        "square micrometer": "µm²",
+        "square micrometers": "µm²",
+        "square µm": "µm²",
+        "sq µm": "µm²",
+        "sq um": "µm²",
+        "um sq": "µm²",
+        "µm sq": "µm²",
+        "µm squared": "µm²",
+        "micrometer squared": "µm²",
+        "micrometers squared": "µm²",
+        
+        # Square nanometer aliases
+        "square nanometer": "nm²",
+        "square nanometers": "nm²",
+        "square nm": "nm²",
+        "sq nm": "nm²",
+        "nm sq": "nm²",
+        "nm squared": "nm²",
+        "nanometer squared": "nm²",
+        "nanometers squared": "nm²",
+        
+        # Imperial units
+        "square inch": "in²",
+        "square inches": "in²",
+        "sq in": "in²",
+        "square foot": "ft²",
+        "square feet": "ft²",
+        "sq ft": "ft²",
+        "square yard": "yd²",
+        "square yards": "yd²",
+        "sq yd": "yd²",
+        
+        # Agricultural units
+        "acres": "acre",
+        "hectare": "ha",
+        "hectares": "ha",
+        "ares": "are"
+    }
 
 # Backward compatibility functions
 @returns_unit("m²")
