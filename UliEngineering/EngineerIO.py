@@ -22,7 +22,7 @@ from ast import alias
 from collections.abc import Iterable
 import math
 import re
-from typing import List, Optional, Set
+from typing import Dict, List, Optional, Set
 import numpy as np
 import functools
 import inspect
@@ -116,7 +116,7 @@ def _length_units(include_m=False):
         units.add("m")
     return units
 
-def _area_units():
+def _area_units() -> Set[str]:
     """
     All known area units (compact symbols only).
     See also Area.py
@@ -134,7 +134,7 @@ def _area_units():
     ])
     return units
 
-def _area_unit_aliases():
+def _area_unit_aliases() -> Dict[str, str]:
     """
     Maps verbose area unit names to their compact symbols.
     """
@@ -650,17 +650,22 @@ class EngineerIO(object):
         if len(s) <= 1:
             return UnitSplitResult(s, '', '')
         # Check for unit aliases first
-        print("Input string: {s}")
         if self.unit_alias_regex:
             alias_match = self.unit_alias_regex.search(s)
             if alias_match:
                 alias = alias_match.group(1)
                 canonical_unit = self._resolve_unit_alias(alias)
-                # We don't need to explicitly replace the unit by the alias,
-                # since the purpose of this funtion is to split if off
-                remainder = s[:alias_match.start()].strip()
-                print("Found unit alias", alias, "->", canonical_unit)
-                return UnitSplitResult(remainder, '', canonical_unit)
+                # NOTE: We need to replace the unit alias by the unit explicitly
+                # (and let the rest of the code handle it).
+                # This is since the aliased unit may contain a SI prefix such as
+                # "sq cm" => "cm²"
+                # Hence, we need to replace the matched alias by the unit 
+                # in the string, and the safest way to do that is to use the match indexes
+                start_idx = alias_match.start(1)
+                end_idx = alias_match.end(1)
+                # Modify the string in-place
+                s = s[:start_idx] + canonical_unit + s[end_idx:]
+                # Now continue with the loop
         
         # Check for units using compiled regex
         if self.units_regex:
