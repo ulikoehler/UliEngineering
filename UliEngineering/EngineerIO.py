@@ -18,6 +18,7 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
+from ast import alias
 from collections.abc import Iterable
 import math
 import re
@@ -126,14 +127,14 @@ def _area_units():
         'in²', 'in^2',
         'ft²', 'ft^2', 
         'yd²', 'yd^2',
-        'acre', 'hectare', 'ha', 'are',
+        'acre', 'ha', 'are',
         'barn', 'b',
         # NOTE: Do not list SI-prefixed units such as cm² here!
         # These must be parsed as m² with SI prefix "c" etc.
     ])
     return units
 
-def _area_aliases():
+def _area_unit_aliases():
     """
     Maps verbose area unit names to their compact symbols.
     """
@@ -155,6 +156,7 @@ def _area_aliases():
         
         # Other area aliases
         'acres': 'acre',
+        'hectare': 'ha', 
         'hectares': 'ha', 
         'hectars': 'ha', 
         'ares': 'are',
@@ -648,6 +650,7 @@ class EngineerIO(object):
         if len(s) <= 1:
             return UnitSplitResult(s, '', '')
         # Check for unit aliases first
+        print("Input string: {s}")
         if self.unit_alias_regex:
             alias_match = self.unit_alias_regex.search(s)
             if alias_match:
@@ -970,6 +973,7 @@ EngineerIO.length_instance = EngineerIO(
 )
 EngineerIO.area_instance = EngineerIO(
     units=_area_units(),
+    unit_aliases=_area_unit_aliases(),
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 

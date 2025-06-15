@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.EngineerIO import *
 from UliEngineering.Exceptions import EngineerIOException
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult, _default_units, _area_aliases
+from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult, _default_units, _area_unit_aliases
 from parameterized import parameterized
 import functools
 import numpy as np
@@ -416,7 +416,7 @@ class TestUnitAliases(unittest.TestCase):
         # Create an EngineerIO instance with area aliases for testing
         self.io = EngineerIO(
             units=_default_units(),
-            unit_aliases=_area_aliases()
+            unit_aliases=_area_unit_aliases()
         )
 
     def test_unit_alias_regex_compilation(self):
@@ -427,8 +427,8 @@ class TestUnitAliases(unittest.TestCase):
         """Test splitting units with aliases that have no spaces"""
         # Test caret notation aliases
         self.assertEqual(self.io.split_unit("100m^2"), UnitSplitResult('100', '', 'm²'))
-        self.assertEqual(self.io.split_unit("50cm^2"), UnitSplitResult('50', '', 'cm²'))
-        self.assertEqual(self.io.split_unit("25km^2"), UnitSplitResult('25', '', 'km²'))
+        self.assertEqual(self.io.split_unit("50cm^2"), UnitSplitResult('50c', '', 'm²'))
+        self.assertEqual(self.io.split_unit("25km^2"), UnitSplitResult('25k', '', 'm²'))
         
         # Test abbreviated aliases
         self.assertEqual(self.io.split_unit("100sqm"), UnitSplitResult('100', '', 'm²'))
@@ -589,16 +589,16 @@ class TestAreaUnits(unittest.TestCase):
         # Test square meters with caret notation
         result = self.io.normalize("7000 m^2")
         self.assertEqual(result.value, 7000.0)
-        self.assertEqual(result.unit, 'm^2')
+        self.assertEqual(result.unit, 'm²')
         
         # Test other caret notation area units
         result = self.io.normalize("500 cm^2")
         self.assertEqual(result.value, 5.0)
-        self.assertEqual(result.unit, 'm^2')
+        self.assertEqual(result.unit, 'm²')
         
         result = self.io.normalize("1.5 km^2")
         self.assertEqual(result.value, 1500)
-        self.assertEqual(result.unit, 'm^2')
+        self.assertEqual(result.unit, 'm²')
 
     def test_imperial_area_units(self):
         """Test recognition of imperial area units"""
@@ -622,7 +622,7 @@ class TestAreaUnits(unittest.TestCase):
         
         result = self.io.normalize("5 hectare")
         self.assertEqual(result.value, 5.0)
-        self.assertEqual(result.unit, 'hectare')
+        self.assertEqual(result.unit, 'ha')
         
         result = self.io.normalize("0.7 hectares")
         self.assertEqual(result.value, 0.7)
@@ -647,8 +647,8 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(self.io.split_unit("7000m²"), UnitSplitResult('7000', '', 'm²'))
         
         # Caret notation
-        self.assertEqual(self.io.split_unit("7000 m^2"), UnitSplitResult('7000', '', 'm^2'))
-        self.assertEqual(self.io.split_unit("500cm^2"), UnitSplitResult('500c', '', 'm^2'))
+        self.assertEqual(self.io.split_unit("7000 m^2"), UnitSplitResult('7000', '', 'm²'))
+        self.assertEqual(self.io.split_unit("500cm^2"), UnitSplitResult('500c', '', 'm²'))
         
         # Imperial units
         self.assertEqual(self.io.split_unit("100 in²"), UnitSplitResult('100', '', 'in²'))
