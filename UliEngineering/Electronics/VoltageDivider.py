@@ -4,9 +4,11 @@
 Utilities for computing different aspects and complexities of voltage dividers
 """
 from UliEngineering.Electronics.Resistors import current_through_resistor, parallel_resistors, power_dissipated_in_resistor_by_voltage
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, format_value, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric, format_value
 import numpy as np
 from collections import namedtuple
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["voltage_divider_ratio", "top_resistor_by_ratio",
            "voltage_divider_voltage", "voltage_divider_current",

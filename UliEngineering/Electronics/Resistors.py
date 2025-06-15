@@ -9,8 +9,10 @@ Originally published at techoverflow.net
 """
 import itertools
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
 from collections import namedtuple
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
     "e192", "e96", "e48", "e24", "e12", "e6", "resistor_range",

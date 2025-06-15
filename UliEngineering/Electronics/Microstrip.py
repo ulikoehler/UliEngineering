@@ -6,7 +6,8 @@ import scipy.constants
 import numpy as np
 import math
 from collections import namedtuple
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
            "RelativePermittivity", "DielectricHeight"]

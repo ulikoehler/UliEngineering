@@ -3,7 +3,7 @@
 """
 Utilities regarding temperatures
 """
-from UliEngineering.EngineerIO import normalize_engineer_notation, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import InvalidUnitException
 
 try:

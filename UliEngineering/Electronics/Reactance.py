@@ -6,7 +6,8 @@ Utility to calculate idealized reactances.
 Originally published at techoverflow.net
 """
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["capacitive_reactance", "inductive_reactance"]
 

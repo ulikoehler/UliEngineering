@@ -18,7 +18,6 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
-from ast import alias
 from collections.abc import Iterable
 import math
 import re
@@ -27,6 +26,7 @@ import deprecated
 import numpy as np
 import functools
 import inspect
+from .UnitInfo import UnitInfo, UnitAlias
 import scipy as sp
 from toolz import functoolz
 from dataclasses import dataclass
@@ -38,8 +38,7 @@ from ..Utils.String import partition_at_numeric_to_nonnumeric_boundary
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan",
-           "normalize_numeric_args", "returns_unit"]
+           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
 
 @dataclass
 class UnitSplitResult:
@@ -155,35 +154,53 @@ class EngineerIO(object):
 
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
-    def __init__(self, units=_default_units(),
+    def __init__(self, unit_infos=None,
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
                  unit_prefix_map=_default_unit_prefix_map(),
-                 timespan_units=None,  # Changed: made optional
-                 unit_aliases=None):
+                 timespan_units=None):
         """
-        Initialize a new EngineerIO instance with default or custom unit prefixes
+        Initialize a new EngineerIO instance with unit information objects
 
         Parameters:
         -----------
-        units : iterable of strings
-            An iterable of valid units (1-char or 2-char)
-        prefixes : string
+        unit_infos : list of UnitInfo and UnitAlias objects
+            List of unit information objects defining available units and their aliases.
+            If None, uses default units.
+        prefixes : list of str
             A list of prefixes that are ignored (available via normalize()).
             Constraint: prefixes ∩ units == ∅
-        unit_prefixes : string
+        unit_prefixes : list of str
             A list of prefixes that ignored (available via normalize()).
             Constraint: unitPrefixes ∩ units == ∅
         unit_prefix_map : dict
             Maps unit prefix strings to their decimal exponents.
-            For generating strings from numbers, the first unit prefix in each nested list is  preferred
-        unit_aliases : dict
-            Maps unit alias strings to their canonical unit names
+            For generating strings from numbers, the first unit prefix in each nested list is preferred
+        timespan_units : dict
+            Maps timespan units to their conversion factors (used by specialized subclasses)
         """
-        self.units = set(units)
+        # Use default unit infos if none provided
+        if unit_infos is None:
+            unit_infos = _default_unit_infos()
+        
+        # Extract units and aliases from unit_infos
+        self.units = set()
+        self.unit_aliases = {}
+        self.timespan_units = timespan_units or {}
+        
+        for unit_info in unit_infos:
+            if isinstance(unit_info, UnitInfo):
+                # Add canonical unit to units set
+                self.units.add(unit_info.canonical)
+                # Add all aliases pointing to canonical unit
+                for alias in unit_info.aliases:
+                    self.unit_aliases[alias] = unit_info.canonical
+            elif isinstance(unit_info, UnitAlias):
+                # Add all aliases pointing to canonical unit
+                for alias in unit_info.aliases:
+                    self.unit_aliases[alias] = unit_info.canonical
+        
         self.unit_prefix_map = unit_prefix_map
-        self.timespan_units = timespan_units or {}  # Changed: default to empty dict
-        self.unit_aliases = unit_aliases or {}
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
         self.prefix_re = re.compile('^(' + _prefix_set + ')+')
@@ -909,106 +926,4 @@ def auto_format(v, *args, **kwargs):
 
 def auto_print(*args, **kwargs):
     return EngineerIO.instance().auto_print(*args, **kwargs)
-
-def returns_unit(unit):
-    """
-    Decorator to annotate a function with a custom return unit string.
-    Usage: @returns_unit("A")
-    """
-    def decorator(fn):
-        fn._returns_unit = unit
-        return fn
-    return decorator
-
-def normalize_numeric_args(func=None, *, exclude=None):
-    """
-    Decorator that applies normalize_numeric to all arguments (args & kwargs) 
-    of the decorated function before calling it.
-    
-    This allows functions to accept engineer notation strings and automatically
-    convert them to numeric values.
-    
-    Parameters:
-    -----------
-    exclude : list of str, optional
-        List of parameter names that should not be normalized
-    
-    Example:
-        @normalize_numeric_args
-        def add(a, b):
-            return a + b
-        
-        result = add("1.5k", "2.3k")  # Will convert to add(1500.0, 2300.0)
-        
-        @normalize_numeric_args(exclude=['unit'])
-        def calculate(value, unit):
-            return value  # value is normalized, unit is left as string
-    """
-    if exclude is None:
-        exclude = []
-    exclude_set = set(exclude)
-    
-    def decorator(func):
-        # Get the function signature
-        sig = inspect.signature(func)
-        
-        # Create new parameters with normalized default values
-        new_params = []
-        for param in sig.parameters.values():
-            if param.name not in exclude_set and param.default != inspect.Parameter.empty and isinstance(param.default, str):
-                # Normalize string default values
-                try:
-                    normalized_default = normalize_numeric(param.default)
-                    new_param = param.replace(default=normalized_default)
-                except:
-                    # If normalization fails, keep the original default
-                    new_param = param
-            else:
-                new_param = param
-            new_params.append(new_param)
-        
-        # Create new signature with normalized defaults
-        new_sig = sig.replace(parameters=new_params)
-
-        def wrapper(*args, **kwargs):
-            # Get parameter names from signature
-            param_names = list(sig.parameters.keys())
-            
-            # Normalize positional arguments (skip excluded ones)
-            normalized_args = []
-            for i, arg in enumerate(args):
-                param_name = param_names[i] if i < len(param_names) else None
-                if param_name in exclude_set:
-                    normalized_args.append(arg)
-                else:
-                    normalized_args.append(normalize_numeric(arg))
-            normalized_args = tuple(normalized_args)
-            
-            # Normalize keyword arguments (skip excluded ones)
-            normalized_kwargs = {}
-            for key, value in kwargs.items():
-                if key in exclude_set:
-                    normalized_kwargs[key] = value
-                else:
-                    normalized_kwargs[key] = normalize_numeric(value)
-            
-            # Bind arguments to new signature to get all parameters with defaults applied
-            bound_args = new_sig.bind(*normalized_args, **normalized_kwargs)
-            bound_args.apply_defaults()
-            
-            # Call the original function with all normalized arguments (including defaults)
-            return func(*bound_args.args, **bound_args.kwargs)
-        
-        # Preserve function metadata
-        functools.update_wrapper(wrapper, func)
-        wrapper.__signature__ = new_sig
-        wrapper._returns_unit = getattr(func, "_returns_unit", None)
-        
-        return wrapper
-    
-    # Handle both @normalize_numeric_args and @normalize_numeric_args(exclude=[...])
-    if func is None:
-        return decorator
-    else:
-        return decorator(func)
 

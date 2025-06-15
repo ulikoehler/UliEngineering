@@ -10,12 +10,14 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-from UliEngineering.EngineerIO import returns_unit, normalize_numeric_args
 
 __all__ = [
     "summing_amplifier_noninv",
     "noninverting_amplifier_gain"
 ]
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+
 
 @returns_unit("V")
 @normalize_numeric_args

@@ -3,7 +3,7 @@
 """
 Utilities for acceleration
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Units import Unit
 import numpy as np
 

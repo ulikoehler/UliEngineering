@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import math
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["sphere_volume_by_radius",
     "sphere_volume_by_diameter",

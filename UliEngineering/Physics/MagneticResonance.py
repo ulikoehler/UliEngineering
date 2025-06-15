@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 import scipy.constants
 
 __all__ = [

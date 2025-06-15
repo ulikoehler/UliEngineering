@@ -4,7 +4,7 @@
 Utilities for computations related to noise density
 """
 import numpy as np
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["actual_noise", "noise_density"]
 @normalize_numeric_args

@@ -3,9 +3,11 @@
 """
 Electronic filter and time constant utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
 from collections import namedtuple
 import numpy as np
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
     "lc_cutoff_frequency", "rc_cutoff_frequency",

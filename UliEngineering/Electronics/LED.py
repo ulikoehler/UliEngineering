@@ -10,7 +10,8 @@ Usage example:
         "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
 
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.Electronics.Resistors import resistor_current_by_power
 
@@ -22,8 +23,7 @@ __all__ = [
     "led_series_resistor_current",
 ]
 
-
-class LEDForwardVoltages():
+class LEDForwardVoltages:
     """
     Common LED forward voltage values.
     Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm

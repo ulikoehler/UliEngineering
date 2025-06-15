@@ -3,7 +3,8 @@
 """
 Utility to calculate MOSFETs
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
     "mosfet_gate_charge_losses", "mosfet_gate_charge_loss_per_cycle",

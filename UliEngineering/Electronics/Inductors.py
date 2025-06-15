@@ -3,9 +3,10 @@
 """
 Utility to calculate inductors
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["ideal_inductor_current_change_rate"]
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 @returns_unit("A/s")
 @normalize_numeric_args

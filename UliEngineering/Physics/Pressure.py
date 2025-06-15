@@ -3,7 +3,7 @@
 """
 Pressure utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Units import Unit
 
 __all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential"]

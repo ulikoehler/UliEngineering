@@ -3,7 +3,7 @@
 """
 Utilities for frequencies
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["frequency_to_period", "period_to_frequency"]
 

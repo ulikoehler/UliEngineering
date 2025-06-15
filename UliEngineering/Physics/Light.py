@@ -3,7 +3,7 @@
 """
 Utilities for computations related to noise density
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 import numpy as np
 
 __all__ = ["lumen_to_candela_by_apex_angle"]

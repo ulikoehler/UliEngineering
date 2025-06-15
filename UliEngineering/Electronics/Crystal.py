@@ -3,7 +3,6 @@
 """
 Crystal oscillator utilities
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = [
     "load_capacitors", "actual_load_capacitance",
@@ -13,6 +12,9 @@ __all__ = [
     "crystal_deviation_seconds_per_month",
     "crystal_deviation_seconds_per_year"
 ]
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+
 
 @returns_unit("F")
 @normalize_numeric_args

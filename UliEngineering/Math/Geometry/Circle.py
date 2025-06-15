@@ -4,7 +4,8 @@
 Circle geometry functions
 """
 import math
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
     "circle_area", "circle_circumference"

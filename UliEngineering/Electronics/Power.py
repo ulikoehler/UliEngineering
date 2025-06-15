@@ -2,9 +2,11 @@
 """
 Utilities to compute the power of a device
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = ["current_by_power", "power_by_current_and_voltage"]
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+
 
 @normalize_numeric_args
 @returns_unit("A")

@@ -3,6 +3,7 @@
 """
 Functions for Multi-Pixel photon counters (MPPCs)
 """
+
 from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 
 __all__ = [

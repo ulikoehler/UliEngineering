@@ -3,9 +3,10 @@
 """
 Utilities for computing different aspects and complexities of voltage dividers
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
-
 __all__ = ["zener_diode_power_dissipation"]
+
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+
 
 @returns_unit("W")
 @normalize_numeric_args

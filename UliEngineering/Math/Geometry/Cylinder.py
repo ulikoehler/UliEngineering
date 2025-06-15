@@ -4,8 +4,8 @@
 Geometry functions for cylinders and hollow cylinders
 """
 import math
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
 from .Circle import circle_area
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 import numpy as np
 
 __all__ = [
