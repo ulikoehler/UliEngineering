@@ -579,7 +579,6 @@ class EngineerIO(object):
         s = normalize_interpunctation(s)
         # Split off unit: "120kV" => "120k", "V"
         split_result = self.split_unit(s)
-        print("Split result", split_result)
         # Print remainder
         s = split_result.remainder
         s = s.replace(" ", "")
@@ -688,7 +687,6 @@ class EngineerIO(object):
             if unit_match:
                 unit = unit_match.group(1)
                 remainder = s[:unit_match.start()].strip()
-                print("Found unit", unit)
                 # Remove unit prefix, if any
                 unit_prefix_hit = self.unit_prefix_re.search(remainder)
                 if unit_prefix_hit:
@@ -913,7 +911,6 @@ class EngineerIO(object):
             else:
                 return v
         # It's an iterable
-        print(arg, self.safe_normalize(arg), none_to_nan(self.safe_normalize(arg)))
         return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.safe_normalize(v)))
 
     def normalize_numeric(self, arg):
