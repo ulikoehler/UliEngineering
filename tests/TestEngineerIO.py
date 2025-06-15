@@ -495,3 +495,116 @@ class TestUnitAliases(unittest.TestCase):
         self.assertEqual(self.io.split_unit("100"), UnitSplitResult('100', '', ''))
         self.assertEqual(self.io.split_unit("50.5"), UnitSplitResult('50.5', '', ''))
 
+
+class TestAreaUnits(unittest.TestCase):
+    def setUp(self):
+        # Create an EngineerIO instance with area units included
+        from UliEngineering.EngineerIO import _area_units
+        self.io = EngineerIO(
+            units=_default_units().union(_area_units())
+        )
+
+    def test_unicode_area_units(self):
+        """Test recognition of Unicode area units (²)"""
+        # Test square meters with Unicode
+        result = self.io.normalize("7000 m²")
+        self.assertEqual(result.value, 7000.0)
+        self.assertEqual(result.unit, 'm²')
+        
+        # Test other Unicode area units
+        result = self.io.normalize("500 cm²")
+        self.assertEqual(result.value, 500.0)
+        self.assertEqual(result.unit, 'cm²')
+        
+        result = self.io.normalize("1.5 km²")
+        self.assertEqual(result.value, 1.5)
+        self.assertEqual(result.unit, 'km²')
+        
+        result = self.io.normalize("250 mm²")
+        self.assertEqual(result.value, 250.0)
+        self.assertEqual(result.unit, 'mm²')
+
+    def test_caret_area_units(self):
+        """Test recognition of caret notation area units (^2)"""
+        # Test square meters with caret notation
+        result = self.io.normalize("7000 m^2")
+        self.assertEqual(result.value, 7000.0)
+        self.assertEqual(result.unit, 'm^2')
+        
+        # Test other caret notation area units
+        result = self.io.normalize("500 cm^2")
+        self.assertEqual(result.value, 500.0)
+        self.assertEqual(result.unit, 'cm^2')
+        
+        result = self.io.normalize("1.5 km^2")
+        self.assertEqual(result.value, 1.5)
+        self.assertEqual(result.unit, 'km^2')
+
+    def test_imperial_area_units(self):
+        """Test recognition of imperial area units"""
+        result = self.io.normalize("100 in²")
+        self.assertEqual(result.value, 100.0)
+        self.assertEqual(result.unit, 'in²')
+        
+        result = self.io.normalize("50 ft²")
+        self.assertEqual(result.value, 50.0)
+        self.assertEqual(result.unit, 'ft²')
+        
+        result = self.io.normalize("25 yd²")
+        self.assertEqual(result.value, 25.0)
+        self.assertEqual(result.unit, 'yd²')
+
+    def test_other_area_units(self):
+        """Test recognition of other area units"""
+        result = self.io.normalize("10 acre")
+        self.assertEqual(result.value, 10.0)
+        self.assertEqual(result.unit, 'acre')
+        
+        result = self.io.normalize("5 hectare")
+        self.assertEqual(result.value, 5.0)
+        self.assertEqual(result.unit, 'hectare')
+        
+        result = self.io.normalize("2.5 ha")
+        self.assertEqual(result.value, 2.5)
+        self.assertEqual(result.unit, 'ha')
+
+    def test_area_units_with_prefixes(self):
+        """Test area units with SI prefixes"""
+        result = self.io.normalize("2.5k m²")
+        self.assertEqual(result.value, 2500.0)
+        self.assertEqual(result.unit, 'm²')
+        
+        result = self.io.normalize("1.2M cm²")
+        self.assertEqual(result.value, 1200000.0)
+        self.assertEqual(result.unit, 'cm²')
+
+    def test_split_unit_area_units(self):
+        """Test split_unit function with area units"""
+        # Unicode notation
+        self.assertEqual(self.io.split_unit("7000 m²"), UnitSplitResult('7000', '', 'm²'))
+        self.assertEqual(self.io.split_unit("500cm²"), UnitSplitResult('500c', '', 'm²'))
+        # No space variant
+        self.assertEqual(self.io.split_unit("7000m²"), UnitSplitResult('7000', '', 'm²'))
+        
+        # Caret notation
+        self.assertEqual(self.io.split_unit("7000 m^2"), UnitSplitResult('7000', '', 'm^2'))
+        self.assertEqual(self.io.split_unit("500cm^2"), UnitSplitResult('500c', '', 'm^2'))
+        
+        # Imperial units
+        self.assertEqual(self.io.split_unit("100 in²"), UnitSplitResult('100', '', 'in²'))
+        self.assertEqual(self.io.split_unit("50ft²"), UnitSplitResult('50', '', 'ft²'))
+
+    def test_area_units_no_space(self):
+        """Test area units without spaces between number and unit"""
+        result = self.io.normalize("7000m²")
+        self.assertEqual(result.value, 7000.0)
+        self.assertEqual(result.unit, 'm²')
+        
+        result = self.io.normalize("500cm^2")
+        self.assertEqual(result.value, 500.0)
+        self.assertEqual(result.unit, 'cm^2')
+        
+        result = self.io.normalize("100in²")
+        self.assertEqual(result.value, 100.0)
+        self.assertEqual(result.unit, 'in²')
+

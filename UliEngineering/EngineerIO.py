@@ -144,8 +144,8 @@ def _area_units():
         'yd²', 'yd^2',
         'acre', 'hectare', 'ha', 'are',
         'barn', 'b',
-        # SI prefixed square meters
-        'mm²', 'cm²', 'dm²', 'µm²', 'nm²', 'km²'
+        # NOTE: Do not list SI-prefixed units such as cm² here!
+        # These must be parsed as m² with SI prefix "c" etc.
     ])
     return units
 
@@ -641,8 +641,6 @@ class EngineerIO(object):
             # Is the suffix a unit?
             if unit_suffix in self.units:
                 # Do not try to find units if encountering the first digit
-                if unit_suffix[0].isnumeric():
-                    break
                 unit_suffix_length = len(unit_suffix)
                 value_str, unit = s[:-unit_suffix_length], s[-unit_suffix_length:]
                 found_unit_suffix = True
