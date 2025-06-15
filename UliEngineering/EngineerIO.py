@@ -438,6 +438,8 @@ class EngineerIO(object):
         self._recompute_unit_prefix_maps()
         # Compile unit alias regex
         self._compile_unit_alias_regex()
+        # Compile units regex
+        self._compile_units_regex()
 
     def _recompute_unit_prefix_maps(self):
         """
@@ -487,6 +489,26 @@ class EngineerIO(object):
         
         # NOTE: Needs to be case-sensitive for some special units
         self.unit_alias_regex = re.compile(pattern)
+
+    def _compile_units_regex(self):
+        """
+        Compile a regex pattern to match units at the end of strings.
+        Pattern format: "(unit1|unit2|...)$"
+        """
+        if not self.units:
+            self.units_regex = None
+            return
+        
+        # Sort units by length (longest first) to ensure proper matching
+        # e.g. "Angstrom" should match before "A"
+        sorted_units = sorted(self.units, key=len, reverse=True)
+        
+        # Escape each unit for regex and join with |
+        escaped_units = [re.escape(unit) for unit in sorted_units]
+        pattern = f"({'|'.join(escaped_units)})$"
+        
+        # NOTE: Needs to be case-sensitive for some special units
+        self.units_regex = re.compile(pattern)
 
     def _resolve_unit_alias(self, unit):
         """
@@ -636,22 +658,29 @@ class EngineerIO(object):
                 remainder = s[:alias_match.start()].strip()
                 print("Found unit alias", alias, "->", canonical_unit)
                 return UnitSplitResult(remainder, '', canonical_unit)
-        # Handle units: "ppm"
-        # We try to find the longest unit suffix, up to the first digit
-        found_unit_suffix = False
-        print(self.units)
-        for unit_suffix in suffix_list(s):
-            print("Checking unit suffix", unit_suffix)
-            # Is the suffix a unit?
-            if unit_suffix in self.units:
-                # Do not try to find units if encountering the first digit
-                unit_suffix_length = len(unit_suffix)
-                value_str, unit = s[:-unit_suffix_length], s[-unit_suffix_length:]
-                found_unit_suffix = True
-                print("Found unit suffix", unit_suffix, "->", unit)
-        # Fallback: Try to parse as value + optionally SI postfix
-        if not found_unit_suffix: # No unit
-            value_str, unit = s, ''
+        
+        # Check for units using compiled regex
+        if self.units_regex:
+            unit_match = self.units_regex.search(s)
+            if unit_match:
+                unit = unit_match.group(1)
+                remainder = s[:unit_match.start()].strip()
+                print("Found unit", unit)
+                # Remove unit prefix, if any
+                unit_prefix_hit = self.unit_prefix_re.search(remainder)
+                if unit_prefix_hit:
+                    # Get actual prefix (returned later)
+                    unit_prefix = unit_prefix_hit.group(0)
+                    # Remove unit_prefix
+                    remainder = self.unit_prefix_re.sub("", remainder)
+                else:
+                    unit_prefix = ""
+                # Remove extra whitespace
+                remainder = remainder.rstrip(self.strippable)
+                return UnitSplitResult(remainder, unit_prefix, unit)
+        
+        # Fallback: No unit found
+        value_str, unit = s, ''
         # Remove extra whitespace
         value_str = value_str.rstrip(self.strippable)
         # Remove unit prefix, if any
