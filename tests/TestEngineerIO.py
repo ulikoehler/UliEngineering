@@ -12,6 +12,8 @@ import numpy as np
 import unittest
 import pytest
 
+from UliEngineering.Utils.String import suffix_list
+
 class TestEngineerIO(unittest.TestCase):
     def setUp(self):
         self.io = EngineerIO()
@@ -371,46 +373,6 @@ class TestNormalizeTimespan(unittest.TestCase):
         assert_approx_equal(self.io.normalize_timespan("-1.25 ps"), -1.25e-12)
         assert_approx_equal(self.io.normalize_timespan("-1.25 fs"), -1.25e-15)
         assert_approx_equal(self.io.normalize_timespan("-1.25 as"), -1.25e-18)
-
-
-class TestAllSuffixes(unittest.TestCase):
-    def setUp(self):
-        self.io = EngineerIO()
-
-    def test_all_suffixes_basic(self):
-        """Test basic functionality with simple strings"""
-        self.assertEqual(self.io.all_suffixes("abc123"), ["3", "23", "123", "c123", "bc123", "abc123"])
-        self.assertEqual(self.io.all_suffixes("test"), ["t", "st", "est", "test"])
-        
-    def test_all_suffixes_single_char(self):
-        """Test with single character strings"""
-        self.assertEqual(self.io.all_suffixes("a"), ["a"])
-        self.assertEqual(self.io.all_suffixes("1"), ["1"])
-        
-    def test_all_suffixes_empty_string(self):
-        """Test with empty string"""
-        self.assertEqual(self.io.all_suffixes(""), [])
-        
-    def test_all_suffixes_numeric(self):
-        """Test with numeric strings"""
-        self.assertEqual(self.io.all_suffixes("1234"), ["4", "34", "234", "1234"])
-        self.assertEqual(self.io.all_suffixes("42"), ["2", "42"])
-        
-    def test_all_suffixes_with_units(self):
-        """Test with engineering notation strings"""
-        self.assertEqual(self.io.all_suffixes("100kΩ"), ["Ω", "kΩ", "0kΩ", "00kΩ", "100kΩ"])
-        self.assertEqual(self.io.all_suffixes("1.5MHz"), ["z", "Hz", "MHz", "5MHz", ".5MHz", "1.5MHz"])
-        
-    def test_all_suffixes_special_chars(self):
-        """Test with special characters"""
-        self.assertEqual(self.io.all_suffixes("a-b_c"), ["c", "_c", "b_c", "-b_c", "a-b_c"])
-        self.assertEqual(self.io.all_suffixes("x.y"), ["y", ".y", "x.y"])
-        
-    def test_all_suffixes_unicode(self):
-        """Test with unicode characters"""
-        self.assertEqual(self.io.all_suffixes("αβγ"), ["γ", "βγ", "αβγ"])
-        self.assertEqual(self.io.all_suffixes("1µV"), ["V", "µV", "1µV"])
-
 
 class TestUnitAliases(unittest.TestCase):
     def setUp(self):
@@ -993,7 +955,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         # Create a mock of the old implementation for comparison
         def old_has_any_unit_prefix(s):
             """Old implementation using all_suffixes for comparison"""
-            for suffix in self.io.all_suffixes(s):
+            for suffix in suffix_list(s):
                 if suffix in self.io.all_unit_prefixes:
                     remainder = s[:-len(suffix)] if len(suffix) > 0 else s
                     return True, suffix, remainder

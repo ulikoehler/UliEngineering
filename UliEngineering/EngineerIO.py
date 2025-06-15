@@ -538,15 +538,6 @@ class EngineerIO(object):
         """
         return self.unit_aliases.get(unit, unit)
 
-    def all_suffixes(self, s):
-        """
-        Given a string e.g "abc123", return a list of all suffixes in inverted order, shortest first.
-        Example:
-            Input: "abc123"
-            Output: ["3", "23", "123", "c123", "bc123", "abc123"]
-        """
-        return [s[i:] for i in range(len(s) - 1, -1, -1)]
-
     def has_any_unit_prefix(self, s):
         """
         Check if any suffix of the string is a unit prefix.
