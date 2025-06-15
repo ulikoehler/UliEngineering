@@ -21,19 +21,15 @@ Originally published at techoverflow.net.
 from collections.abc import Iterable
 import math
 import re
-from typing import Dict, List, Optional, Set
+from typing import List, Optional, Set
 import deprecated
 import numpy as np
-import functools
-import inspect
 from .UnitInfo import UnitInfo, UnitAlias
-import scipy as sp
 from toolz import functoolz
 from dataclasses import dataclass
 from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
-from ..Utils.String import partition_at_numeric_to_nonnumeric_boundary
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
@@ -519,7 +515,7 @@ class EngineerIO(object):
         See split_input() for further details on supported formats
         """
         # Scalars get returned directly
-        if isinstance(s, (int, float)):
+        if isinstance(s, (int, float, np.generic)):
             return NormalizeResult('', s, '', '', '', 1.0)
         # Make sure it's a decoded string
         if isinstance(s, bytes):

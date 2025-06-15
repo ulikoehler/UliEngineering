@@ -8,7 +8,6 @@ import numpy as np
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from . import EngineerIO
 from .UnitInfo import UnitInfo, UnitAlias
-from ..Utils.String import partition_at_numeric_to_nonnumeric_boundary
 
 def _timespan_unit_infos():
     """
@@ -82,7 +81,6 @@ class EngineerTimespanIO(EngineerIO):
     """
     Specialized EngineerIO class for timespan operations
     """
-    
     def __init__(self):
         # Initialize with timespan unit infos
         super().__init__(
@@ -96,27 +94,7 @@ class EngineerTimespanIO(EngineerIO):
         Normalize a given timespan to SI units (seconds).
         Numeric inputs are assumed to be in seconds.
         """
-        if isinstance(arg, bytes):
-            arg = arg.decode("utf8")
-        if isinstance(arg, (int, float)):
-            return arg # Already a number. Just return!
-        elif isinstance(arg, (str)):
-            s, unit = partition_at_numeric_to_nonnumeric_boundary(arg) # Remove unit
-            s, unit = s.strip(), unit.strip()
-            if not s:
-                raise ValueError(f"Empty value in timespan: {arg}")
-            if not unit: # Assume seconds (SI unit of time)
-                return float(s)
-            # Resolve unit alias if it exists
-            resolved_unit = self.unit_aliases.get(unit, unit)
-            # Check if unit exists in timespan_units
-            if resolved_unit not in self.units:
-                raise ValueError(f"Invalid timespan unit '{unit}' in '{arg}'. Expected one of {list(self.timespan_units.keys())}")
-            return float(s) * self.timespan_units[resolved_unit]
-        elif isinstance(arg, (np.ndarray, list)):
-            return np.vectorize(self.normalize_timespan)(arg)
-        else:
-            raise ValueError(f"Unsupported type for normalization: {type(arg)}")
+        return self.normalize_numeric(arg)
 
     @classmethod
     def instance(cls):
