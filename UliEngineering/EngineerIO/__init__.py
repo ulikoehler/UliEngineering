@@ -29,10 +29,10 @@ import inspect
 import scipy as sp
 from toolz import functoolz
 from dataclasses import dataclass
-from .Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
+from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
-from .Utils.String import partition_at_numeric_to_nonnumeric_boundary
+from ..Utils.String import partition_at_numeric_to_nonnumeric_boundary
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
