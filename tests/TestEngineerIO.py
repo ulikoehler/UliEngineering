@@ -501,6 +501,61 @@ class TestAreaUnits(unittest.TestCase):
         # Create an EngineerIO instance with area units included
         self.io = EngineerIO.area_instance
 
+    def test_area_unit_regex_end_matching(self):
+        """Test that area unit regexes only match at the end of strings"""
+        # Test units that should match at the end
+        end_match_cases = [
+            "100 m²",
+            "50ft²", 
+            "25 yd²",
+            "10acre",
+            "5 hectare",
+            "2.5ha",
+            "7barn"
+        ]
+        
+        for case in end_match_cases:
+            with self.subTest(case=case):
+                # Should find a match when searching the whole string
+                units_match = self.io.units_regex.search(case) if self.io.units_regex else None
+                alias_match = self.io.unit_alias_regex.search(case) if self.io.unit_alias_regex else None
+                
+                # At least one should match
+                self.assertTrue(units_match is not None or alias_match is not None,
+                              f"No regex matched for case: {case}")
+                
+                # The match should be at the end of the string
+                if units_match:
+                    self.assertTrue(case.endswith(units_match.group(1)),
+                                  f"Units regex match '{units_match.group(1)}' not at end of '{case}'")
+                if alias_match:
+                    self.assertTrue(case.endswith(alias_match.group(1)),
+                                  f"Alias regex match '{alias_match.group(1)}' not at end of '{case}'")
+
+    def test_area_unit_regex_no_middle_matching(self):
+        """Test that area unit regexes do NOT match in the middle of strings"""
+        # Test cases where unit appears in middle - should NOT match
+        middle_no_match_cases = [
+            "m²value",  # Unit in middle
+            "ft²test",  # Unit in middle  
+            "havalue",  # Unit in middle
+            "acretest", # Unit in middle
+            "barnvalue", # Unit in middle
+            "square meter test", # Alias in middle
+            "sq ft value", # Alias in middle
+        ]
+        
+        for case in middle_no_match_cases:
+            with self.subTest(case=case):
+                # Should NOT find any matches when unit is in middle
+                units_match = self.io.units_regex.search(case) if self.io.units_regex else None
+                alias_match = self.io.unit_alias_regex.search(case) if self.io.unit_alias_regex else None
+                
+                self.assertIsNone(units_match, 
+                                f"Units regex incorrectly matched in middle for case: {case}")
+                self.assertIsNone(alias_match,
+                                f"Alias regex incorrectly matched in middle for case: {case}")
+
     def test_unicode_area_units(self):
         """Test recognition of Unicode area units (²)"""
         # Note: we only normalize() here, so c in cm => 1/100
@@ -569,6 +624,10 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.value, 5.0)
         self.assertEqual(result.unit, 'hectare')
         
+        result = self.io.normalize("0.7 hectares")
+        self.assertEqual(result.value, 0.7)
+        self.assertEqual(result.unit, 'ha')
+        
         result = self.io.normalize("2.5 ha")
         self.assertEqual(result.value, 2.5)
         self.assertEqual(result.unit, 'ha')
@@ -594,6 +653,9 @@ class TestAreaUnits(unittest.TestCase):
         # Imperial units
         self.assertEqual(self.io.split_unit("100 in²"), UnitSplitResult('100', '', 'in²'))
         self.assertEqual(self.io.split_unit("50ft²"), UnitSplitResult('50', '', 'ft²'))
+        
+        # Agricultural units
+        self.assertEqual(self.io.split_unit("0.7 hectares"), UnitSplitResult('0.7', '', 'ha'))
 
     def test_area_units_no_space(self):
         """Test area units without spaces between number and unit"""
@@ -608,4 +670,121 @@ class TestAreaUnits(unittest.TestCase):
         result = self.io.normalize("100in²")
         self.assertEqual(result.value, 100.0)
         self.assertEqual(result.unit, 'in²')
+        self.assertIn('square meter', pattern)
+        self.assertIn('volt', pattern)
+        self.assertIn('amp', pattern)
+        self.assertTrue(pattern.endswith('$'))
+        
+    def test_generate_unit_alias_pattern_with_unicode(self):
+        """Test unit alias pattern generation with unicode characters"""
+        aliases = {
+            'µm squared': 'µm²',
+            'degrees celsius': '°C',
+            'chinese yuan': '元',
+            'ohm resistance': 'Ω'
+        }
+        io = EngineerIO(units=set(), unit_aliases=aliases)
+        pattern = io._generate_unit_alias_pattern()
+        # Should properly handle unicode characters
+        self.assertIn('µm squared', pattern)
+        self.assertIn('degrees celsius', pattern)
+        self.assertIn('chinese yuan', pattern)
+        self.assertIn('ohm resistance', pattern)
+        
+    def test_generate_unit_alias_pattern_with_regex_special_chars(self):
+        """Test unit alias pattern generation with regex special characters"""
+        aliases = {
+            'volt+ampere': 'VA',
+            'power*time': 'Pt',
+            'resistance[ohm]': 'R',
+            'frequency(hertz)': 'f',
+            'voltage.rms': 'Vrms',
+            'current^2': 'I²'
+        }
+        io = EngineerIO(units=set(), unit_aliases=aliases)
+        pattern = io._generate_unit_alias_pattern()
+        # Should escape regex special characters
+        self.assertIn(r'volt\+ampere', pattern)
+        self.assertIn(r'power\*time', pattern)
+        self.assertIn(r'resistance\[ohm\]', pattern)
+        self.assertIn(r'frequency\(hertz\)', pattern)
+        self.assertIn(r'voltage\.rms', pattern)
+        self.assertIn(r'current\^2', pattern)
+        
+    def test_generate_unit_alias_pattern_length_sorting(self):
+        """Test that aliases are sorted by length (longest first)"""
+        aliases = {
+            'V': 'volt',
+            'volt': 'V',
+            'square millimeter': 'mm²'
+        }
+        io = EngineerIO(units=set(), unit_aliases=aliases)
+        pattern = io._generate_unit_alias_pattern()
+        # Should have longest first: square millimeter, then volt, then V
+        parts = pattern[1:-2].split('|')  # Remove outer parentheses and $
+        self.assertEqual(parts[0], 'square millimeter')
+        self.assertEqual(parts[1], 'volt')
+        self.assertEqual(parts[2], 'V')
+        
+    def test_generate_unit_alias_pattern_empty(self):
+        """Test unit alias pattern generation with empty aliases dict"""
+        io = EngineerIO(units=set(), unit_aliases={})
+        pattern = io._generate_unit_alias_pattern()
+        self.assertIsNone(pattern)
+        
+    def test_generate_unit_alias_pattern_with_spaces(self):
+        """Test unit alias pattern generation with spaces in aliases"""
+        aliases = {
+            'square meter': 'm²',
+            'cubic centimeter': 'cm³',
+            'degrees per second': '°/s',
+            'meters per second': 'm/s'
+        }
+        io = EngineerIO(units=set(), unit_aliases=aliases)
+        pattern = io._generate_unit_alias_pattern()
+        # Should properly handle spaces in aliases
+        self.assertIn('square meter', pattern)
+        self.assertIn('cubic centimeter', pattern)
+        self.assertIn('degrees per second', pattern)
+        self.assertIn('meters per second', pattern)
+        
+    def test_pattern_compilation_with_fake_units(self):
+        """Test that generated patterns compile correctly with fake units"""
+        fake_units = {'testunit', 'fakeΩ', 'µtest', 'unit[1]', 'test+volt'}
+        fake_aliases = {
+            'fake square meter': 'm²',
+            'test µ unit': 'µU',
+            'unit(special)': 'US'
+        }
+        
+        io = EngineerIO(units=fake_units, unit_aliases=fake_aliases)
+        
+        # Both regexes should compile without errors
+        self.assertIsNotNone(io.units_regex)
+        self.assertIsNotNone(io.unit_alias_regex)
+        
+        # Test that they can match their respective patterns
+        self.assertIsNotNone(io.units_regex.search('100testunit'))
+        self.assertIsNotNone(io.units_regex.search('50fakeΩ'))
+        self.assertIsNotNone(io.unit_alias_regex.search('100 fake square meter'))
+        self.assertIsNotNone(io.unit_alias_regex.search('50 test µ unit'))
+
+    def test_pattern_matching_precedence_with_fake_data(self):
+        """Test that longer patterns are matched first with fake data"""
+        fake_units = {'A', 'ABC', 'ABCDEF'}
+        fake_aliases = {
+            'test': 'T',
+            'test unit': 'TU', 
+            'test unit long': 'TUL'
+        }
+        
+        io = EngineerIO(units=fake_units, unit_aliases=fake_aliases)
+        
+        # Longest unit should match first
+        match = io.units_regex.search('100ABCDEF')
+        self.assertEqual(match.group(1), 'ABCDEF')
+        
+        # Longest alias should match first
+        match = io.unit_alias_regex.search('100 test unit long')
+        self.assertEqual(match.group(1), 'test unit long')
 

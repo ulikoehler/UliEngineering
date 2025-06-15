@@ -2,22 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 A python script to normalize a wide variety of value notations
-from eldef _default_units(include_m=False):
-    return set([
-        # NOTE: These Ω symbols are NOT identical !
-        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
-        'R', # Ohms, but without having to copynpaste the Ω symbol
-        # Time
-        's', 'h', 'min',
-        # Fraction
-        'ppm', 'ppb', '%',
-        # Lighting
-        'lm', 'lx', 'cd',
-        # Composite units
-        'C/W', '€/km', '€/m',
-        # Currencies
-        '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
-    ]).union(_length_units(include_m=include_m)).union(_area_units(include_m2=include_m))ering.
 
 Examples of valid notations include:
     1,234.56kΩ
@@ -37,7 +21,7 @@ Originally published at techoverflow.net.
 from collections.abc import Iterable
 import math
 import re
-from typing import List, Optional
+from typing import List, Optional, Set
 import numpy as np
 import functools
 import inspect
@@ -171,7 +155,8 @@ def _area_aliases():
         
         # Other area aliases
         'acres': 'acre',
-        'hectares': 'hectare', 
+        'hectares': 'ha', 
+        'hectars': 'ha', 
         'ares': 'are',
         'barns': 'barn',
         'square meter': 'm²',
@@ -244,8 +229,8 @@ def _area_aliases():
     }
 
 
-def _default_units(include_m=False):
-    return set([
+def _default_units(include_m=False) -> Set[str]:
+    return {
         # NOTE: These Ω symbols are NOT identical !
         'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
         'R', # Ohms, but without having to copynpaste the Ω symbol
@@ -259,7 +244,7 @@ def _default_units(include_m=False):
         'C/W', '€/km', '€/m',
         # Currencies
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
-    ])
+    }
 
 
 def _default_timespan_units():
@@ -351,7 +336,6 @@ def _default_timespan_units():
         'Tyr': 31556952000000000,
         'Tyrs': 31556952000000000,
     }
-
 
 def _default_prefixes():
     return ["Δ", "±"]
@@ -470,14 +454,13 @@ class EngineerIO(object):
             self.exp_map_min = 0
             self.exp_map_max = 0
             
-    def _compile_unit_alias_regex(self):
+    def _generate_unit_alias_pattern(self):
         """
-        Compile a regex pattern to match unit aliases at the end of strings.
-        Pattern format: "(alias1|alias2|...)$"
+        Generate a regex pattern to match unit aliases at the end of strings.
+        Returns pattern string in format: "(alias1|alias2|...)$"
         """
         if not self.unit_aliases:
-            self.unit_alias_regex = None
-            return
+            return None
         
         # Sort aliases by length (longest first) to ensure proper matching
         # e.g. "square millimeters" should match before "millimeters"
@@ -485,19 +468,27 @@ class EngineerIO(object):
         
         # Escape each alias for regex and join with |
         escaped_aliases = [re.escape(alias) for alias in sorted_aliases]
-        pattern = f"({'|'.join(escaped_aliases)})$"
+        return f"({'|'.join(escaped_aliases)})$"
+
+    def _compile_unit_alias_regex(self):
+        """
+        Compile a regex pattern to match unit aliases at the end of strings.
+        """
+        pattern = self._generate_unit_alias_pattern()
+        if pattern is None:
+            self.unit_alias_regex = None
+            return
         
         # NOTE: Needs to be case-sensitive for some special units
         self.unit_alias_regex = re.compile(pattern, flags=re.UNICODE)
 
-    def _compile_units_regex(self):
+    def _generate_units_pattern(self):
         """
-        Compile a regex pattern to match units at the end of strings.
-        Pattern format: "(unit1|unit2|...)$"
+        Generate a regex pattern to match units at the end of strings.
+        Returns pattern string in format: "(unit1|unit2|...)$"
         """
         if not self.units:
-            self.units_regex = None
-            return
+            return None
         
         # Sort units by length (longest first) to ensure proper matching
         # e.g. "Angstrom" should match before "A"
@@ -505,7 +496,16 @@ class EngineerIO(object):
         
         # Escape each unit for regex and join with |
         escaped_units = [re.escape(unit) for unit in sorted_units]
-        pattern = f"({'|'.join(escaped_units)})$"
+        return f"({'|'.join(escaped_units)})$"
+
+    def _compile_units_regex(self):
+        """
+        Compile a regex pattern to match units at the end of strings.
+        """
+        pattern = self._generate_units_pattern()
+        if pattern is None:
+            self.units_regex = None
+            return
         
         # NOTE: Needs to be case-sensitive for some special units
         self.units_regex = re.compile(pattern, flags=re.UNICODE)
