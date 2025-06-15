@@ -32,7 +32,7 @@ from dataclasses import dataclass
 from .Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
-from .Utils.String import partition_at_numeric_to_nonnumeric_boundary, suffix_list
+from .Utils.String import partition_at_numeric_to_nonnumeric_boundary
 
 __all__ = ["normalize_interpunctation", "EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
@@ -426,6 +426,8 @@ class EngineerIO(object):
         self._compile_unit_alias_regex()
         # Compile units regex
         self._compile_units_regex()
+        # Compile unit prefix regex
+        self._compile_unit_prefix_suffix_regex()
 
     def _recompute_unit_prefix_maps(self):
         """
@@ -512,6 +514,24 @@ class EngineerIO(object):
         # NOTE: Needs to be case-sensitive for some special units
         self.units_regex = re.compile(pattern, flags=re.UNICODE)
 
+    def _compile_unit_prefix_suffix_regex(self):
+        """
+        Compile a regex pattern to match unit prefixes at the end of strings.
+        """
+        if not self.all_unit_prefixes:
+            self.unit_prefix_suffix_regex = None
+            return
+        
+        # Sort unit prefixes by length (longest first) to ensure proper matching
+        sorted_prefixes = sorted(self.all_unit_prefixes, key=len, reverse=True)
+        
+        # Escape each prefix for regex and join with |
+        escaped_prefixes = [re.escape(prefix) for prefix in sorted_prefixes]
+        pattern = f"({'|'.join(escaped_prefixes)})$"
+        
+        # NOTE: Needs to be case-sensitive for unit prefixes
+        self.unit_prefix_suffix_regex = re.compile(pattern, flags=re.UNICODE)
+
     def _resolve_unit_alias(self, unit):
         """
         Resolve a unit alias to its canonical form.
@@ -527,7 +547,7 @@ class EngineerIO(object):
         """
         return [s[i:] for i in range(len(s) - 1, -1, -1)]
 
-    def has_any_unit_suffix(self, s):
+    def has_any_unit_prefix(self, s):
         """
         Check if any suffix of the string is a unit prefix.
         Returns a tuple (has_prefix, unit_prefix_char, remainder) where:
@@ -535,11 +555,15 @@ class EngineerIO(object):
         - unit_prefix_char: the unit prefix character found (or empty string)
         - remainder: the string with the unit prefix removed (or original string)
         """
-        for suffix in self.all_suffixes(s):
-            if suffix in self.all_unit_prefixes:
-                # Found a unit prefix suffix
-                remainder = s[:-len(suffix)] if len(suffix) > 0 else s
-                return True, suffix, remainder
+        if not self.unit_prefix_suffix_regex:
+            return False, "", s
+        
+        match = self.unit_prefix_suffix_regex.search(s)
+        if match:
+            unit_prefix_char = match.group(1)
+            remainder = s[:match.start()]
+            return True, unit_prefix_char, remainder
+        
         return False, "", s
 
     def split_input(self, s):
@@ -581,7 +605,7 @@ class EngineerIO(object):
         if not s:
             raise ValueError("Can't split empty string")
         # Try to find SI unit prefix using suffix checking
-        string_is_suffixed_by_unit_prefix, unit_prefix_char, remainder = self.has_any_unit_suffix(s)
+        string_is_suffixed_by_unit_prefix, unit_prefix_char, remainder = self.has_any_unit_prefix(s)
         if string_is_suffixed_by_unit_prefix: # e.g. "2.5k" is terminated by "k"
             s = remainder
         else:  # Try to find unit prefix anywhere, e.g. in the middle
