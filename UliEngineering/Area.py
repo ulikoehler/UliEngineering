@@ -164,6 +164,9 @@ def normalize_area(s, instance=EngineerIO.area_instance):
         split_result.value *= split_result.prefix_multiplier
     # Multiply unit-specific factor to convert to meters square
     if split_result.unit in _area_factors:
+        print(f"Converting {split_result.value} {split_result.unit} to m²")
+        print(f"Using factor {_area_factors[split_result.unit]}")
+        print(split_result)
         return split_result.value * _area_factors[split_result.unit]
     else:
         raise UnknownUnitInContextException(

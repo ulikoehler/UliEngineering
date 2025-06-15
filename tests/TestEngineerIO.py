@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.EngineerIO import *
 from UliEngineering.Exceptions import EngineerIOException
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult
+from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult, _default_units, _area_aliases
 from parameterized import parameterized
 import functools
 import numpy as np
@@ -409,4 +409,89 @@ class TestAllSuffixes(unittest.TestCase):
         """Test with unicode characters"""
         self.assertEqual(self.io.all_suffixes("αβγ"), ["γ", "βγ", "αβγ"])
         self.assertEqual(self.io.all_suffixes("1µV"), ["V", "µV", "1µV"])
+
+
+class TestUnitAliases(unittest.TestCase):
+    def setUp(self):
+        # Create an EngineerIO instance with area aliases for testing
+        self.io = EngineerIO(
+            units=_default_units(),
+            unit_aliases=_area_aliases()
+        )
+
+    def test_unit_alias_regex_compilation(self):
+        """Test that the unit alias regex is compiled correctly"""
+        self.assertIsNotNone(self.io.unit_alias_regex)
+        
+    def test_split_unit_with_aliases_no_space(self):
+        """Test splitting units with aliases that have no spaces"""
+        # Test caret notation aliases
+        self.assertEqual(self.io.split_unit("100m^2"), UnitSplitResult('100', '', 'm²'))
+        self.assertEqual(self.io.split_unit("50cm^2"), UnitSplitResult('50', '', 'cm²'))
+        self.assertEqual(self.io.split_unit("25km^2"), UnitSplitResult('25', '', 'km²'))
+        
+        # Test abbreviated aliases
+        self.assertEqual(self.io.split_unit("100sqm"), UnitSplitResult('100', '', 'm²'))
+        self.assertEqual(self.io.split_unit("75acres"), UnitSplitResult('75', '', 'acre'))
+        self.assertEqual(self.io.split_unit("30hectares"), UnitSplitResult('30', '', 'hectare'))
+
+    def test_split_unit_with_aliases_with_space(self):
+        """Test splitting units with aliases that contain spaces"""
+        # Test full spelled out aliases with spaces
+        self.assertEqual(self.io.split_unit("100 square meters"), UnitSplitResult('100', '', 'm²'))
+        self.assertEqual(self.io.split_unit("50 square millimeters"), UnitSplitResult('50', '', 'mm²'))
+        self.assertEqual(self.io.split_unit("25 square kilometers"), UnitSplitResult('25', '', 'km²'))
+        
+        # Test abbreviated aliases with spaces  
+        self.assertEqual(self.io.split_unit("100 sq m"), UnitSplitResult('100', '', 'm²'))
+        self.assertEqual(self.io.split_unit("50 sq mm"), UnitSplitResult('50', '', 'mm²'))
+        self.assertEqual(self.io.split_unit("25 sq km"), UnitSplitResult('25', '', 'km²'))
+
+    def test_split_unit_with_regex_special_characters(self):
+        """Test aliases containing regex special characters"""
+        # Test caret (^) character - needs proper escaping in regex
+        self.assertEqual(self.io.split_unit("100m^2"), UnitSplitResult('100', '', 'm²'))
+        self.assertEqual(self.io.split_unit("50µm^2"), UnitSplitResult('50', '', 'µm²'))
+        self.assertEqual(self.io.split_unit("25nm^2"), UnitSplitResult('25', '', 'nm²'))
+        
+        # Test unicode characters (µ)
+        self.assertEqual(self.io.split_unit("100 square µm"), UnitSplitResult('100', '', 'µm²'))
+        self.assertEqual(self.io.split_unit("50 µm squared"), UnitSplitResult('50', '', 'µm²'))
+
+    def test_split_unit_alias_precedence(self):
+        """Test that longer aliases are matched before shorter ones"""
+        # "square millimeters" should match before "millimeters"
+        self.assertEqual(self.io.split_unit("100 square millimeters"), UnitSplitResult('100', '', 'mm²'))
+        
+        # "square meters" should match before "meters" 
+        self.assertEqual(self.io.split_unit("100 square meters"), UnitSplitResult('100', '', 'm²'))
+
+    def test_normalize_with_aliases(self):
+        """Test full normalization with unit aliases"""
+        # Test with spaces
+        result = self.io.normalize("100 square meters")
+        self.assertEqual(result.value, 100.0)
+        self.assertEqual(result.unit, 'm²')
+        
+        # Test with caret notation
+        result = self.io.normalize("50 cm^2")
+        self.assertEqual(result.value, 50.0)
+        self.assertEqual(result.unit, 'cm²')
+        
+        # Test with prefixes and aliases
+        result = self.io.normalize("2.5k square millimeters")
+        self.assertEqual(result.value, 2500.0)
+        self.assertEqual(result.unit, 'mm²')
+
+    def test_split_unit_no_alias_fallback(self):
+        """Test that non-aliased units still work correctly"""
+        # Test regular units that don't have aliases
+        self.assertEqual(self.io.split_unit("100V"), UnitSplitResult('100', '', 'V'))
+        self.assertEqual(self.io.split_unit("50 Hz"), UnitSplitResult('50', '', 'Hz'))
+        self.assertEqual(self.io.split_unit("25Ω"), UnitSplitResult('25', '', 'Ω'))
+
+    def test_split_unit_no_unit(self):
+        """Test that strings without units work correctly with alias regex"""
+        self.assertEqual(self.io.split_unit("100"), UnitSplitResult('100', '', ''))
+        self.assertEqual(self.io.split_unit("50.5"), UnitSplitResult('50.5', '', ''))
 

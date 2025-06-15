@@ -133,33 +133,121 @@ def _length_units(include_m=False):
 
 def _area_units():
     """
-    All known area units.
+    All known area units (compact symbols only).
     See also Area.py
     """
     units = set([
         # Area units
         'm²', 'm^2',
-        'in²', 'in^2', 'square inch', 'square inches', 'sq in',
-        'ft²', 'ft^2', 'square foot', 'square feet', 'sq ft',
-        'yd²', 'yd^2', 'square yard', 'square yards', 'sq yd',
-        'acre', 'acres', 'hectare', 'hectares', 'ha', 'are', 'ares',
-        'barn', 'barns', 'b', 'square meter', 'square meters', 'sq m', 'sqm',
-        # Spelled out SI prefixed meters
-        'square millimeter', 'square millimeters', 'square mm', 'sq mm', 'mm sq', 'mm squared', 'millimeter squared',
-        'square centimeter', 'square centimeters', 'square cm', 'sq cm', 'cm sq', 'cm squared', 'centimeter squared', 'centimeters squared',
-        'square decimeter', 'square decimeters', 'square dm', 'sq dm', 'dm sq', 'dm squared', 'decimeter squared', 'decimeters squared',
-        'square micrometer', 'square micrometers', 'square µm' 'sq µm', 'sq um', 'um sq', 'µm sq', 'µm squared', 'micrometer squared', 'micrometers squared',
-        'square nanometer', 'square nanometer', 'square nm', 'sq nm', 'nm sq', 'nm squared', 'nanometers squared',
-        'square kilometer', 'square kilometers', 'square km', 'sq km', 'km squared', 'km sq', 'kilometers sq', 'kilometers squared',
-        # Different 'µ'
-        'square µm' 'sq µm', 'µm sq', 'µm squared',
+        'in²', 'in^2',
+        'ft²', 'ft^2', 
+        'yd²', 'yd^2',
+        'acre', 'hectare', 'ha', 'are',
+        'barn', 'b',
+        # SI prefixed square meters
+        'mm²', 'cm²', 'dm²', 'µm²', 'nm²', 'km²'
     ])
     return units
+
+def _area_aliases():
+    """
+    Maps verbose area unit names to their compact symbols.
+    """
+    return {
+        # Square inch aliases
+        'square inch': 'in²',
+        'square inches': 'in²', 
+        'sq in': 'in²',
+        
+        # Square foot aliases
+        'square foot': 'ft²',
+        'square feet': 'ft²', 
+        'sq ft': 'ft²',
+        
+        # Square yard aliases  
+        'square yard': 'yd²',
+        'square yards': 'yd²',
+        'sq yd': 'yd²',
+        
+        # Other area aliases
+        'acres': 'acre',
+        'hectares': 'hectare', 
+        'ares': 'are',
+        'barns': 'barn',
+        'square meter': 'm²',
+        'square meters': 'm²', 
+        'sq m': 'm²', 
+        'sqm': 'm²',
+        'm^2': 'm²',  # Caret notation alias
+        
+        # SI prefixed meter aliases
+        'square millimeter': 'mm²',
+        'square millimeters': 'mm²', 
+        'square mm': 'mm²', 
+        'sq mm': 'mm²', 
+        'mm sq': 'mm²', 
+        'mm squared': 'mm²', 
+        'millimeter squared': 'mm²',
+        'mm^2': 'mm²',  # Caret notation alias
+        
+        'square centimeter': 'cm²',
+        'square centimeters': 'cm²', 
+        'square cm': 'cm²', 
+        'sq cm': 'cm²', 
+        'cm sq': 'cm²', 
+        'cm squared': 'cm²', 
+        'centimeter squared': 'cm²', 
+        'centimeters squared': 'cm²',
+        'cm^2': 'cm²',  # Caret notation alias
+        
+        'square decimeter': 'dm²',
+        'square decimeters': 'dm²', 
+        'square dm': 'dm²', 
+        'sq dm': 'dm²', 
+        'dm sq': 'dm²', 
+        'dm squared': 'dm²', 
+        'decimeter squared': 'dm²', 
+        'decimeters squared': 'dm²',
+        'dm^2': 'dm²',  # Caret notation alias
+        
+        'square micrometer': 'µm²',
+        'square micrometers': 'µm²', 
+        'square µm': 'µm²',
+        'sq µm': 'µm²', 
+        'sq um': 'µm²', 
+        'um sq': 'µm²', 
+        'µm sq': 'µm²', 
+        'µm squared': 'µm²', 
+        'micrometer squared': 'µm²', 
+        'micrometers squared': 'µm²',
+        'µm^2': 'µm²',  # Caret notation alias
+        'um^2': 'µm²',  # Caret notation alias
+        
+        'square nanometer': 'nm²',
+        'square nanometers': 'nm²', 
+        'square nm': 'nm²', 
+        'sq nm': 'nm²', 
+        'nm sq': 'nm²', 
+        'nm squared': 'nm²', 
+        'nanometers squared': 'nm²',
+        'nm^2': 'nm²',  # Caret notation alias
+        
+        'square kilometer': 'km²',
+        'square kilometers': 'km²', 
+        'square km': 'km²', 
+        'sq km': 'km²', 
+        'km squared': 'km²', 
+        'km sq': 'km²', 
+        'kilometers sq': 'km²', 
+        'kilometers squared': 'km²',
+        'km^2': 'km²',  # Caret notation alias
+    }
+
 
 def _default_units(include_m=False):
     return set([
         # NOTE: These Ω symbols are NOT identical !
-        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
+        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
         'R', # Ohms, but without having to copynpaste the Ω symbol
         # Time
         's', 'h', 'min',
@@ -171,7 +259,7 @@ def _default_units(include_m=False):
         'C/W', '€/km', '€/m',
         # Currencies
         '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
-    ]).union(_length_units(include_m=include_m))
+    ])
 
 
 def _default_timespan_units():
@@ -285,10 +373,11 @@ def none_to_nan(value):
     # NOTE: NormalizeResult is a namedtuple i.e. iterable, so we need to handle it separately
     if isinstance(value, NormalizeResult):
         return NormalizeResult(
-            value.prefix,
-            none_to_nan(value.value),
-            value.unit_prefix,
-            value.unit
+            prefix=value.prefix,
+            value=none_to_nan(value.value),
+            unit_prefix=value.unit_prefix,
+            unit=value.unit,
+            
         )
     if isinstance(value, Iterable):
         # If it's an iterable, convert each element
@@ -311,7 +400,8 @@ class EngineerIO(object):
                  prefixes=_default_prefixes(),
                  unit_prefixes=_default_unit_prefixes(),
                  unit_prefix_map=_default_unit_prefix_map(),
-                 timespan_units=_default_timespan_units()):
+                 timespan_units=_default_timespan_units(),
+                 unit_aliases=None):
         """
         Initialize a new EngineerIO instance with default or custom unit prefixes
 
@@ -328,10 +418,13 @@ class EngineerIO(object):
         unit_prefix_map : dict
             Maps unit prefix strings to their decimal exponents.
             For generating strings from numbers, the first unit prefix in each nested list is  preferred
+        unit_aliases : dict
+            Maps unit alias strings to their canonical unit names
         """
         self.units = set(units)
         self.unit_prefix_map = unit_prefix_map
         self.timespan_units = timespan_units
+        self.unit_aliases = unit_aliases or {}
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
         self.prefix_re = re.compile('^(' + _prefix_set + ')+')
@@ -343,6 +436,8 @@ class EngineerIO(object):
         # Compute maps
         self.all_unit_prefixes = set(self.unit_prefix_map.keys())
         self._recompute_unit_prefix_maps()
+        # Compile unit alias regex
+        self._compile_unit_alias_regex()
 
     def _recompute_unit_prefix_maps(self):
         """
@@ -373,6 +468,32 @@ class EngineerIO(object):
             self.exp_map_min = 0
             self.exp_map_max = 0
             
+    def _compile_unit_alias_regex(self):
+        """
+        Compile a regex pattern to match unit aliases at the end of strings.
+        Pattern format: "(alias1|alias2|...)$"
+        """
+        if not self.unit_aliases:
+            self.unit_alias_regex = None
+            return
+        
+        # Sort aliases by length (longest first) to ensure proper matching
+        # e.g. "square millimeters" should match before "millimeters"
+        sorted_aliases = sorted(self.unit_aliases.keys(), key=len, reverse=True)
+        
+        # Escape each alias for regex and join with |
+        escaped_aliases = [re.escape(alias) for alias in sorted_aliases]
+        pattern = f"({'|'.join(escaped_aliases)})$"
+        
+        # NOTE: Needs to be case-sensitive for some special units
+        self.unit_alias_regex = re.compile(pattern)
+
+    def _resolve_unit_alias(self, unit):
+        """
+        Resolve a unit alias to its canonical form.
+        """
+        return self.unit_aliases.get(unit, unit)
+
     def all_suffixes(self, s):
         """
         Given a string e.g "abc123", return a list of all suffixes in inverted order, shortest first.
@@ -417,7 +538,8 @@ class EngineerIO(object):
         orig_str = s
         # Remove thousands separator & ensure dot is used
         s = normalize_interpunctation(s)
-        split_result = self.split_unit(s) # Remove unit
+        # Split off unit: "120kV" => "120k", "V"
+        split_result = self.split_unit(s)
         # Print remainder
         s = split_result.remainder
         s = s.replace(" ", "")
@@ -502,6 +624,16 @@ class EngineerIO(object):
         # Fallback for strings which are too short
         if len(s) <= 1:
             return UnitSplitResult(s, '', '')
+        # Check for unit aliases first
+        if self.unit_alias_regex:
+            alias_match = self.unit_alias_regex.search(s)
+            if alias_match:
+                alias = alias_match.group(1)
+                canonical_unit = self._resolve_unit_alias(alias)
+                # We don't need to explicitly replace the unit by the alias,
+                # since the purpose of this funtion is to split if off
+                remainder = s[:alias_match.start()].strip()
+                return UnitSplitResult(remainder, '', canonical_unit)
         # Handle units: "ppm"
         # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
@@ -544,7 +676,7 @@ class EngineerIO(object):
         See split_input() for further details on supported formats
         """
         # Scalars get returned directly
-        if isinstance(s, (int, float, np.generic)):
+        if isinstance(s, (int, float)):
             return NormalizeResult('', s, '', '', '', 1.0)
         # Make sure it's a decoded string
         if isinstance(s, bytes):
@@ -805,7 +937,7 @@ EngineerIO.length_instance = EngineerIO(
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 EngineerIO.area_instance = EngineerIO(
-    units=_area_units(),
+    units=_default_units(),
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 
@@ -968,7 +1100,7 @@ def normalize_numeric_args(func=None, *, exclude=None):
         
         # Create new signature with normalized defaults
         new_sig = sig.replace(parameters=new_params)
-        
+
         def wrapper(*args, **kwargs):
             # Get parameter names from signature
             param_names = list(sig.parameters.keys())
