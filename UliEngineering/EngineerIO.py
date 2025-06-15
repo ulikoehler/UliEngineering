@@ -540,6 +540,7 @@ class EngineerIO(object):
         s = normalize_interpunctation(s)
         # Split off unit: "120kV" => "120k", "V"
         split_result = self.split_unit(s)
+        print("Split result", split_result)
         # Print remainder
         s = split_result.remainder
         s = s.replace(" ", "")
@@ -633,17 +634,21 @@ class EngineerIO(object):
                 # We don't need to explicitly replace the unit by the alias,
                 # since the purpose of this funtion is to split if off
                 remainder = s[:alias_match.start()].strip()
+                print("Found unit alias", alias, "->", canonical_unit)
                 return UnitSplitResult(remainder, '', canonical_unit)
         # Handle units: "ppm"
         # We try to find the longest unit suffix, up to the first digit
         found_unit_suffix = False
+        print(self.units)
         for unit_suffix in suffix_list(s):
+            print("Checking unit suffix", unit_suffix)
             # Is the suffix a unit?
             if unit_suffix in self.units:
                 # Do not try to find units if encountering the first digit
                 unit_suffix_length = len(unit_suffix)
                 value_str, unit = s[:-unit_suffix_length], s[-unit_suffix_length:]
                 found_unit_suffix = True
+                print("Found unit suffix", unit_suffix, "->", unit)
         # Fallback: Try to parse as value + optionally SI postfix
         if not found_unit_suffix: # No unit
             value_str, unit = s, ''
@@ -935,7 +940,7 @@ EngineerIO.length_instance = EngineerIO(
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 EngineerIO.area_instance = EngineerIO(
-    units=_default_units(),
+    units=_area_units(),
     unit_prefix_map=_default_unit_prefix_map(include_length_unit_prefixes=True)
 )
 
