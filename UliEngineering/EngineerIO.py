@@ -488,7 +488,7 @@ class EngineerIO(object):
         pattern = f"({'|'.join(escaped_aliases)})$"
         
         # NOTE: Needs to be case-sensitive for some special units
-        self.unit_alias_regex = re.compile(pattern)
+        self.unit_alias_regex = re.compile(pattern, flags=re.UNICODE)
 
     def _compile_units_regex(self):
         """
@@ -508,7 +508,7 @@ class EngineerIO(object):
         pattern = f"({'|'.join(escaped_units)})$"
         
         # NOTE: Needs to be case-sensitive for some special units
-        self.units_regex = re.compile(pattern)
+        self.units_regex = re.compile(pattern, flags=re.UNICODE)
 
     def _resolve_unit_alias(self, unit):
         """
