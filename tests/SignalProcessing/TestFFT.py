@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose, assert_almost_equal
+from numpy.testing import assert_allclose, assert_almost_equal
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.Chunks import *

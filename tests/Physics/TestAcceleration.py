@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.Acceleration import *
-from UliEngineering.EngineerIO import auto_format
 import unittest
 import scipy.constants
 

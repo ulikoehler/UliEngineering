@@ -9,7 +9,7 @@ import numpy as np
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from . import EngineerIO
-from .UnitInfo import UnitInfo, UnitAlias
+from .UnitInfo import UnitInfo
 from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_length", "convert_length_to_meters", "EngineerLengthIO"]
@@ -153,8 +153,6 @@ def convert_length_to_meters(value, unit, instance=None):
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.convert_length_to_meters(value, unit)
-        return self.normalize_length(f"{value} {unit}")
-
 
 # Backward compatibility functions
 @returns_unit("m")
@@ -173,19 +171,6 @@ def normalize_length(s, instance=None):
     - "1.2 M light years" => 1.135287656709696e+22
     - "9.15 kpc" => 2.8233949868947424e+17
     """
-    if instance is None:
-        instance = EngineerLengthIO.instance()
-    return instance.normalize_length(s)
-
-@returns_unit("m")
-def convert_length_to_meters(value, unit, instance=None):
-    """
-    Given a number or Engineer string (unit ignored) <value>
-    in <unit>, convert it to meters.
-    """
-    if instance is None:
-        instance = EngineerLengthIO.instance()
-    return instance.convert_length_to_meters(value, unit)
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.normalize_length(s)

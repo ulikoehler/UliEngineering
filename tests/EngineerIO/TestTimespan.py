@@ -29,7 +29,7 @@ class TestEngineerTimespanIO(unittest.TestCase):
     def test_list_input_1d(self):
         assert_allclose(self.io.normalize_timespan([1, 2, 3]), [1,2,3])
         assert_allclose(self.io.normalize_timespan([1.25, 2.25, 3.25]), [1.25,2.25,3.25])
-    
+
     def test_list_input_2d(self):
         assert_allclose(self.io.normalize_timespan([[1, 2], [3, 4]]), [[1,2], [3,4]])
         assert_allclose(self.io.normalize_timespan([[1.25, 2.25], [3.25, 4.25]]), [[1.25,2.25], [3.25,4.25]])

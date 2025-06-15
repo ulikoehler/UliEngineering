@@ -3,6 +3,7 @@
 """
 Utilities regarding temperatures
 """
+from UliEngineering.EngineerIO import normalize
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import InvalidUnitException
 
@@ -46,7 +47,7 @@ def normalize_temperature(t, default_unit="°C"):
     """
     unit = ""
     if isinstance(t, str):
-        res = normalize_engineer_notation(t)
+        res = normalize(t)
         if res is None:
             raise ValueError("Invalid temperature string: {}".format(t))
         t, unit = res.value, res.unit

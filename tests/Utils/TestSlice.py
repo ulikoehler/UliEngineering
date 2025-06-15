@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
 from UliEngineering.Utils.Slice import *
 import unittest
 

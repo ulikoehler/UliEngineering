@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import io
-from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
+from numpy.testing import assert_allclose
 from UliEngineering.Utils.Files import *
 from UliEngineering.Utils.Temporary import *
 import unittest

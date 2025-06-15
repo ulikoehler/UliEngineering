@@ -6,7 +6,6 @@ from parameterized import parameterized
 import numpy as np
 import unittest
 
-
 class TestSphere(unittest.TestCase):
     @parameterized.expand([
         (0.0, ),

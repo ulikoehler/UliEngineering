@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.Pressure import *
-from UliEngineering.EngineerIO import auto_format
 import unittest
-import math
 
 class TestPressureConversion(unittest.TestCase):
     def test_pascal_to_bar(self):

@@ -6,7 +6,8 @@ Thermistor computations
 For reference see e.g.
 https://www.electronics-tutorials.ws/io/thermistors.html
 """
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
 import numpy as np
 from UliEngineering.Physics.Temperature import kelvin_to_celsius

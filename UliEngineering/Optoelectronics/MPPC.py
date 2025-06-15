@@ -4,7 +4,7 @@
 Functions for Multi-Pixel photon counters (MPPCs)
 """
 
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
     "pixel_capacitance_from_terminal_capacitance"

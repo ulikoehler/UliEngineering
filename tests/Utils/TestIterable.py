@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
 from UliEngineering.Utils.Iterable import *
 import unittest
-
 
 class TestListIterator(unittest.TestCase):
     def test_to_list(self):

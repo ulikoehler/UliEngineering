@@ -7,7 +7,7 @@ from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import EngineerLengthIO
 from UliEngineering.Exceptions import EngineerIOException
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import _format_with_suffix, SplitResult, UnitSplitResult, NormalizeResult
+from UliEngineering.EngineerIO import SplitResult, UnitSplitResult, NormalizeResult
 from parameterized import parameterized
 import functools
 import numpy as np
@@ -22,13 +22,13 @@ class TestEngineerIO(unittest.TestCase):
 
     def test_normalize_interpunctation(self):
         for suffix in ["", "k", " kV", "V/√Hz", "µV"]:
-            self.assertEqual(normalize_interpunctation("1234" + suffix), '1234' + suffix)
-            self.assertEqual(normalize_interpunctation("123.4" + suffix), '123.4' + suffix)
-            self.assertEqual(normalize_interpunctation("123,4" + suffix), '123.4' + suffix)
-            self.assertEqual(normalize_interpunctation("1,234.5" + suffix), '1234.5' + suffix)
-            self.assertEqual(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
-            self.assertEqual(normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
-        self.assertEqual(normalize_interpunctation(""), "")
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("1234" + suffix), '1234' + suffix)
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("123.4" + suffix), '123.4' + suffix)
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("123,4" + suffix), '123.4' + suffix)
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("1,234.5" + suffix), '1234.5' + suffix)
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
+            self.assertEqual(EngineerIO.instance().normalize_interpunctation("1.234,5" + suffix), '1234.5' + suffix)
+        self.assertEqual(EngineerIO.instance().normalize_interpunctation(""), "")
 
     def test_split_input(self):
         self.assertEqual(self.io.split_input("1234"), SplitResult('', '1234', '', '', ''))

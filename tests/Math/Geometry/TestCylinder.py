@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 from UliEngineering.Math.Geometry.Cylinder import *
 from parameterized import parameterized
-import concurrent.futures
-import numpy as np
-import datetime
 import unittest
 import math
 

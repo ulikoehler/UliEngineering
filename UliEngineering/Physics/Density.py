@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO import normalize_numeric_args, Unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
 
 __all__ = ["Densities", "density_by_volume_and_weight"]
 

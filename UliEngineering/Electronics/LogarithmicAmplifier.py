@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from UliEngineering.EngineerIO import normalize_numeric_args
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
 import numpy as np
 
 __all__ = [

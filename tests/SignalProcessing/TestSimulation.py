@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_allclose
 from UliEngineering.SignalProcessing.Simulation import *
 from UliEngineering.SignalProcessing.FFT import *
 from UliEngineering.SignalProcessing.Chunks import *
 from parameterized import parameterized
-import concurrent.futures
-import numpy as np
 import unittest
 
 class TestGenerateSinewave(unittest.TestCase):

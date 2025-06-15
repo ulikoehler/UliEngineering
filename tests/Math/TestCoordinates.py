@@ -3,7 +3,6 @@
 from numpy.testing import assert_allclose
 from UliEngineering.Math.Coordinates import *
 from parameterized import parameterized
-import functools
 import numpy as np
 import unittest
 

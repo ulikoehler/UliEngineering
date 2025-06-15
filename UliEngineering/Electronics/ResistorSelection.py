@@ -3,7 +3,8 @@ import numpy as np
 from dataclasses import dataclass
 from typing import List, Callable, Sequence
 import itertools
-from UliEngineering.EngineerIO import normalize_numeric, normalize_numeric_args
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
 from UliEngineering.Electronics.Resistors import ESeries, standard_resistors, power_dissipated_in_resistor_by_current, series_resistors, current_through_resistor
 

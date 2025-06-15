@@ -31,7 +31,7 @@ from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContain
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
 
-__all__ = ["normalize_interpunctation", "EngineerIO",
+__all__ = ["EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
            "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
@@ -91,23 +91,65 @@ def _default_unit_prefix_map(include_length_unit_prefixes=False):
     
     return unit_prefixes
 
-def _default_units() -> Set[str]:
-    return {
-        # NOTE: These Ω symbols are NOT identical !
-        'F', 'A', 'Ω', 'Ω', 'W', 'H', 'C', 'K', 'Hz', 'V', 'J', 'S',
-        'R', # Ohms, but without having to copynpaste the Ω symbol
-        # Time
-        's', 'h', 'min',
-        # Fraction
-        'ppm', 'ppb', '%',
-        # Lighting
-        'lm', 'lx', 'cd',
+def _default_unit_infos():
+    """
+    Returns the default list of UnitInfo and UnitAlias objects for standard engineering units.
+    """
+    return [
+        # Electrical units
+        UnitInfo('F', ['Farad', 'farads']),  # Capacitance
+        UnitInfo('A', ['Amp', 'Amps', 'Ampere', 'amperes']),  # Current
+        UnitInfo('Ω', ['Ohm', 'Ohms', 'ohm', 'ohms']),  # Resistance
+        UnitInfo('W', ['Watt', 'Watts', 'watt', 'watts']),  # Power
+        UnitInfo('H', ['Henry', 'Henries', 'henry', 'henries']),  # Inductance
+        UnitInfo('C', ['Coulomb', 'coulombs']),  # Charge
+        UnitInfo('V', ['Volt', 'Volts', 'volt', 'volts']),  # Voltage
+        UnitInfo('J', ['Joule', 'Joules', 'joule', 'joules']),  # Energy
+        UnitInfo('S', ['Siemens', 'siemens']),  # Conductance
+        UnitInfo('Hz', ['Hertz', 'hertz']),  # Frequency
+        
+        # Alternative resistance notation
+        UnitInfo('R', ['Ohms']),  # Ohms without unicode symbol
+        
+        # Temperature
+        UnitInfo('K', ['Kelvin', 'kelvin']),
+        
+        # Time units
+        UnitInfo('s', ['second', 'seconds', 'sec']),
+        UnitInfo('h', ['hour', 'hours', 'hr']),
+        UnitInfo('min', ['minute', 'minutes']),
+        
+        # Fraction/percentage units
+        UnitInfo('ppm', ['parts per million']),
+        UnitInfo('ppb', ['parts per billion']),
+        UnitInfo('%', ['percent', 'percentage']),
+        
+        # Lighting units
+        UnitInfo('lm', ['lumen', 'lumens']),
+        UnitInfo('lx', ['lux']),
+        UnitInfo('cd', ['candela', 'candelas']),
+        
         # Composite units
-        'C/W', '€/km', '€/m',
-        # Currencies
-        '€', '$', '元', '﷼', '₽', '௹', '૱', '₺', 'Zł', '₩', '¥'
-    }
-
+        UnitInfo('C/W', []),
+        UnitInfo('€/km', []),
+        UnitInfo('€/m', []),
+        
+        # Currency units
+        UnitInfo('€', ['Euro', 'Euros', 'euro', 'euros']),
+        UnitInfo('$', ['Dollar', 'Dollars', 'dollar', 'dollars', 'USD']),
+        UnitInfo('元', ['Yuan', 'yuan', 'CNY']),
+        UnitInfo('﷼', ['Riyal', 'riyal', 'SAR']),
+        UnitInfo('₽', ['Ruble', 'ruble', 'RUB']),
+        UnitInfo('௹', ['Rupee', 'rupee', 'INR']),
+        UnitInfo('૱', []),
+        UnitInfo('₺', ['Lira', 'lira', 'TRY']),
+        UnitInfo('Zł', ['Zloty', 'zloty', 'PLN']),
+        UnitInfo('₩', ['Won', 'won', 'KRW']),
+        UnitInfo('¥', ['Yen', 'yen', 'JPY']),
+        
+        # Special unicode variants for resistance
+        UnitAlias(['Ω'], 'Ω'),  # Different unicode variants
+    ]
 
 def _default_prefixes():
     return ["Δ", "±"]
@@ -362,7 +404,7 @@ class EngineerIO(object):
         """
         orig_str = s
         # Remove thousands separator & ensure dot is used
-        s = normalize_interpunctation(s)
+        s = self.normalize_interpunctation(s)
         # Split off unit: "120kV" => "120k", "V"
         split_result = self.split_unit(s)
         # Print remainder
@@ -566,7 +608,7 @@ class EngineerIO(object):
             unit = ""
         # Handle NaN
         if np.isnan(v):
-            return _format_with_suffix(
+            return self._format_with_suffix(
                 v,
                 unit,
                 significant_digits=significant_digits
@@ -580,7 +622,7 @@ class EngineerIO(object):
         #Pre-multiply the value
         v = v * (10.0 ** -(unit_prefixMapIdx * 3))
         #Delegate the rest of the task to the helper
-        return _format_with_suffix(
+        return self._format_with_suffix(
             v,
             self.exp_unit_prefix_map[unit_prefixMapIdx] + unit,
             significant_digits=significant_digits
@@ -752,145 +794,74 @@ class EngineerIO(object):
             cls._instance = cls()
         return cls._instance
 
-__replace_comma_dot = lambda s: s.replace(",", ".")
-"""
-Map of a transform to apply to the string
-during interpunctation normalization,
-depending on (commaFound, dotFound, commaFoundFirst).
-Must contain every possible variant
-"""
-_interpunct_transform_map = {
-    # Found nothing or only point -> no modification required
-    (False, False, False): functoolz.identity,
-    (False, False, True): functoolz.identity,
-    (False, True, False): functoolz.identity,
-    (False, True, True): functoolz.identity,
-    # Only comma -> replace and exit
-    (True, False, False): __replace_comma_dot,
-    (True, False, True): __replace_comma_dot,
-    # Below this line: Both comma and dot found
-    # Comma first => comma used as thousands separators
-    (True, True, True): lambda s: s.replace(",", ""),
-    # Dot first => dot used as thousands separator
-    (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
-}
+    def normalize_interpunctation(self, s):
+        """
+        Normalize comma to point for float conversion.
+        Correctly handles thousands separators.
 
-def normalize_interpunctation(s):
-    """
-    Normalize comma to point for float conversion.
-    Correctly handles thousands separators.
+        Note that cases like "1,234" are undecidable between
+        "1234" and "1.234". They are treated as "1.234".
 
-    Note that cases like "1,234" are undecidable between
-    "1234" and "1.234". They are treated as "1.234".
+        Only points and commata are potentially modified.
+        Other characters and digits are not handled.
+        """
+        __replace_comma_dot = lambda s: s.replace(",", ".")
+        """
+        Map of a transform to apply to the string
+        during interpunctation normalization,
+        depending on (commaFound, dotFound, commaFoundFirst).
+        Must contain every possible variant
+        """
+        _interpunct_transform_map = {
+            # Found nothing or only point -> no modification required
+            (False, False, False): functoolz.identity,
+            (False, False, True): functoolz.identity,
+            (False, True, False): functoolz.identity,
+            (False, True, True): functoolz.identity,
+            # Only comma -> replace and exit
+            (True, False, False): __replace_comma_dot,
+            (True, False, True): __replace_comma_dot,
+            # Below this line: Both comma and dot found
+            # Comma first => comma used as thousands separators
+            (True, True, True): lambda s: s.replace(",", ""),
+            # Dot first => dot used as thousands separator
+            (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
+        }
+        
+        commaIdx = s.find(",")
+        pointIdx = s.find(".")
+        foundComma = commaIdx is not None
+        foundPoint = pointIdx is not None
+        commaFirst = commaIdx < pointIdx if (foundComma and foundPoint) else None
+        # Get the appropriate transform function from the map an run it on s
+        return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
 
-    Only points and commata are potentially modified.
-    Other characters and digits are not handled.
-    """
-    commaIdx = s.find(",")
-    pointIdx = s.find(".")
-    foundComma = commaIdx is not None
-    foundPoint = pointIdx is not None
-    commaFirst = commaIdx < pointIdx if (foundComma and foundPoint) else None
-    # Get the appropriate transform function from the map an run it on s
-    return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
+    def _format_with_suffix(self, v, suffix="", significant_digits=3):
+        """
+        Format a given value with a given suffix.
+        This helper function formats the value to 3 visible digits.
+        v must be pre-multiplied by the factor implied by the suffix.
 
-
-def _format_with_suffix(v, suffix="", significant_digits=3):
-    """
-    Format a given value with a given suffix.
-    This helper function formats the value to 3 visible digits.
-    v must be pre-multiplied by the factor implied by the suffix.
-
-    Keyword arguments
-    -----------------
-    suffix : string
-        The suffix to append
-    significant_digits : integer
-        The number of overall significant digits to show
-    """
-    abs_v = abs(v)
-    if np.isnan(v):
-        res = "-"
-    elif abs_v < 1.0:
-        res = f"{v:.{significant_digits - 0}f}"
-    elif abs_v < 10.0:
-        res = f"{v:.{significant_digits - 1}f}"
-    elif abs_v < 100.0:
-        res = f"{v:.{significant_digits - 2}f}"
-    else:  # Should only happen if v < 1000
-        res = str(int(round(v)))
-    #Avoid appending whitespace if there is no suffix
-    return f"{res} {suffix}" if suffix else res
-
-__replace_comma_dot = lambda s: s.replace(",", ".")
-"""
-Map of a transform to apply to the string
-during interpunctation normalization,
-depending on (commaFound, dotFound, commaFoundFirst).
-Must contain every possible variant
-"""
-_interpunct_transform_map = {
-    # Found nothing or only point -> no modification required
-    (False, False, False): functoolz.identity,
-    (False, False, True): functoolz.identity,
-    (False, True, False): functoolz.identity,
-    (False, True, True): functoolz.identity,
-    # Only comma -> replace and exit
-    (True, False, False): __replace_comma_dot,
-    (True, False, True): __replace_comma_dot,
-    # Below this line: Both comma and dot found
-    # Comma first => comma used as thousands separators
-    (True, True, True): lambda s: s.replace(",", ""),
-    # Dot first => dot used as thousands separator
-    (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
-}
-
-def normalize_interpunctation(s):
-    """
-    Normalize comma to point for float conversion.
-    Correctly handles thousands separators.
-
-    Note that cases like "1,234" are undecidable between
-    "1234" and "1.234". They are treated as "1.234".
-
-    Only points and commata are potentially modified.
-    Other characters and digits are not handled.
-    """
-    commaIdx = s.find(",")
-    pointIdx = s.find(".")
-    foundComma = commaIdx is not None
-    foundPoint = pointIdx is not None
-    commaFirst = commaIdx < pointIdx if (foundComma and foundPoint) else None
-    # Get the appropriate transform function from the map an run it on s
-    return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
-
-
-def _format_with_suffix(v, suffix="", significant_digits=3):
-    """
-    Format a given value with a given suffix.
-    This helper function formats the value to 3 visible digits.
-    v must be pre-multiplied by the factor implied by the suffix.
-
-    Keyword arguments
-    -----------------
-    suffix : string
-        The suffix to append
-    significant_digits : integer
-        The number of overall significant digits to show
-    """
-    abs_v = abs(v)
-    if np.isnan(v):
-        res = "-"
-    elif abs_v < 1.0:
-        res = f"{v:.{significant_digits - 0}f}"
-    elif abs_v < 10.0:
-        res = f"{v:.{significant_digits - 1}f}"
-    elif abs_v < 100.0:
-        res = f"{v:.{significant_digits - 2}f}"
-    else:  # Should only happen if v < 1000
-        res = str(int(round(v)))
-    #Avoid appending whitespace if there is no suffix
-    return f"{res} {suffix}" if suffix else res
+        Keyword arguments
+        -----------------
+        suffix : string
+            The suffix to append
+        significant_digits : integer
+            The number of overall significant digits to show
+        """
+        abs_v = abs(v)
+        if np.isnan(v):
+            res = "-"
+        elif abs_v < 1.0:
+            res = f"{v:.{significant_digits - 0}f}"
+        elif abs_v < 10.0:
+            res = f"{v:.{significant_digits - 1}f}"
+        elif abs_v < 100.0:
+            res = f"{v:.{significant_digits - 2}f}"
+        else:  # Should only happen if v < 1000
+            res = str(int(round(v)))
+        #Avoid appending whitespace if there is no suffix
+        return f"{res} {suffix}" if suffix else res
 
 @deprecated.deprecated("Use normalize() instead of normalize_engineer_notation()")
 def normalize_engineer_notation(s, encoding="utf8"):

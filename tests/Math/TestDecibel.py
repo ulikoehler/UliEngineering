@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from UliEngineering.Math.Decibel import *
-from parameterized import parameterized
 import numpy as np
 import unittest
 import pytest

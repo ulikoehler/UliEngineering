@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os.path
 from UliEngineering.Utils.Temporary import *
 import unittest
 

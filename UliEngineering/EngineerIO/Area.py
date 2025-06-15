@@ -7,7 +7,8 @@ from typing import Dict, Set
 from numpy import ndarray
 import scipy.constants
 import numpy as np
-from . import EngineerIO, returns_unit
+from . import EngineerIO
+from .Decorators import returns_unit
 from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_area", "convert_area_to_square_meters", "EngineerAreaIO"]

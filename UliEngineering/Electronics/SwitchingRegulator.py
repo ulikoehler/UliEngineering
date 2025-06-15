@@ -3,7 +3,7 @@
 """
 Utilities for computing switching regulator parameters
 """
-from UliEngineering.EngineerIO import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from collections import namedtuple
 
 __all__ = [
