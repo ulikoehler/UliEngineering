@@ -5,6 +5,7 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.EngineerIO import *
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import EngineerLengthIO
+from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
 from UliEngineering.Exceptions import EngineerIOException
 from UliEngineering.Units import *
 from UliEngineering.EngineerIO.Types import SplitResult, UnitSplitResult, NormalizeResult
@@ -425,7 +426,8 @@ class TestUnitPrefixRegex(unittest.TestCase):
     def test_has_any_unit_prefix_no_regex(self):
         """Test has_any_unit_prefix() when no unit prefix regex is compiled"""
         # Create an instance with no unit prefixes
-        io_no_prefixes = EngineerIO(unit_prefix_map={})
+        config = EngineerIOConfiguration([], [], {})
+        io_no_prefixes = EngineerIO(config)
         
         has_prefix, prefix_char, remainder = io_no_prefixes.has_any_unit_prefix("123k")
         self.assertFalse(has_prefix)
@@ -434,14 +436,16 @@ class TestUnitPrefixRegex(unittest.TestCase):
 
     def test_compile_unit_prefix_suffix_regex_empty(self):
         """Test _compile_unit_prefix_suffix_regex() with empty unit prefixes"""
-        io_empty = EngineerIO(unit_prefix_map={})
+        config = EngineerIOConfiguration([], [], {})
+        io_empty = EngineerIO(config)
         self.assertIsNone(io_empty.unit_prefix_suffix_regex)
 
     def test_compile_unit_prefix_suffix_regex_sorting(self):
         """Test that unit prefixes are sorted by length (longest first) in regex"""
         # Create a custom instance with multi-character prefixes for testing
-        custom_prefixes = {'a': -18, 'abc': -15, 'ab': -12}
-        io_custom = EngineerIO(unit_prefix_map=custom_prefixes)
+        custom_prefixes = {'a': -18., 'abc': -15., 'ab': -12.}
+        config = EngineerIOConfiguration([], [], custom_prefixes)
+        io_custom = EngineerIO(config)
         
         # The regex should match the longest prefix first
         has_prefix, prefix_char, remainder = io_custom.has_any_unit_prefix("123abc")
@@ -488,29 +492,6 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "μ")
         self.assertEqual(remainder, "600")
-
-    def test_unit_prefix_regex_special_characters(self):
-        """Test that unit prefix regex properly escapes special regex characters"""
-        # Create an instance with regex special characters as unit prefixes
-        special_prefixes = {'+': 3, '*': 6, '.': 9, '^': 12, '[': 15, ']': 18}
-        io_special = EngineerIO(unit_prefix_map=special_prefixes)
-        
-        # These should be properly escaped and work
-        test_cases = [
-            ("100+", "+", "100"),
-            ("200*", "*", "200"),
-            ("300.", ".", "300"),
-            ("400^", "^", "400"),
-            ("500[", "[", "500"),
-            ("600]", "]", "600"),
-        ]
-        
-        for input_str, expected_prefix, expected_remainder in test_cases:
-            with self.subTest(input_str=input_str):
-                has_prefix, prefix_char, remainder = io_special.has_any_unit_prefix(input_str)
-                self.assertTrue(has_prefix, f"Failed to match {input_str}")
-                self.assertEqual(prefix_char, expected_prefix)
-                self.assertEqual(remainder, expected_remainder)
 
     def test_has_any_unit_prefix_performance_improvement(self):
         """Test that the new regex-based implementation is functionally equivalent to the old one"""
@@ -797,33 +778,6 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(prefix_char, "d")
         self.assertEqual(remainder, "200")
 
-    def test_has_any_unit_prefix_no_regex(self):
-        """Test has_any_unit_prefix() when no unit prefix regex is compiled"""
-        # Create an instance with no unit prefixes
-        io_no_prefixes = EngineerIO(unit_prefix_map={})
-        
-        has_prefix, prefix_char, remainder = io_no_prefixes.has_any_unit_prefix("123k")
-        self.assertFalse(has_prefix)
-        self.assertEqual(prefix_char, "")
-        self.assertEqual(remainder, "123k")
-
-    def test_compile_unit_prefix_suffix_regex_empty(self):
-        """Test _compile_unit_prefix_suffix_regex() with empty unit prefixes"""
-        io_empty = EngineerIO(unit_prefix_map={})
-        self.assertIsNone(io_empty.unit_prefix_suffix_regex)
-
-    def test_compile_unit_prefix_suffix_regex_sorting(self):
-        """Test that unit prefixes are sorted by length (longest first) in regex"""
-        # Create a custom instance with multi-character prefixes for testing
-        custom_prefixes = {'a': -18, 'abc': -15, 'ab': -12}
-        io_custom = EngineerIO(unit_prefix_map=custom_prefixes)
-        
-        # The regex should match the longest prefix first
-        has_prefix, prefix_char, remainder = io_custom.has_any_unit_prefix("123abc")
-        self.assertTrue(has_prefix)
-        self.assertEqual(prefix_char, "abc")
-        self.assertEqual(remainder, "123")
-
     def test_unit_prefix_regex_pattern_generation(self):
         """Test that the unit prefix regex pattern is generated correctly"""
         # Test with known prefixes
@@ -867,8 +821,9 @@ class TestUnitPrefixRegex(unittest.TestCase):
     def test_unit_prefix_regex_special_characters(self):
         """Test that unit prefix regex properly escapes special regex characters"""
         # Create an instance with regex special characters as unit prefixes
-        special_prefixes = {'+': 3, '*': 6, '.': 9, '^': 12, '[': 15, ']': 18}
-        io_special = EngineerIO(unit_prefix_map=special_prefixes)
+        special_prefixes = {'+': 3., '*': 6., '.': 9., '^': 12., '[': 15., ']': 18.}
+        config = EngineerIOConfiguration([], [], special_prefixes)
+        io_special = EngineerIO(config)
         
         # These should be properly escaped and work
         test_cases = [

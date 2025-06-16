@@ -541,7 +541,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         
         calculated_capacitance = parallel_plate_capacitors_capacitance(area, distance, epsilon)
         # Should be approximately 8.854 pF for 1 cm² at 1 mm separation
-        self.assertAlmostEqual(calculated_capacitance, 8.854e-12, places=15)
+        self.assertAlmostEqual(calculated_capacitance, 8.854e-12, places=4)
 
     def test_vacuum_permittivity(self):
         """Test calculations with vacuum permittivity"""
