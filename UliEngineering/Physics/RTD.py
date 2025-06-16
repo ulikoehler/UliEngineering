@@ -15,9 +15,9 @@ For other r0 values, you can precalculate the polynomial.
 For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
+from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 import functools
 from collections import namedtuple
 import numpy as np

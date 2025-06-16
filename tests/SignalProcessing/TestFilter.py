@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_less
 from UliEngineering.SignalProcessing.Filter import *
 from UliEngineering.SignalProcessing.Filter import _normalize_frequencies
 from parameterized import parameterized

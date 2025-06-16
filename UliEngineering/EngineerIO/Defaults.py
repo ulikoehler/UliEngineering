@@ -103,6 +103,7 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
         UnitInfo('C/W'),
         UnitInfo('€/km'),
         UnitInfo('€/m'),
+        UnitInfo('F/m'),
         
         # Currency units
         UnitInfo('€', aliases=['Euro', 'Euros', 'euro', 'euros']),

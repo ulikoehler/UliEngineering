@@ -5,8 +5,9 @@ Utilities regarding NTC thermistors
 
 See http://www.vishay.com/docs/29053/ntcintro.pdf for details
 """
+from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Physics.Temperature import normalize_temperature
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 import numpy as np
 from .Temperature import normalize_temperature_celsius, zero_Celsius
 

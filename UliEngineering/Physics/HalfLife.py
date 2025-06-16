@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO import normalize_numeric, normalize_timespan
+from UliEngineering.EngineerIO import normalize_numeric
 import numpy as np
+
+from UliEngineering.EngineerIO.Timespan import normalize_timespan
+
 _ln2 = np.log(2)
 
 __all__ = [

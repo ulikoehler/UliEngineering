@@ -132,7 +132,9 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(234.6789, "V"), '235 V')
         self.assertEqual(self.io.format(2345.6789, "V"), '2.35 kV')
         self.assertEqual(self.io.format(2345.6789e6, "V"), '2.35 GV')
-        self.assertEqual(self.io.format(2345.6789e12, "V"), '2.35 EV')
+        self.assertEqual(self.io.format(2345.6789e12, "V"), '2.35 PV')
+        self.assertEqual(self.io.format(2345.6789e15, "V"), '2.35 EV')
+        self.assertEqual(self.io.format(2345.6789e18, "V"), '2.35 ZV')
         self.assertEqual(self.io.format(2.3456789e-6, "V"), '2.35 µV')
         self.assertEqual(self.io.format(2.3456789e-6, "°C"), '2.35 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
@@ -149,7 +151,7 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(-234.6789, "V"), '-235 V')
         self.assertEqual(self.io.format(-2345.6789, "V"), '-2.35 kV')
         self.assertEqual(self.io.format(-2345.6789e6, "V"), '-2.35 GV')
-        self.assertEqual(self.io.format(-2345.6789e12, "V"), '-2.35 EV')
+        self.assertEqual(self.io.format(-2345.6789e12, "V"), '-2.35 PV')
         self.assertEqual(self.io.format(-2.3456789e-6, "V"), '-2.35 µV')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C"), '-2.35 µ°C')
         self.assertEqual(self.io.format(np.nan, "V"), '- V')
@@ -276,7 +278,7 @@ class TestEngineerIO(unittest.TestCase):
         arr = 1e-40 * np.arange(-4., 5., .5)
         self.assertEqual(self.io.auto_suffix_1d(arr), (1e24, "y"))
         arr = 1e40 * np.arange(-4., 5., .5)
-        self.assertEqual(self.io.auto_suffix_1d(arr), (1e-21, "Y"))
+        self.assertEqual(self.io.auto_suffix_1d(arr), (1e-24, "Y"))
 
     def test_special_units(self):
         """

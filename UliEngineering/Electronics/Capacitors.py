@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Area import normalize_area
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.EngineerIO.Length import normalize_length

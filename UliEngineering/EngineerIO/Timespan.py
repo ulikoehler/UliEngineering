@@ -7,7 +7,7 @@ import numpy as np
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from . import EngineerIO
-from .UnitInfo import UnitInfo, UnitAlias
+from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
 
 def _timespan_unit_infos():
     """
@@ -15,15 +15,15 @@ def _timespan_unit_infos():
     """
     return [
         # SI-prefixed seconds (using UnitAlias)
-        UnitAlias('as', aliases=['s', 'attosecond', 'attoseconds', 'asec', 'asecs']),
-        UnitAlias('fs', aliases=['s', 'femtosecond', 'femtoseconds', 'fsec', 'fsecs']),
-        UnitAlias('ps', aliases=['s', 'picosecond', 'picoseconds', 'psec', 'psecs']),
-        UnitAlias('ns', aliases=['s', 'nanosecond', 'nanoseconds', 'nsec', 'nsecs']),
-        UnitAlias('µs', aliases=['s', 'microsecond', 'microseconds', 'µsecond', 'µsec', 'usec', 'us']),
-        UnitAlias('ms', aliases=['s', 'millisecond', 'milliseconds']),
+        UnitAlias('as', aliases=['attosecond', 'attoseconds', 'asec', 'asecs']),
+        UnitAlias('fs', aliases=['femtosecond', 'femtoseconds', 'fsec', 'fsecs']),
+        UnitAlias('ps', aliases=['picosecond', 'picoseconds', 'psec', 'psecs']),
+        UnitAlias('ns', aliases=['nanosecond', 'nanoseconds', 'nsec', 'nsecs']),
+        UnitAlias('µs', aliases=['microsecond', 'microseconds', 'µsecond', 'µsec', 'usec', 'us']),
+        UnitAlias('ms', aliases=['millisecond', 'milliseconds']),
         
         # Base seconds unit
-        UnitInfo('s', aliases=['second', 'seconds', 'sec', 'secs']),
+        UnitInfo('s', 1.0, ['second', 'seconds', 'sec', 'secs']),
         
         # Units with custom conversion factors
         UnitInfo('min', 60, ['minute', 'minutes']),
@@ -42,51 +42,27 @@ def _timespan_unit_infos():
         UnitAlias('Ty', aliases=['terayear', 'terayears', 'Tyr', 'Tyrs']),
     ]
 
-def _timespan_factors():
+def _create_timespan_config():
     """
-    Returns a dictionary mapping timespan units to their conversion factors to seconds
+    Create a custom EngineerIOConfiguration for timespan units
     """
-    factors = {}
-    for item in _timespan_unit_infos():
-        if isinstance(item, UnitInfo):
-            factors[item.canonical] = item.factor
-        # UnitAlias objects don't contribute to factors - they reference existing units
-    return factors
-
-def _timespan_unit_aliases():
-    """
-    Maps verbose timespan unit names to their compact symbols.
-    """
-    aliases = {}
-    for item in _timespan_unit_infos():
-        if isinstance(item, UnitInfo):
-            for alias in item.aliases:
-                aliases[alias] = item.canonical
-        elif isinstance(item, UnitAlias):
-            for alias in item.aliases:
-                aliases[alias] = item.canonical
-    return aliases
-
-def _timespan_units():
-    """
-    Returns a set of timespan unit symbols
-    """
-    units = set()
-    for item in _timespan_unit_infos():
-        if isinstance(item, UnitInfo):
-            units.add(item.canonical)
-    return units
+    config = EngineerIOConfiguration.default()
+    return EngineerIOConfiguration(
+        units=_timespan_unit_infos(),
+        unit_prefixes=config.unit_prefixes,
+        si_prefix_map=config.si_prefix_map
+    )
 
 class EngineerTimespanIO(EngineerIO):
     """
     Specialized EngineerIO class for timespan operations
     """
+    
+    _instance = None
+    
     def __init__(self):
-        # Initialize with timespan unit infos
-        super().__init__(
-            unit_infos=_timespan_unit_infos(),
-            timespan_units=_timespan_factors()
-        )
+        # Use timespan-specific configuration
+        super().__init__(config=_create_timespan_config())
     
     @returns_unit("s")
     def normalize_timespan(self, arg: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
@@ -101,7 +77,7 @@ class EngineerTimespanIO(EngineerIO):
         """
         Get the singleton instance of EngineerTimespanIO
         """
-        if not hasattr(cls, '_instance') or cls._instance is None:
+        if cls._instance is None:
             cls._instance = cls()
         return cls._instance
 
