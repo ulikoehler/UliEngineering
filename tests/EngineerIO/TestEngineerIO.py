@@ -526,9 +526,14 @@ class TestRegexCompilationMethods(unittest.TestCase):
     def test_generate_unit_alias_pattern_method(self):
         """Test _generate_unit_alias_pattern() method"""
         # Test with some aliases
-        aliases = {'square meter': 'm²', 'volt': 'V', 'amp': 'A'}
-        io_with_aliases = EngineerIO(units=set(), unit_aliases=aliases)
-        
+        units = [
+            UnitInfo("m²", aliases=["square meter"]),
+            UnitInfo("V", aliases=["volt"]),
+            UnitInfo("A", aliases=["amp"]),
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io_with_aliases = EngineerIO(config)
+
         pattern = io_with_aliases._generate_unit_alias_pattern()
         self.assertIsNotNone(pattern)
         self.assertIn(re.escape('square meter'), pattern)
@@ -538,8 +543,14 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_generate_units_pattern_method(self):
         """Test _generate_units_pattern() method"""
-        units = {'V', 'A', 'Ω', 'Hz'}
-        io_with_units = EngineerIO(units=units)
+        units = [
+            UnitInfo('V'),
+            UnitInfo('A'),
+            UnitInfo('Ω'),
+            UnitInfo('Hz')
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io_with_units = EngineerIO(config)
         
         pattern = io_with_units._generate_units_pattern()
         self.assertIsNotNone(pattern)
@@ -561,9 +572,13 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_resolve_unit_alias_method(self):
         """Test _resolve_unit_alias() method"""
-        aliases = {'sq m': 'm²', 'volt': 'V'}
-        io_with_aliases = EngineerIO(units=set(), unit_aliases=aliases)
-        
+        units = [
+            UnitInfo('m²', aliases=['sq m']),
+            UnitInfo('V', aliases=['volt']),
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io_with_aliases = EngineerIO(config)
+
         # Test existing alias
         self.assertEqual(io_with_aliases._resolve_unit_alias('sq m'), 'm²')
         self.assertEqual(io_with_aliases._resolve_unit_alias('volt'), 'V')
@@ -574,7 +589,8 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_empty_collections_handling(self):
         """Test that empty units/aliases are handled gracefully"""
-        io_empty = EngineerIO(units=set(), unit_aliases={}, unit_prefix_map={})
+        config = EngineerIOConfiguration([], [], {})
+        io_empty = EngineerIO(config)
         
         # Should not crash and should have None for regex patterns
         self.assertIsNone(io_empty.units_regex)
@@ -583,18 +599,19 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_regex_compilation_with_complex_patterns(self):
         """Test regex compilation with complex unit names and aliases"""
-        complex_units = {
-            'Ω', '°C', 'Hz', 'V/√Hz', '€/km', 'C/W',
-            'V·A', 'm/s²', 'kg·m²/s³'
-        }
-        complex_aliases = {
-            'degrees celsius': '°C',
-            'ohm': 'Ω',
-            'volts per root hertz': 'V/√Hz',
-            'euros per kilometer': '€/km'
-        }
-        
-        io_complex = EngineerIO(units=complex_units, unit_aliases=complex_aliases)
+        units = [
+            UnitInfo('Ω', aliases=['ohm']),
+            UnitInfo('°C', aliases=['degrees celsius']),
+            UnitInfo('Hz'),
+            UnitInfo('V/√Hz', aliases=['volts per root hertz']),
+            UnitInfo('€/km', aliases=['euros per kilometer']),
+            UnitInfo('C/W'),
+            UnitInfo('V·A'),
+            UnitInfo('m/s²'),
+            UnitInfo('kg·m²/s³'),
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io_complex = EngineerIO(config)
         
         # Should compile without errors
         self.assertIsNotNone(io_complex.units_regex)
@@ -605,23 +622,24 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIsNotNone(io_complex.units_regex.search('25°C'))
         self.assertIsNotNone(io_complex.unit_alias_regex.search('100 degrees celsius'))
         self.assertIsNotNone(io_complex.unit_alias_regex.search('50 ohm'))
-        self.assertEqual(parts[2], re.escape('V'))
         
     def test_generate_unit_alias_pattern_empty(self):
         """Test unit alias pattern generation with empty aliases dict"""
-        io = EngineerIO(units=set(), unit_aliases={})
+        config = EngineerIOConfiguration([], [], {})
+        io = EngineerIO(config)
         pattern = io._generate_unit_alias_pattern()
         self.assertIsNone(pattern)
         
     def test_generate_unit_alias_pattern_with_spaces(self):
         """Test unit alias pattern generation with spaces in aliases"""
-        aliases = {
-            'square meter': 'm²',
-            'cubic centimeter': 'cm³',
-            'degrees per second': '°/s',
-            'meters per second': 'm/s'
-        }
-        io = EngineerIO(units=set(), unit_aliases=aliases)
+        units = [
+            UnitInfo('m²', aliases=['square meter']),
+            UnitInfo('cm³', aliases=['cubic centimeter']),
+            UnitInfo('°/s', aliases=['degrees per second']),
+            UnitInfo('m/s', aliases=['meters per second'])
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io = EngineerIO(config)
         pattern = io._generate_unit_alias_pattern()
         # Should properly handle spaces in aliases
         self.assertIn(re.escape('square meter'), pattern)
@@ -631,15 +649,19 @@ class TestRegexCompilationMethods(unittest.TestCase):
         
     def test_pattern_compilation_with_fake_units(self):
         """Test that generated patterns compile correctly with fake units"""
-        fake_units = {'testunit', 'fakeΩ', 'µtest', 'unit[1]', 'test+volt'}
-        fake_aliases = {
-            'fake square meter': 'm²',
-            'test µ unit': 'µU',
-            'unit(special)': 'US'
-        }
-        
-        io = EngineerIO(units=fake_units, unit_aliases=fake_aliases)
-        
+        units = [
+            UnitInfo('m²', aliases=['fake square meter']),
+            UnitInfo('µU', aliases=['test µ unit']),
+            UnitInfo('US', aliases=['unit(special)']),
+            UnitInfo('testunit', aliases=['test unit']),
+            UnitInfo('fakeΩ', aliases=['fake ohm']),
+            UnitInfo('µtest', aliases=['micro test']),
+            UnitInfo('unit[1]', aliases=['unit one']),
+            UnitInfo('test+volt', aliases=['test volt'])
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io = EngineerIO(config)
+
         # Both regexes should compile without errors
         self.assertIsNotNone(io.units_regex)
         self.assertIsNotNone(io.unit_alias_regex)
@@ -652,15 +674,14 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_pattern_matching_precedence_with_fake_data(self):
         """Test that longer patterns are matched first with fake data"""
-        fake_units = {'A', 'ABC', 'ABCDEF'}
-        fake_aliases = {
-            'test': 'T',
-            'test unit': 'TU', 
-            'test unit long': 'TUL'
-        }
-        
-        io = EngineerIO(units=fake_units, unit_aliases=fake_aliases)
-        
+        units = [
+            UnitInfo('A', aliases=['test']),
+            UnitInfo('ABC', aliases=['test unit']),
+            UnitInfo('ABCDEF', aliases=['test unit long'])
+        ]
+        config = EngineerIOConfiguration(units, [], {})
+        io = EngineerIO(config)
+
         # Longest unit should match first
         match = io.units_regex.search('100ABCDEF')
         self.assertEqual(match.group(1), 'ABCDEF')
@@ -866,97 +887,4 @@ class TestUnitPrefixRegex(unittest.TestCase):
                 old_result = old_has_any_unit_prefix(test_case)
                 self.assertEqual(new_result, old_result, 
                                f"Results differ for '{test_case}': new={new_result}, old={old_result}")
-
-
-class TestRegexCompilationMethods(unittest.TestCase):
-    def setUp(self):
-        self.io = EngineerIO()
-
-    def test_generate_unit_alias_pattern_method(self):
-        """Test _generate_unit_alias_pattern() method"""
-        # Test with some aliases
-        aliases = {'square meter': 'm²', 'volt': 'V', 'amp': 'A'}
-        io_with_aliases = EngineerIO(units=set(), unit_aliases=aliases)
-        
-        pattern = io_with_aliases._generate_unit_alias_pattern()
-        self.assertIsNotNone(pattern)
-        self.assertIn(re.escape('square meter'), pattern)
-        self.assertIn(re.escape('volt'), pattern)
-        self.assertIn(re.escape('amp'), pattern)
-        self.assertTrue(pattern.endswith('$'))
-
-    def test_generate_units_pattern_method(self):
-        """Test _generate_units_pattern() method"""
-        units = {'V', 'A', 'Ω', 'Hz'}
-        io_with_units = EngineerIO(units=units)
-        
-        pattern = io_with_units._generate_units_pattern()
-        self.assertIsNotNone(pattern)
-        self.assertIn('V', pattern)
-        self.assertIn('A', pattern)
-        self.assertIn('Ω', pattern)
-        self.assertIn('Hz', pattern)
-        self.assertTrue(pattern.endswith('$'))
-
-    def test_compile_methods_called_in_init(self):
-        """Test that all compile methods are called during initialization"""
-        # Create a new instance and verify all regex attributes exist
-        io = EngineerIO()
-        
-        # All regex compilation methods should have been called
-        self.assertIsNotNone(hasattr(io, 'unit_alias_regex'))
-        self.assertIsNotNone(hasattr(io, 'units_regex'))
-        self.assertIsNotNone(hasattr(io, 'unit_prefix_suffix_regex'))
-
-    def test_resolve_unit_alias_method(self):
-        """Test _resolve_unit_alias() method"""
-        unit_aliases = [
-            UnitInfo('m²', aliases=['sq m']),
-            UnitInfo('V', aliases=['volt']),
-        ]
-        config = EngineerIOConfiguration(unit_aliases, [], {})
-        io_with_aliases = EngineerIO(config)
-        
-        # Test existing alias
-        self.assertEqual(io_with_aliases._resolve_unit_alias('sq m'), 'm²')
-        self.assertEqual(io_with_aliases._resolve_unit_alias('volt'), 'V')
-        
-        # Test non-existing alias (should return original)
-        self.assertEqual(io_with_aliases._resolve_unit_alias('unknown'), 'unknown')
-        self.assertEqual(io_with_aliases._resolve_unit_alias('A'), 'A')
-
-    def test_empty_collections_handling(self):
-        """Test that empty units/aliases are handled gracefully"""
-        config = EngineerIOConfiguration([], [], {})
-        io_empty = EngineerIO(config)
-        
-        # Should not crash and should have None for regex patterns
-        self.assertIsNone(io_empty.units_regex)
-        self.assertIsNone(io_empty.unit_alias_regex)
-        self.assertIsNone(io_empty.unit_prefix_suffix_regex)
-
-    def test_regex_compilation_with_complex_patterns(self):
-        """Test regex compilation with complex unit names and aliases"""
-        complex_units = {
-            'Ω', '°C', 'Hz', 'V/√Hz', '€/km', 'C/W',
-            'V·A', 'm/s²', 'kg·m²/s³'
-        }
-        complex_aliases = {
-            'degrees celsius': '°C',
-            'ohm': 'Ω',
-            'volts per root hertz': 'V/√Hz',
-            'euros per kilometer': '€/km'
-        }
-        
-        io_complex = EngineerIO(units=complex_units, unit_aliases=complex_aliases)
-        
-        # Should compile without errors
-        self.assertIsNotNone(io_complex.units_regex)
-        self.assertIsNotNone(io_complex.unit_alias_regex)
-        
-        # Should be able to match complex patterns
-        self.assertIsNotNone(io_complex.units_regex.search('100Ω'))
-        self.assertIsNotNone(io_complex.units_regex.search('25°C'))
-        self.assertIsNotNone(io_complex.unit_alias_regex.search('100 degrees celsius'))
-        self.assertIsNotNone(io_complex.unit_alias_regex.search('50 ohm'))
 
