@@ -6,6 +6,7 @@ Utility to calculate inductors
 
 __all__ = ["ideal_inductor_current_change_rate"]
 
+import numpy as np
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 @returns_unit("A/s")
@@ -22,4 +23,4 @@ def ideal_inductor_current_change_rate(inductance, voltage):
     voltage: number or Engineer string
         The voltage across the inductor
     """
-    return voltage / inductance
+    return np.divide(voltage, inductance)  # Returns inf when inductance is zero
