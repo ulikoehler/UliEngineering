@@ -5,7 +5,10 @@ Utilities for computing temperature coefficients
 and their effects
 """
 from collections.abc import Iterable
-from UliEngineering.EngineerIO import NormalizeResult, normalize
+from typing import Tuple
+
+import numpy as np
+from UliEngineering.EngineerIO import NormalizeResult, normalize, normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
@@ -55,7 +58,7 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
     return nominal * factor
     
 
-def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %", tmin="-40 °C", tmax="85 °C", tref="25 °C", significant_digits=4):
+def value_range_over_temperature(nominal, coefficient:str|float="100ppm", tolerance="0 %", tmin="-40 °C", tmax="85 °C", tref="25 °C", significant_digits=4):
     """
     Given a component which has a nominal value (e.g. "1 kΩ")
     at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
@@ -86,12 +89,12 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
         The nominal value of the component e.g. 1023 or "1.023 kΩ"
     coefficient : number or string or 2-tuple (see above)
         The temperature coefficient of the component per °C
-        e.g. "100 ppm", "1 %" or 100e-6
-        or: ("-30 ppm", "100 ppm") (separate + and - values)
-    tolerance : number or string or 2-tuple (see above)
+        e.g. "100 ppm", "1 %" or 100e-6 (treated as +/- values)
+    tolerance : number or string
         The static (temperature-independent) tolerance of the component.
-        e.g. "100 ppm", "1 %" or 100e-6
-        or: ("-0.5 %", "1.0%") (separate + and - values)
+        e.g. "100 ppm", "1 %" or 100e-6.
+        When the value is positive, larger temperatures generate larger values.
+        When the value is negative, larger temperatures generate smaller values.
     tmin : number or string
         The minimum temperature to consider in °C, e.g. "-40 °C". or -40 or "100 K"
         Numbers are interpreted as °C, strings are automatically converted.
@@ -118,8 +121,8 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     # Static tolerance
     # We are only interested in the maximum temperature
     # differential from tmin
-    tdelta_neg = tmin - tref
-    tdelta_pos = tmax - tref
+    tdelta_neg = np.abs(tmin - tref)
+    tdelta_pos = np.abs(tmax - tref)
     normalized = normalize(nominal)
     if normalized is None:
         raise ValueError("The nominal value must be a valid number or EngineerIO string.")
@@ -132,21 +135,16 @@ def value_range_over_temperature(nominal, coefficient="100ppm", tolerance="0 %",
     # Compute nominal factors by static tolerance
     tol_min_value, tol_max_value, _ = value_range_over_tolerance(nominal, tolerance)
     # Parse coefficient
-    min_coeff, max_coeff, _ = normalize_minmax_tuple(coefficient, name="coefficient")
+    tempco = normalize_numeric(coefficient)
     # NOTE: Minimum & maximum value could be any of those (?)
     args = [
-        tol_min_value * (1. + (tdelta_neg * min_coeff)),
-        tol_max_value * (1. + (tdelta_neg * min_coeff)),
-        tol_min_value * (1. + (tdelta_neg * max_coeff)),
-        tol_max_value * (1. + (tdelta_neg * max_coeff)),
-        tol_min_value * (1. + (tdelta_pos * min_coeff)),
-        tol_max_value * (1. + (tdelta_pos * min_coeff)),
-        tol_min_value * (1. + (tdelta_pos * max_coeff)),
-        tol_max_value * (1. + (tdelta_pos * max_coeff))
+        tol_min_value * (1. - (tdelta_neg * tempco)),
+        tol_max_value * (1. - (tdelta_neg * tempco)),
+        tol_min_value * (1. + (tdelta_pos * tempco)),
+        tol_max_value * (1. + (tdelta_pos * tempco))
     ]
     
     min_temp = min(args)
     max_temp = max(args)
  
     return ValueRange(min_temp, max_temp, unit, significant_digits)
-

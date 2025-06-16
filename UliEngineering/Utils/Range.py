@@ -40,7 +40,7 @@ def normalize_minmax_tuple(arg, name="field"):
     if isinstance(arg, tuple):
         # Check length 2
         if len(arg) != 2:
-            raise ValueError("If {} is given as a tuple, it must have length 2. {} is {}".format(name, name, arg))
+            raise ValueError(f"If {name} is given as a tuple, it must have length 2. {name} is {arg}")
         # Parse tuple
         min_value = normalize_numeric(arg[0])
         max_value = normalize_numeric(arg[1])

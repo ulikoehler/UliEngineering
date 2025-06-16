@@ -405,6 +405,8 @@ class EngineerIO(object):
 
         See split_input() for further details on supported formats
         """
+        if s is None:
+            return None
         # Scalars get returned directly
         if isinstance(s, (int, float, np.number)):
             return NormalizeResult('', s, s, '', '', 1.0, 1.0)
