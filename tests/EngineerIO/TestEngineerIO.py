@@ -3,6 +3,7 @@
 import re
 from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.EngineerIO import *
+from UliEngineering.EngineerIO import UnitInfo
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import EngineerLengthIO
 from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
@@ -909,8 +910,12 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_resolve_unit_alias_method(self):
         """Test _resolve_unit_alias() method"""
-        aliases = {'sq m': 'm²', 'volt': 'V'}
-        io_with_aliases = EngineerIO(units=set(), unit_aliases=aliases)
+        unit_aliases = [
+            UnitInfo('m²', aliases=['sq m']),
+            UnitInfo('V', aliases=['volt']),
+        ]
+        config = EngineerIOConfiguration(unit_aliases, [], {})
+        io_with_aliases = EngineerIO(config)
         
         # Test existing alias
         self.assertEqual(io_with_aliases._resolve_unit_alias('sq m'), 'm²')
@@ -922,7 +927,8 @@ class TestRegexCompilationMethods(unittest.TestCase):
 
     def test_empty_collections_handling(self):
         """Test that empty units/aliases are handled gracefully"""
-        io_empty = EngineerIO(units=set(), unit_aliases={}, unit_prefix_map={})
+        config = EngineerIOConfiguration([], [], {})
+        io_empty = EngineerIO(config)
         
         # Should not crash and should have None for regex patterns
         self.assertIsNone(io_empty.units_regex)
