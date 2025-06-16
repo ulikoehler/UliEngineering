@@ -18,6 +18,7 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
+from functools import partial
 import math
 import re
 from typing import Callable, List, Optional
@@ -562,7 +563,6 @@ class EngineerIO(object):
         Use toolz.itertoolz.compact() on the result to remove all None values.
 
         Returns an ndarray with np.nan (on error) or the numeric value (no unit).
-
         """
         if arg is None:
             raise ValueError("Can't normalize None")
@@ -579,7 +579,7 @@ class EngineerIO(object):
             else:
                 return v
         # It's an iterable
-        return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.safe_normalize(v)))
+        return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.normalize_numeric_safe(v)))
 
     def normalize_numeric(self, arg):
         """
@@ -603,7 +603,7 @@ class EngineerIO(object):
         # It's an iterable
         return self.normalize_iterable(arg, func=self.normalize_numeric)
 
-    def normalize_numeric_verify_unit(self, arg, reference):
+    def normalize_numeric_verify_unit(self, arg, unit):
         """
         Normalize a value. If it is a string
         verify if its unit matches the reference unit.
@@ -619,11 +619,11 @@ class EngineerIO(object):
         if isinstance(arg, (str, bytes)):
             normalize_result = self.normalize(arg)
             # Check if unit matches (it's also considered a match if there is no unit at all)
-            if normalize_result.unit and normalize_result.unit != reference.unit:
-                raise InvalidUnitInContextException(f"Invalid unit: Expected {reference} but found {normalize_result.unit} in source string '{arg}'")
+            if normalize_result.unit and normalize_result.unit != unit.unit:
+                raise InvalidUnitInContextException(f"Invalid unit: Expected {unit} but found {normalize_result.unit} in source string '{arg}'")
             return normalize_result.value
         # It's an iterable
-        return self.normalize_iterable(arg, func=self.normalize)
+        return self.normalize_iterable(arg, func=partial(self.normalize_numeric_verify_unit, unit=unit))
     
     @classmethod
     def instance(cls):
