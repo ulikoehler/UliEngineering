@@ -3,7 +3,6 @@
 """
 Utilities for area
 """
-from typing import Dict, Set
 from numpy import ndarray
 import scipy.constants
 import numpy as np
@@ -13,7 +12,6 @@ from . import EngineerIO
 from .Decorators import returns_unit
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 from .Defaults import default_si_prefix_map
-from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_area", "convert_area_to_square_meters", "EngineerAreaIO"]
 
@@ -115,6 +113,7 @@ class EngineerAreaIO(EngineerIO):
             return [self.normalize_area(v) for v in s]
         if isinstance(s, ndarray):
             return np.asarray([self.normalize_area(v) for v in s])
+        print(s, self.normalize(s), self._apply_squaredness_to_value(self.normalize(s)))
         # We can't just normalize() it here, need to handle squaredness
         return self._apply_squaredness_to_value(self.normalize(s))
             

@@ -406,7 +406,7 @@ class EngineerIO(object):
         See split_input() for further details on supported formats
         """
         # Scalars get returned directly
-        if isinstance(s, (int, float, np.generic)):
+        if isinstance(s, (int, float, np.number)):
             return NormalizeResult('', s, s, '', '', 1.0, 1.0)
         # Make sure it's a decoded string
         if isinstance(s, bytes):
@@ -589,7 +589,7 @@ class EngineerIO(object):
         if arg is None:
             raise ValueError("Can't normalize None")
         # Scalars get returned directly
-        if isinstance(arg, (int, float, np.generic)):
+        if isinstance(arg, (int, float, np.number)):
             return arg
         # If it's stringlike, apply directly
         if isinstance(arg, str) or isinstance(arg, bytes):
@@ -616,7 +616,7 @@ class EngineerIO(object):
             raise ValueError("Can't normalize None")
 
         # Scalars get returned directly
-        if isinstance(arg, (int, float, np.generic)):
+        if isinstance(arg, (int, float, np.number)):
             return arg
 
         # If it's stringlike, apply directly
