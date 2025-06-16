@@ -24,10 +24,12 @@ import re
 from typing import List, Optional, Set
 import deprecated
 import numpy as np
-from .UnitInfo import UnitInfo, UnitAlias
+from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
+from .Types import SplitResult, NormalizeResult, UnitSplitResult
 from toolz import functoolz
 from dataclasses import dataclass
 from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
+from ..Utils.NaN import none_to_nan
 
 from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
 
@@ -36,154 +38,9 @@ __all__ = ["EngineerIO",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
            "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
 
-@dataclass
-class UnitSplitResult:
-    remainder: str = ''
-    unit_prefix: str = ''
-    unit: str = ''
-
-@dataclass
-class SplitResult:
-    prefix: str = ''
-    number: str = ''
-    unit_prefix_char: str = ''
-    unit_prefix: str = ''
-    unit: str = ''
-
-@dataclass
-class NormalizeResult:
-    prefix: str = ''
-    value: float = 0.0
-    original_number: float = 0.0
-    unit_prefix: str = ''
-    unit: str = ''
-    # Multiplier from prefix
-    prefix_multiplier: float = 1.0
-
-def _default_unit_prefix_map(include_length_unit_prefixes=False):
-    """
-    The default unit prefix to exponent mapping
-    """
-    unit_prefixes = {
-        'y': -24,
-        'z': -21,
-        'a': -18,
-        'f': -15,
-        'p': -12,
-        'n': -9,
-        'µ': -6, 'μ': -6, 'u': -6,  # micro variants
-        'm': -3,
-        # No unit prefix for base unit (exponent 0)
-        'k': 3,
-        'M': 6,
-        'G': 9,
-        'T': 12,
-        'E': 15,
-        'Z': 18,
-        'Y': 21
-    }
-    
-    if include_length_unit_prefixes:
-        unit_prefixes.update({
-            'c': -2,  # e.g. centimeter
-            'd': -1   # e.g. decimeter
-        })
-    
-    return unit_prefixes
-
-def _default_unit_infos():
-    """
-    Returns the default list of UnitInfo and UnitAlias objects for standard engineering units.
-    """
-    return [
-        # Electrical units
-        UnitInfo('F', ['Farad', 'farads']),  # Capacitance
-        UnitInfo('A', ['Amp', 'Amps', 'Ampere', 'amperes']),  # Current
-        UnitInfo('Ω', ['Ohm', 'Ohms', 'ohm', 'ohms']),  # Resistance
-        UnitInfo('W', ['Watt', 'Watts', 'watt', 'watts']),  # Power
-        UnitInfo('H', ['Henry', 'Henries', 'henry', 'henries']),  # Inductance
-        UnitInfo('C', ['Coulomb', 'coulombs']),  # Charge
-        UnitInfo('V', ['Volt', 'Volts', 'volt', 'volts']),  # Voltage
-        UnitInfo('J', ['Joule', 'Joules', 'joule', 'joules']),  # Energy
-        UnitInfo('S', ['Siemens', 'siemens']),  # Conductance
-        UnitInfo('Hz', ['Hertz', 'hertz']),  # Frequency
-        
-        # Alternative resistance notation
-        UnitInfo('R', ['Ohms']),  # Ohms without unicode symbol
-        
-        # Temperature
-        UnitInfo('K', ['Kelvin', 'kelvin']),
-        
-        # Time units
-        UnitInfo('s', ['second', 'seconds', 'sec']),
-        UnitInfo('h', ['hour', 'hours', 'hr']),
-        UnitInfo('min', ['minute', 'minutes']),
-        
-        # Fraction/percentage units
-        UnitInfo('ppm', ['parts per million']),
-        UnitInfo('ppb', ['parts per billion']),
-        UnitInfo('%', ['percent', 'percentage']),
-        
-        # Lighting units
-        UnitInfo('lm', ['lumen', 'lumens']),
-        UnitInfo('lx', ['lux']),
-        UnitInfo('cd', ['candela', 'candelas']),
-        
-        # Composite units
-        UnitInfo('C/W', []),
-        UnitInfo('€/km', []),
-        UnitInfo('€/m', []),
-        
-        # Currency units
-        UnitInfo('€', ['Euro', 'Euros', 'euro', 'euros']),
-        UnitInfo('$', ['Dollar', 'Dollars', 'dollar', 'dollars', 'USD']),
-        UnitInfo('元', ['Yuan', 'yuan', 'CNY']),
-        UnitInfo('﷼', ['Riyal', 'riyal', 'SAR']),
-        UnitInfo('₽', ['Ruble', 'ruble', 'RUB']),
-        UnitInfo('௹', ['Rupee', 'rupee', 'INR']),
-        UnitInfo('૱', []),
-        UnitInfo('₺', ['Lira', 'lira', 'TRY']),
-        UnitInfo('Zł', ['Zloty', 'zloty', 'PLN']),
-        UnitInfo('₩', ['Won', 'won', 'KRW']),
-        UnitInfo('¥', ['Yen', 'yen', 'JPY']),
-        
-        # Special unicode variants for resistance
-        UnitAlias(['Ω'], 'Ω'),  # Different unicode variants
-    ]
-
-def _default_prefixes():
-    return ["Δ", "±"]
-
-def _default_unit_prefixes():
-    return ["°"]
 
 # Valid unit designators. Ensure no SI suffix is added here
 _numeric_allowed = set("+0123456789-e.")
-
-def none_to_nan(value):
-    """
-    Convert None to NaN, otherwise return the value unchanged.
-    This is useful for normalizing values in arrays.
-    """
-    # NOTE: string is iterable, so we need to check for that first
-    if isinstance(value, str):
-        return np.nan if value.strip() == '' else value.strip()
-    # NOTE: NormalizeResult is a namedtuple i.e. iterable, so we need to handle it separately
-    if isinstance(value, NormalizeResult):
-        return NormalizeResult(
-            prefix=value.prefix,
-            value=none_to_nan(value.value),
-            unit_prefix=value.unit_prefix,
-            unit=value.unit,
-            
-        )
-    if isinstance(value, Iterable):
-        # If it's an iterable, convert each element
-        return [none_to_nan(elem) for elem in value]
-    # Else: Assume a simple value
-    if value is None:
-        return np.nan
-    return value
 
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
@@ -192,41 +49,25 @@ class EngineerIO(object):
 
     Note: ppm, ppb and % are special 'units' that are handled separately.
     """
-    def __init__(self, unit_infos=None,
-                 prefixes=_default_prefixes(),
-                 unit_prefixes=_default_unit_prefixes(),
-                 unit_prefix_map=_default_unit_prefix_map(),
-                 timespan_units=None):
+    def __init__(self, config: Optional[EngineerIOConfiguration] = None):
         """
-        Initialize a new EngineerIO instance with unit information objects
+        Initialize a new EngineerIO instance with configuration object
 
         Parameters:
         -----------
-        unit_infos : list of UnitInfo and UnitAlias objects
-            List of unit information objects defining available units and their aliases.
-            If None, uses default units.
-        prefixes : list of str
-            A list of prefixes that are ignored (available via normalize()).
-            Constraint: prefixes ∩ units == ∅
-        unit_prefixes : list of str
-            A list of prefixes that ignored (available via normalize()).
-            Constraint: unitPrefixes ∩ units == ∅
-        unit_prefix_map : dict
-            Maps unit prefix strings to their decimal exponents.
-            For generating strings from numbers, the first unit prefix in each nested list is preferred
-        timespan_units : dict
-            Maps timespan units to their conversion factors (used by specialized subclasses)
+        config : EngineerIOConfiguration, optional
+            Configuration object containing unit information, prefixes, and SI prefix mappings.
+            If None, uses default configuration.
         """
-        # Use default unit infos if none provided
-        if unit_infos is None:
-            unit_infos = _default_unit_infos()
+        # Use default configuration if none provided
+        if config is None:
+            config = EngineerIOConfiguration()
         
         # Extract units and aliases from unit_infos
         self.units = set()
         self.unit_aliases = {}
-        self.timespan_units = timespan_units or {}
         
-        for unit_info in unit_infos:
+        for unit_info in config.units:
             if isinstance(unit_info, UnitInfo):
                 # Add canonical unit to units set
                 self.units.add(unit_info.canonical)
@@ -238,12 +79,12 @@ class EngineerIO(object):
                 for alias in unit_info.aliases:
                     self.unit_aliases[alias] = unit_info.canonical
         
-        self.unit_prefix_map = unit_prefix_map
+        self.unit_prefix_map = config.si_prefix_map
         # Build prefix regex
-        _prefix_set = "|".join(re.escape(pfx) for pfx in prefixes)
+        _prefix_set = "|".join(re.escape(pfx) for pfx in config.unit_prefixes)
         self.prefix_re = re.compile('^(' + _prefix_set + ')+')
         # Build unit prefix regex
-        __unitprefix_set = "|".join(re.escape(pfx) for pfx in unit_prefixes)
+        __unitprefix_set = "|".join(re.escape(pfx) for pfx in config.unit_prefixes)
         self.unit_prefix_re = re.compile(f'({__unitprefix_set})+$') # $: Matched at end of numeric part
         # Unit prefixes will only be used in strip, so we can strip spaces in one go.
         self.strippable = " \t\n"
@@ -879,6 +720,20 @@ def normalize_numeric_verify_unit(self, arg, reference):
 def normalize_engineer_notation_safe(v, unit=""):
     return EngineerIO.instance().safe_normalize(v, unit)
 
+def normalize_numeric(v):
+    return EngineerIO.instance().normalize_numeric(v)
+
+def normalize(v):
+    return EngineerIO.instance().normalize(v)
+
+def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+    return EngineerIO.instance().normalize_timespan(v)
+
+def auto_format(v, *args, **kwargs):
+    return EngineerIO.instance().auto_format(v, *args, **kwargs)
+
+def auto_print(*args, **kwargs):
+    return EngineerIO.instance().auto_print(*args, **kwargs)
 def normalize_numeric(v):
     return EngineerIO.instance().normalize_numeric(v)
 

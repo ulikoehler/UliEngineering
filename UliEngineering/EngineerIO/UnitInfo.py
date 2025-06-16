@@ -4,7 +4,9 @@
 Unit information dataclass for UliEngineering
 """
 from dataclasses import dataclass, field
-from typing import List
+from typing import Dict, List, Union
+
+from UliEngineering.EngineerIO.Defaults import default_si_prefix_map, default_unit_infos, default_unit_prefixes
 
 @dataclass
 class UnitAlias:
@@ -84,3 +86,10 @@ class UnitInfo:
             List containing canonical form and all aliases
         """
         return [self.canonical] + self.aliases
+
+
+@dataclass
+class EngineerIOConfiguration:
+    units: List[Union[UnitInfo, UnitAlias]] = field(default_factory=default_unit_infos)
+    unit_prefixes: List[str] = field(default_factory=default_unit_prefixes)
+    si_prefix_map: Dict[str, float] = field(default_factory=default_si_prefix_map)

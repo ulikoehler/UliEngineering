@@ -118,13 +118,13 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.normalize("100 kΩ".encode("utf8")), NormalizeResult(value=1e5, unit="Ω", prefix_multiplier=1e3, original_number=100))
 
     def test_format_with_suffix(self):
-        self.assertEqual(_format_with_suffix(1.01, "A"), '1.01 A')
-        self.assertEqual(_format_with_suffix(1, "A"), '1.00 A')
-        self.assertEqual(_format_with_suffix(101, "A"), '101 A')
-        self.assertEqual(_format_with_suffix(99.9, "A"), '99.9 A')
-        self.assertEqual(_format_with_suffix(1000.0, ""), '1000')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(1.01, "A"), '1.01 A')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(1, "A"), '1.00 A')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(101, "A"), '101 A')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(99.9, "A"), '99.9 A')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(1000.0, ""), '1000')
         # More significant digits
-        self.assertEqual(_format_with_suffix(1.01, "A", significant_digits=4), '1.010 A')
+        self.assertEqual(EngineerIO.instance()._format_with_suffix(1.01, "A", significant_digits=4), '1.010 A')
 
     def test_format(self):
         self.assertEqual(self.io.format(1.0e-15, "V"), '1.00 fV')
