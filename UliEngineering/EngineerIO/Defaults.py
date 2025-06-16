@@ -3,17 +3,16 @@
 """
 Default values and configurations for the EngineerIO library.
 """
+from toolz import functoolz
+from typing import Callable, Dict, List, Tuple, Union
+from UliEngineering.EngineerIO.UnitInfo import UnitAlias, UnitInfo
 
 __all__ = [
     'default_unit_prefixes',
     'default_si_prefix_map',
-    'default_unit_infos'
+    'default_unit_infos',
+    'default_interpunctation_transform_map',
 ]
-
-from typing import Dict, List, Union
-
-from UliEngineering.EngineerIO.UnitInfo import UnitAlias, UnitInfo
-
 
 def default_unit_prefixes() -> List[str]:
     return ["Δ", "±", "°"]
@@ -117,3 +116,23 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
         UnitInfo('₩', aliases=['Won', 'won', 'KRW']),
         UnitInfo('¥', aliases=['Yen', 'yen', 'JPY']),
     ]
+
+def replace_comma_dot(s: str) -> str:
+    return s.replace(",", ".")
+    
+def default_interpunctation_transform_map() -> Dict[Tuple[bool, bool, bool], Callable]:
+    return {
+        # Found nothing or only point -> no modification required
+        (False, False, False): functoolz.identity,
+        (False, False, True): functoolz.identity,
+        (False, True, False): functoolz.identity,
+        (False, True, True): functoolz.identity,
+        # Only comma -> replace and exit
+        (True, False, False): replace_comma_dot,
+        (True, False, True): replace_comma_dot,
+        # Below this line: Both comma and dot found
+        # Comma first => comma used as thousands separators
+        (True, True, True): lambda s: s.replace(",", ""),
+        # Dot first => dot used as thousands separator
+        (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
+    }

@@ -20,12 +20,13 @@ Originally published at techoverflow.net.
 """
 import math
 import re
-from typing import List, Optional
+from typing import Callable, List, Optional
 
 import deprecated
 import numpy as np
 from toolz import functoolz
 
+from UliEngineering.EngineerIO.Defaults import default_interpunctation_transform_map
 from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
 from UliEngineering.Units import (InvalidUnitInContextException,
                                   UnannotatedReturnValueError)
@@ -65,22 +66,7 @@ class EngineerIO(object):
         self._numeric_allowed = set("+0123456789-e.")
         
         # Interpunctation config. Default allows both comma and dot as decimal separators, and handles thousands separators correctly
-        __replace_comma_dot = lambda s: s.replace(",", ".")
-        self._interpunct_transform_map = {
-            # Found nothing or only point -> no modification required
-            (False, False, False): functoolz.identity,
-            (False, False, True): functoolz.identity,
-            (False, True, False): functoolz.identity,
-            (False, True, True): functoolz.identity,
-            # Only comma -> replace and exit
-            (True, False, False): __replace_comma_dot,
-            (True, False, True): __replace_comma_dot,
-            # Below this line: Both comma and dot found
-            # Comma first => comma used as thousands separators
-            (True, True, True): lambda s: s.replace(",", ""),
-            # Dot first => dot used as thousands separator
-            (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
-        }
+        self._interpunct_transform_map = default_interpunctation_transform_map()
         
         # Extract units and aliases from unit_infos
         self.units = set()
