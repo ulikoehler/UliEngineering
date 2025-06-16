@@ -18,28 +18,29 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
-from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
-from typing import Optional
-from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
-from UliEngineering.Exceptions import RemainderOfStringContainsNonNumericCharacters
-
 import math
 import re
 from typing import List, Optional
+
 import deprecated
 import numpy as np
-from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
-from .Types import SplitResult, NormalizeResult, UnitSplitResult
 from toolz import functoolz
-from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
-from ..Utils.NaN import none_to_nan
 
-from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
+from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
+from UliEngineering.Units import (InvalidUnitInContextException,
+                                  UnannotatedReturnValueError)
+
+from ..Exceptions import (FirstCharacterInStringIsUnitPrefixException,
+                          MultipleUnitPrefixesException,
+                          RemainderOfStringContainsNonNumericCharacters)
+from ..Utils.NaN import none_to_nan
+from .Types import NormalizeResult, SplitResult, UnitSplitResult
+from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 
 __all__ = ["EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
+           "normalize_numeric_verify_unit", "SplitResult"]
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
     """
@@ -59,7 +60,7 @@ class EngineerIO(object):
         """
         # Use default configuration if none provided
         if config is None:
-            config = EngineerIOConfiguration()
+            config = EngineerIOConfiguration.default()
             
         self._numeric_allowed = set("+0123456789-e.")
         
@@ -677,7 +678,7 @@ class EngineerIO(object):
         foundPoint = pointIdx is not None
         commaFirst = commaIdx < pointIdx if (foundComma and foundPoint) else None
         # Get the appropriate transform function from the map an run it on s
-        return _interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
+        return self._interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
 
     def _format_with_suffix(self, v, suffix="", significant_digits=3):
         """
@@ -730,25 +731,10 @@ def normalize(v):
     return EngineerIO.instance().normalize(v)
 
 def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
-    return EngineerIO.instance().normalize_timespan(v)
+    raise NotImplementedError("Please use normalize_timespan() from UliEngineering.EngineerIO.Timespan instead!")
 
 def auto_format(v, *args, **kwargs):
     return EngineerIO.instance().auto_format(v, *args, **kwargs)
 
 def auto_print(*args, **kwargs):
     return EngineerIO.instance().auto_print(*args, **kwargs)
-def normalize_numeric(v):
-    return EngineerIO.instance().normalize_numeric(v)
-
-def normalize(v):
-    return EngineerIO.instance().normalize(v)
-
-def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
-    return EngineerIO.instance().normalize_timespan(v)
-
-def auto_format(v, *args, **kwargs):
-    return EngineerIO.instance().auto_format(v, *args, **kwargs)
-
-def auto_print(*args, **kwargs):
-    return EngineerIO.instance().auto_print(*args, **kwargs)
-

@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import functools
 import inspect
+from typing import Optional
+
+from UliEngineering.EngineerIO import EngineerIO
 
 
 def returns_unit(unit):
@@ -14,7 +17,7 @@ def returns_unit(unit):
         return fn
     return decorator
 
-def normalize_numeric_args(func=None, *, exclude=None):
+def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
     """
     Decorator that applies normalize_numeric to all arguments (args & kwargs) 
     of the decorated function before calling it.
@@ -42,6 +45,9 @@ def normalize_numeric_args(func=None, *, exclude=None):
         exclude = []
     exclude_set = set(exclude)
     
+    if instance is None:
+        instance = EngineerIO.instance()
+    
     def decorator(func):
         # Get the function signature
         sig = inspect.signature(func)
@@ -52,7 +58,7 @@ def normalize_numeric_args(func=None, *, exclude=None):
             if param.name not in exclude_set and param.default != inspect.Parameter.empty and isinstance(param.default, str):
                 # Normalize string default values
                 try:
-                    normalized_default = normalize_numeric(param.default)
+                    normalized_default = instance.normalize_numeric(param.default)
                     new_param = param.replace(default=normalized_default)
                 except:
                     # If normalization fails, keep the original default
@@ -75,7 +81,7 @@ def normalize_numeric_args(func=None, *, exclude=None):
                 if param_name in exclude_set:
                     normalized_args.append(arg)
                 else:
-                    normalized_args.append(normalize_numeric(arg))
+                    normalized_args.append(instance.normalize_numeric(arg))
             normalized_args = tuple(normalized_args)
             
             # Normalize keyword arguments (skip excluded ones)
@@ -84,7 +90,7 @@ def normalize_numeric_args(func=None, *, exclude=None):
                 if key in exclude_set:
                     normalized_kwargs[key] = value
                 else:
-                    normalized_kwargs[key] = normalize_numeric(value)
+                    normalized_kwargs[key] = instance.normalize_numeric(value)
             
             # Bind arguments to new signature to get all parameters with defaults applied
             bound_args = new_sig.bind(*normalized_args, **normalized_kwargs)
@@ -96,15 +102,6 @@ def normalize_numeric_args(func=None, *, exclude=None):
         # Preserve function metadata
         functools.update_wrapper(wrapper, func)
         wrapper.__signature__ = new_sig
-        wrapper._returns_unit = getattr(func, "_returns_unit", None)
-        
-        return wrapper
-    
-    # Handle both @normalize_numeric_args and @normalize_numeric_args(exclude=[...])
-    if func is None:
-        return decorator
-    else:
-        return decorator(func)
         wrapper._returns_unit = getattr(func, "_returns_unit", None)
         
         return wrapper
