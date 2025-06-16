@@ -551,30 +551,8 @@ class EngineerIO(object):
         """
         Normalize an iterable (works for lists, tuples, numpy arrays and generators)
         """
-        size = len(arg)
-        resize_step = 1000 # Default size if size is indeterminate
-        size_indeterminate = size < 1
-        # If size is invalid, we use a default array of size 100 to prevent frequent reallocation
-        ret = np.zeros(resize_step if size_indeterminate else size, dtype=float)
-        n = 0
-        for i, elem in enumerate(arg):
-            if i > len(arg):
-                # Resize arg to at least [i]
-                # This might be slow, but better than crashing, and
-                # we can't expect the generator to be iterable twice
-                # NOTE: This resizes only every 1000th element
-                ret = np.resize(ret, i + resize_step)
-            func_result = func(elem)
-            # If it has .value, return .value, otherwise return the value directly
-            if hasattr(func_result, 'value'):
-                ret[i] = func_result.value
-            else:
-                ret[i] = func_result
-            n = i + 1
-        if size_indeterminate:
-            # If the size was indeterminate, we return a view of the array
-            return ret[:n]
-        return ret
+        vectorized_func = np.vectorize(func, otypes=[float])
+        return vectorized_func(arg)
 
     def normalize_numeric_safe(self, arg):
         """
@@ -623,7 +601,7 @@ class EngineerIO(object):
         if isinstance(arg, (str, bytes)):
             return self.normalize(arg).value
         # It's an iterable
-        return self.normalize_iterable(arg, func=self.normalize)
+        return self.normalize_iterable(arg, func=self.normalize_numeric)
 
     def normalize_numeric_verify_unit(self, arg, reference):
         """
