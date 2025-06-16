@@ -600,33 +600,36 @@ class TestAreaUnits(unittest.TestCase):
     def test_imperial_area_units(self):
         """Test recognition of imperial area units"""
         result = self.io.normalize("100 in²")
-        self.assertEqual(result.value, 100.0)
+        # Verified using Wolfram Alpha "100in² in m²"
+        assert_approx_equal(result.value, 0.064516)
         self.assertEqual(result.unit, 'in²')
         
         result = self.io.normalize("50 ft²")
-        self.assertEqual(result.value, 50.0)
+        # Verified using Wolfram Alpha "50ft² in m²"
+        assert_approx_equal(result.value, 4.645152)
         self.assertEqual(result.unit, 'ft²')
         
         result = self.io.normalize("25 yd²")
-        self.assertEqual(result.value, 25.0)
+        # Verified using Wolfram Alpha "25yd² in m²"
+        assert_approx_equal(result.value, 20.903184)
         self.assertEqual(result.unit, 'yd²')
 
     def test_other_area_units(self):
         """Test recognition of other area units"""
         result = self.io.normalize("10 acre")
-        self.assertEqual(result.value, 10.0)
+        self.assertEqual(result.value, 40468.564224)
         self.assertEqual(result.unit, 'acre')
         
         result = self.io.normalize("5 hectare")
-        self.assertEqual(result.value, 5.0)
+        self.assertEqual(result.value, 50000.0)
         self.assertEqual(result.unit, 'ha')
         
         result = self.io.normalize("0.7 hectares")
-        self.assertEqual(result.value, 0.7)
+        self.assertEqual(result.value, 7000)
         self.assertEqual(result.unit, 'ha')
         
         result = self.io.normalize("2.5 ha")
-        self.assertEqual(result.value, 2.5)
+        self.assertEqual(result.value, 25000)
         self.assertEqual(result.unit, 'ha')
 
     def test_area_units_with_prefixes(self):
@@ -659,15 +662,15 @@ class TestAreaUnits(unittest.TestCase):
     def test_area_units_no_space(self):
         """Test area units without spaces between number and unit"""
         result = self.io.normalize("7000m²")
-        self.assertEqual(result.value, 7000.0)
+        assert_approx_equal(result.value, 7000.0)
         self.assertEqual(result.unit, 'm²')
         
         result = self.io.normalize("500cm^2")
-        self.assertEqual(result.value, 500.0)
+        assert_approx_equal(result.value, 5.0)
         self.assertEqual(result.unit, 'm²')
         
         result = self.io.normalize("100in²")
-        self.assertEqual(result.value, 100.0)
+        assert_approx_equal(result.value, 0.064516)
         self.assertEqual(result.unit, 'in²')
 
 
