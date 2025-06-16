@@ -8,8 +8,9 @@ import scipy.constants
 import numpy as np
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Defaults import default_si_prefix_map
 from . import EngineerIO
-from .UnitInfo import UnitInfo
+from .UnitInfo import EngineerIOConfiguration, UnitInfo
 from ..Units import UnknownUnitInContextException
 
 __all__ = ["normalize_length", "convert_length_to_meters", "EngineerLengthIO"]
@@ -52,29 +53,26 @@ def _default_unit_prefix_map_length():
         'E': 18, 'Z': 21, 'Y': 24
     }
 
-def _length_factors():
+def _create_length_config():
     """
-    Returns a dictionary mapping length units to their conversion factors to meters
+    Create a custom EngineerIOConfiguration for length units with extended SI prefixes
     """
-    factors = {}
-    for unit_info in _length_unit_infos():
-        factors[unit_info.canonical] = unit_info.factor
-    return factors
-
+    config = EngineerIOConfiguration.default()
+    return EngineerIOConfiguration(
+        units=_length_unit_infos(),
+        unit_prefixes=config.unit_prefixes,
+        si_prefix_map=default_si_prefix_map(include_length_unit_prefixes=True)
+    )
 
 class EngineerLengthIO(EngineerIO):
     """
     EngineerIO subclass specialized for length unit parsing and conversion.
     """
-    
     _instance = None
     
     def __init__(self):
         # Use length-specific configuration
-        super().__init__(
-            unit_infos=_length_unit_infos(),
-            unit_prefix_map=_default_unit_prefix_map_length()
-        )
+        super().__init__(config=_create_length_config())
     
     @classmethod
     def instance(cls):
@@ -101,17 +99,7 @@ class EngineerLengthIO(EngineerIO):
         - "1.2 M light years" => 1.135287656709696e+22
         - "9.15 kpc" => 2.8233949868947424e+17
         """
-        if s is None:
-            return None
-        if isinstance(s, list):
-            return [self.normalize_length(v) for v in s]
-        if isinstance(s, ndarray):
-            return np.asarray([self.normalize_length(v) for v in s])
-        result = self.normalize(s)
-        length_factors = _length_factors()
-        if result.unit in length_factors:
-            return result.value * length_factors[result.unit]
-        raise UnknownUnitInContextException(f"Unknown length unit: {result.unit}")
+        return self.normalize_numeric(s)
     
     @returns_unit("m")
     def convert_length_to_meters(self, value, unit):

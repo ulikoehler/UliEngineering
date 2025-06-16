@@ -48,3 +48,10 @@ class RemainderOfStringContainsNonNumericCharacters(EngineerIOException):
     there are still non-numeric characters left in the string
     """
     pass
+
+class UnknownUnitInContextException(EngineerIOException):
+    """
+    Raised when an unknown unit is encountered in a specific context
+    where only certain units are expected.
+    """
+    pass

@@ -71,11 +71,14 @@ class EngineerIO(object):
         # Extract units and aliases from unit_infos
         self.units = set()
         self.unit_aliases = {}
+        self.unit_factors = {}  # Maps unit (canonical) to its conversion factor
         
         for unit_info in config.units:
             if isinstance(unit_info, UnitInfo):
                 # Add canonical unit to units set
                 self.units.add(unit_info.canonical)
+                # Store unit factor
+                self.unit_factors[unit_info.canonical] = unit_info.factor
                 # Add all aliases pointing to canonical unit
                 for alias in unit_info.aliases:
                     self.unit_aliases[alias] = unit_info.canonical
@@ -404,7 +407,7 @@ class EngineerIO(object):
         """
         # Scalars get returned directly
         if isinstance(s, (int, float, np.generic)):
-            return NormalizeResult('', s, '', '', '', 1.0)
+            return NormalizeResult('', s, s, '', '', 1.0, 1.0)
         # Make sure it's a decoded string
         if isinstance(s, bytes):
             s = s.decode(encoding)
@@ -413,26 +416,39 @@ class EngineerIO(object):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
         split_result = self.split_input(s.strip())
-        mul = (10 ** self.unit_prefix_exp_map[split_result.unit_prefix_char])**prefix_exponent if split_result.unit_prefix_char else 1
-        # Handle ppm and ppb: They are listed as units
+        
+        # Compute the factor to multiply with based on the SI prefix
+        # e.g. "k" => 1e3, "m" => 1e-3
+        prefix_multiplicator = (10 ** self.unit_prefix_exp_map[split_result.unit_prefix_char])**prefix_exponent if split_result.unit_prefix_char else 1
+        
+        # Get unit factor
         unit = split_result.unit
+        unit_factor = 1.0
+        if unit:
+            unit_factor = self.unit_factors.get(unit, 1.0)
+        
+        # Handle ppm and ppb: They are listed as units
         if unit == '%':
-            mul /= 100
+            prefix_multiplicator /= 100
             unit = ''
         elif unit == 'ppm':
-            mul /= 1e6
+            prefix_multiplicator /= 1e6
             unit = ''
         elif unit == 'ppb':
-            mul /= 1e9
+            prefix_multiplicator /= 1e9
             unit = ''
+        
         num = float(split_result.number)
+        final_value = num * prefix_multiplicator * unit_factor
+        
         return NormalizeResult(
             prefix=split_result.prefix,
-            value=num * mul,
-            prefix_multiplier=mul,
+            value=final_value,
+            prefix_multiplier=prefix_multiplicator,
             original_number=num,
             unit_prefix=split_result.unit_prefix,
-            unit=split_result.unit
+            unit=split_result.unit,
+            unit_factor=unit_factor
         )
 
     def safe_normalize(self, s, encoding="utf8"):

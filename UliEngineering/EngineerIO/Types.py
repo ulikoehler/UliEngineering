@@ -25,3 +25,5 @@ class NormalizeResult:
     unit: str = ''
     # Multiplier from prefix
     prefix_multiplier: float = 1.0
+    # Multiplier from unit factor
+    unit_factor: float = 1.0

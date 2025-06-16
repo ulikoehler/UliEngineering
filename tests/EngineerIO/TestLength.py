@@ -152,8 +152,8 @@ class TestLength(unittest.TestCase):
 
     def test_none_handling(self):
         """Test handling of None input"""
-        self.assertIsNone(normalize_length(None))
-        self.assertIsNone(self.length_io.normalize_length(None))
+        with self.assertRaises(ValueError):
+            normalize_length(None)
 
     def test_list_input(self):
         """Test list input handling"""

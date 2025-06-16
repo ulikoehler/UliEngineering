@@ -50,15 +50,16 @@ def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float
         'M': 6.0,
         'G': 9.0,
         'T': 12.0,
-        'E': 15.0,
-        'Z': 18.0,
-        'Y': 21.0
+        'P': 15.0,
+        'E': 18.0,
+        'Z': 21.0,
+        'Y': 24.0
     }
     
     if include_length_unit_prefixes:
         unit_prefixes.update({
-            'c': -2,  # e.g. centimeter
-            'd': -1   # e.g. decimeter
+            'c': -2.0,  # e.g. centimeter
+            'd': -1.0   # e.g. decimeter
         })
     
     return unit_prefixes
