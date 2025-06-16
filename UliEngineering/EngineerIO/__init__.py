@@ -23,7 +23,6 @@ import math
 import re
 from typing import Callable, List, Optional
 
-import deprecated
 import numpy as np
 from toolz import functoolz
 
@@ -687,9 +686,8 @@ class EngineerIO(object):
         #Avoid appending whitespace if there is no suffix
         return f"{res} {suffix}" if suffix else res
 
-
-@deprecated.deprecated("Use normalize() instead of normalize_engineer_notation()")
 def normalize_engineer_notation(s, encoding="utf8"):
+    raise DeprecationWarning("Use normalize() instead of normalize_engineer_notation()")
     return EngineerIO.instance().normalize(s, encoding=encoding)
 
 def format_value(v, unit="", significant_digits=3):
