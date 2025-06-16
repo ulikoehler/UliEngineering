@@ -10,8 +10,9 @@ __all__ = [
     'default_unit_infos'
 ]
 
-from typing import Dict, List
-from UliEngineering.EngineerIO.UnitInfo import UnitInfo
+from typing import Dict, List, Union
+
+from UliEngineering.EngineerIO.UnitInfo import UnitAlias, UnitInfo
 
 
 def default_unit_prefixes() -> List[str]:
@@ -63,7 +64,7 @@ def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float
     
     return unit_prefixes
 
-def default_unit_infos():
+def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
     """
     Returns the default list of UnitInfo and UnitAlias objects for standard engineering units.
     """

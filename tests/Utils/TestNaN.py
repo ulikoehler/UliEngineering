@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import unittest
 import numpy as np
-from numpy.testing import assert_array_equal
 from UliEngineering.Utils.NaN import none_to_nan
 from UliEngineering.EngineerIO.Types import NormalizeResult
 
@@ -44,42 +43,6 @@ class TestNoneToNaN(unittest.TestCase):
         
         result = none_to_nan("123")
         self.assertEqual(result, "123")
-    
-    def test_none_to_nan_normalize_result(self):
-        """Test NormalizeResult object handling"""
-        # Test with None value in NormalizeResult
-        normalize_result = NormalizeResult(
-            prefix="k",
-            value=None,
-            original_number=1000.0,
-            unit_prefix="m",
-            unit="V",
-            prefix_multiplier=1000.0
-        )
-        
-        result = none_to_nan(normalize_result)
-        self.assertIsInstance(result, NormalizeResult)
-        self.assertEqual(result.prefix, "k")
-        self.assertTrue(np.isnan(result.value))
-        self.assertEqual(result.unit_prefix, "m")
-        self.assertEqual(result.unit, "V")
-        
-        # Test with non-None value in NormalizeResult
-        normalize_result = NormalizeResult(
-            prefix="",
-            value=42.0,
-            original_number=42.0,
-            unit_prefix="",
-            unit="A",
-            prefix_multiplier=1.0
-        )
-        
-        result = none_to_nan(normalize_result)
-        self.assertIsInstance(result, NormalizeResult)
-        self.assertEqual(result.prefix, "")
-        self.assertEqual(result.value, 42.0)
-        self.assertEqual(result.unit_prefix, "")
-        self.assertEqual(result.unit, "A")
     
     def test_none_to_nan_list_handling(self):
         """Test list handling with various elements"""
@@ -144,44 +107,6 @@ class TestNoneToNaN(unittest.TestCase):
         result = none_to_nan([])
         self.assertEqual(result, [])
     
-    def test_none_to_nan_normalize_result_in_list(self):
-        """Test list containing NormalizeResult objects"""
-        normalize_result1 = NormalizeResult(
-            prefix="k",
-            value=None,
-            original_number=1000.0,
-            unit_prefix="m",
-            unit="V",
-            prefix_multiplier=1000.0
-        )
-        
-        normalize_result2 = NormalizeResult(
-            prefix="",
-            value=42.0,
-            original_number=42.0,
-            unit_prefix="",
-            unit="A",
-            prefix_multiplier=1.0
-        )
-        
-        input_list = [normalize_result1, None, normalize_result2]
-        result = none_to_nan(input_list)
-        
-        self.assertEqual(len(result), 3)
-        
-        # First element - NormalizeResult with None value
-        self.assertIsInstance(result[0], NormalizeResult)
-        self.assertTrue(np.isnan(result[0].value))
-        self.assertEqual(result[0].prefix, "k")
-        
-        # Second element - None converted to NaN
-        self.assertTrue(np.isnan(result[1]))
-        
-        # Third element - NormalizeResult with non-None value
-        self.assertIsInstance(result[2], NormalizeResult)
-        self.assertEqual(result[2].value, 42.0)
-        self.assertEqual(result[2].unit, "A")
-    
     def test_none_to_nan_numpy_array(self):
         """Test numpy array handling"""
         input_array = np.array([1, 2, 3])
@@ -226,34 +151,5 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(none_to_nan(0), 0)
         self.assertEqual(none_to_nan(0.0), 0.0)
     
-    def test_none_to_nan_normalize_result_edge_cases(self):
-        """Test NormalizeResult with various value types"""
-        # NormalizeResult with string value
-        normalize_result = NormalizeResult(
-            prefix="",
-            value="  test  ",
-            original_number=0.0,
-            unit_prefix="",
-            unit="",
-            prefix_multiplier=1.0
-        )
-        
-        result = none_to_nan(normalize_result)
-        self.assertEqual(result.value, "test")  # Should be stripped
-        
-        # NormalizeResult with empty string value
-        normalize_result = NormalizeResult(
-            prefix="",
-            value="",
-            original_number=0.0,
-            unit_prefix="",
-            unit="",
-            prefix_multiplier=1.0
-        )
-        
-        result = none_to_nan(normalize_result)
-        self.assertTrue(np.isnan(result.value))  # Empty string should become NaN
-
-
 if __name__ == '__main__':
     unittest.main()

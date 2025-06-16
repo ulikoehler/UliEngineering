@@ -6,8 +6,6 @@ Unit information dataclass for UliEngineering
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 
-from UliEngineering.EngineerIO.Defaults import default_si_prefix_map, default_unit_infos, default_unit_prefixes
-
 @dataclass
 class UnitAlias:
     """
@@ -90,6 +88,24 @@ class UnitInfo:
 
 @dataclass
 class EngineerIOConfiguration:
-    units: List[Union[UnitInfo, UnitAlias]] = field(default_factory=default_unit_infos)
-    unit_prefixes: List[str] = field(default_factory=default_unit_prefixes)
-    si_prefix_map: Dict[str, float] = field(default_factory=default_si_prefix_map)
+    units: List[Union[UnitInfo, UnitAlias]] = field()
+    unit_prefixes: List[str] = field()
+    si_prefix_map: Dict[str, float] = field()
+    
+    @classmethod
+    def default(cls) -> 'EngineerIOConfiguration':
+        """
+        Returns a default configuration with standard units and prefixes.
+        
+        Returns:
+        --------
+        EngineerIOConfiguration
+            Default configuration instance
+        """
+        # Late import to avoid circular dependency issuess
+        from UliEngineering.EngineerIO.Defaults import default_si_prefix_map, default_unit_infos, default_unit_prefixes
+        return cls(
+            units=default_unit_infos(),
+            unit_prefixes=default_unit_prefixes(),
+            si_prefix_map=default_si_prefix_map()
+        )

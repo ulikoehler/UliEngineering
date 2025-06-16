@@ -18,16 +18,19 @@ Usage example:
 
 Originally published at techoverflow.net.
 """
-from collections.abc import Iterable
+from UliEngineering.Units import InvalidUnitInContextException, UnannotatedReturnValueError
+from typing import Optional
+from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
+from UliEngineering.Exceptions import RemainderOfStringContainsNonNumericCharacters
+
 import math
 import re
-from typing import List, Optional, Set
+from typing import List, Optional
 import deprecated
 import numpy as np
 from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
 from .Types import SplitResult, NormalizeResult, UnitSplitResult
 from toolz import functoolz
-from dataclasses import dataclass
 from ..Exceptions import MultipleUnitPrefixesException, RemainderOfStringContainsNonNumericCharacters, FirstCharacterInStringIsUnitPrefixException
 from ..Utils.NaN import none_to_nan
 
@@ -37,11 +40,6 @@ __all__ = ["EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
            "normalize_numeric_verify_unit", "SplitResult", "normalize_timespan"]
-
-
-# Valid unit designators. Ensure no SI suffix is added here
-_numeric_allowed = set("+0123456789-e.")
-
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
     """
@@ -62,6 +60,26 @@ class EngineerIO(object):
         # Use default configuration if none provided
         if config is None:
             config = EngineerIOConfiguration()
+            
+        self._numeric_allowed = set("+0123456789-e.")
+        
+        # Interpunctation config. Default allows both comma and dot as decimal separators, and handles thousands separators correctly
+        __replace_comma_dot = lambda s: s.replace(",", ".")
+        self._interpunct_transform_map = {
+            # Found nothing or only point -> no modification required
+            (False, False, False): functoolz.identity,
+            (False, False, True): functoolz.identity,
+            (False, True, False): functoolz.identity,
+            (False, True, True): functoolz.identity,
+            # Only comma -> replace and exit
+            (True, False, False): __replace_comma_dot,
+            (True, False, True): __replace_comma_dot,
+            # Below this line: Both comma and dot found
+            # Comma first => comma used as thousands separators
+            (True, True, True): lambda s: s.replace(",", ""),
+            # Dot first => dot used as thousands separator
+            (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
+        }
         
         # Extract units and aliases from unit_infos
         self.units = set()
@@ -105,7 +123,7 @@ class EngineerIO(object):
         # Direct mapping from unit prefix to exponent already exists in self.unit_prefix_map
         # Create the inverse mapping from exponent to unit prefix
         self.exp_unit_prefix_map = {}  # Key: exp // 3, Value: unit prefix
-        self.unit_prefix_exp_map = {'': 0}  # Key: unit prefix, value: exponent (empty string for no unit prefix)
+        self.unit_prefix_exp_map = {'': 0.0}  # Key: unit prefix, value: exponent (empty string for no unit prefix)
         
         # Copy the unit prefix map and add it to unit_prefix_exp_map
         for unit_prefix, exponent in self.unit_prefix_map.items():
@@ -313,7 +331,7 @@ class EngineerIO(object):
 
         s = s.strip(self.strippable)
         # Final check: After applying all rules, the string should be all numbers
-        if not all((ch in _numeric_allowed for ch in s)):
+        if not all((ch in self._numeric_allowed for ch in s)):
             raise RemainderOfStringContainsNonNumericCharacters(f"'{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', split result {split_result}")
         return SplitResult(
             prefix=prefix,
@@ -646,28 +664,12 @@ class EngineerIO(object):
         Only points and commata are potentially modified.
         Other characters and digits are not handled.
         """
-        __replace_comma_dot = lambda s: s.replace(",", ".")
         """
         Map of a transform to apply to the string
         during interpunctation normalization,
         depending on (commaFound, dotFound, commaFoundFirst).
         Must contain every possible variant
         """
-        _interpunct_transform_map = {
-            # Found nothing or only point -> no modification required
-            (False, False, False): functoolz.identity,
-            (False, False, True): functoolz.identity,
-            (False, True, False): functoolz.identity,
-            (False, True, True): functoolz.identity,
-            # Only comma -> replace and exit
-            (True, False, False): __replace_comma_dot,
-            (True, False, True): __replace_comma_dot,
-            # Below this line: Both comma and dot found
-            # Comma first => comma used as thousands separators
-            (True, True, True): lambda s: s.replace(",", ""),
-            # Dot first => dot used as thousands separator
-            (True, True, False): lambda s: s.replace(".", "").replace(",", ".")
-        }
         
         commaIdx = s.find(",")
         pointIdx = s.find(".")
@@ -703,6 +705,7 @@ class EngineerIO(object):
             res = str(int(round(v)))
         #Avoid appending whitespace if there is no suffix
         return f"{res} {suffix}" if suffix else res
+
 
 @deprecated.deprecated("Use normalize() instead of normalize_engineer_notation()")
 def normalize_engineer_notation(s, encoding="utf8"):

@@ -7,7 +7,7 @@ from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import EngineerLengthIO
 from UliEngineering.Exceptions import EngineerIOException
 from UliEngineering.Units import *
-from UliEngineering.EngineerIO import SplitResult, UnitSplitResult, NormalizeResult
+from UliEngineering.EngineerIO.Types import SplitResult, UnitSplitResult, NormalizeResult
 from parameterized import parameterized
 import functools
 import numpy as np
