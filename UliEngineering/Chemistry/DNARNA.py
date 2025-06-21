@@ -11,7 +11,8 @@ __all__ = [
     "NucleotideFractions",
     "DNANucleotideWeights",
     "RNANucleotideWeights",
-    "equal_dnarna_fractions",
+    "equal_dna_fractions",
+    "equal_rna_fractions",
     "dnarna_weight_concentration_from_concentration",
     "dnarna_moles_to_grams",
     "dnarna_grams_to_moles",
@@ -61,7 +62,8 @@ class NucleotideFractions:
 # For DNA: U=0, for RNA: T=0
 # User can override as needed
 
-equal_dnarna_fractions = NucleotideFractions(A=0.2, T=0.2, G=0.2, C=0.2, U=0.2)
+equal_dna_fractions = NucleotideFractions(A=0.25, T=0.25, G=0.25, C=0.25, U=0.0)
+equal_rna_fractions = NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25)
 
 # DNA/RNA nucleotide fractions for various organisms (from HTML table data)
 class DNARNANucleotideFractionsByOrganism:
