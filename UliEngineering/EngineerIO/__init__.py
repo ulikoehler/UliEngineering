@@ -46,8 +46,6 @@ class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
     """
     Default instance, used for global functions. Initialized on first use
-
-    Note: ppm, ppb and % are special 'units' that are handled separately.
     """
     def __init__(self, config: Optional[EngineerIOConfiguration] = None):
         """
@@ -428,17 +426,6 @@ class EngineerIO(object):
         unit_factor = 1.0
         if unit:
             unit_factor = self.unit_factors.get(unit, 1.0)
-        
-        # Handle ppm and ppb: They are listed as units
-        if unit == '%':
-            prefix_multiplicator /= 100
-            unit = ''
-        elif unit == 'ppm':
-            prefix_multiplicator /= 1e6
-            unit = ''
-        elif unit == 'ppb':
-            prefix_multiplicator /= 1e9
-            unit = ''
         
         num = float(split_result.number)
         final_value = num * prefix_multiplicator * unit_factor

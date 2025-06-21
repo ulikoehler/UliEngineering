@@ -6,6 +6,7 @@ Default values and configurations for the EngineerIO library.
 from toolz import functoolz
 from typing import Callable, Dict, List, Tuple, Union
 from UliEngineering.EngineerIO.UnitInfo import UnitAlias, UnitInfo
+from scipy.constants import N_A
 
 __all__ = [
     'default_unit_prefixes',
@@ -90,9 +91,13 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
         UnitInfo('min', aliases=['minute', 'minutes']),
         
         # Fraction/percentage units
-        UnitInfo('ppm', aliases=['parts per million']),
-        UnitInfo('ppb', aliases=['parts per billion']),
-        UnitInfo('%', aliases=['percent', 'percentage']),
+        UnitInfo('ppm', factor=1e-6, aliases=['parts per million']),
+        UnitInfo('ppb', factor=1e-9, aliases=['parts per billion']),
+        UnitInfo('ppt', factor=1e-12, aliases=['parts per trillion']),
+        UnitInfo('%', factor=0.01, aliases=['percent', 'pct', 'percentage']),
+        
+        # Moles (normalized to Avogadro's number)
+        UnitInfo('mol', factor=N_A, aliases=['mole', 'moles']),
         
         # Lighting units
         UnitInfo('lm', aliases=['lumen', 'lumens']),

@@ -8,6 +8,7 @@ from . import EngineerIO
 from .Decorators import returns_unit
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 from .Defaults import default_si_prefix_map
+from scipy.constants import N_A  # Avogadro's number
 
 __all__ = [
     "normalize_mass_concentration", "convert_mass_concentration_to_per_liter", "EngineerMassConcentrationIO",
@@ -16,7 +17,7 @@ __all__ = [
 
 def amount_concentration_unit_infos():
     return [
-        UnitInfo('1/l', 1.0, ['per liter', 'per litre', '1/L', '1/litre', '1/liter']),
+        UnitInfo('1/l', 1/N_A, ['per liter', 'per litre', '1/L', '1/litre', '1/liter', 'per l']),
         UnitInfo('mol/l', 1.0, ['M', 'mol/L', 'molar', 'mole per liter', 'moles per liter']),
         UnitAlias('mmol/l', aliases=['mmol/L', 'millimolar', 'millimole per liter', 'millimoles per liter']),
         UnitAlias('µmol/l', aliases=['umol/l', 'umol/L', 'µmol/L', 'micromolar', 'micromole per liter', 'micromoles per liter']),
@@ -111,7 +112,7 @@ class EngineerAmountConcentrationIO(EngineerIO):
         if s is None:
             return None
         if isinstance(s, list):
-            return [self.normalize_amount_concentration(v) for v in s]
+            return np.asarray([self.normalize_amount_concentration(v) for v in s])
         if isinstance(s, ndarray):
             return np.asarray([self.normalize_amount_concentration(v) for v in s])
         return self.normalize(s).value
@@ -135,12 +136,12 @@ class EngineerMassConcentrationIO(EngineerIO):
             cls._instance = cls()
         return cls._instance
 
-    @returns_unit("1/l")
+    @returns_unit("mol/l")
     def normalize_mass_concentration(self, s):
         if s is None:
             return None
         if isinstance(s, list):
-            return [self.normalize_mass_concentration(v) for v in s]
+            return np.asarray([self.normalize_mass_concentration(v) for v in s])
         if isinstance(s, ndarray):
             return np.asarray([self.normalize_mass_concentration(v) for v in s])
         return self.normalize(s).value

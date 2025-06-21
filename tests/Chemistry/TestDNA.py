@@ -6,8 +6,10 @@ from UliEngineering.Chemistry.DNA import (
     NucleotideFractions,
     NucleotideWeights,
     human_dna_fractions,
-    equal_dna_fractions
+    equal_dna_fractions,
+    dna_weight_concentration_from_concentration
 )
+import numpy as np
 
 class TestDNAMolecularWeight(unittest.TestCase):
     def test_human_dna_fractions(self):
@@ -78,6 +80,56 @@ class TestDNAMolecularWeight(unittest.TestCase):
             79.0
         )
         self.assertAlmostEqual(mw, expected, places=6)
+
+class TestDNAWeightConcentration(unittest.TestCase):
+    def test_mol_per_liter(self):
+        mw = dna_molecular_weight(1, equal_dna_fractions)
+        result = dna_weight_concentration_from_concentration("1 mol/l", 1, equal_dna_fractions)
+        if isinstance(result, (list, np.ndarray)):
+            self.assertAlmostEqual(result[0], mw, places=6)
+        else:
+            self.assertAlmostEqual(result, mw, places=6)
+
+    def test_micromolar(self):
+        mw = dna_molecular_weight(10, equal_dna_fractions)
+        result = dna_weight_concentration_from_concentration("1 uM", 10, equal_dna_fractions)
+        if isinstance(result, (list, np.ndarray)):
+            self.assertAlmostEqual(result[0], 1e-6 * mw, places=12)
+        else:
+            self.assertAlmostEqual(result, 1e-6 * mw, places=12)
+
+    def test_list_input(self):
+        mw = dna_molecular_weight(5, equal_dna_fractions)
+        result = dna_weight_concentration_from_concentration(["1 uM", "2 uM"], 5, equal_dna_fractions)
+        if isinstance(result, (list, np.ndarray)):
+            self.assertEqual(len(result), 2)
+            self.assertAlmostEqual(result[0], 1e-6 * mw, places=12)
+            self.assertAlmostEqual(result[1], 2e-6 * mw, places=12)
+        else:
+            self.fail("Expected list or ndarray output")
+
+    def test_zero_concentration(self):
+        mw = dna_molecular_weight(10, equal_dna_fractions)
+        result = dna_weight_concentration_from_concentration("0 mol/l", 10, equal_dna_fractions)
+        if isinstance(result, (list, np.ndarray)):
+            self.assertAlmostEqual(result[0], 0.0, places=12)
+        else:
+            self.assertAlmostEqual(result, 0.0, places=12)
+
+    def test_ndarray_input(self):
+        mw = dna_molecular_weight(2, equal_dna_fractions)
+        arr = np.array(["1 uM", "3 uM"])
+        result = dna_weight_concentration_from_concentration(arr, 2, equal_dna_fractions)
+        if isinstance(result, np.ndarray):
+            self.assertEqual(result.shape, (2,))
+            self.assertAlmostEqual(result[0], 1e-6 * mw, places=12)
+            self.assertAlmostEqual(result[1], 3e-6 * mw, places=12)
+        elif isinstance(result, list):
+            self.assertEqual(len(result), 2)
+            self.assertAlmostEqual(result[0], 1e-6 * mw, places=12)
+            self.assertAlmostEqual(result[1], 3e-6 * mw, places=12)
+        else:
+            self.fail("Expected ndarray or list output")
 
 if __name__ == "__main__":
     unittest.main()

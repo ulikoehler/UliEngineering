@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+import numpy as np
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Concentration import normalize_amount_concentration
 from dataclasses import dataclass
 
 __all__ = [
@@ -74,4 +76,13 @@ def dna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = hu
         79.0
     )
     return mw
+
+def dna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = human_dna_fractions, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
+    """
+    Convert DNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
+    Handles scalar, list, or ndarray input.
+    """
+    molar_conc = normalize_amount_concentration(concentration)  # normalize to mol/L
+    mw = dna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
+    return molar_conc * mw  # g/L
 
