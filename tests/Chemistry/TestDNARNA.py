@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import unittest
-from UliEngineering.Chemistry.DNA import (
+from UliEngineering.Chemistry.DNARNA import (
     dnarna_molecular_weight as dna_molecular_weight,
     rna_molecular_weight,
     NucleotideFractions,
@@ -9,8 +9,6 @@ from UliEngineering.Chemistry.DNA import (
     RNANucleotideWeights,
     equal_dnarna_fractions,
     dnarna_weight_concentration_from_concentration,
-    dnarna_moles_to_grams,
-    dnarna_grams_to_moles,
     DNARNANucleotideFractionsByOrganism
 )
 import numpy as np
