@@ -11,7 +11,9 @@ __all__ = [
     "NucleotideFractions",
     "NucleotideWeights",
     "human_dna_fractions",
-    "equal_dna_fractions"
+    "equal_dna_fractions",
+    "dna_weight_concentration_from_concentration",
+    "dna_moles_to_grams",
 ]
 
 @dataclass
@@ -85,4 +87,13 @@ def dna_weight_concentration_from_concentration(concentration, length_nucleotide
     molar_conc = normalize_amount_concentration(concentration)  # normalize to mol/L
     mw = dna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return molar_conc * mw  # g/L
+
+def dna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFractions = human_dna_fractions, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
+    """
+    Convert amount of DNA (in moles) to grams for a given sequence length and nucleotide composition.
+    Handles scalar, list, or ndarray input.
+    """
+    moles = normalize_numeric(moles)
+    mw = dna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
+    return moles * mw  # grams
 

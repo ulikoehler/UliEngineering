@@ -131,5 +131,30 @@ class TestDNAWeightConcentration(unittest.TestCase):
         else:
             self.fail("Expected ndarray or list output")
 
+class TestDNAMolesToGrams(unittest.TestCase):
+    def test_scalar(self):
+        from UliEngineering.Chemistry.DNA import dna_moles_to_grams, equal_dna_fractions, dna_molecular_weight
+        mw = dna_molecular_weight(5, equal_dna_fractions)
+        grams = dna_moles_to_grams(2, 5, equal_dna_fractions)
+        self.assertAlmostEqual(grams, 2 * mw, places=8)
+
+    def test_list(self):
+        from UliEngineering.Chemistry.DNA import dna_moles_to_grams, equal_dna_fractions, dna_molecular_weight
+        mw = dna_molecular_weight(3, equal_dna_fractions)
+        grams = dna_moles_to_grams([1, 2], 3, equal_dna_fractions)
+        self.assertEqual(len(grams), 2)
+        self.assertAlmostEqual(grams[0], 1 * mw, places=8)
+        self.assertAlmostEqual(grams[1], 2 * mw, places=8)
+
+    def test_ndarray(self):
+        import numpy as np
+        from UliEngineering.Chemistry.DNA import dna_moles_to_grams, equal_dna_fractions, dna_molecular_weight
+        mw = dna_molecular_weight(4, equal_dna_fractions)
+        arr = np.array([0.5, 1.5])
+        grams = dna_moles_to_grams(arr, 4, equal_dna_fractions)
+        self.assertTrue(isinstance(grams, np.ndarray))
+        self.assertAlmostEqual(grams[0], 0.5 * mw, places=8)
+        self.assertAlmostEqual(grams[1], 1.5 * mw, places=8)
+
 if __name__ == "__main__":
     unittest.main()
