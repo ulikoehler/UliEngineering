@@ -10,10 +10,11 @@ __all__ = [
     "dna_molecular_weight",
     "NucleotideFractions",
     "NucleotideWeights",
-    "human_dna_fractions",
+    "NucleotideFractionsByOrganism",
     "equal_dna_fractions",
     "dna_weight_concentration_from_concentration",
     "dna_moles_to_grams",
+    "NucleotideFractionsByOrganism"
 ]
 
 @dataclass
@@ -38,13 +39,29 @@ class NucleotideFractions:
     G: float
     C: float
 
-# Default nucleotide fractions for human DNA (approximate)
-human_dna_fractions = NucleotideFractions(A=0.3, T=0.3, G=0.2, C=0.2)
 # Default nucleotide fractions for equal base composition
 equal_dna_fractions = NucleotideFractions(A=0.25, T=0.25, G=0.25, C=0.25)
 
+# DNA nucleotide fractions for various organisms (from HTML table data)
+class NucleotideFractionsByOrganism:
+    """
+    Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules
+    Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11)
+    """
+    Maize = NucleotideFractions(A=0.268, T=0.272, G=0.228, C=0.232)
+    Octopus = NucleotideFractions(A=0.332, T=0.316, G=0.176, C=0.176)
+    Chicken = NucleotideFractions(A=0.280, T=0.284, G=0.220, C=0.216)
+    Rat = NucleotideFractions(A=0.286, T=0.284, G=0.214, C=0.205)
+    Human = NucleotideFractions(A=0.293, T=0.300, G=0.207, C=0.200)
+    Grasshopper = NucleotideFractions(A=0.293, T=0.293, G=0.205, C=0.207)
+    SeaUrchin = NucleotideFractions(A=0.328, T=0.321, G=0.177, C=0.173)
+    Wheat = NucleotideFractions(A=0.273, T=0.271, G=0.227, C=0.228)
+    Yeast = NucleotideFractions(A=0.313, T=0.329, G=0.187, C=0.171)
+    EColi = NucleotideFractions(A=0.247, T=0.236, G=0.260, C=0.257)
+    PhiX174 = NucleotideFractions(A=0.240, T=0.312, G=0.233, C=0.215)
+
 @returns_unit("g/mol")
-def dna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = human_dna_fractions, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
+def dna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = NucleotideFractionsByOrganism.Human, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
     """
     Compute the molecular weight of a single-stranded DNA molecule (e.g., oligonucleotide).
 
@@ -79,7 +96,7 @@ def dna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = hu
     )
     return mw
 
-def dna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = human_dna_fractions, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
+def dna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = NucleotideFractionsByOrganism.Human, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
     """
     Convert DNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
     Handles scalar, list, or ndarray input.
@@ -88,7 +105,7 @@ def dna_weight_concentration_from_concentration(concentration, length_nucleotide
     mw = dna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return molar_conc * mw  # g/L
 
-def dna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFractions = human_dna_fractions, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
+def dna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFractions = NucleotideFractionsByOrganism.Human, nucleotide_weights: NucleotideWeights = NucleotideWeights()):
     """
     Convert amount of DNA (in moles) to grams for a given sequence length and nucleotide composition.
     Handles scalar, list, or ndarray input.
