@@ -146,34 +146,34 @@ class TestHaleQuerryAbsorptionModel(unittest.TestCase):
         self.model = HaleQuerryAbsorptionModel()
 
     def test_interpolation_within_bounds(self):
-        # Test a wavelength exactly at a datapoint
-        wl = 0.200
+        # Test a wavelength exactly at a datapoint (in nm)
+        wl = 200.0
         expected = 1.1e-7
         self.assertAlmostEqual(self.model(wl), expected)
-        # Test a wavelength between two datapoints
-        wl = 0.2125
-        # Linear interpolation between 0.200 (1.1e-7) and 0.225 (4.9e-8)
+        # Test a wavelength between two datapoints (in nm)
+        wl = 212.5
+        # Linear interpolation between 200.0 (1.1e-7) and 225.0 (4.9e-8)
         y0, y1 = 1.1e-7, 4.9e-8
-        x0, x1 = 0.200, 0.225
+        x0, x1 = 200.0, 225.0
         expected = y0 + (y1 - y0) * (wl - x0) / (x1 - x0)
         self.assertAlmostEqual(self.model(wl), expected)
 
     def test_interpolation_array(self):
-        wls = np.array([0.200, 0.225, 0.250])
+        wls = np.array([200.0, 225.0, 250.0])
         expected = np.array([1.1e-7, 4.9e-8, 3.35e-8])
         np.testing.assert_allclose(self.model(wls), expected)
 
     def test_out_of_bounds_raises(self):
         with self.assertRaises(ValueError):
-            self.model(0.1)
+            self.model(100.0)
         with self.assertRaises(ValueError):
-            self.model(201.0)
+            self.model(201000.0)
         with self.assertRaises(ValueError):
-            self.model(np.array([0.2, 300.0]))
+            self.model(np.array([200.0, 300000.0]))
 
     def test_vectorized_interpolation(self):
-        # Should work for numpy arrays
-        wls = np.linspace(0.2, 1.0, 5)
+        # Should work for numpy arrays (in nm)
+        wls = np.linspace(200.0, 1000.0, 5)
         result = self.model(wls)
         self.assertEqual(result.shape, wls.shape)
         # All values should be between min and max of datapoints
@@ -184,12 +184,12 @@ class TestHaleQuerryAbsorptionModel(unittest.TestCase):
         model = self.model
         # Test that for datapoints, interpolation matches exactly
         for dp in model.datapoints[::10]:  # test every 10th point for speed
-            self.assertAlmostEqual(model(dp.Wavelength), dp.Extinction_coefficient, places=12)
+            self.assertAlmostEqual(model(dp.wavelength), dp.extinction_coefficient, places=12)
 
     def test_model_vectorized_consistency(self):
         model = self.model
-        wls = np.array([dp.Wavelength for dp in model.datapoints])
-        expected = np.array([dp.Extinction_coefficient for dp in model.datapoints])
+        wls = np.array([dp.wavelength for dp in model.datapoints])
+        expected = np.array([dp.extinction_coefficient for dp in model.datapoints])
         np.testing.assert_allclose(model(wls), expected, atol=1e-12)
 
     def test_model_bounds(self):
