@@ -7,6 +7,13 @@ class AbsorptionData:
     Extinction_coefficient: float
     refractive_index: float
     extra: Optional[float] = None
+    
+class HaleQuerryAbsorptionModel:
+    """
+    
+    Source: Hale, G. M., & Querry, M. R. (1973). Optical constants of water in the 200-nm to 200-μm wavelength region, Table 1
+    Document available at: https://opg.optica.org/ao/viewmedia.cfm?uri=ao-12-3-555&seq=0
+    """
 
 data = [
     AbsorptionData(0.200, 1.1e-7, 1.396),
@@ -121,4 +128,61 @@ data = [
     AbsorptionData(9.2, 0.0415, 1.255),
     AbsorptionData(9.4, 0.0433, 1.247),
     AbsorptionData(9.6, 0.0454, 1.239),
+    AbsorptionData(9.8, 0.0479, 1.229),
+    AbsorptionData(10.0, 0.0508, 1.218),
+    AbsorptionData(10.5, 0.0662, 1.185),
+    AbsorptionData(11.0, 0.0968, 1.153),
+    AbsorptionData(11.5, 0.142, 1.126),
+    AbsorptionData(12.0, 0.199, 1.111),
+    AbsorptionData(12.5, 0.259, 1.123),
+    AbsorptionData(13.0, 0.305, 1.146),
+    AbsorptionData(13.5, 0.343, 1.177),
+    AbsorptionData(14.0, 0.370, 1.210),
+    AbsorptionData(14.5, 0.388, 1.241),
+    AbsorptionData(15.0, 0.402, 1.270),
+    AbsorptionData(15.5, 0.414, 1.297),
+    AbsorptionData(16.0, 0.422, 1.325),
+    AbsorptionData(16.5, 0.428, 1.351),
+    AbsorptionData(17.0, 0.429, 1.376),
+    AbsorptionData(17.5, 0.429, 1.401),
+    AbsorptionData(18.0, 0.426, 1.423),
+    AbsorptionData(18.5, 0.421, 1.443),
+    AbsorptionData(19.0, 0.414, 1.461),
+    AbsorptionData(19.5, 0.404, 1.476),
+    AbsorptionData(20.0, 0.393, 1.480),
+    AbsorptionData(21.0, 0.382, 1.487),
+    AbsorptionData(22.0, 0.373, 1.500),
+    AbsorptionData(23.0, 0.367, 1.511),
+    AbsorptionData(24.0, 0.361, 1.521),
+    AbsorptionData(25.0, 0.356, 1.531),
+    AbsorptionData(26.0, 0.350, 1.539),
+    AbsorptionData(27.0, 0.344, 1.545),
+    AbsorptionData(28.0, 0.338, 1.549),
+    AbsorptionData(29.0, 0.333, 1.551),
+    AbsorptionData(30.0, 0.328, 1.551),
+    AbsorptionData(32.0, 0.324, 1.546),
+    AbsorptionData(34.0, 0.329, 1.536),
+    AbsorptionData(36.0, 0.343, 1.527),
+    AbsorptionData(38.0, 0.361, 1.522),
+    AbsorptionData(40.0, 0.385, 1.519),
+    AbsorptionData(42.0, 0.409, 1.522),
+    AbsorptionData(44.0, 0.436, 1.530),
+    AbsorptionData(46.0, 0.462, 1.541),
+    AbsorptionData(48.0, 0.488, 1.555),
+    AbsorptionData(50.0, 0.514, 1.587),
+    AbsorptionData(60.0, 0.587, 1.703),
+    AbsorptionData(70.0, 0.576, 1.821),
+    AbsorptionData(80.0, 0.547, 1.886),
+    AbsorptionData(90.0, 0.536, 1.924),
+    AbsorptionData(100.0, 0.532, 1.957),
+    AbsorptionData(110.0, 0.531, 1.966),
+    AbsorptionData(120.0, 0.526, 2.004),
+    AbsorptionData(130.0, 0.514, 2.036),
+    AbsorptionData(140.0, 0.500, 2.056),
+    AbsorptionData(150.0, 0.495, 2.069),
+    AbsorptionData(160.0, 0.496, 2.081),
+    AbsorptionData(170.0, 0.497, 2.094),
+    AbsorptionData(180.0, 0.499, 2.107),
+    AbsorptionData(190.0, 0.501, 2.119),
+    AbsorptionData(200.0, 0.504, 2.130),
 ]
