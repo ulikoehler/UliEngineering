@@ -53,9 +53,9 @@ class NucleotideFractions:
     Fractions of the five nucleotides (must sum to 1.0).
     """
     A: float
-    T: float = 0.0  # Default to 0 for RNA
     G: float
     C: float
+    T: float = 0.0  # Default to 0 for RNA
     U: float = 0.0  # Default to 0 for DNA
 
 # Default nucleotide fractions for equal base composition
