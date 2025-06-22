@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import unittest
+from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Chemistry.DNARNA import (
     dnarna_molecular_weight as dna_molecular_weight,
     rna_molecular_weight,
@@ -182,5 +183,13 @@ class TestRNAMolesToGrams(unittest.TestCase):
         grams = 3 * mw
         self.assertAlmostEqual(grams, 3 * mw, places=8)
 
-if __name__ == "__main__":
-    unittest.main()
+class TestAutoFormat(unittest.TestCase):
+    def test_auto_format_dna(self):
+        formatted = auto_format(dna_molecular_weight, 100, equal_dna_fractions)
+        self.assertIsInstance(formatted, str)
+        self.assertEqual(formatted, "31.0 kg/mol")
+
+    def test_auto_format_rna(self):
+        formatted = auto_format(rna_molecular_weight, 100, equal_rna_fractions)
+        self.assertIsInstance(formatted, str)
+        self.assertEqual(formatted, "32.3 kg/mol")

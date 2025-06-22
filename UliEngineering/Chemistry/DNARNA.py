@@ -145,6 +145,7 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
     )
     return mw
 
+@returns_unit("g/L")
 def dnarna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert DNA/RNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
@@ -154,6 +155,7 @@ def dnarna_weight_concentration_from_concentration(concentration, length_nucleot
     mw = dnarna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return molar_conc * mw  # g/L
 
+@returns_unit("g")
 def dnarna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert amount of DNA/RNA (in moles) to grams for a given sequence length and nucleotide composition.
@@ -163,6 +165,7 @@ def dnarna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFracti
     mw = dnarna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return moles * mw  # grams
 
+@returns_unit("mol")
 def dnarna_grams_to_moles(grams, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert mass of DNA/RNA (in grams) to moles for a given sequence length and nucleotide composition.

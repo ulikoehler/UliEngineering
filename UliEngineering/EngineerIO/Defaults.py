@@ -98,6 +98,8 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
         
         # Moles (normalized to Avogadro's number)
         UnitInfo('mol', factor=N_A, aliases=['mole', 'moles']),
+        # Weight units
+        UnitInfo('Da', aliases=['Dalton', 'Daltons', 'dalton', 'daltons']),
         
         # Lighting units
         UnitInfo('lm', aliases=['lumen', 'lumens']),
