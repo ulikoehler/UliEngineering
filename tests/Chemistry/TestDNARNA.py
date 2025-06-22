@@ -170,7 +170,8 @@ class TestDNAWeightConcentration(unittest.TestCase):
 
 class TestRNAMolesToGrams(unittest.TestCase):
     def test_scalar(self):
-        mw = rna_molecular_weight(5, NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25))
+        mw = rna_molecular_weight(5, NucleotideFractions(A=0.25, T=0.0, G=0.25, 
+                                                         C=0.25, U=0.25))
         grams = 2 * mw
         self.assertAlmostEqual(grams, 2 * mw, places=8)
 

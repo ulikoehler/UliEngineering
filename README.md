@@ -81,6 +81,7 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
   - [How to compute the weight of a titanium or stainless steel rod using UliEngineering in Python](https://techoverflow.net/2023/05/21/how-to-compute-the-weight-of-a-titanium-or-stainless-steel-rod-using-uliengineering-in-python/)
   - [How to compute non-inverting OpAmp amplifier gain using UliEngineering in Python](https://techoverflow.net/2023/09/18/how-to-compute-non-inverting-opamp-amplifier-gain-using-uliengineering-in-python/)
   - [How to generate filename with date & time in Python](https://techoverflow.net/2022/09/02/how-to-generate-filename-with-date-time-in-python/)
+  - [How to compute the exact weight of single-strand DNA using Python](https://techoverflow.net/2025/06/22/how-to-compute-the-exact-weight-of-single-strand-dna-using-python/)
 
 ## Testing
 
