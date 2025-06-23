@@ -341,6 +341,7 @@ class HaleQuerryAbsorptionModel:
         Interpolate the extinction coefficient for the given wavelength (in nanometers, nm).
         Raises ValueError if wavelength is out of bounds.
         """
+        wavelength = normalize_length(wavelength)
         # Convert nm to μm for interpolation
         min_wl = self._wavelengths[0]
         max_wl = self._wavelengths[-1]
