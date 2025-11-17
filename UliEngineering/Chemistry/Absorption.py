@@ -338,7 +338,7 @@ class HaleQuerryAbsorptionModel:
 
     def __call__(self, wavelength):
         """
-        Interpolate the extinction coefficient for the given wavelength (in nanometers, nm).
+        Interpolate the extinction coefficient for the given wavelength (in meters).
         Raises ValueError if wavelength is out of bounds.
         """
         wavelength = normalize_length(wavelength)
@@ -346,5 +346,5 @@ class HaleQuerryAbsorptionModel:
         min_wl = self._wavelengths[0]
         max_wl = self._wavelengths[-1]
         if np.any(np.less_equal(wavelength, min_wl)) or np.any(np.greater_equal(wavelength, max_wl)):
-            raise ValueError(f"Wavelength {wavelength} nm is out of bounds ({min_wl}–{max_wl} nm) for Hale-Querry model.")
+            raise ValueError(f"Wavelength {wavelength*1e9} nm is out of bounds ({min_wl*1e9} nm..{max_wl*1e9} nm) for Hale-Querry model.")
         return self._interp(wavelength)
