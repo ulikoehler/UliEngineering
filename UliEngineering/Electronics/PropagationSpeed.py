@@ -2,7 +2,6 @@
 """
 Utilities for propagation speed and propagation delay calculations
 """
-from typing import Optional
 import scipy.constants
 import numpy as np
 
@@ -14,7 +13,7 @@ __all__ = ["propagation_speed", "propagation_delay", "velocity_factor"]
 @returns_unit("m/s")
 @normalize_numeric_args
 def propagation_speed(e_r: float = 1.0, mu_r: float = 1.0):
-	"""
+    """
 	Compute the propagation speed in a homogeneous medium characterized
 	by the relative permittivity (e_r) and relative permeability (mu_r).
 
@@ -34,14 +33,14 @@ def propagation_speed(e_r: float = 1.0, mu_r: float = 1.0):
 	>>> propagation_speed(4.0)
 	149896229.0
 	"""
-	c0 = scipy.constants.c
-	return c0 / np.sqrt(e_r * mu_r)
+    c0 = scipy.constants.c
+    return c0 / np.sqrt(e_r * mu_r)
 
 
 @returns_unit("s")
 @normalize_numeric_args
 def propagation_delay(length, e_r: float = 1.0, mu_r: float = 1.0):
-	"""
+    """
 	Compute the propagation delay for a given physical length in a medium
 	with relative permittivity e_r and relative permeability mu_r.
 
@@ -54,18 +53,20 @@ def propagation_delay(length, e_r: float = 1.0, mu_r: float = 1.0):
 	>>> propagation_delay('1 m', 4.0)
 	6.671281903963041e-09
 	"""
-	v = propagation_speed(e_r=e_r, mu_r=mu_r)
-	return length / v
+
+    v = propagation_speed(e_r=e_r, mu_r=mu_r)
+    return length / v
 
 
 @returns_unit("")
 @normalize_numeric_args
 def velocity_factor(e_r: float = 1.0, mu_r: float = 1.0):
-	"""
+    """
 	Return the velocity factor (unitless) for the medium, i.e. the ratio of the
 	propagation speed to the speed of light in vacuum.
 
 	velocity_factor = v / c = 1 / sqrt(e_r * mu_r)
 	"""
-	return 1.0 / np.sqrt(e_r * mu_r)
+
+    return 1.0 / np.sqrt(e_r * mu_r)
 
