@@ -21,10 +21,9 @@ Originally published at techoverflow.net.
 from functools import partial
 import math
 import re
-from typing import Callable, List, Optional
+from typing import List, Optional
 
 import numpy as np
-from toolz import functoolz
 
 from UliEngineering.EngineerIO.Defaults import default_interpunctation_transform_map
 from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration

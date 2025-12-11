@@ -3,17 +3,14 @@
 """
 Utilities for length
 """
-from numpy import ndarray
 import scipy.constants
-import numpy as np
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Defaults import default_si_prefix_map
 from . import EngineerIO
 from .UnitInfo import EngineerIOConfiguration, UnitInfo
-from ..Units import UnknownUnitInContextException
 
-__all__ = ["normalize_length", "convert_length_to_meters", "EngineerLengthIO"]
+__all__ = ["normalize_length", "convert_length_to_meters", "convert_length_to_unit", "EngineerLengthIO"]
 
 def _length_unit_infos():
     """
@@ -110,6 +107,23 @@ class EngineerLengthIO(EngineerIO):
         # Currently a hack, but doing it directly will not parse SI units
         return self.normalize_length(f"{value} {unit}")
 
+    def convert_length_to_unit(self, value, from_unit, to_unit):
+        """
+        Convert a value expressed in `from_unit` to `to_unit`.
+
+        `value` may be a number or an engineer-formatted string (in which case
+        `from_unit` is ignored and the unit inside `value` is used).
+        """
+        if isinstance(value, (str, bytes)):
+            # If value already contains a unit, use it and ignore `from_unit`.
+            meters = self.normalize_length(value)
+        else:
+            meters = self.convert_length_to_meters(value, from_unit)
+
+        # Determine how many meters are in one target unit
+        per_target_unit = self.convert_length_to_meters(1.0, to_unit)
+        return meters / per_target_unit
+
 
 # Backward compatibility functions
 @returns_unit("m")
@@ -141,6 +155,18 @@ def convert_length_to_meters(value, unit, instance=None):
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.convert_length_to_meters(value, unit)
+
+
+def convert_length_to_unit(value, from_unit, to_unit, instance=None):
+    """
+    Convert a value expressed in `from_unit` to `to_unit`.
+
+    `value` may be a number or an engineer-formatted string (in which case
+    `from_unit` is ignored and the unit inside `value` is used).
+    """
+    if instance is None:
+        instance = EngineerLengthIO.instance()
+    return instance.convert_length_to_unit(value, from_unit, to_unit)
 
 # Backward compatibility functions
 @returns_unit("m")

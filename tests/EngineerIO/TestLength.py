@@ -143,6 +143,30 @@ class TestLength(unittest.TestCase):
                 assert_approx_equal(function_result, class_result, 
                                   err_msg=f"Results differ for {value} {unit}")
 
+    def test_convert_length_to_unit(self):
+        # Basic conversions (function)
+        assert_approx_equal(convert_length_to_unit(1.0, "m", "cm"), 100.0)
+        assert_approx_equal(convert_length_to_unit(1.0, "in", "cm"), 2.54)
+        assert_approx_equal(convert_length_to_unit(2.0, "ft", "m"), 0.6096)
+        assert_approx_equal(convert_length_to_unit(1000.0, "mm", "m"), 1.0)
+        # String input (from_unit ignored)
+        assert_approx_equal(convert_length_to_unit("2 in", "m", "cm"), 5.08)
+
+        # Class vs function consistency
+        function_result = convert_length_to_unit(1.0, "in", "cm")
+        class_result = self.length_io.convert_length_to_unit(1.0, "in", "cm")
+        assert_approx_equal(function_result, class_result)
+
+        # mil -> micrometer (3.5 mil ~= 88.9 µm)
+        assert_approx_equal(convert_length_to_unit(3.5, "mil", "um"), 88.9)
+        assert_approx_equal(self.length_io.convert_length_to_unit(3.5, "mil", "um"), 88.9)
+        # also verify directly in meters
+        assert_approx_equal(convert_length_to_unit(3.5, "mil", "m"), 3.5 * 2.54e-5)
+
+    def test_convert_length_to_unit_invalid(self):
+        with self.assertRaises(ValueError):
+            convert_length_to_unit(1.0, "m", "not_a_unit")
+
     @parameterized.expand([
         ("1A",),
         ("xaz",),
