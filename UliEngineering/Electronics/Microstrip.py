@@ -82,7 +82,6 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
     return w_guess
 
 @returns_unit("Ω")
-@normalize_numeric_args
 def microstrip_impedance(w, h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4):
     """
     Compute the impedance of a single-eded
@@ -105,6 +104,10 @@ def microstrip_impedance(w, h="140 μm", t="35 μm", e_r=RelativePermittivity.FR
     e_r : number or engineer string
         Relative permittivity of the dielectric
     """
+    w = normalize_length(w)
+    h = normalize_length(h)
+    t = normalize_length(t)
+    e_r = normalize_numeric(e_r)
     # Formula from https://www.allaboutcircuits.com/tools/microstrip-impedance-calculator/
     Y0 = np.square(t / (w * math.pi + 1.1 * t * math.pi))
     Y1 = math.sqrt(np.square(t / h) + Y0)
