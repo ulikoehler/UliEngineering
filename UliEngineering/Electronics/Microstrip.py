@@ -7,7 +7,9 @@ import numpy as np
 import math
 from collections import namedtuple
 
+from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Length import normalize_length
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
            "RelativePermittivity", "microstrip_width"]
@@ -18,12 +20,13 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 class RelativePermittivity():
     """
     Default values for relative permittivity of different materials
+    
+    Best to choose a specific value for your material, since these vary widely
     """
-    FR4 = 4.8 # Varies widely (range: 3.9..4.8)
+    FR4 = 4.8 # Varies widely (approximate range: 3.9..4.8)
 
 @returns_unit("m")
-@normalize_numeric_args
-def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4, max_iter=1000, tol=1e-9):
+def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4, max_iter:int=1000, tol:float=1e-9):
     """
     Compute the width of a single-ended outer-layer microstrip given its impedance,
     height, thickness, and the relative permittivity of the substrate.
@@ -53,6 +56,10 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
     float
         The width of the microstrip in meters
     """
+    Z0 = normalize_numeric(Z0)
+    h = normalize_length(h)
+    t = normalize_length(t)
+    e_r = normalize_numeric(e_r)
     # Initial guess using simplified formula (for thin traces)
     w_guess = h * (8 * math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) - 2) / (math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) + 2)
 
