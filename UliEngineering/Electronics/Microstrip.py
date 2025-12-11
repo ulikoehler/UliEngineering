@@ -10,7 +10,7 @@ from collections import namedtuple
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
-           "RelativePermittivity", "DielectricHeight"]
+           "RelativePermittivity", "microstrip_width"]
 
 Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
@@ -19,23 +19,64 @@ class RelativePermittivity():
     """
     Default values for relative permittivity of different materials
     """
-    FR4 = 4.8
+    FR4 = 4.8 # Varies widely (range: 3.9..4.8)
 
+@returns_unit("m")
+@normalize_numeric_args
+def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4, max_iter=1000, tol=1e-9):
+    """
+    Compute the width of a single-ended outer-layer microstrip given its impedance,
+    height, thickness, and the relative permittivity of the substrate.
 
-class DielectricHeight():
+    This uses an iterative approach to solve microstrip_impedance()
+    for width since there's no closed-form solution.
+    (Newton-Raphson method)
+
+    Parameters
+    ----------
+    Z0 : number or engineer string
+        The characteristic impedance of the microstrip in ohms
+    h : number or engineer string
+        Trace height of the substrate between the bottom
+        of the microstrip and the ground plane (converted to meters)
+    t : number or engineer string
+        The trace thickness of the microstrip (converted to meters)
+    e_r : number or engineer string
+        Relative permittivity of the dielectric
+    max_iter : int
+        Maximum number of iterations for the solver
+    tol : float
+        Tolerance for convergence in ohms
+
+    Returns
+    -------
+    float
+        The width of the microstrip in meters
     """
-    Default values for the thickness of the dielectric for
-    different PCB configurations.
-    """
-    L4_1p6mm = "140 μm"
-    """
-    4 layer PCB with 1.6mm total thickness
-    https://www.multi-circuit-boards.eu/en/pcb-design-aid/layer-buildup/standard-buildup.html
-    """
+    # Initial guess using simplified formula (for thin traces)
+    w_guess = h * (8 * math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) - 2) / (math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) + 2)
+
+    # Iterative solution
+    for _ in range(max_iter):
+        current_Z0 = microstrip_impedance(w_guess, h, t, e_r)
+        error = current_Z0 - Z0
+
+        if abs(error) < tol:
+            break
+
+        # Numerical derivative approximation
+        delta = w_guess * 1e-6
+        Z0_plus = microstrip_impedance(w_guess + delta, h, t, e_r)
+        derivative = (Z0_plus - current_Z0) / delta
+
+        # Newton-Raphson update
+        w_guess = w_guess - error / derivative
+
+    return w_guess
 
 @returns_unit("Ω")
 @normalize_numeric_args
-def microstrip_impedance(w, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4):
+def microstrip_impedance(w, h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4):
     """
     Compute the impedance of a single-eded
     outer-layer microstrip using its width, height and
@@ -78,7 +119,7 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
 
 @returns_unit("Ω")
 @normalize_numeric_args
-def differential_microstrip_impedance(w, d, h=DielectricHeight.L4_1p6mm, t="35 μm", e_r=RelativePermittivity.FR4):
+def differential_microstrip_impedance(w, d, h="140μm", t="35 μm", e_r=RelativePermittivity.FR4):
     """
     Compute the impedance of a differential (edge-coupled)
     outer-layer microstrip using its width, height, the distance
