@@ -69,16 +69,27 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
         error = current_Z0 - Z0
 
         if abs(error) < tol:
-            break
+            return w_guess
 
         # Numerical derivative approximation
-        delta = w_guess * 1e-6
+        delta = max(w_guess * 1e-6, 1e-12)
         Z0_plus = microstrip_impedance(w_guess + delta, h, t, e_r)
         derivative = (Z0_plus - current_Z0) / delta
+        
+        if derivative == 0:
+            break
 
         # Newton-Raphson update
-        w_guess = w_guess - error / derivative
+        w_new = w_guess - error / derivative
+        if w_new <= 0:
+            w_new = w_guess / 2.0
+        w_guess = w_new
 
+    # Check if we converged
+    current_Z0 = microstrip_impedance(w_guess, h, t, e_r)
+    if abs(current_Z0 - Z0) > tol:
+        raise ValueError(f"Could not converge to Z0={Z0} Ohm. Best guess w={w_guess} m gave Z0={current_Z0} Ohm")
+    
     return w_guess
 
 @returns_unit("Ω")
