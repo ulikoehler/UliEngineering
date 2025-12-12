@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "UliEngineering"
-version = "1.0.7"
+version = "1.1.0"
 description = "Computational tools for electronics engineering"
 authors = ["Uli Köhler <ukoehler@techoverflow.net>"]
 license = "Apache-2.0"
@@ -12,7 +12,7 @@ packages = [
     { include = "UliEngineering/*" },
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Education",
@@ -25,6 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
     "Topic :: Scientific/Engineering :: Information Analysis"
 ]
 
