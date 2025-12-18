@@ -3,7 +3,6 @@
 """
 Utility to calculate MOSFETs
 """
-from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [
