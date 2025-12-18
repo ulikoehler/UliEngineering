@@ -10,8 +10,7 @@ import math
 import numpy as np
 import pytest
 
-from UliEngineering.SignalProcessing.WrappedValues import unwrap
-
+from UliEngineering.SignalProcessing.WrappedValues import unwrap, OnlineUnwrapper
 
 def test_no_wrap_returns_same():
     data = [0, 1, 2, 3, 4, 5]
@@ -107,3 +106,61 @@ def test_round_trip_with_wrapped_modulo():
     # After removing that integer multiple, we should be nearly identical
     corrected = un - multiples[0] * wrap_value
     np.testing.assert_allclose(corrected, orig, atol=1e-6)
+
+def test_online_unwrapper_scalar():
+    unwrapper = OnlineUnwrapper(wrap_value=100)
+    assert unwrapper(10) == 10
+    assert unwrapper(20) == 20
+    # 20 -> 90: diff=70 > 50 => wrap backward => correction -100 => 90-100 = -10
+    assert unwrapper(90) == -10
+    # 90 -> 5: diff=-85 < -50 => wrap forward => correction +100 => 5 + (-100+100) = 5
+    assert unwrapper(5) == 5
+
+def test_online_unwrapper_chunks():
+    unwrapper = OnlineUnwrapper(wrap_value=100)
+    # Chunk 1
+    res1 = unwrapper([10, 20])
+    np.testing.assert_allclose(res1, [10, 20])
+    # Chunk 2
+    res2 = unwrapper([90, 5])
+    np.testing.assert_allclose(res2, [-10, 5])
+
+def test_online_unwrapper_consistency_with_unwrap():
+    # Generate random walk data
+    np.random.seed(42)
+    # Random steps
+    steps = np.random.randn(1000) * 10
+    walk = np.cumsum(steps)
+    # Wrap it
+    wrapped = walk % 100
+
+    # Expected result using the static function
+    # Note: static unwrap might start at a different offset if the first value is far from 0?
+    # No, static unwrap starts at arr[0].
+    # Online unwrapper also starts at arr[0].
+    expected = unwrap(wrapped, wrap_value=100)
+
+    # Test scalar
+    unwrapper = OnlineUnwrapper(wrap_value=100)
+    res_scalar = [unwrapper(x) for x in wrapped]
+    np.testing.assert_allclose(res_scalar, expected)
+
+    # Test chunks
+    unwrapper = OnlineUnwrapper(wrap_value=100)
+    res_chunks = []
+    chunk_size = 50
+    for i in range(0, len(wrapped), chunk_size):
+        chunk = wrapped[i:i+chunk_size]
+        res_chunks.append(unwrapper(chunk))
+    res_chunks = np.concatenate(res_chunks)
+    np.testing.assert_allclose(res_chunks, expected)
+
+def test_online_unwrapper_mixed_scalar_and_chunks():
+    unwrapper = OnlineUnwrapper(wrap_value=100)
+    # 1. Scalar
+    assert unwrapper(10) == 10
+    # 2. Chunk
+    res = unwrapper([20, 90]) # 20 (ok), 90 (wrap -> -10)
+    np.testing.assert_allclose(res, [20, -10])
+    # 3. Scalar
+    assert unwrapper(5) == 5 # 90->5 wrap -> 5
