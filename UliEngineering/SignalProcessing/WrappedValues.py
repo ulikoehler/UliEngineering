@@ -6,6 +6,10 @@ which wrap around at a certain point.
 """
 import numpy as np
 
+__all__ = [
+    "unwrap"
+]
+
 def unwrap(series, wrap_value=2**20, threshold=None):
     """
     Unwrap wrapped values  by compensating for numerical wraps.
