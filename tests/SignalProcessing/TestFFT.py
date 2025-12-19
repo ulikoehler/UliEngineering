@@ -121,6 +121,40 @@ class TestFFT(unittest.TestCase):
         assert_almost_equal(fft.amplitude_integral(), sum(fft.amplitudes) / 3.)
         assert_almost_equal(fft.amplitude_integral(low=1., high=2.01), 3 + 4)
 
+    def testSpectralPowerFFTReduce(self):
+        """Test if spectral power reduction works correctly (per-FFT power values)"""
+        # Sine wave with amplitude 1.0 -> expected power ~1.0
+        sine = sine_wave(10.0, 100.0, 1.0, 10.0)
+        res = simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none")
+        self.assertTrue(hasattr(res, "powers"))
+        # Mean power should be approx amplitude^2
+        assert_almost_equal(np.mean(res.powers), 1.0, 1)
+
+        # Sine wave with amplitude 2.0 -> expected power ~4.0
+        sine = sine_wave(10.0, 100.0, 2.0, 10.0)
+        res = simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none")
+        assert_almost_equal(np.mean(res.powers), 4.0, 1)
+
+        # Test parallel version
+        res_p = simple_parallel_spectral_power_fft_reduce(sine, 100.0, 100, window="none")
+        assert_almost_equal(np.mean(res_p.powers), 4.0, 1)
+
+        # Test start/end frequency selection: band power should be much larger near the sine freq
+        band = simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none", start=9.0, end=11.0)
+        off = simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none", start=20.0, end=40.0)
+        self.assertGreater(np.mean(band.powers), 10.0 * (np.mean(off.powers) + 1e-12))
+
+        # Length should match number of chunks
+        cg = overlapping_chunks(sine, 100, 25)
+        self.assertEqual(len(simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none")), len(cg))
+
+        # Check that time indices are available and sensible
+        self.assertEqual(len(band.powers), len(band.start_indices))
+        self.assertEqual(len(band.powers), len(band.end_indices))
+        # Middles should be between start and end
+        self.assertTrue(np.all(band.mid_indices >= band.start_indices))
+        self.assertTrue(np.all(band.mid_indices <= band.end_indices))
+
     def test_too_small_fft(self):
         with self.assertRaises(ValueError):
             d = np.random.random_sample(10)

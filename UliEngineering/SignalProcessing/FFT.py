@@ -6,7 +6,6 @@ Utilities for FFT computation and visualization
 import warnings
 import numpy as np
 import functools
-from toolz import functoolz
 from .Selection import find_closest_index, sorted_range_indices
 from .Chunks import overlapping_chunks
 from .Window import create_and_apply_window, WindowFunctor
@@ -18,7 +17,9 @@ from UliEngineering.SignalProcessing.Utils import remove_mean
 
 __all__ = ["compute_fft", "parallel_fft_reduce", "simple_fft_reduce", "FFTPoint",
            "fft_cut_dc_artifacts", "fft_cut_dc_artifacts_multi", "fft_frequencies", "FFT",
-           "serial_fft_reduce", "simple_serial_fft_reduce", "simple_parallel_fft_reduce"]
+           "serial_fft_reduce", "simple_serial_fft_reduce", "simple_parallel_fft_reduce",
+           "spectral_power_reducer", "parallel_spectral_power_fft_reduce", "serial_spectral_power_fft_reduce",
+           "simple_serial_spectral_power_fft_reduce", "simple_parallel_spectral_power_fft_reduce"]
 
 # Optional scipy dependency: Use either faster scipy or fallback to numpy
 try:
@@ -137,6 +138,66 @@ class FFT(object):
         """
         return fft_cut_dc_artifacts(self, return_idx=return_idx)
 
+class FFTReductionOverTime(object):
+    """Container for per-FFT reduction values over time.
+
+    Attributes
+    ----------
+    powers : numpy.ndarray
+        1D array with one value per FFT chunk containing the reduced power.
+    start_indices : numpy.ndarray
+        Start sample index of the time slice for each FFT chunk (float).
+    end_indices : numpy.ndarray
+        End sample index of the time slice for each FFT chunk (float).
+    mid_indices : numpy.ndarray
+        Middle sample index of the time slice for each FFT chunk (float).
+    fftsize : int
+        FFT size used to compute the power.
+    samplerate : float or None
+        Samplerate used (if provided) to compute times; otherwise None.
+    start_freq : float or None
+        Start frequency used for the band selection.
+    end_freq : float or None
+        End frequency used for the band selection.
+    """
+    def __init__(self, powers, start_indices, end_indices, fftsize, samplerate=None, start_freq=None, end_freq=None):
+        import numpy as _np
+        self.powers = _np.asarray(powers)
+        self.start_indices = _np.asarray(start_indices, dtype=float)
+        self.end_indices = _np.asarray(end_indices, dtype=float)
+        self.mid_indices = (self.start_indices + self.end_indices) / 2.0
+        self.fftsize = int(fftsize)
+        self.samplerate = None if samplerate is None else float(samplerate)
+        self.start_freq = start_freq
+        self.end_freq = end_freq
+        if not (self.powers.shape[0] == self.start_indices.shape[0] == self.end_indices.shape[0]):
+            raise ValueError("powers, start_indices and end_indices must have the same length")
+
+    def __len__(self):
+        return self.powers.shape[0]
+
+    def __getitem__(self, idx):
+        return (self.start_indices[idx], self.end_indices[idx], self.mid_indices[idx], self.powers[idx])
+
+    def times(self):
+        """Return time positions (middle of each FFT) in seconds if samplerate is set, else None."""
+        if self.samplerate is None:
+            return None
+        return self.mid_indices / self.samplerate
+
+    def as_array(self):
+        """Return powers as a NumPy array."""
+        return self.powers
+
+    def mean(self):
+        """Return mean power over time."""
+        return float(self.powers.mean())
+
+    def __repr__(self):
+        return f"FFTReductionOverTime(len={len(self)}, fftsize={self.fftsize}, start_freq={self.start_freq}, end_freq={self.end_freq})"
+
+
+
 def fft_frequencies(fftsize, samplerate):
     """Return the frequencies associated to a real-onl FFT array"""
     return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
@@ -155,7 +216,8 @@ def compute_fft(y, samplerate, window="blackman", window_param=None):
     n = len(y)
     windowedY = create_and_apply_window(y, window, param=window_param)
     w = _fft_backend(windowedY)[:n // 2]
-    w_norm = 2.0 * np.abs(w) / n  # Perform amplitude normalization
+    # Perform amplitude normalization (use centralized helper)
+    w_norm = normalize_fft_reduction(np.abs(w), n, nchunks=1, power=False)
     x = fft_frequencies(n, samplerate)
     angles = np.rad2deg(np.angle(w))
     return FFT(x, w_norm, angles)
@@ -179,7 +241,39 @@ def sum_reducer(fx, gen):
     "The standard FFT reducer. Sums up all FFT y values."
     return sum(y for _, y in gen)
 
-def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None):
+def spectral_power_reducer(fx, gen):
+    "FFT reducer that computes the sum of squares of the FFT y values."
+    return sum(y**2 for _, y in gen)
+
+
+def normalize_fft_reduction(values, fftsize, nchunks=1, power=False):
+    """Normalize FFT reduction results.
+
+    Parameters
+    ----------
+    values : array_like
+        Values to normalize (amplitudes or powers).
+    fftsize : int
+        FFT size (n)
+    nchunks : int
+        Number of averaged chunks
+    power : bool
+        If True, treat `values` as summed powers (squared amplitudes) and
+        apply the power normalization. Otherwise, use amplitude normalization.
+
+    Returns
+    -------
+    numpy.ndarray
+        Normalized values
+    """
+    vals = np.asarray(values)
+    if power:
+        factor = 4.0 / (nchunks * fftsize * fftsize)
+    else:
+        factor = 2.0 / (nchunks * fftsize)
+    return vals * factor
+
+def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None, window_param=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     The default reduction method is sum, however any reduction method may be given that
@@ -203,7 +297,7 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     if executor is None:
         executor = QueuedThreadExecutor()
     # Compute common parameters
-    window = WindowFunctor(fftsize, window)
+    window = WindowFunctor(fftsize, window, param=window_param)
     fftSum = np.zeros(fftsize // 2)
     # Initialize threadpool
     futures = [
@@ -215,32 +309,133 @@ def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="b
     fftSum = reducer(x, (f.result() for f in concurrent.futures.as_completed(futures)))
     # Perform normalization once
     if normalize:
-        fftSum = fftSum * 2.0 / (len(chunkgen) * fftsize)
+        fftSum = normalize_fft_reduction(fftSum, fftsize, len(chunkgen), power=False)
     return FFT(x, fftSum, None)
 
 
 def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, window_param=None):
     """
-    Like parallel_fft_reduce, but performs all operations in serial, i.e. all operations
-    are performed on the calling thread
+    Serial wrapper that calls the parallel implementation with a single-threaded executor.
     """
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
-    # Compute common parameters
-    window = WindowFunctor(fftsize, window, param=window_param)
-    fftSum = np.zeros(fftsize // 2)
-    # Initialize threadpool
+    executor = QueuedThreadExecutor(nthreads=1)
+    return parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=removeDC, window=window, reducer=reducer, normalize=normalize, executor=executor, window_param=window_param)
+
+
+def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", normalize=True, start=0.0, end=None, executor=None, window_param=None):
+    """
+    Like (parallel|serial)_fft_reduce, but computes a single power value per FFT chunk
+    representing the total power inside the requested frequency band.
+
+    Returns a numpy array of length equal to the number of chunks. Each element is the
+    spectral power for one FFT (time slot).
+
+    Parameters
+    ----------
+    start : float or None
+        Start frequency (inclusive). Defaults to 0.0.
+    end : float or None
+        End frequency (exclusive). Defaults to the maximum frequency.
+    """
+    if len(chunkgen) == 0:
+        raise ValueError("Can't perform FFT on empty chunk generator")
+    nchunks = len(chunkgen)
+    if executor is None:
+        executor = QueuedThreadExecutor()
+    # Compute frequency array and selection indices
     x = fft_frequencies(fftsize, samplerate)
-    gen = (
-        __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC)
-        for i in range(len(chunkgen))
-    )
-    # Sum up the results
-    fftSum = reducer(x, gen)
-    # Perform normalization once
-    if normalize:
-        fftSum = fftSum * 2.0 / (len(chunkgen) * fftsize)
-    return FFT(x, fftSum, None)
+    startidx, endidx = sorted_range_indices(x, start, end)
+    # Convert None to bounds
+    startidx = 0 if startidx is None else startidx
+    endidx = x.shape[0] if endidx is None else endidx
+    # Prepare result array (one value per FFT chunk)
+    powers = np.zeros(nchunks)
+    # Prepare common window
+    windowfun = WindowFunctor(fftsize, window)
+    # Submit workers
+    futures = [executor.submit(__fft_reduce_worker, chunkgen, i, windowfun, fftsize, removeDC)
+               for i in range(nchunks)]
+    # As futures complete, compute per-chunk band power and store at correct index
+    starts = []
+    ends = []
+    for f in concurrent.futures.as_completed(futures):
+        i, mags = f.result()
+        # Compute integral
+        p = np.sum(mags[startidx:endidx] ** 2)
+        if normalize:
+            # For a single FFT, power normalization uses nchunks=1
+            p = normalize_fft_reduction(p, fftsize, nchunks=1, power=True)
+        powers[i] = p
+        # Attempt to obtain the original index slice for time mapping
+        try:
+            sl = chunkgen.original_indexes(i)
+            starts.append((i, float(sl.start)))
+            ends.append((i, float(sl.stop)))
+        except Exception:
+            # Fallback: approximate using chunk index and fftsize
+            starts.append((i, float(i)))
+            ends.append((i, float(i + fftsize)))
+    # Recreate ordered arrays
+    starts_arr = np.zeros(len(powers), dtype=float)
+    ends_arr = np.zeros(len(powers), dtype=float)
+    for i, v in starts:
+        starts_arr[i] = v
+    for i, v in ends:
+        ends_arr[i] = v
+    return FFTReductionOverTime(powers, starts_arr, ends_arr, fftsize, samplerate=samplerate, start_freq=start, end_freq=end)
+
+
+def serial_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", normalize=True, start=0.0, end=None, window_param=None):
+    """
+    Like serial_fft_reduce, but computes the average spectral power (amplitude squared) only in
+    the requested frequency band. The selection is applied while computing the spectrum.
+
+    Parameters
+    ----------
+    start : float or None
+        Start frequency (inclusive). Defaults to 0.0.
+    end : float or None
+        End frequency (exclusive). Defaults to the maximum frequency.
+    """
+    if len(chunkgen) == 0:
+        raise ValueError("Can't perform FFT on empty chunk generator")
+    # Compute frequency array and selection indices
+    x = fft_frequencies(fftsize, samplerate)
+    startidx, endidx = sorted_range_indices(x, start, end)
+    # Convert None to bounds
+    startidx = 0 if startidx is None else startidx
+    endidx = x.shape[0] if endidx is None else endidx
+    # Prepare accumulation buffer
+    n_bins = endidx - startidx
+    fftPower = np.zeros(n_bins)
+    # Prepare common window
+    windowfun = WindowFunctor(fftsize, window, param=window_param)
+    # Loop over chunks and compute one power value per chunk
+    nchunks = len(chunkgen)
+    powers = np.zeros(nchunks)
+    starts = []
+    ends = []
+    for i in range(nchunks):
+        _, mags = __fft_reduce_worker(chunkgen, i, windowfun, fftsize, removeDC)
+        p = np.sum(mags[startidx:endidx] ** 2)
+        if normalize:
+            p = normalize_fft_reduction(p, fftsize, nchunks=1, power=True)
+        powers[i] = p
+        try:
+            sl = chunkgen.original_indexes(i)
+            starts.append((i, float(sl.start)))
+            ends.append((i, float(sl.stop)))
+        except Exception:
+            starts.append((i, float(i)))
+            ends.append((i, float(i + fftsize)))
+    starts_arr = np.zeros(len(powers), dtype=float)
+    ends_arr = np.zeros(len(powers), dtype=float)
+    for i, v in starts:
+        starts_arr[i] = v
+    for i, v in ends:
+        ends_arr[i] = v
+    return FFTReductionOverTime(powers, starts_arr, ends_arr, fftsize, samplerate=samplerate, start_freq=start, end_freq=end)
 
 
 def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
@@ -257,6 +452,9 @@ def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, 
 
 simple_serial_fft_reduce = functools.partial(simple_fft_reduce, serial_fft_reduce)
 simple_parallel_fft_reduce = functools.partial(simple_fft_reduce, parallel_fft_reduce)
+simple_serial_spectral_power_fft_reduce = functools.partial(simple_fft_reduce, serial_spectral_power_fft_reduce)
+simple_parallel_spectral_power_fft_reduce = functools.partial(simple_fft_reduce, parallel_spectral_power_fft_reduce)
+
 
 def fft_cut_dc_artifacts(fft, return_idx=False):
     """
