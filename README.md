@@ -83,6 +83,7 @@ On [my blog](https://techoverflow.net), I've posted several easy-to-use examples
   - [How to generate filename with date & time in Python](https://techoverflow.net/2022/09/02/how-to-generate-filename-with-date-time-in-python/)
   - [How to compute the exact weight of single-strand DNA using Python](https://techoverflow.net/2025/06/22/how-to-compute-the-exact-weight-of-single-strand-dna-using-python/)
   - [Plotting microstrip impedance vs width using UliEngineering](https://techoverflow.net/2025/12/11/plotting-microstrip-impedance-vs-width-using-uliengineering/)
+  - [How to generate periodic ramps in Python using UliEngineering](https://techoverflow.net/2025/12/19/how-to-generate-periodic-ramps-in-python-using-uliengineering/)
 
 ## Testing
 
