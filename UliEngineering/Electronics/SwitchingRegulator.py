@@ -14,6 +14,7 @@ __all__ = [
     "buck_regulator_min_capacitance_method3", "buck_regulator_min_capacitance",
     "buck_regulator_output_capacitor_max_esr", "buck_regulator_output_capacitor_rms_current",
     "buck_regulator_catch_diode_power", "buck_regulator_min_output_voltage",
+    "buck_regulator_output_voltage_ripple",
 ]
 
 @normalize_numeric_args
@@ -49,6 +50,7 @@ def buck_regulator_inductance(vin, vout, frequency, ioutmax, K=0.3):
     return ((vin - vout) / (frequency * K * ioutmax)) * (vout/vin)
 
 InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms", "ripple"])
+RippleVoltage = namedtuple("RippleVoltage", ["pp", "rms", "capacitive_pp", "esr_pp"])
 
 @normalize_numeric_args
 def buck_regulator_duty_cycle(vin, vout) -> float:
@@ -344,3 +346,71 @@ def buck_regulator_min_output_voltage(vin, t_on_min, switching_frequency):
     Returns the minimum output voltage in the same units as Vin.
     """
     return vin * t_on_min * switching_frequency
+
+@normalize_numeric_args
+def buck_regulator_output_voltage_ripple(ripple_current, frequency, capacitance, esr=0.0) -> RippleVoltage:
+    """
+    Compute the output voltage ripple breakdown for a buck regulator.
+    
+    This function calculates the peak-to-peak and RMS ripple, providing 
+    the individual contributions from both the capacitance and the ESR.
+    
+    ### Reasoning for the Formula:
+    
+    1. **Capacitive Peak-to-Peak (ΔVout_C):**
+       The inductor current ripple (ΔIL) is a triangular waveform. The charge (ΔQ) 
+       delivered to the capacitor is the area of the triangle above the average 
+       current. 
+       ΔQ = (1/2) * (ΔIL / 2) * (T / 2) = ΔIL / (8 * frequency)
+       Using ΔV = ΔQ / C:
+       ΔVout_C = ΔIL / (8 * frequency * capacitance)
+    
+    2. **ESR Peak-to-Peak (ΔVout_ESR):**
+       Derived from Ohm's Law as the ripple current passes through the 
+       internal resistance:
+       ΔVout_ESR = ΔIL * ESR
+    
+    3. **Total Peak-to-Peak (pp):**
+       In the worst case (where peaks align), these are summed:
+       ΔVout_total = ΔVout_C + ΔVout_ESR
+       
+    4. **RMS Ripple (rms):**
+       The ripple waveform in a buck converter is essentially triangular. 
+       For a triangular wave, the RMS value of the AC component is:
+       V_rms = ΔVout_total / (2 * sqrt(3))
+    
+    Parameters
+    ----------
+    ripple_current : float
+        The inductor ripple current (ΔIL) in Amperes.
+    frequency : float
+        The switching frequency (fsw) in Hertz.
+    capacitance : float
+        The output capacitance (Cout) in Farads.
+    esr : float, optional
+        The Equivalent Series Resistance in Ohms (default: 0.0).
+        
+    Returns
+    -------
+    RippleVoltage
+        A namedtuple containing:
+        - pp: Total peak-to-peak ripin=Vin, Vout=Vout, L=inductor, fsw=fsw, Iout=Ioutmax, Cout=Coutple voltage (V)
+        - rms: Estimated RMS ripple voltage (V)
+        - capacitive_pp: P-P ripple from capacitance only (V)
+        - esr_pp: P-P ripple from ESR only (V)
+    """
+    # Calculate P-P components
+    cap_pp = ripple_current / (8 * frequency * capacitance)
+    esr_pp = ripple_current * esr
+    total_pp = cap_pp + esr_pp
+    
+    # Calculate RMS (Triangular approximation)
+    # RMS = V_pp / (2 * sqrt(3))
+    rms = total_pp / (2 * (3**0.5))
+    
+    return RippleVoltage(
+        pp=total_pp,
+        rms=rms,
+        capacitive_pp=cap_pp,
+        esr_pp=esr_pp
+    )
