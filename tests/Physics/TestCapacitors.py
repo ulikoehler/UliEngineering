@@ -76,6 +76,154 @@ class TestCapacitors(unittest.TestCase):
         # Test with auto_format
         self.assertEqual(auto_format(capacitor_voltage_by_energy, "1.5 F", "18.75 J"), "5.00 V")
 
+
+class TestCapacitorResistorTiming(unittest.TestCase):
+    def test_capacitor_rc_time_constant(self):
+        self.assertAlmostEqual(capacitor_rc_time_constant("100 uF", "10 kΩ"), 1.0, places=12)
+        self.assertEqual(auto_format(capacitor_rc_time_constant, "100 uF", "10 kΩ"), "1000 ms")
+
+    def test_capacitor_rc_time_constant_numpy_arrays(self):
+        capacitances = np.asarray([100e-6, 220e-6])
+        resistances = np.asarray([10e3, 1e3])
+        assert_allclose(capacitor_rc_time_constant(capacitances, resistances), [1.0, 0.22])
+
+    def test_capacitor_resistor_charge_time_at_one_tau(self):
+        charge_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage=5.0 * (1 - np.exp(-1)),
+        )
+        self.assertAlmostEqual(charge_time, 1.0, places=12)
+
+    def test_capacitor_resistor_discharge_time_at_one_tau(self):
+        discharge_time = capacitor_resistor_discharge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            initial_voltage="5 V",
+            target_voltage=5.0 * np.exp(-1),
+        )
+        self.assertAlmostEqual(discharge_time, 1.0, places=12)
+
+    def test_capacitor_resistor_charge_time_with_diode_drop(self):
+        final_voltage = 5.0 - 0.7
+        target_voltage = final_voltage * (1 - np.exp(-1))
+        charge_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage=target_voltage,
+            diode_voltage="700 mV",
+        )
+        self.assertAlmostEqual(charge_time, 1.0, places=12)
+
+    def test_capacitor_resistor_discharge_time_with_diode_drop(self):
+        target_voltage = 0.7 + (5.0 - 0.7) * np.exp(-1)
+        discharge_time = capacitor_resistor_discharge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            initial_voltage="5 V",
+            target_voltage=target_voltage,
+            diode_voltage="700 mV",
+        )
+        self.assertAlmostEqual(discharge_time, 1.0, places=12)
+
+    def test_capacitor_resistor_charge_time_keyword_arguments_and_same_voltage(self):
+        charge_time = capacitor_resistor_charge_time(
+            capacitance="1 uF",
+            resistance="1 kΩ",
+            source_voltage="3.3 V",
+            initial_voltage="1.2 V",
+            target_voltage="1.2 V",
+        )
+        self.assertEqual(charge_time, 0.0)
+
+    def test_capacitor_resistor_discharge_time_same_voltage(self):
+        discharge_time = capacitor_resistor_discharge_time(
+            capacitance="1 uF",
+            resistance="1 kΩ",
+            initial_voltage="1.2 V",
+            target_voltage="1.2 V",
+        )
+        self.assertEqual(discharge_time, 0.0)
+
+    def test_capacitor_resistor_charge_time_reaches_asymptote_at_infinite_time(self):
+        charge_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage="5 V",
+        )
+        self.assertTrue(np.isinf(charge_time))
+
+    def test_capacitor_resistor_discharge_time_reaches_asymptote_at_infinite_time(self):
+        discharge_time = capacitor_resistor_discharge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            initial_voltage="5 V",
+            target_voltage="0 V",
+        )
+        self.assertTrue(np.isinf(discharge_time))
+
+    def test_capacitor_resistor_charge_time_invalid_targets(self):
+        with self.assertRaises(ValueError):
+            capacitor_resistor_charge_time("100 uF", "10 kΩ", "5 V", "-1 V")
+        with self.assertRaises(ValueError):
+            capacitor_resistor_charge_time("100 uF", "10 kΩ", "5 V", "5.1 V")
+        with self.assertRaises(ValueError):
+            capacitor_resistor_charge_time("100 uF", "10 kΩ", "5 V", "2 V", initial_voltage="4 V", diode_voltage="2 V")
+
+    def test_capacitor_resistor_discharge_time_invalid_targets(self):
+        with self.assertRaises(ValueError):
+            capacitor_resistor_discharge_time("100 uF", "10 kΩ", "5 V", "5.1 V")
+        with self.assertRaises(ValueError):
+            capacitor_resistor_discharge_time("100 uF", "10 kΩ", "5 V", "-0.1 V")
+        with self.assertRaises(ValueError):
+            capacitor_resistor_discharge_time("100 uF", "10 kΩ", "500 mV", "400 mV", diode_voltage="700 mV")
+
+    def test_capacitor_resistor_charge_time_auto_format(self):
+        result = auto_format(
+            capacitor_resistor_charge_time,
+            "100 uF",
+            "10 kΩ",
+            "5 V",
+            5.0 * (1 - np.exp(-1)),
+            "0 V",
+        )
+        self.assertEqual(result, "1000 ms")
+
+    def test_capacitor_resistor_discharge_time_auto_format(self):
+        result = auto_format(
+            capacitor_resistor_discharge_time,
+            "100 uF",
+            "10 kΩ",
+            "5 V",
+            5.0 * np.exp(-1),
+        )
+        self.assertEqual(result, "1000 ms")
+
+    def test_capacitor_resistor_charge_time_numpy_arrays(self):
+        charge_times = capacitor_resistor_charge_time(
+            capacitance=np.asarray([100e-6, 220e-6]),
+            resistance=np.asarray([10e3, 1e3]),
+            source_voltage=5.0,
+            initial_voltage=0.0,
+            target_voltage=5.0 * (1 - np.exp(-1)),
+        )
+        assert_allclose(charge_times, [1.0, 0.22])
+
+    def test_capacitor_resistor_discharge_time_numpy_arrays(self):
+        discharge_times = capacitor_resistor_discharge_time(
+            capacitance=np.asarray([100e-6, 220e-6]),
+            resistance=np.asarray([10e3, 1e3]),
+            initial_voltage=5.0,
+            target_voltage=5.0 * np.exp(-1),
+        )
+        assert_allclose(discharge_times, [1.0, 0.22])
+
 class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
     def test_basic_functionality_zero_starting_voltage(self):
         """Test basic capacitance calculation with zero starting voltage"""

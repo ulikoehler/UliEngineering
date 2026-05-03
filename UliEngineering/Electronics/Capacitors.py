@@ -12,13 +12,37 @@ __all__ = [
     "capacitor_lifetime",
     "capacitor_energy",
     "capacitor_charge",
+    "capacitor_rc_time_constant",
     "parallel_plate_capacitors_capacitance",
     "capacitor_constant_current_charge_time",
     "capacitor_constant_current_discharge_time",
+    "capacitor_resistor_charge_time",
+    "capacitor_resistor_discharge_time",
     "capacitor_voltage_by_energy",
     "capacitor_capacitance_by_energy",
     "capacitor_charging_energy",
 ]
+
+
+def _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage):
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return -time_constant * np.log((target_voltage - final_voltage) / (initial_voltage - final_voltage))
+
+
+@returns_unit("s")
+@normalize_numeric_args
+def capacitor_rc_time_constant(capacitance, resistance):
+    """
+    Compute the R/C time constant $\tau = R \cdot C$ of a resistor-capacitor network.
+
+    Parameters:
+    - capacitance: The capacitance in farads.
+    - resistance: The resistance in ohms.
+
+    Returns:
+    The time constant in seconds.
+    """
+    return capacitance * resistance
 
 @returns_unit("h")
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.):
@@ -110,6 +134,65 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     Returns: The time in seconds.
     """
     return capacitance * (initial_voltage - target_voltage) / current
+
+
+@returns_unit("s")
+@normalize_numeric_args
+def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, target_voltage, initial_voltage="0V", diode_voltage="0V"):
+    """
+    Compute the time it takes to charge a capacitor through a resistor.
+
+    Parameters:
+    - capacitance: The capacitance in farads.
+    - resistance: The charging resistance in ohms.
+    - source_voltage: The source voltage in volts.
+    - target_voltage: The target capacitor voltage in volts.
+    - initial_voltage: The initial capacitor voltage in volts.
+    - diode_voltage: Optional forward voltage drop of a series diode.
+
+    Returns:
+    The time in seconds.
+
+    The capacitor asymptotically approaches source_voltage - diode_voltage.
+    """
+    final_voltage = source_voltage - diode_voltage
+    if np.any(final_voltage < initial_voltage):
+        raise ValueError("source_voltage - diode_voltage must be greater than or equal to initial_voltage")
+    if np.any(target_voltage < initial_voltage):
+        raise ValueError("target_voltage must be greater than or equal to initial_voltage")
+    if np.any(target_voltage > final_voltage):
+        raise ValueError("target_voltage must be less than or equal to source_voltage - diode_voltage")
+    time_constant = capacitor_rc_time_constant(capacitance, resistance)
+    return _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage)
+
+
+@returns_unit("s")
+@normalize_numeric_args
+def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, target_voltage="0V", diode_voltage="0V"):
+    """
+    Compute the time it takes to discharge a capacitor through a resistor.
+
+    Parameters:
+    - capacitance: The capacitance in farads.
+    - resistance: The discharge resistance in ohms.
+    - initial_voltage: The initial capacitor voltage in volts.
+    - target_voltage: The target capacitor voltage in volts.
+    - diode_voltage: Optional forward voltage drop of a series diode.
+
+    Returns:
+    The time in seconds.
+
+    The capacitor asymptotically approaches diode_voltage.
+    """
+    final_voltage = diode_voltage
+    if np.any(initial_voltage < final_voltage):
+        raise ValueError("initial_voltage must be greater than or equal to diode_voltage")
+    if np.any(target_voltage > initial_voltage):
+        raise ValueError("target_voltage must be less than or equal to initial_voltage")
+    if np.any(target_voltage < final_voltage):
+        raise ValueError("target_voltage must be greater than or equal to diode_voltage")
+    time_constant = capacitor_rc_time_constant(capacitance, resistance)
+    return _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage)
 
 @returns_unit("F")
 def parallel_plate_capacitors_capacitance(area, distance, epsilon):
