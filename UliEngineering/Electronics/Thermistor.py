@@ -47,7 +47,6 @@ def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0):
     Parameters:
     - resistance: The measured resistance of the thermistor in Ohms, for which to calculate the temperature.
     - beta: The Beta constant of the thermistor.
-    - c: An additional constant, currently unused.
     - R0: The resistance of the thermistor at reference temperature T0 (default is 10kOhms).
     - T0: The reference temperature in Celsius (default is 25°C).
     

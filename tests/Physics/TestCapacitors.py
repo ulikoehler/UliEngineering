@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.Capacitors import *
+from UliEngineering.Electronics.Diode import DiodeModel, ShockleyDiodeModel, SimpleDiodeModel
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
+from scipy.integrate import quad
 import unittest
 
 class TestCapacitors(unittest.TestCase):
@@ -78,6 +80,27 @@ class TestCapacitors(unittest.TestCase):
 
 
 class TestCapacitorResistorTiming(unittest.TestCase):
+    class CustomDiodeModel(DiodeModel):
+        def minimum_series_voltage(self):
+            return 0.2
+
+        def forward_voltage(self, current):
+            current = np.asarray(current)
+            return np.where(current > 0, 0.2, 0.0)
+
+        def series_current(self, total_voltage, resistance):
+            total_voltage = np.asarray(total_voltage)
+            resistance = np.asarray(resistance)
+            with np.errstate(divide="ignore", invalid="ignore"):
+                current = np.divide(total_voltage - 0.2, resistance)
+            return np.where(total_voltage > 0.2, current, 0.0)
+
+        def series_current_integral(self, total_voltage, resistance):
+            total_voltage = np.asarray(total_voltage)
+            resistance = np.asarray(resistance)
+            with np.errstate(divide="ignore", invalid="ignore"):
+                return resistance * np.log(total_voltage - 0.2)
+
     def test_capacitor_rc_time_constant(self):
         self.assertAlmostEqual(capacitor_rc_time_constant("100 uF", "10 kΩ"), 1.0, places=12)
         self.assertEqual(auto_format(capacitor_rc_time_constant, "100 uF", "10 kΩ"), "1000 ms")
@@ -119,6 +142,28 @@ class TestCapacitorResistorTiming(unittest.TestCase):
         )
         self.assertAlmostEqual(charge_time, 1.0, places=12)
 
+    def test_capacitor_resistor_charge_time_with_simple_diode_model(self):
+        final_voltage = 5.0 - 0.7
+        target_voltage = final_voltage * (1 - np.exp(-1))
+        model_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage=target_voltage,
+            diode_model=SimpleDiodeModel("700 mV"),
+        )
+        scalar_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage=target_voltage,
+            diode_model="700 mV",
+        )
+        self.assertAlmostEqual(model_time, 1.0, places=12)
+        self.assertAlmostEqual(model_time, scalar_time, places=12)
+
     def test_capacitor_resistor_discharge_time_with_diode_drop(self):
         target_voltage = 0.7 + (5.0 - 0.7) * np.exp(-1)
         discharge_time = capacitor_resistor_discharge_time(
@@ -129,6 +174,36 @@ class TestCapacitorResistorTiming(unittest.TestCase):
             diode_voltage="700 mV",
         )
         self.assertAlmostEqual(discharge_time, 1.0, places=12)
+
+    def test_capacitor_resistor_discharge_time_with_simple_diode_model(self):
+        target_voltage = 0.7 + (5.0 - 0.7) * np.exp(-1)
+        model_time = capacitor_resistor_discharge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            initial_voltage="5 V",
+            target_voltage=target_voltage,
+            diode_model=SimpleDiodeModel("700 mV"),
+        )
+        scalar_time = capacitor_resistor_discharge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            initial_voltage="5 V",
+            target_voltage=target_voltage,
+            diode_model=0.7,
+        )
+        self.assertAlmostEqual(model_time, 1.0, places=12)
+        self.assertAlmostEqual(model_time, scalar_time, places=12)
+
+    def test_capacitor_resistor_time_with_custom_diode_model(self):
+        charge_time = capacitor_resistor_charge_time(
+            capacitance="100 uF",
+            resistance="10 kΩ",
+            source_voltage="5 V",
+            initial_voltage="0 V",
+            target_voltage=(5.0 - 0.2) * (1 - np.exp(-1)),
+            diode_model=self.CustomDiodeModel(),
+        )
+        self.assertAlmostEqual(charge_time, 1.0, places=12)
 
     def test_capacitor_resistor_charge_time_keyword_arguments_and_same_voltage(self):
         charge_time = capacitor_resistor_charge_time(
@@ -176,6 +251,16 @@ class TestCapacitorResistorTiming(unittest.TestCase):
         with self.assertRaises(ValueError):
             capacitor_resistor_charge_time("100 uF", "10 kΩ", "5 V", "2 V", initial_voltage="4 V", diode_voltage="2 V")
 
+    def test_capacitor_resistor_charge_time_shockley_invalid_targets(self):
+        with self.assertRaises(ValueError):
+            capacitor_resistor_charge_time(
+                "100 uF", "10 kΩ", "5 V", "-1 mV", diode_model=ShockleyDiodeModel("1 pA")
+            )
+        with self.assertRaises(ValueError):
+            capacitor_resistor_charge_time(
+                "100 uF", "10 kΩ", "5 V", "5.1 V", diode_model=ShockleyDiodeModel("1 pA")
+            )
+
     def test_capacitor_resistor_discharge_time_invalid_targets(self):
         with self.assertRaises(ValueError):
             capacitor_resistor_discharge_time("100 uF", "10 kΩ", "5 V", "5.1 V")
@@ -183,6 +268,12 @@ class TestCapacitorResistorTiming(unittest.TestCase):
             capacitor_resistor_discharge_time("100 uF", "10 kΩ", "5 V", "-0.1 V")
         with self.assertRaises(ValueError):
             capacitor_resistor_discharge_time("100 uF", "10 kΩ", "500 mV", "400 mV", diode_voltage="700 mV")
+
+    def test_capacitor_resistor_discharge_time_shockley_invalid_targets(self):
+        with self.assertRaises(ValueError):
+            capacitor_resistor_discharge_time(
+                "100 uF", "10 kΩ", "5 V", "-1 mV", diode_model=ShockleyDiodeModel("1 pA")
+            )
 
     def test_capacitor_resistor_charge_time_auto_format(self):
         result = auto_format(
@@ -223,6 +314,54 @@ class TestCapacitorResistorTiming(unittest.TestCase):
             target_voltage=5.0 * np.exp(-1),
         )
         assert_allclose(discharge_times, [1.0, 0.22])
+
+    def test_capacitor_resistor_charge_time_shockley_matches_numerical_integration(self):
+        model = ShockleyDiodeModel("1 pA", ideality_factor=1.7, temperature="25°C")
+        capacitance = 100e-6
+        resistance = 470.0
+        source_voltage = 5.0
+        initial_voltage = 0.0
+        target_voltage = 4.0
+
+        closed_form = capacitor_resistor_charge_time(
+            capacitance,
+            resistance,
+            source_voltage,
+            target_voltage,
+            initial_voltage=initial_voltage,
+            diode_model=model,
+        )
+
+        numerical, _ = quad(
+            lambda cap_voltage: capacitance / model.series_current(source_voltage - cap_voltage, resistance),
+            initial_voltage,
+            target_voltage,
+            limit=500,
+        )
+        self.assertAlmostEqual(closed_form, numerical, places=9)
+
+    def test_capacitor_resistor_discharge_time_shockley_matches_numerical_integration(self):
+        model = ShockleyDiodeModel("1 pA", ideality_factor=1.7, temperature="25°C")
+        capacitance = 100e-6
+        resistance = 470.0
+        initial_voltage = 5.0
+        target_voltage = 1.0
+
+        closed_form = capacitor_resistor_discharge_time(
+            capacitance,
+            resistance,
+            initial_voltage,
+            target_voltage=target_voltage,
+            diode_model=model,
+        )
+
+        numerical, _ = quad(
+            lambda cap_voltage: capacitance / model.series_current(cap_voltage, resistance),
+            target_voltage,
+            initial_voltage,
+            limit=500,
+        )
+        self.assertAlmostEqual(closed_form, numerical, places=9)
 
 class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
     def test_basic_functionality_zero_starting_voltage(self):

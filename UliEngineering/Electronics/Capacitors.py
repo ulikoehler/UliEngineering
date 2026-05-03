@@ -4,6 +4,7 @@ from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Area import normalize_area
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.EngineerIO.Length import normalize_length
+from UliEngineering.Electronics.Diode import normalize_diode_model
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
 import numpy as np
@@ -22,18 +23,21 @@ __all__ = [
     "capacitor_capacitance_by_energy",
     "capacitor_charging_energy",
 ]
-
-
-def _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage):
-    with np.errstate(divide="ignore", invalid="ignore"):
-        return -time_constant * np.log((target_voltage - final_voltage) / (initial_voltage - final_voltage))
+def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltage, target_drive_voltage, diode_model, initial_voltage, target_voltage):
+    initial_integral = diode_model.series_current_integral(initial_drive_voltage, resistance)
+    target_integral = diode_model.series_current_integral(target_drive_voltage, resistance)
+    time = capacitance * (initial_integral - target_integral)
+    same_voltage = np.equal(initial_voltage, target_voltage)
+    if np.isscalar(time):
+        return 0.0 if same_voltage else time
+    return np.where(same_voltage, 0.0, time)
 
 
 @returns_unit("s")
 @normalize_numeric_args
 def capacitor_rc_time_constant(capacitance, resistance):
     """
-    Compute the R/C time constant $\tau = R \cdot C$ of a resistor-capacitor network.
+    Compute the R/C time constant tau = R * C of a resistor-capacitor network.
 
     Parameters:
     - capacitance: The capacitance in farads.
@@ -137,8 +141,8 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
 
 
 @returns_unit("s")
-@normalize_numeric_args
-def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, target_voltage, initial_voltage="0V", diode_voltage="0V"):
+@normalize_numeric_args(exclude=["diode_model", "diode_voltage"])
+def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, target_voltage, initial_voltage="0V", diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to charge a capacitor through a resistor.
 
@@ -148,27 +152,37 @@ def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, targ
     - source_voltage: The source voltage in volts.
     - target_voltage: The target capacitor voltage in volts.
     - initial_voltage: The initial capacitor voltage in volts.
-    - diode_voltage: Optional forward voltage drop of a series diode.
+    - diode_model: Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
+    - diode_voltage: Backward-compatible alias for diode_model.
 
     Returns:
     The time in seconds.
 
-    The capacitor asymptotically approaches source_voltage - diode_voltage.
+    The capacitor asymptotically approaches source_voltage - diode_model.minimum_series_voltage().
     """
-    final_voltage = source_voltage - diode_voltage
+    diode_model = normalize_diode_model(diode_voltage if diode_voltage is not None else diode_model)
+    minimum_series_voltage = normalize_numeric(diode_model.minimum_series_voltage())
+    final_voltage = source_voltage - minimum_series_voltage
     if np.any(final_voltage < initial_voltage):
-        raise ValueError("source_voltage - diode_voltage must be greater than or equal to initial_voltage")
+        raise ValueError("source_voltage - diode minimum voltage must be greater than or equal to initial_voltage")
     if np.any(target_voltage < initial_voltage):
         raise ValueError("target_voltage must be greater than or equal to initial_voltage")
     if np.any(target_voltage > final_voltage):
-        raise ValueError("target_voltage must be less than or equal to source_voltage - diode_voltage")
-    time_constant = capacitor_rc_time_constant(capacitance, resistance)
-    return _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage)
+        raise ValueError("target_voltage must be less than or equal to source_voltage - diode minimum voltage")
+    return _capacitor_resistor_model_time(
+        capacitance,
+        resistance,
+        source_voltage - initial_voltage,
+        source_voltage - target_voltage,
+        diode_model,
+        initial_voltage,
+        target_voltage,
+    )
 
 
 @returns_unit("s")
-@normalize_numeric_args
-def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, target_voltage="0V", diode_voltage="0V"):
+@normalize_numeric_args(exclude=["diode_model", "diode_voltage"])
+def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, target_voltage="0V", diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to discharge a capacitor through a resistor.
 
@@ -177,22 +191,31 @@ def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, 
     - resistance: The discharge resistance in ohms.
     - initial_voltage: The initial capacitor voltage in volts.
     - target_voltage: The target capacitor voltage in volts.
-    - diode_voltage: Optional forward voltage drop of a series diode.
+    - diode_model: Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
+    - diode_voltage: Backward-compatible alias for diode_model.
 
     Returns:
     The time in seconds.
 
-    The capacitor asymptotically approaches diode_voltage.
+    The capacitor asymptotically approaches diode_model.minimum_series_voltage().
     """
-    final_voltage = diode_voltage
+    diode_model = normalize_diode_model(diode_voltage if diode_voltage is not None else diode_model)
+    final_voltage = normalize_numeric(diode_model.minimum_series_voltage())
     if np.any(initial_voltage < final_voltage):
-        raise ValueError("initial_voltage must be greater than or equal to diode_voltage")
+        raise ValueError("initial_voltage must be greater than or equal to diode minimum voltage")
     if np.any(target_voltage > initial_voltage):
         raise ValueError("target_voltage must be less than or equal to initial_voltage")
     if np.any(target_voltage < final_voltage):
-        raise ValueError("target_voltage must be greater than or equal to diode_voltage")
-    time_constant = capacitor_rc_time_constant(capacitance, resistance)
-    return _capacitor_exponential_time(time_constant, initial_voltage, target_voltage, final_voltage)
+        raise ValueError("target_voltage must be greater than or equal to diode minimum voltage")
+    return _capacitor_resistor_model_time(
+        capacitance,
+        resistance,
+        initial_voltage,
+        target_voltage,
+        diode_model,
+        initial_voltage,
+        target_voltage,
+    )
 
 @returns_unit("F")
 def parallel_plate_capacitors_capacitance(area, distance, epsilon):
