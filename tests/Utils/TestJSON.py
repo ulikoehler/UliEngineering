@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal
-from UliEngineering.Utils.JSON import *
+from UliEngineering.Utils.JSON import NumPyEncoder
+import json
+import numpy as np
 import unittest
 
 class TestNumpyEncoder(unittest.TestCase):
@@ -23,7 +24,7 @@ class TestNumpyEncoder(unittest.TestCase):
         s = json.dumps(arr, cls=NumPyEncoder)
         self.assertEqual(s, "[75.0, 31.0]")
 
-    def testNPFloatEncoding(self):
+    def testNPIntEncoding(self):
         arr = [np.int64(75),
                np.int64(31)]
         print(arr)

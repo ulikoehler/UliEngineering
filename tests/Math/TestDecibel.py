@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.Math.Decibel import *
+from UliEngineering.Math.Decibel import (
+    dBFactor,
+    ratio_to_dB,
+    value_to_dB,
+    dB_to_ratio,
+    dB_to_value,
+    voltage_to_dBuV,
+    power_to_dBm
+)
 import numpy as np
 import unittest
 import pytest

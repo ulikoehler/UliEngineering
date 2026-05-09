@@ -676,7 +676,6 @@ class EngineerIO(object):
 
 def normalize_engineer_notation(s, encoding="utf8"):
     raise DeprecationWarning("Use normalize() instead of normalize_engineer_notation()")
-    return EngineerIO.instance().normalize(s, encoding=encoding)
 
 def format_value(v, unit="", significant_digits=3):
     return EngineerIO.instance().format(v, unit, significant_digits=significant_digits)

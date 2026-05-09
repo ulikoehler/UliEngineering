@@ -186,8 +186,8 @@ def serial_resample(t, y, new_samplerate, out=None, prefilter=None,
     ovp_size = int(math.floor(overprovisioning_factor * chunksize))
     # How many chunks do we have to process?
     for i in range(len(new_t) // chunksize):
-        __parallel_resample_worker(i=i, orig=t, tnew=new_t,
-            y=y, out=out, chunksize=chunksize,
+        __parallel_resample_worker(torig=t, tnew=new_t,
+            y=y, out=out, i=i, chunksize=chunksize,
             ovp_size=ovp_size, prefilter=prefilter,
             fitkind=fitkind)
 

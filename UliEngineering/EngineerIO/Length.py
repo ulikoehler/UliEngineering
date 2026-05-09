@@ -156,7 +156,6 @@ def convert_length_to_meters(value, unit, instance=None):
         instance = EngineerLengthIO.instance()
     return instance.convert_length_to_meters(value, unit)
 
-
 def convert_length_to_unit(value, from_unit, to_unit, instance=None):
     """
     Convert a value expressed in `from_unit` to `to_unit`.
@@ -167,34 +166,3 @@ def convert_length_to_unit(value, from_unit, to_unit, instance=None):
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.convert_length_to_unit(value, from_unit, to_unit)
-
-# Backward compatibility functions
-@returns_unit("m")
-def normalize_length(s, instance=None):
-    """
-    Normalize a length to meters.
-    Returns the numeric value in m or None.
-
-    NOTE: 1 nm is one nanometer, not one nautical mile! Use "1 nautical mile" instead!
-
-    Valid inputs include:
-    - "1.0" => 1.0
-    - "1.0 mm" => 0.001
-    - "1 inch" => 0.0254
-    - "1 mil" => 0.000254
-    - "1.2 M light years" => 1.135287656709696e+22
-    - "9.15 kpc" => 2.8233949868947424e+17
-    """
-    if instance is None:
-        instance = EngineerLengthIO.instance()
-    return instance.normalize_length(s)
-
-@returns_unit("m")
-def convert_length_to_meters(value, unit, instance=None):
-    """
-    Given a number or Engineer string (unit ignored) <value>
-    in <unit>, convert it to meters.
-    """
-    if instance is None:
-        instance = EngineerLengthIO.instance()
-    return instance.convert_length_to_meters(value, unit)

@@ -7,8 +7,8 @@ __all__ = ["ValueRange", "normalize_minmax_tuple"]
 _ValueRange = namedtuple("ValueRange", ["min", "max", "unit"])
 
 class ValueRange(_ValueRange):
-    def __new__(cls, min, max, unit=None, significant_digits=4):
-        self = super(ValueRange, cls).__new__(cls, min, max, unit)
+    def __new__(cls, min_val, max_val, unit=None, significant_digits=4):
+        self = super(ValueRange, cls).__new__(cls, min_val, max_val, unit)
         self.significant_digits = significant_digits
         return self
 

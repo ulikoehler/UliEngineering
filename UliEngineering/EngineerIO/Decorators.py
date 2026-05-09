@@ -60,7 +60,7 @@ def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[Enginee
                 try:
                     normalized_default = instance.normalize_numeric(param.default)
                     new_param = param.replace(default=normalized_default)
-                except:
+                except Exception:
                     # If normalization fails, keep the original default
                     new_param = param
             else:
