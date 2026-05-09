@@ -13,10 +13,7 @@ class ValueRange(_ValueRange):
         return self
 
     def __repr__(self):
-        return "ValueRange('{}', '{}')".format(
-            format_value(self.min, self.unit, significant_digits=self.significant_digits),
-            format_value(self.max, self.unit, significant_digits=self.significant_digits)
-        )
+        return f"ValueRange('{format_value(self.min, self.unit, significant_digits=self.significant_digits)}', '{format_value(self.max, self.unit, significant_digits=self.significant_digits)}')"
 
     @property
     def minmax(self):

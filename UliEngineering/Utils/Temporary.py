@@ -7,7 +7,7 @@ import tempfile
 import shutil
 import os
 
-class AutoDeleteTempfileGenerator(object):
+class AutoDeleteTempfileGenerator:
     """
     A wrapper for temporary files and directories that are automatically automatically
     deleted once this class is deleted or deleteAll() is called.

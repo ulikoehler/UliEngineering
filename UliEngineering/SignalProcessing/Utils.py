@@ -125,7 +125,7 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
     return poly, deg, np.min(scores)
 
 
-class LinRange(object):
+class LinRange:
     """
     Combines the properties of numpy.linspace and Python3's range by providing
     a floating-point capable lazy range generator that does not keep the entire array
@@ -193,32 +193,25 @@ class LinRange(object):
             istart, istop, istep = key.indices(self.size)
             return np.linspace(self[istart], self[istop], (istop - istart) // istep,
                                endpoint=False, dtype=self.dtype)
-        elif isinstance(key, numbers.Number):
+        if isinstance(key, numbers.Number):
             if key < 0:
                 key = len(self) + key  # NOTE: Key is negative, so result is < len(self)!
             val = self.start + self.step * key
             # Convert to dtype
             if self.dtype == float:
                 return val
-            else:
-                # TODO find better method, maybe using a scalar
-                return np.asarray([val]).astype(self.dtype)[0]
+            # TODO find better method, maybe using a scalar
+            return np.asarray([val]).astype(self.dtype)[0]
         else:
-            raise TypeError("Invalid argument type for slicing: {0}".format(type(key)))
+            raise TypeError(f"Invalid argument type for slicing: {type(key)}")
 
     def __dtype_name(self):
         if hasattr(self.dtype, "__qualname__"):
             return self.dtype.__qualname__
-        else:
-            return str(self.dtype)
+        return str(self.dtype)
 
     def __repr__(self):
-        return "LinRange({}, {}, {}{})".format(
-            self.start,
-            self.stop,
-            str(self.step) if type(self.step) == np.timedelta64 else self.step,
-            "" if self.dtype == float else ", dtype={}".format(self.__dtype_name())
-            )
+        return f"LinRange({self.start}, {self.stop}, {str(self.step) if isinstance(self.step, np.timedelta64) else self.step}{'' if self.dtype == float else f', dtype={self.__dtype_name()}'})"
 
     def __eq__(self, other):
         return self.start == other.start and self.stop == other.stop and self.step == other.step
@@ -229,12 +222,11 @@ class LinRange(object):
         This works especially if step is a np.timedelta64 object.
         Else "step" is assumed to be a <seconds> value
         """
-        if type(self.step) == np.timedelta64:
+        if isinstance(self.step, np.timedelta64):
             ns = self.step.astype("timedelta64[ns]").astype(int)
             s = ns*1e-9
             return 1./s
-        else:
-            return 1./self.step
+        return 1./self.step
 
 def aggregate(gen):
     """

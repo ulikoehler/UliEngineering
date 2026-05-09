@@ -7,7 +7,7 @@ import collections.abc
 
 __all__ = ["PeekableIteratorWrapper", "ListIterator", "skip_first"]
 
-class ListIterator(object):
+class ListIterator:
     """
     Takes an iterable (like a list)
     and exposes a generator-like interface.
@@ -45,13 +45,13 @@ class ListIterator(object):
     
 
 
-def iterable_to_iterator(it):
+def iterable_to_iterator(_it):
     """
     Given an iterable (like a list), generates
     an iterable out
     """
 
-class PeekableIteratorWrapper(object):
+class PeekableIteratorWrapper:
     """
     Wraps an iterator and provides the additional
     capability of 'peeking' and un-getting values.
@@ -97,13 +97,12 @@ class PeekableIteratorWrapper(object):
         """
         if len(self.buffer) > 0:
             return True
-        else:
-            try:
-                v = next(self)
-                self.unget(v)
-                return True
-            except StopIteration:
-                return False
+        try:
+            v = next(self)
+            self.unget(v)
+            return True
+        except StopIteration:
+            return False
             
 
     def unget(self, v):
@@ -142,7 +141,6 @@ def skip_first(it):
         except StopIteration:
             return
     elif isinstance(it, collections.abc.Iterable):
-        yield from skip_first(it.__iter__())
+        yield from skip_first(iter(it))
     else:
         raise TypeError(f"You must pass an Iterator or an Iterable to skip_first(), but you passed {it}")
-

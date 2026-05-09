@@ -14,8 +14,7 @@ class NumPyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
-        elif isinstance(obj, np.number):  # Generic scalars
+        if isinstance(obj, np.number):  # Generic scalars
             return obj.item()
         # Let the base class default method raise the TypeError
-        raise TypeError("Unserializable object {} of type {}".format(
-            obj, type(obj)))
+        raise TypeError(f"Unserializable object {obj} of type {type(obj)}")

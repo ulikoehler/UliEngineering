@@ -27,8 +27,6 @@ import operator
 from toolz import functoolz
 from toolz.dicttoolz import valmap
 
-import collections
-
 # Some compatibility with Python before 3.3
 try:
     collectionsAbc = collections.abc
@@ -41,17 +39,14 @@ __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
 
 class NotComputedException(Exception):
     "The filter has not been computed yet"
-    pass
 
 
 class FilterUnstableError(Exception):
     """The generated filter is numerically unstable and must not be used"""
-    pass
 
 
 class FilterInvalidError(Exception):
     """The generated filter is numerically unstable and must not be used"""
-    pass
 
 def _normalize_frequencies(freqs):
     # Normalize freqs: Allow [1.0] instead of 1.0
@@ -61,9 +56,9 @@ def _normalize_frequencies(freqs):
     if isinstance(freqs, Iterable) and not isinstance(freqs, str):
         if len(freqs) == 0:
             raise ValueError("Empty frequency list")
-        elif len(freqs) == 1:
+        if len(freqs) == 1:
             return normalize_numeric(freqs[0])
-        elif len(freqs) > 2:
+        if len(freqs) > 2:
             raise ValueError("No more than 2 critical frequencies allowed")
     return normalize_numeric(freqs)
 
@@ -78,7 +73,7 @@ def _check_filter_type(btype, freqs):
         raise ValueError(f"Invalid pass type '{btype}': Use lowpass, highpass, bandpass or bandstop!")
 
 
-class SignalFilter(object):
+class SignalFilter:
     """
     High-level abstraction of a digital signal filter.
     """
@@ -113,8 +108,7 @@ class SignalFilter(object):
         """
         if isinstance(f, numbers.Number):
             return f / (0.5 * self.samplerate)
-        else:
-            return [f[0] / (0.5 * self.samplerate), f[1] / (0.5 * self.samplerate)]
+        return [f[0] / (0.5 * self.samplerate), f[1] / (0.5 * self.samplerate)]
 
     def is_stable(self):
         """
@@ -211,7 +205,7 @@ class SignalFilter(object):
 
 
 
-class ChainedFilter(object):
+class ChainedFilter:
     """
     Chained filter object that applies a number of filters in series.
     This can be used to deal with numerically unstable filters.
@@ -289,7 +283,7 @@ class SumFilter(ChainedFilter):
         return sum(filt(d) for filt in self.filters)
 
 
-class FilterBank(object):
+class FilterBank:
     """
     Represents a set of filters that can be accessed with arbitrary samplerates.
     Utility class that eases the use of filters for multiple sampling rates.

@@ -11,7 +11,7 @@ __all__ = [
     "OnlineUnwrapper"
 ]
 
-class OnlineUnwrapper(object):
+class OnlineUnwrapper:
     """
     An online unwrapper that can process samples one by one or in chunks.
     Maintains state between calls.
@@ -58,40 +58,40 @@ class OnlineUnwrapper(object):
             
             self.last_val = val
             return val + self.correction
-        else:
-            arr = np.array(data, dtype=np.float64)
-            if len(arr) == 0:
-                return arr
-            
-            if self.last_val is None:
-                # First chunk: treat first element as reference (no wrap possible for it)
-                prepend_val = arr[0]
-                current_correction = 0.0
-            else:
-                prepend_val = self.last_val
-                current_correction = self.correction
 
-            # Calculate diffs including the jump from previous chunk
-            diffs = np.diff(arr, prepend=prepend_val)
-            
-            # Determine wrap corrections for each step
-            wrap_adjustments = np.zeros_like(diffs)
-            wrap_adjustments[diffs > self.threshold] = -self.wrap_value
-            wrap_adjustments[diffs < -self.threshold] = +self.wrap_value
-            
-            # Cumulative correction for this chunk
-            chunk_corrections = np.cumsum(wrap_adjustments)
-            
-            # Add the carried-over correction from previous chunks
-            total_corrections = chunk_corrections + current_correction
-            
-            out = arr + total_corrections
-            
-            # Update state
-            self.last_val = arr[-1]
-            self.correction = total_corrections[-1]
-            
-            return out
+        arr = np.array(data, dtype=np.float64)
+        if len(arr) == 0:
+            return arr
+
+        if self.last_val is None:
+            # First chunk: treat first element as reference (no wrap possible for it)
+            prepend_val = arr[0]
+            current_correction = 0.0
+        else:
+            prepend_val = self.last_val
+            current_correction = self.correction
+
+        # Calculate diffs including the jump from previous chunk
+        diffs = np.diff(arr, prepend=prepend_val)
+
+        # Determine wrap corrections for each step
+        wrap_adjustments = np.zeros_like(diffs)
+        wrap_adjustments[diffs > self.threshold] = -self.wrap_value
+        wrap_adjustments[diffs < -self.threshold] = +self.wrap_value
+
+        # Cumulative correction for this chunk
+        chunk_corrections = np.cumsum(wrap_adjustments)
+
+        # Add the carried-over correction from previous chunks
+        total_corrections = chunk_corrections + current_correction
+
+        out = arr + total_corrections
+
+        # Update state
+        self.last_val = arr[-1]
+        self.correction = total_corrections[-1]
+
+        return out
 
 def unwrap(series, wrap_value=2**20, threshold=None):
     """

@@ -151,7 +151,7 @@ def ngrams(arr, n, closed=False):
         the first in the list)
     """
     idxs = np.arange(n)
-    for i in range(arr.shape[0] if closed else arr.shape[0] - n + 1):
+    for _ in range(arr.shape[0] if closed else arr.shape[0] - n + 1):
         yield arr[idxs]
         idxs = np.mod(idxs + 1, arr.shape[0])
 
@@ -184,8 +184,10 @@ def datetime64_now():
     """
     return np.datetime64(datetime.now())
 
+
 # Regex for timedelta64_resolution etc
 _resolution_re = re.compile(r'^[^\[]+\[([^\]]+)\]$')
+
 
 def timedelta64_resolution(tdelta):
     """
@@ -196,8 +198,7 @@ def timedelta64_resolution(tdelta):
     match = _resolution_re.match(s)
     if match is None:
         raise ValueError(f"Data type {s} is not supported for ..._resolution!")
-    else:
-        return match.group(1)
+    return match.group(1)
 
 def datetime64_resolution(dt):
     """

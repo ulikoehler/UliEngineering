@@ -25,20 +25,19 @@ def create_window(size, window_id="blackman", param=None):
     """
     if window_id == "blackman":
         return np.blackman(size)
-    elif window_id == "bartlett":
+    if window_id == "bartlett":
         return np.bartlett(size)
-    elif window_id == "hamming":
+    if window_id == "hamming":
         return np.hamming(size)
-    elif window_id == "hanning":
+    if window_id == "hanning":
         return np.hanning(size)
-    elif window_id == "kaiser":
+    if window_id == "kaiser":
         return np.kaiser(size, 2.0 if param is None else param)
-    elif window_id in ["ones", "none"]:
+    if window_id in ["ones", "none"]:
         return np.ones(size)
-    elif callable(window_id):
+    if callable(window_id):
         return window_id(size, param)
-    else:
-        raise ValueError(f"Unknown window {window_id}")
+    raise ValueError(f"Unknown window {window_id}")
 
 def create_and_apply_window(data, window_id="blackman", param=None, inplace=False):
     """
@@ -63,10 +62,9 @@ def create_and_apply_window(data, window_id="blackman", param=None, inplace=Fals
     if inplace:
         data *= window
         return data
-    else:
-        return data * window
+    return data * window
 
-class WindowFunctor(object):
+class WindowFunctor:
     """
     Initialize a window functor that initializes
 
@@ -109,7 +107,4 @@ class WindowFunctor(object):
         if inplace:
             data *= self.window
             return data
-        else:
-            return data * self.window
-
-
+        return data * self.window

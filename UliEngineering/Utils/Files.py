@@ -19,10 +19,18 @@ __all__ = [
     "find_datasets_by_extension"
 ]
 
-_strip_newline = lambda s: s.strip("\n")
+def _strip_newline(s):
+    return s.strip("\n")
+
+
 __standard_isline = functoolz.compose(bool, str.strip)
 # Utility to get nth CSV column
-_csv_nthcol = lambda n: functoolz.compose(operator.itemgetter(n), lambda s: s.partition(','))
+
+def _csv_nthcol(n):
+
+    return functoolz.compose(operator.itemgetter(n), lambda s: s.partition(','))
+
+
 _csv_firstcol = _csv_nthcol(0)
 
 def count_lines(flo, isline=__standard_isline):
@@ -34,7 +42,7 @@ def count_lines(flo, isline=__standard_isline):
     """
     # Open it if it is a string
     if isinstance(flo, str):
-        with open(flo, "r") as infile:
+        with open(flo, "r", encoding="utf-8") as infile:
             return count_lines(infile, isline=isline)
     # Actual counting code
     num_lines = 0
@@ -50,7 +58,7 @@ def extract_numeric_column(flo, isline=__standard_isline, postproc=functoolz.ide
     """
     # Open it if it is a string
     if isinstance(flo, str):
-        with open(flo, "r") as infile:
+        with open(flo, "r", encoding="utf-8") as infile:
             return extract_numeric_column(infile, isline=isline, postproc=postproc,
                                           preproc=preproc, extractcol=extractcol,
                                           initsize=initsize, **kwargs)
@@ -78,7 +86,7 @@ def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
     """
     # Open it if it is a string
     if isinstance(flo, str):
-        with open(flo, "r") as infile:
+        with open(flo, "r", encoding="utf-8") as infile:
             return extract_column(infile, isline=isline, postproc=postproc, preproc=preproc, extractcol=extractcol)
     # Actual counting code #TODO
     columns = []
@@ -97,14 +105,14 @@ def write_textfile(path, text):
     Does not write a terminating newline.
     """
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w") as outfile:
+    with open(path, "w", encoding="utf-8") as outfile:
         outfile.write(text)
 
 def read_textfile(path):
     """
     Utility to read utf-8 encoded text from a file
     """
-    with open(path, "r") as infile:
+    with open(path, "r", encoding="utf-8") as infile:
         return infile.read()
 
 def list_recursive(directory, relative=False, files_only=True):
@@ -172,8 +180,8 @@ def find_datasets_by_extension(namelist, extensions):
     index_prefixes = [os.path.splitext(name)[0] # Prefix
                    for name in namelist
                    if os.path.splitext(name)[1] == index_ext]
-    # Find 
+    # Find
     for prefix in index_prefixes:
         extfiles = [prefix + ext for ext in extensions]
         if all(extfile in namelist for extfile in extfiles):
-            yield(extfiles)
+            yield (extfiles)

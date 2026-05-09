@@ -31,11 +31,10 @@ def weigh_halves(arr, operator=np.sum):
         # => We can just split in the middle
         pivot = len(arr) // 2
         return operator(arr[:pivot]), operator(arr[pivot:])
-    else:
-        # => We can just split in the middle
-        pivot = len(arr) // 2
-        middle = arr[pivot] / 2
-        return operator(arr[:pivot]) + middle, operator(arr[pivot + 1:]) + middle
+    # => We can just split in the middle
+    pivot = len(arr) // 2
+    middle = arr[pivot] / 2
+    return operator(arr[:pivot]) + middle, operator(arr[pivot + 1:]) + middle
 
 def weight_symmetry(a, b):
     """

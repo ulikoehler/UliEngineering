@@ -20,7 +20,6 @@ class UnannotatedReturnValueError(Exception):
 
     Returns the unit string
     """
-    pass
 
 
 class InvalidUnitInContextException(ValueError):
@@ -29,7 +28,6 @@ class InvalidUnitInContextException(ValueError):
     unknown or invalid unit, but in the given context
     it can't be used
     """
-    pass
 
 
 class UnknownUnitInContextException(ValueError):
@@ -40,14 +38,12 @@ class UnknownUnitInContextException(ValueError):
     The message should contain information on what type of
     quantity (e.g. length) is accepted.
     """
-    pass
 
 class InvalidUnitCombinationException(ValueError):
     """
     Raised if the units involved in an operation can't be
     combined in the way requested, for example if the
     """
-    pass
 
 def find_returned_unit(fn):
     """

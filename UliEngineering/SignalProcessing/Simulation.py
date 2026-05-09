@@ -43,6 +43,7 @@ def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phases
     phaseshift_add += timedelay * samplerate
     return offset + amplitude * genfn(frequency * (2. * np.pi) * (x + phaseshift_add) / samplerate)
 
+
 sine_wave = functools.partial(_generate_wave, np.sin)
 cosine_wave = functools.partial(_generate_wave, np.cos)
 

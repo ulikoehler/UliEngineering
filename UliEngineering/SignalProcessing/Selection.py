@@ -99,17 +99,17 @@ class IntInterval(__Interval):
             raise TypeError("Intervals can only be multiplied by numbers")
         if n == 1:
             return self
-        elif n == 0:  # Return size-0 interval
+        if n == 0:  # Return size-0 interval
             center = (self.end + self.start) // 2
             return IntInterval(center, center)
-        elif n < 1:  # Shrink
+        if n < 1:  # Shrink
             # Compute what to remove at each end
             toRemove = int(round(len(self) * (1.0 - n) / 2))
             return IntInterval(self.start + toRemove, self.end - toRemove)
-        else:  # n > 1: Expand
-            # Compute what to remove at each end
-            toAdd = int(round(len(self) * (n - 1.0) / 2))
-            return IntInterval(self.start - toAdd, self.end + toAdd)
+        # n > 1: Expand
+        # Compute what to remove at each end
+        toAdd = int(round(len(self) * (n - 1.0) / 2))
+        return IntInterval(self.start - toAdd, self.end + toAdd)
 
     def __rmul__(self, n):
         return self.__mul__(n)
@@ -162,8 +162,8 @@ def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side=
     idx = bisect_func(timestamps, (time.timestamp() - ofs) * factor)
     if around is None:
         return idx
-    else:  # Return range
-        return IntInterval(idx - around, idx + around)
+    # Return range
+    return IntInterval(idx - around, idx + around)
 
 def sorted_range_indices(arr, low, high):
     """
@@ -300,6 +300,7 @@ def __select_y(ranges, y, selector):
     """maxy selector for shrink_ranges"""
     return np.asarray([start + selector(y[start:end + 1]) for start, end in ranges])
 
+
 __shrinkRangeMethodLUT = {
     "min": lambda arr: arr[:, 0],
     "max": lambda arr: arr[:, 1],
@@ -308,6 +309,7 @@ __shrinkRangeMethodLUT = {
     "miny": functools.partial(__select_y, selector=np.argmin),
     "maxy": functools.partial(__select_y, selector=np.argmax),
 }
+
 
 def shrink_ranges(ranges, method="middle", **kwargs):
     """
@@ -344,7 +346,7 @@ def select_ranges(ranges, arr):
 
 
 
-def ranges_to_IntInterva(ranges):
+def ranges_to_IntInterva(_ranges):
     """
     Convert a 2d range array, like the one returned by find_true_runs(),
     to a list of int ranges).
@@ -370,19 +372,18 @@ def random_slice(arr, size):
     """
     if isinstance(arr, numbers.Integral):
         alen = arr
-    else:  # Assume numpy-like
-        alen = arr.shape[0]
+    # Assume numpy-like
+    alen = arr.shape[0]
     if alen < size:
-        msg = "Array of size {0} is not large enough to hold interval of size {1}"\
-              .format(alen, size)
+        msg = f"Array of size {alen} is not large enough to hold interval of size {size}"
         raise ValueError(msg)
-    elif alen == size:
+    if alen == size:
         return IntInterval(0, alen)
     r = np.random.randint(0, alen - size)
     return IntInterval(r, r + size)
 
 
-class GeneratorCounter(object):
+class GeneratorCounter:
     """
     Utility class that provides zero-overhead counting for generators.
     At any point in time, len(...) of this class provides the number of
@@ -397,7 +398,7 @@ class GeneratorCounter(object):
     def __init__(self, gen):
         self.gen = gen
         self.count = 0
-        self.iter = self.gen.__iter__()
+        self.iter = iter(self.gen)
 
     def reiter(self, reset_count=False):
         """
@@ -408,7 +409,7 @@ class GeneratorCounter(object):
         """
         if reset_count:
             self.count = 0
-        self.iter = self.gen.__iter__()
+        self.iter = iter(self.gen)
 
     def __iter__(self):
         return self
