@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["Densities", "density_by_volume_and_weight"]
 
@@ -53,7 +53,8 @@ Densities: dict[str, float] = {
 }
 
 @normalize_numeric_args
-def density_by_volume_and_weight(volume, weight) -> Unit("kg/m³"):
+@returns_unit("kg/m³")
+def density_by_volume_and_weight(volume, weight):
     """
     Calculates the density of a material by its volume and weight.
 

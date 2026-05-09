@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_less
-from UliEngineering.SignalProcessing.Filter import SignalFilter, _normalize_frequencies
+from UliEngineering.SignalProcessing.Filter import SignalFilter, _normalize_frequencies, NotComputed, FilterUnstableError, FilterInvalidError, ChainedFilter, SumFilter, FilterBank
 from parameterized import parameterized
 import unittest
 

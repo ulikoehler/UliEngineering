@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from UliEngineering.SignalProcessing.Selection import IntInterval, select_by_datetime, find_sorted_extrema, shrink_ranges
+from UliEngineering.SignalProcessing.Selection import IntInterval, select_by_datetime, find_sorted_extrema, shrink_ranges, find_true_runs, find_false_runs, select_by_threshold, random_slice, find_nearest_idx, majority_vote_all, majority_vote, extract_by_reference, select_ranges, multiselect
 from parameterized import parameterized
 import concurrent.futures
 import numpy as np

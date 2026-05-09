@@ -11,7 +11,7 @@ import numpy as np
 from UliEngineering.EngineerIO import NormalizeResult, normalize, normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
 from UliEngineering.Physics.Temperature import normalize_temperature
-from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
+from UliEngineering.Utils.Range import ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
 
 __all__ = ["value_range_over_temperature", "value_at_temperature"]

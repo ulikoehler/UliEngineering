@@ -5,7 +5,6 @@ Functions for normalizing signals
 """
 import numpy as np
 from collections import namedtuple
-import scipy.signal
 from .Utils import peak_to_peak
 
 __all__ = ["normalize_max", "center_to_zero", "normalize_minmax", "normalize_plusminus_peak"]

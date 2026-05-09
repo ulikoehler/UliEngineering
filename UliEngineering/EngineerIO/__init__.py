@@ -26,7 +26,6 @@ from typing import List, Optional
 import numpy as np
 
 from UliEngineering.EngineerIO.Defaults import default_interpunctation_transform_map
-from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
 from UliEngineering.Units import (InvalidUnitInContextException,
                                   UnannotatedReturnValueError)
 

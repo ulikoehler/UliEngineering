@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Volume import normalize_volume, EngineerVolumeIO
+from UliEngineering.EngineerIO.Volume import normalize_volume, EngineerVolumeIO, convert_volume_to_cubic_meters
 import unittest
 import numpy as np
 import scipy.constants

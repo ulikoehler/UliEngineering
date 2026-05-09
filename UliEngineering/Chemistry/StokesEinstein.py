@@ -19,7 +19,6 @@ Also includes the Stokes-Einstein-Sutherland variant and
 the rotational diffusion coefficient.
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-import numpy as np
 from scipy.constants import k as k_B, pi
 
 __all__ = [
