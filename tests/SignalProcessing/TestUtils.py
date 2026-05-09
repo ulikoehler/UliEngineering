@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_equal
-from UliEngineering.SignalProcessing.Utils import *
+from UliEngineering.SignalProcessing.Utils import remove_mean, rms, peak_to_peak, unstair, optimum_polyfit, LinRange, aggregate
 from parameterized import parameterized
 import numpy as np
 import pytest

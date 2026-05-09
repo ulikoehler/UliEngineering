@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Electronics.Crystal import *
+from UliEngineering.Electronics.Crystal import load_capacitors, actual_load_capacitance, crystal_deviation_seconds_per_minute, crystal_deviation_seconds_per_hour, crystal_deviation_seconds_per_day, crystal_deviation_seconds_per_month, crystal_deviation_seconds_per_year
 from UliEngineering.EngineerIO import auto_format
 import unittest
 

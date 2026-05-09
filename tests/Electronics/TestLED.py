@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.LED import *
+from UliEngineering.Electronics.LED import led_series_resistor, LEDForwardVoltages, led_series_resistor_power, led_series_resistor_maximum_current
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.EngineerIO import auto_format
 import unittest

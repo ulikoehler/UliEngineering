@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.Light import *
+from UliEngineering.Physics.Light import lumen_to_candela_by_apex_angle
 from UliEngineering.EngineerIO import auto_format
 import unittest
 

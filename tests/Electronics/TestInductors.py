@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.Inductors import *
+from UliEngineering.Electronics.Inductors import ideal_inductor_current_change_rate
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
 import unittest

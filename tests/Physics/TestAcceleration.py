@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Physics.Acceleration import *
+from UliEngineering.Physics.Acceleration import g_to_ms2, ms2_to_g, centrifugal_acceleration, centrifuge_radius
 import unittest
 import scipy.constants
 

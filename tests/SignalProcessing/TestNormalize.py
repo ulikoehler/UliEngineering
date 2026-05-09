@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.SignalProcessing.Normalize import *
+from UliEngineering.SignalProcessing.Normalize import center_to_zero, normalize_max, normalize_minmax
 import numpy as np
 import unittest
 import pytest

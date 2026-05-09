@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Electronics.Thermistor import *
+from UliEngineering.Electronics.Thermistor import thermistor_b_value, thermistor_temperature, thermistor_resistance
 import unittest
 import numpy as np
 

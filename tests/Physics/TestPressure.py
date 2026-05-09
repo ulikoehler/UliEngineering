@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Physics.Pressure import *
+from UliEngineering.Physics.Pressure import pascal_to_bar, bar_to_pascal
 import unittest
 
 class TestPressureConversion(unittest.TestCase):

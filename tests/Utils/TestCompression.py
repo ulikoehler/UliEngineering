@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import os
 from subprocess import check_output
-from UliEngineering.Utils.Compression import *
-from UliEngineering.Utils.Temporary import *
+from UliEngineering.Utils.Compression import auto_open
+from UliEngineering.Utils.Temporary import AutoDeleteTempfileGenerator
 import unittest
 
 class TestAutoOpen(unittest.TestCase):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Economics.Interest import *
+from UliEngineering.Economics.Interest import interest_apply_multiple_times, yearly_interest_to_equivalent_monthly_interest, yearly_interest_to_equivalent_daily_interest
 import unittest
 
 class TestEquivalentInterest(unittest.TestCase):

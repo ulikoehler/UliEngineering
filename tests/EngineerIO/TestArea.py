@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Area import *
+from UliEngineering.EngineerIO.Area import normalize_area, convert_area_to_square_meters, EngineerAreaIO
 import unittest
 import numpy as np
 import scipy.constants

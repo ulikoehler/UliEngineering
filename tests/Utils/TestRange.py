@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Utils.Range import *
+from UliEngineering.Utils.Range import ValueRange
 import unittest
 
 class TestValueRange(unittest.TestCase):

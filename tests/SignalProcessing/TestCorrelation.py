@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.SignalProcessing.Correlation import *
+from UliEngineering.SignalProcessing.Correlation import autocorrelate
 import numpy as np
 import unittest
 

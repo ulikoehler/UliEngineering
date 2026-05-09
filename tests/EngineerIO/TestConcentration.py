@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Concentration import *
+from UliEngineering.EngineerIO.Concentration import normalize_mass_concentration, convert_mass_concentration_to_per_liter, EngineerMassConcentrationIO, normalize_amount_concentration, convert_amount_concentration_to_grams_per_liter, EngineerAmountConcentrationIO
 
 class TestMassConcentration(unittest.TestCase):
     def setUp(self):

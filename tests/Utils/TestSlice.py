@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Utils.Slice import *
+from UliEngineering.Utils.Slice import shift_slice
 import unittest
 
 class TestShiftSlice(unittest.TestCase):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Physics.MagneticResonance import *
+from UliEngineering.Physics.MagneticResonance import larmor_frequency, NucleusLarmorFrequency
 import unittest
 
 class TestLarmorFrequency(unittest.TestCase):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.TemperatureCoefficient import *
+from UliEngineering.Electronics.TemperatureCoefficient import value_range_over_temperature, value_at_temperature
 from UliEngineering.Utils.Range import ValueRange
 import unittest
 import numpy as np

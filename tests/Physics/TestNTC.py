@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.NTC import *
-from UliEngineering.Exceptions import *
+from UliEngineering.Physics.NTC import ntc_resistance, ntc_resistances
+from UliEngineering.Exceptions import InvalidUnitException
 import unittest
 
 class TestNTC(unittest.TestCase):

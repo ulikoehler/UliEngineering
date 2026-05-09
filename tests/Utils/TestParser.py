@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Utils.Parser import *
+from UliEngineering.Utils.Parser import parse_int_or_float, try_parse_int_or_float
 import unittest
 
 class TestParseIntFloat(unittest.TestCase):

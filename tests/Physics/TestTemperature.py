@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.Temperature import *
-from UliEngineering.Exceptions import *
+from UliEngineering.Physics.Temperature import normalize_temperature, normalize_temperature_celsius, temperature_with_dissipation
+from UliEngineering.Exceptions import InvalidUnitException
 from UliEngineering.EngineerIO import auto_format
 import unittest
 

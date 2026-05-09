@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Physics.Rotation import *
+from UliEngineering.Physics.Rotation import rpm_to_Hz, rpm_to_rps, hz_to_rpm, angular_speed, centrifugal_force, rotation_linear_speed
 import unittest
 import math
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.OpAmp import *
+from UliEngineering.Electronics.OpAmp import summing_amplifier_noninv, noninverting_amplifier_gain
 from UliEngineering.EngineerIO import auto_format
 import unittest
 import numpy as np

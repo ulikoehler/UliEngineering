@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.SignalProcessing.Window import *
+from UliEngineering.SignalProcessing.Window import WindowFunctor, create_and_apply_window
 import numpy as np
 import unittest
 

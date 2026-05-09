@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose, assert_array_equal
-from UliEngineering.Utils.NumPy import *
+from UliEngineering.Utils.NumPy import numpy_resize_insert, invert_bijection, apply_pairwise_1d, ngrams, split_by_pivot, datetime64_now, timedelta64_resolution
 from parameterized import parameterized
 import numpy as np
 import unittest

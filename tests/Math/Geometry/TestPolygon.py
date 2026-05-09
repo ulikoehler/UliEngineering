@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.Math.Geometry.Polygon import *
+from UliEngineering.Math.Geometry.Polygon import polygon_lines, polygon_area
 from parameterized import parameterized
 import numpy as np
 import unittest

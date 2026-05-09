@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.Reactance import *
+from UliEngineering.Electronics.Reactance import capacitive_reactance, inductive_reactance, inductance_from_reactance, capacitance_from_reactance
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
 import unittest

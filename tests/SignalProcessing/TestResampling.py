@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 from numpy.testing import assert_allclose, assert_approx_equal
-from UliEngineering.SignalProcessing.Resampling import *
+from UliEngineering.SignalProcessing.Resampling import resample_discard, signal_samplerate, parallel_resample
 import unittest
 
 

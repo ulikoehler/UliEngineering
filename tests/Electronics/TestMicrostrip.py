@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.Electronics.Microstrip import *
-from UliEngineering.EngineerIO import *
+from UliEngineering.Electronics.Microstrip import microstrip_width, microstrip_impedance
+from UliEngineering.EngineerIO import auto_format
 import unittest
 import numpy as np
 

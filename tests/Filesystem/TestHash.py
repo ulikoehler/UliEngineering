@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import unittest
-from UliEngineering.Filesystem.Hash import *
+from UliEngineering.Filesystem.Hash import hash_file_native, hash_file_sha256, hash_file_md5, hash_file_sha1, hash_directory
 import tempfile
 import hashlib
 import os

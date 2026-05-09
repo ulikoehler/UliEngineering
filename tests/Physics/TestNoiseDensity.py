@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.NoiseDensity import *
+from UliEngineering.Physics.NoiseDensity import actual_noise, noise_density
 from UliEngineering.EngineerIO import auto_format
 import unittest
 

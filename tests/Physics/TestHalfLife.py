@@ -1,5 +1,5 @@
 import unittest
-from UliEngineering.Physics.HalfLife import *
+from UliEngineering.Physics.HalfLife import half_lifes_passed, fraction_remaining, fraction_decayed, remaining_quantity, decayed_quantity, half_life_from_decay_constant, half_life_from_remaining_quantity, half_life_from_decayed_quantity, half_life_from_fraction_remaining, half_life_from_fraction_decayed
 
 class TestHalfLife(unittest.TestCase):
     def test_half_lifes_passed(self):

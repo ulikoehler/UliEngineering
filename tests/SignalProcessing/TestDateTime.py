@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.SignalProcessing.DateTime import *
+from UliEngineering.SignalProcessing.DateTime import splice_date, auto_strptime
 import datetime
 import unittest
 

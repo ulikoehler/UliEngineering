@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Utils.String import *
+from UliEngineering.Utils.String import split_nth, partition_at_numeric_to_nonnumeric_boundary
 from parameterized import parameterized
 import unittest
 

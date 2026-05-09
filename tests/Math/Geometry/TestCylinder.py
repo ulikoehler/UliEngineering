@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Math.Geometry.Cylinder import *
+from UliEngineering.Math.Geometry.Cylinder import cylinder_volume, cylinder_side_surface_area, cylinder_surface_area, hollow_cylinder_volume, hollow_cylinder_inner_radius_by_volume
 from parameterized import parameterized
 import unittest
 import math

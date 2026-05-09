@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Mechanics.Threads import *
+from UliEngineering.Mechanics.Threads import threads
 import unittest
 
 class TestThreads(unittest.TestCase):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.SignalProcessing.Weight import *
+from UliEngineering.SignalProcessing.Weight import weigh_halves, weight_symmetry
 import numpy as np
 import unittest
 

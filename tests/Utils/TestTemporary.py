@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Utils.Temporary import *
+from UliEngineering.Utils.Temporary import AutoDeleteTempfileGenerator
+import os
 import unittest
 
 class TestTemporary(unittest.TestCase):

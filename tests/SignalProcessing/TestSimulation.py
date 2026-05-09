@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.SignalProcessing.Simulation import *
-from UliEngineering.SignalProcessing.FFT import *
-from UliEngineering.SignalProcessing.Chunks import *
+from UliEngineering.SignalProcessing.Simulation import sine_wave, cosine_wave, square_wave, triangle_wave, sawtooth, inverse_sawtooth
+from UliEngineering.SignalProcessing.FFT import compute_fft
 from parameterized import parameterized
 import unittest
 
