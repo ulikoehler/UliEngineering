@@ -211,7 +211,7 @@ class TestFindRuns(unittest.TestCase):
         assert_allclose(ranges, [[4, 8], [14, 20]])
 
     def testEdges(self):
-        "Test range with both edges at once"
+        "Test range with both edges at once."
         x = np.full(25, False)
         x[0:9] = True
         x[14:24] = True
@@ -243,7 +243,7 @@ class TestShrinkRanges(unittest.TestCase):
         self.x[22] = 4.0
 
     def testSimple(self):
-        """Test simple (non data-aware) methods"""
+        """Test simple (non data-aware) methods."""
         # Generate test data. Tuned so there are definitive min/max values
         ranges = find_true_runs(self.x > 0.5)
         # Min selector

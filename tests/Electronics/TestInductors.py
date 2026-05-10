@@ -99,8 +99,8 @@ class TestInductors(unittest.TestCase):
         transformer_rate = ideal_inductor_current_change_rate(transformer_inductance, transformer_voltage)
         self.assertAlmostEqual(transformer_rate, 12.0, places=10)  # A/s
 
-    def test_switching_power_supply_scenarios(self):
-        """Test scenarios common in switching power supplies"""
+    def test_scenarios_common_in_switching_power_supplies(self):
+        """Test scenarios common in switching power supplies."""
         # Boost converter inductor during switch-on phase
         boost_inductance = 22e-6  # 22 µH
         input_voltage = 12.0      # V
@@ -130,8 +130,8 @@ class TestInductors(unittest.TestCase):
         filter_rate = ideal_inductor_current_change_rate(filter_inductance, ripple_voltage)
         self.assertAlmostEqual(filter_rate, 100.0, places=10)  # A/s
 
-    def test_edge_cases_small_values(self):
-        """Test edge cases with very small values"""
+    def test_edge_cases_with_very_small_values(self):
+        """Test edge cases with very small values."""
         # Very small inductance (parasitic inductance)
         tiny_inductance = 1e-12  # pH (picohenry)
         small_voltage = 1e-3     # mV
@@ -251,7 +251,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(base_result, result3, places=10)
 
     def test_real_world_component_values(self):
-        """Test with actual component values from datasheets"""
+        """Test with actual component values from datasheets."""
         # Ferrite bead (high frequency)
         ferrite_inductance = 120e-9  # 120 nH @ 100 MHz
         signal_voltage = 0.1         # V
@@ -272,8 +272,8 @@ class TestInductors(unittest.TestCase):
         expected_rate = 3.3 / 4.7e-6  # ~702127 A/s
         self.assertAlmostEqual(power_rate, expected_rate, places=0)
 
-    def test_frequency_domain_implications(self):
-        """Test scenarios that relate to frequency domain behavior"""
+    def test_scenarios_that_relate_to_frequency_domain_behavior(self):
+        """Test scenarios that relate to frequency domain behavior."""
         # At different frequencies, the same inductor will have different impedance
         # But the current change rate formula di/dt = V/L remains the same
         inductance = 100e-6  # 100 µH

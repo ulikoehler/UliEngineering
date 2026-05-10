@@ -11,6 +11,7 @@ class NumPyEncoder(json.JSONEncoder):
     """
     A JSON encoder that is capable of encoding NumPy ndarray objects.
     """
+
     def default(self, obj):
         if isinstance(obj, np.ndarray):
             return obj.tolist()

@@ -22,7 +22,7 @@ class TestGenerateSinewave(unittest.TestCase):
         (11.,),
     ])
     def testPhaseShift(self, frequency):
-        """Test if 0/360/720° phase shift matches, and 180/540° matches as wel"""
+        """Test if 0/360/720° phase shift matches, and 180/540° matches as well."""
         sw0 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=0.0)
         sw180 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=180.0)
         sw360 = sine_wave(frequency, 1000.0, amplitude=1., length=5.0, phaseshift=360.0)

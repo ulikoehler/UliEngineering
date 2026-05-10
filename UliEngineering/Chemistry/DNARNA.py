@@ -68,7 +68,7 @@ equal_rna_fractions = NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25)
 # DNA/RNA nucleotide fractions for various organisms (from HTML table data)
 class DNARNANucleotideFractionsByOrganism:
     """
-    Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules
+    Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules.
     Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11)
     """
     Maize = NucleotideFractions(A=0.268, T=0.272, G=0.228, C=0.232, U=0.0)

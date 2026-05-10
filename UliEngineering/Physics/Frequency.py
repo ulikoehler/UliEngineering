@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for frequencies
-"""
+"""Utilities for frequencies."""
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = ["frequency_to_period", "period_to_frequency"]
@@ -17,6 +15,7 @@ def frequency_to_period(frequency):
     ----------
     frequency : number or Engineer string or NumPy array-like
         The frequency in Hz
+
     """
     return 1./frequency
 

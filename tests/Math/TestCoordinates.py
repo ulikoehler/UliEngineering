@@ -25,7 +25,7 @@ class TestBoundingBox(unittest.TestCase):
         self.assertIn("BoundingBox(", bbox.__repr__())
 
     def test_bbox(self):
-        """Test bounding box with simulated data"""
+        """Test bounding box with simulated data."""
         coords = [(0., 0.),
                   (20., 10)]
 

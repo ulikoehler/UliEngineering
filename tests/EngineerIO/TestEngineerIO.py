@@ -317,11 +317,11 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.io = EngineerIO()
 
     def test_unit_prefix_suffix_regex_compilation(self):
-        """Test that the unit prefix suffix regex is compiled correctly"""
+        """Test that the unit prefix suffix regex is compiled correctly."""
         self.assertIsNotNone(self.io.unit_prefix_suffix_regex)
         
     def test_has_any_unit_prefix_with_suffix(self):
-        """Test has_any_unit_prefix() with unit prefixes at the end"""
+        """Test has_any_unit_prefix() with unit prefixes at the end."""
         # Test single character unit prefixes
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123k")
         self.assertTrue(has_prefix)
@@ -560,7 +560,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertTrue(pattern.endswith('$'))
 
     def test_compile_methods_called_in_init(self):
-        """Test that all compile methods are called during initialization"""
+        """Test that all compile methods are called during initialization."""
         # Create a new instance and verify all regex attributes exist
         io = EngineerIO()
         
@@ -570,7 +570,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIsNotNone(hasattr(io, 'unit_prefix_suffix_regex'))
 
     def test_resolve_unit_alias_method(self):
-        """Test _resolve_unit_alias() method"""
+        """Test _resolve_unit_alias() method."""
         units = [
             UnitInfo('m²', aliases=['sq m']),
             UnitInfo('V', aliases=['volt']),

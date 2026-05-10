@@ -499,7 +499,7 @@ class TestAreaUnits(unittest.TestCase):
         self.io = EngineerAreaIO.instance()
 
     def test_area_unit_regex_end_matching(self):
-        """Test that area unit regexes only match at the end of strings"""
+        """Test that area unit regexes only match at the end of strings."""
         # Test units that should match at the end
         end_match_cases = [
             "100 m²",
@@ -530,7 +530,7 @@ class TestAreaUnits(unittest.TestCase):
                                   f"Alias regex match '{alias_match.group(1)}' not at end of '{case}'")
 
     def test_area_unit_regex_no_middle_matching(self):
-        """Test that area unit regexes do NOT match in the middle of strings"""
+        """Test that area unit regexes do NOT match in the middle of strings."""
         # Test cases where unit appears in middle - should NOT match
         middle_no_match_cases = [
             "m²value",  # Unit in middle
@@ -633,13 +633,13 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.unit, 'ha')
 
     def test_area_units_with_prefixes(self):
-        """Test area units with SI prefixes"""
+        """Test area units with SI prefixes."""
         result = self.io.normalize("2.5k m²")
         self.assertEqual(result.value, 2500.0)
         self.assertEqual(result.unit, 'm²')
 
     def test_split_unit_area_units(self):
-        """Test split_unit function with area units"""
+        """Test split_unit function with area units."""
         from UliEngineering.EngineerIO import UnitSplitResult
         
         # Unicode notation
@@ -680,11 +680,11 @@ class TestUnitAliases(unittest.TestCase):
         self.io = EngineerAreaIO.instance()
 
     def test_unit_alias_regex_compilation(self):
-        """Test that the unit alias regex is compiled correctly"""
+        """Test that the unit alias regex is compiled correctly."""
         self.assertIsNotNone(self.io.unit_alias_regex)
         
     def test_split_unit_with_aliases_no_space(self):
-        """Test splitting units with aliases that have no spaces"""
+        """Test splitting units with aliases that have no spaces."""
         from UliEngineering.EngineerIO import UnitSplitResult
         
         # Test caret notation aliases

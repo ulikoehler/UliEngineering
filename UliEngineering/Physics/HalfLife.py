@@ -25,7 +25,8 @@ def half_lifes_passed(timespan, half_life) -> float:
     Compute the number of half-lifes that have passed within a certain
     timespan. The timespan can be a string or a number (in seconds).
 
-    Examples:
+    Examples
+    --------
         half_lifes_passed("1h", half_life="1min") => 1/60
 
     """
@@ -38,8 +39,10 @@ def fraction_remaining(timespan, half_life) -> float:
     Compute the fraction of the original quantity that remains after
     a certain timespan and half-life.
 
-    Examples:
+    Examples
+    --------
         fraction_remaining("1h", half_life="1min") => 0.5
+
     """
     return 0.5 ** half_lifes_passed(timespan, half_life)
 
@@ -48,7 +51,8 @@ def fraction_decayed(timespan, half_life) -> float:
     Compute the fraction of the original quantity that has decayed
     after a certain timespan and half-life.
 
-    Examples:
+    Examples
+    --------
         fraction_decayed("1h", half_life="1min") => 0.5
     """
     return 1.0 - fraction_remaining(timespan, half_life)
@@ -57,7 +61,8 @@ def remaining_quantity(timespan, half_life, initial_quantity) -> float:
     """
     Compute the quantity that remains after a certain timespan and half-life.
 
-    Examples:
+    Examples
+    --------
         remaining_quantity("1h", half_life="1min", initial_quantity=100) => ...
     """
     initial_quantity = normalize_numeric(initial_quantity)
@@ -67,6 +72,7 @@ def decayed_quantity(timespan, half_life, initial_quantity) -> float:
     """
     Compute the quantity that remains after a certain timespan and half-life.
 
+    --------
     Examples:
         decayed_quantity("1h", half_life="1min", initial_quantity=100) => 40/60
     """
@@ -78,15 +84,18 @@ def half_life_from_decay_constant(decay_constant) -> float:
     Compute the half-life from a decay constant using the formula: T₁/₂ = ln(2) / λ
 
     The half-life is the time required for a quantity to reduce to half of its initial value.
-    This is commonly used in radioactive decay, drug elimination, and chemical kinetics.
+    This is co
+    ----------monly used in radioactive decay, drug elimination, and chemical kinetics.
 
     Parameters:
         decay_constant (float): The decay constant λ (lambda) in s⁻¹
 
-    Returns:
+    Returns
+    -------
         float: The half-life in the same time units as the decay constant (typically seconds)
 
-    Example:
+    Examples
+    --------
         >>> half_life_from_decay_constant(0.1)  # For λ = 0.1 s⁻¹
         6.9314718056
     """
@@ -97,15 +106,18 @@ def half_life_from_remaining_quantity(timespan, remaining_quantity, initial_quan
     """
     Compute the half-life from a remaining quantity after a certain timespan.
 
-    Parameters:
+    Parameters
+    ----------
         timespan (str or float): The timespan in seconds or a string like "1h"
         remaining_quantity (float): The quantity that remains after the timespan
         initial_quantity (float): The initial quantity
 
-    Returns:
+    Returns
+    -------
         float: The half-life in the same time units as the timespan
 
-    Example:
+    Examples
+    --------
         >>> half_life_from_remaining_quantity("1h", 50, 100)
         3600.0
     """
@@ -118,15 +130,18 @@ def half_life_from_decayed_quantity(timespan, decayed_quantity, initial_quantity
     """
     Compute the half-life from a decayed quantity after a certain timespan.
 
-    Parameters:
+    Parameters
+    ----------
         timespan (str or float): The timespan in seconds or a string like "1h"
         decayed_quantity (float): The quantity that has decayed after the timespan
         initial_quantity (float): The initial quantity
 
-    Returns:
+    Returns
+    -------
         float: The half-life in the same time units as the timespan
 
-    Example:
+    Examples
+    --------
         >>> half_life_from_decayed_quantity("1h", 50, 100)
         3600.0
     """
@@ -140,14 +155,17 @@ def half_life_from_fraction_remaining(timespan, fraction_remaining) -> float:
     """
     Compute the half-life from a remaining fraction after a certain timespan.
 
-    Parameters:
+    Parameters
+    ----------
         timespan (str or float): The timespan in seconds or a string like "1h"
         fraction_remaining (float): The fraction of the initial quantity that remains
 
-    Returns:
+    Returns
+    -------
         float: The half-life in the same time units as the timespan
 
-    Example:
+    Examples
+    --------
         >>> half_life_from_fraction_remaining("1h", 0.5)
         3600.0
     """
@@ -161,10 +179,12 @@ def half_life_from_fraction_decayed(timespan, fraction_decayed) -> float:
         timespan (str or float): The timespan in seconds or a string like "1h"
         fraction_decayed (float): The fraction of the initial quantity that has decayed
 
-    Returns:
+    Returns
+    -------
         float: The half-life in the same time units as the timespan
 
-    Example:
+    Examples
+    --------
         >>> half_life_from_fraction_decayed("1h", 0.5)
         3600.0
     """

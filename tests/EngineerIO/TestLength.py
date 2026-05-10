@@ -179,12 +179,12 @@ class TestLength(unittest.TestCase):
             self.length_io.normalize_length("6.6 {}".format(unit))
 
     def test_none_handling(self):
-        """Test handling of None input"""
+        """Test handling of None input."""
         with self.assertRaises(ValueError):
             normalize_length(None)
 
     def test_list_input(self):
-        """Test list input handling"""
+        """Test list input handling."""
         input_list = ["1 m", "100 mm", "1 ft"]
         result_func = normalize_length(input_list)
         result_class = self.length_io.normalize_length(input_list)

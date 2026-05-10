@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for FFT computation and visualization
-"""
+"""Utilities for FFT computation and visualization."""
 import warnings
 import numpy as np
 import functools
@@ -160,6 +158,7 @@ class FFTReductionOverTime(object):
     end_freq : float or None
         End frequency used for the band selection.
     """
+
     def __init__(self, powers, start_indices, end_indices, fftsize, samplerate=None, start_freq=None, end_freq=None):
         import numpy as _np
         self.powers = _np.asarray(powers)
@@ -199,7 +198,7 @@ class FFTReductionOverTime(object):
 
 
 def fft_frequencies(fftsize, samplerate):
-    """Return the frequencies associated to a real-onl FFT array"""
+    """Return the frequencies associated to a real-only FFT array."""
     return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
 
 def compute_fft(y, samplerate, window="blackman", window_param=None):
@@ -265,6 +264,7 @@ def normalize_fft_reduction(values, fftsize, nchunks=1, power=False):
     -------
     numpy.ndarray
         Normalized values
+
     """
     vals = np.asarray(values)
     if power:

@@ -13,7 +13,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertTrue(np.isnan(result))
     
     def test_none_to_nan_simple_values(self):
-        """Test that simple non-None values are returned unchanged"""
+        """Test that simple non-None values are returned unchanged."""
         test_values = [42, 3.14, -1, 0, True, False]
         for value in test_values:
             with self.subTest(value=value):
@@ -21,7 +21,7 @@ class TestNoneToNaN(unittest.TestCase):
                 self.assertEqual(result, value)
     
     def test_none_to_nan_string_handling(self):
-        """Test string handling - empty strings become NaN, others are stripped"""
+        """Test string handling - empty strings become NaN, others are stripped."""
         # Empty string should become NaN
         result = none_to_nan("")
         self.assertTrue(np.isnan(result))
@@ -57,7 +57,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(result[4], 5)
     
     def test_none_to_nan_mixed_list(self):
-        """Test list with mixed types including strings and None"""
+        """Test list with mixed types including strings and None."""
         input_list = [1, None, "test", "", "  ", 3.14]
         result = none_to_nan(input_list)
         
@@ -102,12 +102,12 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(result[2][1], 3)
     
     def test_none_to_nan_empty_list(self):
-        """Test empty list handling"""
+        """Test empty list handling."""
         result = none_to_nan([])
         self.assertEqual(result, [])
     
     def test_none_to_nan_numpy_array(self):
-        """Test numpy array handling"""
+        """Test numpy array handling."""
         input_array = np.array([1, 2, 3])
         result = none_to_nan(input_array)
         
@@ -116,7 +116,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(result, [1, 2, 3])
     
     def test_none_to_nan_string_edge_cases(self):
-        """Test edge cases for string handling"""
+        """Test edge cases for string handling."""
         # Various whitespace characters
         test_cases = [
             ("\r\n", True),  # Should become NaN
@@ -136,7 +136,7 @@ class TestNoneToNaN(unittest.TestCase):
                     self.assertEqual(result, input_str.strip())
     
     def test_none_to_nan_complex_types(self):
-        """Test with complex number and other special types"""
+        """Test with complex number and other special types."""
         # Complex numbers
         complex_val = 3 + 4j
         result = none_to_nan(complex_val)

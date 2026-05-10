@@ -48,7 +48,7 @@ def voltage_divider_current(rtop, rbot, vin, rload=np.inf):
     # Compute voltage delta across resistor
     vdelta = vout - vin
     # Compute current through resisotr
-    return current_through_resistor(rtop, vdelta);
+    return current_through_resistor(rtop, vdelta)
 
 class VoltageDividerPower(namedtuple("VoltageDividerPower", [
         "top", "bottom", "load", "total"
@@ -56,8 +56,9 @@ class VoltageDividerPower(namedtuple("VoltageDividerPower", [
     """
     Represents the power dissipated in different parts of a voltage
     """
+
     def __repr__(self):
-        """Better formatting"""
+        """Better formatting."""
         return f"VoltageDividerPower(top={format_value(self.top, 'W')}, bottom={format_value(self.bottom, 'W')}, {'load=' + format_value(self.load, 'W') if self.load != 0 else ''}total={format_value(self.total, 'W')})"
 
 @returns_unit("W")

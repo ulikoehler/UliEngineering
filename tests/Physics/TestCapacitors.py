@@ -540,7 +540,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertEqual(auto_format(capacitor_capacitance_by_energy, "1.25 mJ", "5.0 V"), "100 µF")
 
     def test_boundary_conditions(self):
-        """Test boundary conditions and numerical stability"""
+        """Test boundary conditions and numerical stability."""
         # Zero energy case (should give infinite capacitance when starting voltage equals final voltage)
         with np.errstate(divide='ignore', invalid='ignore'):
             calculated_capacitance = capacitor_capacitance_by_energy(0, "5V", "5V")
@@ -557,7 +557,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertGreater(calculated_capacitance, 0)
 
 class TestCapacitorChargingEnergy(unittest.TestCase):
-    """Comprehensive tests for capacitor_charging_energy function"""
+    """Comprehensive tests for capacitor_charging_energy function."""
     
     def test_basic_functionality_zero_starting_voltage(self):
         """Test basic energy calculation from 0V to target voltage"""
@@ -832,7 +832,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, 8.854e-12, places=4)
 
     def test_vacuum_permittivity(self):
-        """Test calculations with vacuum permittivity"""
+        """Test calculations with vacuum permittivity."""
         epsilon_0 = 8.854187817e-12  # F/m (more precise value)
         
         test_cases = [

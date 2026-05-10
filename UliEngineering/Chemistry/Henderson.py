@@ -49,6 +49,7 @@ def henderson_hasselbalch_pH(pKa, base_concentration, acid_concentration):
     -------
     float
         pH value (dimensionless).
+
     """
     return pKa + np.log10(base_concentration / acid_concentration)
 

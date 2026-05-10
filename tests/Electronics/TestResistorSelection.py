@@ -68,7 +68,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(loose_functor(close_value), 0.95)    # E6
 
     def test_engineer_string_inputs(self):
-        """Test with various engineer string formats"""
+        """Test with various engineer string formats."""
         functor = ResistorSeriesCostFunctor()
         
         # Test different units and formats
@@ -400,8 +400,8 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         cost2 = functor(1000.0, 1000.0)
         assert_approx_equal(cost, cost2)
 
-    def test_power_cost_exceeds_maximum(self):
-        """Test behavior when power exceeds maximum rating"""
+    def test_behavior_when_power_exceeds_maximum_rating(self):
+        """Test behavior when power exceeds maximum rating."""
         # 12V input, very low max power (0.001W)
         functor = ResistorPowerCostFunctor("12V", "0.001W")
         

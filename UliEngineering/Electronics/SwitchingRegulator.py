@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Utilities for computing switching regulator parameters
+Utilities for computing switching regulator parameters.
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from collections import namedtuple

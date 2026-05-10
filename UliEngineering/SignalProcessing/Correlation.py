@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Functions for correlating a dataset with itself and other datasets
+"""Functions for correlating a dataset with itself and other datasets.
+
 Mainly built for 1D signal analysis.
 Might or might not work for higher-dimensional data.
 """

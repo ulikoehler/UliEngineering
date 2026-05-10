@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilities for ZIP files
-"""
+"""Utilities for ZIP files."""
 import io
 import os.path
 import zipfile

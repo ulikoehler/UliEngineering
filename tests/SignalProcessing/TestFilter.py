@@ -138,7 +138,7 @@ class TestFilter(unittest.TestCase):
                                self_repeat=2, other_repeat=2), ChainedFilter)
 
     def testChain0(self):
-        "Test chain with repeat=0"
+        """Test chain with repeat=0."""
         with self.assertRaises(ValueError):
             self.filt.chain(0)
 
