@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from typing import Annotated
+
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Concentration import normalize_amount_concentration
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
 from dataclasses import dataclass
 
 __all__ = [
@@ -16,8 +20,20 @@ __all__ = [
     "dnarna_weight_concentration_from_concentration",
     "dnarna_moles_to_grams",
     "dnarna_grams_to_moles",
-    "DNARNANucleotideFractionsByOrganism"
+    "DNARNANucleotideFractionsByOrganism",
+    "normalize_moles", "Moles",
+    "normalize_grams", "Grams",
 ]
+
+
+def normalize_moles(moles: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(moles, {"mol": 1.0, "mmol": 1e-3, "µmol": 1e-6, "nmol": 1e-9, "kmol": 1e3}, quantity_name="moles")
+
+def normalize_grams(grams: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(grams, {"g": 1.0, "mg": 1e-3, "µg": 1e-6, "ng": 1e-9, "kg": 1e3}, quantity_name="grams")
+
+Moles = Annotated[NormalizedComputable, normalize_moles]
+Grams = Annotated[NormalizedComputable, normalize_grams]
 
 @dataclass
 class DNANucleotideWeights:
@@ -101,7 +117,7 @@ def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions =
     Returns:
     - Molecular weight in g/mol.
     """
-    length_nucleotides = normalize_numeric(length_nucleotides)
+    length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
     n_T = length_nucleotides * fractions.T
     n_G = length_nucleotides * fractions.G
@@ -131,7 +147,7 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
     Returns:
     - Molecular weight in g/mol.
     """
-    length_nucleotides = normalize_numeric(length_nucleotides)
+    length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
     n_U = length_nucleotides * getattr(fractions, 'U', 0.0)
     n_G = length_nucleotides * fractions.G
@@ -156,22 +172,22 @@ def dnarna_weight_concentration_from_concentration(concentration, length_nucleot
     return molar_conc * mw  # g/L
 
 @returns_unit("g")
-def dnarna_moles_to_grams(moles, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_moles_to_grams(moles: Moles, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert amount of DNA/RNA (in moles) to grams for a given sequence length and nucleotide composition.
     Handles scalar, list, or ndarray input.
     """
-    moles = normalize_numeric(moles)
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
     mw = dnarna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return moles * mw  # grams
 
 @returns_unit("mol")
-def dnarna_grams_to_moles(grams, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_grams_to_moles(grams: Grams, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert mass of DNA/RNA (in grams) to moles for a given sequence length and nucleotide composition.
     Handles scalar, list, or ndarray input.
     """
-    grams = normalize_numeric(grams)
+    grams = normalize_grams(grams) if isinstance(grams, str) else grams
     mw = dnarna_molecular_weight(length_nucleotides, fractions, nucleotide_weights)
     return grams / mw  # moles
 

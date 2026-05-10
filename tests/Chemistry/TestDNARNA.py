@@ -11,7 +11,9 @@ from UliEngineering.Chemistry.DNARNA import (
     equal_dna_fractions,
     equal_rna_fractions,
     dnarna_weight_concentration_from_concentration,
-    DNARNANucleotideFractionsByOrganism
+    DNARNANucleotideFractionsByOrganism,
+    normalize_moles, Moles,
+    normalize_grams, Grams,
 )
 import numpy as np
 
@@ -192,3 +194,38 @@ class TestAutoFormat(unittest.TestCase):
         formatted = auto_format(rna_molecular_weight, 100, equal_rna_fractions)
         self.assertIsInstance(formatted, str)
         self.assertEqual(formatted, "32.3 kg/mol")
+
+
+class TestNormalizeFunctions(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(Moles)
+        self.assertIsNotNone(Grams)
+
+    def test_normalize_moles_various_units(self):
+        """Test normalize_moles with various unit inputs"""
+        test_cases = [
+            ("1 mol", 1.0),
+            ("1 mmol", 1e-3),
+            ("1 µmol", 1e-6),
+            ("1 nmol", 1e-9),
+            ("1 kmol", 1e3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_moles(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_grams_various_units(self):
+        """Test normalize_grams with various unit inputs"""
+        test_cases = [
+            ("1 g", 1.0),
+            ("1 mg", 1e-3),
+            ("1 µg", 1e-6),
+            ("1 ng", 1e-9),
+            ("1 kg", 1e3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_grams(input_val)
+                self.assertAlmostEqual(result, expected)
