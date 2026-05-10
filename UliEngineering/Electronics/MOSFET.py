@@ -3,15 +3,28 @@
 """
 Utility to calculate MOSFETs
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics._normalize import normalize_with_known_units
+from .Diode import normalize_voltage, VoltageV
+from .Filter import normalize_frequency, FrequencyHz
 
 __all__ = [
     "mosfet_gate_charge_losses", "mosfet_gate_charge_loss_per_cycle",
-    "mosfet_gate_capacitance_from_gate_charge"]
+    "mosfet_gate_capacitance_from_gate_charge",
+    "normalize_charge", "ChargeC",
+]
+
+
+def normalize_charge(Q: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(Q, {"C": 1.0, "mC": 1e-3, "µC": 1e-6, "nC": 1e-9}, quantity_name="charge")
+
+ChargeC = Annotated[NormalizedComputable, normalize_charge]
 
 @returns_unit("W")
-@normalize_numeric_args
-def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz"):
+def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, frequency: FrequencyHz = "100 kHz"):
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application as a total power (integrated per second).
@@ -30,12 +43,14 @@ def mosfet_gate_charge_losses(total_gate_charge, vsupply, frequency="100 kHz"):
     frequency: number or Engineer string
         The switching frequency in Hz
     """
+    total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
+    vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
+    frequency = normalize_frequency(frequency) if isinstance(frequency, str) else frequency
     return mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply) * frequency
 
 
 @returns_unit("J")
-@normalize_numeric_args
-def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply):
+def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application per switching cycle.
@@ -52,11 +67,12 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge, vsupply):
     vsupply: number or Engineer string
         The gate driver supply voltage in Volts
     """
+    total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
+    vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     return total_gate_charge * vsupply
 
 @returns_unit("F")
-@normalize_numeric_args
-def mosfet_gate_capacitance_from_gate_charge(total_gate_charge, vsupply):
+def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
     Compute the gate capacitance of a MOSFET in a switch-mode
     power-supply application.
@@ -70,4 +86,6 @@ def mosfet_gate_capacitance_from_gate_charge(total_gate_charge, vsupply):
     vsupply: number or Engineer string
         The gate driver supply voltage in Volts
     """
+    total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
+    vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     return total_gate_charge / vsupply
