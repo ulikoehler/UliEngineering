@@ -3,7 +3,8 @@
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
 
 from ._normalize import normalize_with_known_units
 
@@ -76,9 +77,8 @@ def normalize_density_kg_per_m3(density: NormalizableArgument) -> NormalizedComp
 # Unit type annotations
 DensityKgPerM3 = Annotated[NormalizedComputable, normalize_density_kg_per_m3]
 
-@normalize_numeric_args
 @returns_unit("kg/m³")
-def density_by_volume_and_weight(volume, weight):
+def density_by_volume_and_weight(volume: NormalizableArgument, weight: NormalizableArgument):
     """
     Calculates the density of a material by its volume and weight.
 
@@ -94,4 +94,6 @@ def density_by_volume_and_weight(volume, weight):
     float
         Density of the material in kg/m³.
     """
+    volume = normalize_numeric(volume) if isinstance(volume, str) else volume
+    weight = normalize_numeric(weight) if isinstance(weight, str) else weight
     return weight / volume
