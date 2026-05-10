@@ -5,6 +5,7 @@ from UliEngineering.Electronics.LogarithmicAmplifier import (
     logarithmic_amplifier_output_voltage,
     logarithmic_amplifier_input_current
 )
+from UliEngineering.Electronics.Diode import VoltageV, CurrentA
 
 class TestLogarithmicAmplifier(unittest.TestCase):
     def test_logarithmic_amplifier_output_voltage(self):
@@ -58,6 +59,24 @@ class TestLogarithmicAmplifier(unittest.TestCase):
             expected_input_current,
             places=3
         )
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(CurrentA)
+
+    def test_logarithmic_amplifier_functions_various_units(self):
+        """Test logarithmic amplifier functions with various unit inputs"""
+        # Test with different unit representations
+        v1 = logarithmic_amplifier_output_voltage("1 µA", 0.2, "1 nA")
+        v2 = logarithmic_amplifier_output_voltage("0.001 mA", 0.2, "0.001 µA")
+        self.assertAlmostEqual(v1, v2)
+
+        # Test input current with different units
+        i1 = logarithmic_amplifier_input_current("0.6 V", 0.2, "1 nA")
+        i2 = logarithmic_amplifier_input_current("600 mV", 0.2, "0.001 µA")
+        self.assertAlmostEqual(i1, i2)
 
 if __name__ == '__main__':
     unittest.main()

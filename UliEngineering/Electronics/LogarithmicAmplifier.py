@@ -1,40 +1,45 @@
 #!/usr/bin/env python3
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
+from typing import Annotated
+
 import numpy as np
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics._normalize import normalize_with_known_units
+from .Diode import normalize_current, CurrentA, normalize_voltage, VoltageV
 
 __all__ = [
     "logarithmic_amplifier_output_voltage",
-    "logarithmic_amplifier_input_current"
+    "logarithmic_amplifier_input_current",
 ]
 
-@normalize_numeric_args
-def logarithmic_amplifier_output_voltage(ipd, gain, intercept):
+def logarithmic_amplifier_output_voltage(ipd: CurrentA, gain: VoltageV, intercept: CurrentA):
     """
     Compute the logarithmic output voltage of a ADL5303 (probably its more general than that)
-    
+
     According to Formula (1) in the [ADL5303 datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/adl5303.pdf)
-    
+
     Parameters
     ----------
     ipd : float
         The input current (in Amperes)
     gain : float
-        The gain (volts per decade) 
+        The gain (volts per decade)
     intercept : float
         The intercept point (in Amperes)
-        
+
     Returns: The output voltage in Volts
     """
+    ipd = normalize_current(ipd) if isinstance(ipd, str) else ipd
+    gain = normalize_voltage(gain) if isinstance(gain, str) else gain
+    intercept = normalize_current(intercept) if isinstance(intercept, str) else intercept
     return gain * np.log10(ipd / intercept)
 
-@normalize_numeric_args
-def logarithmic_amplifier_input_current(vout, gain, intercept):
+def logarithmic_amplifier_input_current(vout: VoltageV, gain: VoltageV, intercept: CurrentA):
     """
     Compute the input current based on the output voltage of a logarithmic amplifier
-    
+
     The formula for this is Ipd = intercept * 10^(vout / Gain)
     https://techoverflow.net/2024/09/23/how-to-compute-the-input-current-of-a-logarithmic-amplifier/
-    
+
     Parameters
     ----------
     vout : float
@@ -44,4 +49,7 @@ def logarithmic_amplifier_input_current(vout, gain, intercept):
     intercept : float
         The intercept point (in Amperes)
     """
+    vout = normalize_voltage(vout) if isinstance(vout, str) else vout
+    gain = normalize_voltage(gain) if isinstance(gain, str) else gain
+    intercept = normalize_current(intercept) if isinstance(intercept, str) else intercept
     return intercept * np.power(10, vout / gain)
