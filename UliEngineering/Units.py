@@ -24,14 +24,14 @@ class UnannotatedReturnValueError(Exception):
     the appropriate function annotation that
     tells an auto-formatting function which unit is being used.
 
-    Returns the unit string
+    Returns the unit string.
     """
 
 
 class InvalidUnitInContextException(ValueError):
     """Raised if the unit might not be a globally
     unknown or invalid unit, but in the given context
-    it can't be used
+    it can't be used.
     """
 
 
