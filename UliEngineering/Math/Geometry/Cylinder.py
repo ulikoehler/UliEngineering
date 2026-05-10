@@ -5,7 +5,9 @@ Geometry functions for cylinders and hollow cylinders
 """
 import math
 from .Circle import circle_area
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 import numpy as np
 
 __all__ = [
@@ -15,75 +17,88 @@ __all__ = [
     "cylinder_weight_by_cross_sectional_area"
 ]
 
-@normalize_numeric_args
 @returns_unit("m³")
-def cylinder_volume(radius, height):
+def cylinder_volume(radius: NormalizableArgument, height: NormalizableArgument):
     """
     Compute the volume of a cylinder by its radius and height.
     """
+    radius = normalize_numeric(radius) if isinstance(radius, str) else radius
+    height = normalize_numeric(height) if isinstance(height, str) else height
     return math.pi * (radius**2) * height
 
-@normalize_numeric_args
 @returns_unit("m²")
-def cylinder_side_surface_area(radius, height):
+def cylinder_side_surface_area(radius: NormalizableArgument, height: NormalizableArgument):
     """
     Compute the surface area of the side (also called lateral surface area).
     """
+    radius = normalize_numeric(radius) if isinstance(radius, str) else radius
+    height = normalize_numeric(height) if isinstance(height, str) else height
     return 2 * math.pi * radius * height
 
-@normalize_numeric_args
 @returns_unit("m²")
-def cylinder_surface_area(radius, height):
+def cylinder_surface_area(radius: NormalizableArgument, height: NormalizableArgument):
     """
     Compute the surface area (side + top + bottom).
     """
+    radius = normalize_numeric(radius) if isinstance(radius, str) else radius
+    height = normalize_numeric(height) if isinstance(height, str) else height
     return cylinder_side_surface_area(radius, height) + 2 * circle_area(radius)
 
-@normalize_numeric_args
 @returns_unit("m³")
-def hollow_cylinder_volume(outer_radius, inner_radius, height):
+def hollow_cylinder_volume(outer_radius: NormalizableArgument, inner_radius: NormalizableArgument, height: NormalizableArgument):
     """
     Compute the volume of a hollow cylinder by its height and the inner and outer radii.
     """
+    outer_radius = normalize_numeric(outer_radius) if isinstance(outer_radius, str) else outer_radius
+    inner_radius = normalize_numeric(inner_radius) if isinstance(inner_radius, str) else inner_radius
+    height = normalize_numeric(height) if isinstance(height, str) else height
     return cylinder_volume(outer_radius, height) - cylinder_volume(inner_radius, height)
 
-@normalize_numeric_args
-def cylinder_weight_by_diameter(diameter, length, density=8000):
+def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
     """
     Compute the weight of a cylinder by its diameter, length and density.
 
     The density is in kg/m³, the diameter and length must be given in mm.
     The default density is an approximation for steel.
     """
+    diameter = normalize_numeric(diameter) if isinstance(diameter, str) else diameter
+    length = normalize_numeric(length) if isinstance(length, str) else length
+    density = normalize_numeric(density) if isinstance(density, str) else density
     return cylinder_volume(diameter/2., length) * density
 
-@normalize_numeric_args
-def cylinder_weight_by_radius(radius, length, density=8000):
+def cylinder_weight_by_radius(radius: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
     """
     Compute the weight of a cylinder by its radius, length and density.
 
     The density is in kg/m³, the radius and length must be given in mm.
     The default density is an approximation for steel.
     """
+    radius = normalize_numeric(radius) if isinstance(radius, str) else radius
+    length = normalize_numeric(length) if isinstance(length, str) else length
+    density = normalize_numeric(density) if isinstance(density, str) else density
     return cylinder_volume(radius, length) * density
 
-@normalize_numeric_args
-def cylinder_weight_by_cross_sectional_area(area, length, density=8000):
+def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
     """
     Compute the weight of a cylinder by its cross-sectional area, length and density.
 
     The density is in kg/m³, the area and length must be given in mm² and mm.
     The default density is an approximation for steel.
     """
+    area = normalize_numeric(area) if isinstance(area, str) else area
+    length = normalize_numeric(length) if isinstance(length, str) else length
+    density = normalize_numeric(density) if isinstance(density, str) else density
     return area * length * density
 
-@normalize_numeric_args
 @returns_unit("m")
-def hollow_cylinder_inner_radius_by_volume(outer_radius, volume, height):
+def hollow_cylinder_inner_radius_by_volume(outer_radius: NormalizableArgument, volume: NormalizableArgument, height: NormalizableArgument):
     """
     Given the outer radius, the height and the inner radius of a hollow cylinder,
     compute the inner radius.
     """
+    outer_radius = normalize_numeric(outer_radius) if isinstance(outer_radius, str) else outer_radius
+    volume = normalize_numeric(volume) if isinstance(volume, str) else volume
+    height = normalize_numeric(height) if isinstance(height, str) else height
     # Wolfram Alpha: solve V=(pi*o²*h)-(pi*i²*h) for i
     term1 = np.pi*height*(outer_radius**2)-volume
     # Due to rounding errors etc, term1 might become negative.
