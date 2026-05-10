@@ -5,8 +5,8 @@ Utilities regarding temperatures
 """
 from typing import Annotated
 
-from UliEngineering.EngineerIO import normalize
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO import normalize, normalize_numeric
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Exceptions import InvalidUnitException
 
@@ -24,22 +24,23 @@ __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "TemperatureKelvin", "TemperatureCelsius"]
 
 @returns_unit("K")
-@normalize_numeric_args
-def celsius_to_kelvin(c):
+def celsius_to_kelvin(c: NormalizableArgument):
+    c = normalize_numeric(c) if isinstance(c, str) else c
     return c + zero_Celsius
 
 @returns_unit("°C")
-@normalize_numeric_args
-def kelvin_to_celsius(c):
+def kelvin_to_celsius(c: NormalizableArgument):
+    c = normalize_numeric(c) if isinstance(c, str) else c
     return c - zero_Celsius
 
 @returns_unit("K")
-@normalize_numeric_args
-def fahrenheit_to_kelvin(f):
+def fahrenheit_to_kelvin(f: NormalizableArgument):
+    f = normalize_numeric(f) if isinstance(f, str) else f
     return (f + 459.67) * 5.0 / 9.0
 
 @returns_unit("°C")
-def fahrenheit_to_celsius(f):
+def fahrenheit_to_celsius(f: NormalizableArgument):
+    f = normalize_numeric(f) if isinstance(f, str) else f
     return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
 @returns_unit("K")
@@ -80,11 +81,12 @@ TemperatureKelvin = Annotated[NormalizedComputable, normalize_temperature]
 TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsius]
 
 @returns_unit("°C")
-@normalize_numeric_args
-def temperature_with_dissipation(power_dissipated="1 W", theta="50 °C/W", t_ambient="25 °C"):
+def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
     """
     Compute the temperature of a component, given its thermal resistance (theta),
     its dissipated power and 
     """
+    power_dissipated = normalize_numeric(power_dissipated) if isinstance(power_dissipated, str) else power_dissipated
+    theta = normalize_numeric(theta) if isinstance(theta, str) else theta
     t_ambient = normalize_temperature_celsius(t_ambient)
     return t_ambient + power_dissipated * theta
