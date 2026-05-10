@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.Inductors import ideal_inductor_current_change_rate
+from UliEngineering.Electronics.Diode import VoltageV
+from UliEngineering.Electronics.Filter import InductanceH
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
 import unittest
@@ -291,6 +293,25 @@ class TestInductors(unittest.TestCase):
         
         # This confirms that the function correctly calculates instantaneous rate
         # regardless of frequency (as it should for an ideal inductor)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(InductanceH)
+        self.assertIsNotNone(VoltageV)
+
+    def test_inductor_functions_various_units(self):
+        """Test inductor functions with various unit inputs"""
+        # Test with different unit representations
+        base_result = ideal_inductor_current_change_rate(1e-3, 5.0)  # 1mH, 5V
+        
+        result1 = ideal_inductor_current_change_rate("1 mH", "5 V")
+        result2 = ideal_inductor_current_change_rate("1000 µH", "5000 mV")
+        result3 = ideal_inductor_current_change_rate("0.001 H", "5.0 V")
+        
+        self.assertAlmostEqual(base_result, result1, places=10)
+        self.assertAlmostEqual(base_result, result2, places=10)
+        self.assertAlmostEqual(base_result, result3, places=10)
 
 if __name__ == '__main__':
     unittest.main()
