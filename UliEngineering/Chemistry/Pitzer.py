@@ -16,7 +16,11 @@ where:
 
 Standard parameters: b = 1.2, α = 2.0, A_φ ≈ 0.3915 at 25 °C
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
 import numpy as np
 
 __all__ = [
@@ -27,9 +31,16 @@ __all__ = [
     "pitzer_osmotic_coefficient",
     "PITZER_A_PHI_25C",
     "PITZER_PARAMETERS",
+    "normalize_molality", "MolalityMolKg",
 ]
 
 PITZER_A_PHI_25C = 0.3915  # Debye-Hückel slope for osmotic coefficient at 25 °C
+
+
+def normalize_molality(m: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(m, {"mol/kg": 1.0, "m": 1.0, "mmol/kg": 1e-3, "µmol/kg": 1e-6}, quantity_name="molality")
+
+MolalityMolKg = Annotated[NormalizedComputable, normalize_molality]
 
 # Pitzer parameters for common electrolytes at 25 °C
 # Source: Pitzer (1991), Activity Coefficients in Electrolyte Solutions
@@ -53,9 +64,8 @@ PITZER_PARAMETERS = {
 }
 
 
-@normalize_numeric_args
 @returns_unit("")
-def pitzer_f_gamma(I, A_phi=PITZER_A_PHI_25C, b=1.2):
+def pitzer_f_gamma(I: MolalityMolKg, A_phi=PITZER_A_PHI_25C, b=1.2):
     """
     Compute the Pitzer f^γ (electrostatic) term.
 
@@ -75,13 +85,13 @@ def pitzer_f_gamma(I, A_phi=PITZER_A_PHI_25C, b=1.2):
     float
         f^γ term (dimensionless).
     """
+    I = normalize_molality(I) if isinstance(I, str) else I
     sqrt_I = np.sqrt(I)
     return -A_phi * (sqrt_I / (1.0 + b * sqrt_I) + (2.0 / b) * np.log(1.0 + b * sqrt_I))
 
 
-@normalize_numeric_args
 @returns_unit("")
-def pitzer_B_gamma(I, beta0, beta1, alpha=2.0):
+def pitzer_B_gamma(I: MolalityMolKg, beta0, beta1, alpha=2.0):
     """
     Compute the Pitzer B^γ (ion-interaction) term.
 
@@ -103,12 +113,12 @@ def pitzer_B_gamma(I, beta0, beta1, alpha=2.0):
     float
         B^γ term (dimensionless).
     """
+    I = normalize_molality(I) if isinstance(I, str) else I
     sqrt_I = np.sqrt(I)
     x = alpha * sqrt_I
     return 2.0 * beta0 + 2.0 * beta1 / (alpha**2 * I) * (1.0 - (1.0 + x - x**2 / 2.0) * np.exp(-x))
 
 
-@normalize_numeric_args
 @returns_unit("")
 def pitzer_C_gamma(C_phi):
     """
@@ -129,9 +139,8 @@ def pitzer_C_gamma(C_phi):
     return 1.5 * C_phi
 
 
-@normalize_numeric_args
 @returns_unit("")
-def pitzer_activity_coefficient(m, z_plus, z_minus, nu_plus, nu_minus,
+def pitzer_activity_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_minus,
                                  beta0, beta1, C_phi,
                                  A_phi=PITZER_A_PHI_25C, b=1.2, alpha=2.0):
     """
@@ -169,6 +178,7 @@ def pitzer_activity_coefficient(m, z_plus, z_minus, nu_plus, nu_minus,
     float
         Mean activity coefficient γ± (dimensionless).
     """
+    m = normalize_molality(m) if isinstance(m, str) else m
     nu = nu_plus + nu_minus
     # Ionic strength for single electrolyte
     I = 0.5 * m * (nu_plus * z_plus**2 + nu_minus * z_minus**2)
@@ -184,9 +194,8 @@ def pitzer_activity_coefficient(m, z_plus, z_minus, nu_plus, nu_minus,
     return np.exp(ln_gamma)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def pitzer_osmotic_coefficient(m, z_plus, z_minus, nu_plus, nu_minus,
+def pitzer_osmotic_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_minus,
                                 beta0, beta1, C_phi,
                                 A_phi=PITZER_A_PHI_25C, b=1.2, alpha=2.0):
     """
@@ -222,6 +231,7 @@ def pitzer_osmotic_coefficient(m, z_plus, z_minus, nu_plus, nu_minus,
     float
         Osmotic coefficient φ (dimensionless).
     """
+    m = normalize_molality(m) if isinstance(m, str) else m
     nu = nu_plus + nu_minus
     I = 0.5 * m * (nu_plus * z_plus**2 + nu_minus * z_minus**2)
     sqrt_I = np.sqrt(I)
