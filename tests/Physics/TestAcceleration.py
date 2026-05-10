@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from UliEngineering.Physics.Acceleration import g_to_ms2, ms2_to_g, centrifugal_acceleration, centrifuge_radius
+from numpy.testing import assert_approx_equal
+from UliEngineering.Physics.Acceleration import (
+    g_to_ms2, ms2_to_g, centrifugal_acceleration, centrifuge_radius,
+    normalize_acceleration_ms2, normalize_acceleration_g,
+    AccelerationMs2, AccelerationG
+)
 import unittest
 import scipy.constants
 
@@ -36,3 +41,49 @@ class TestCentrifugalAcceleration(unittest.TestCase):
         self.assertAlmostEqual(centrifuge_radius(39478.417, 100), 0.1, places=2)
         self.assertAlmostEqual(centrifuge_radius(78956.835, 100), 0.2, places=2)
         self.assertAlmostEqual(centrifuge_radius(789.568, 10), 0.2, places=2)
+
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(AccelerationMs2)
+        self.assertIsNotNone(AccelerationG)
+
+    def test_normalize_acceleration_ms2_various_units(self):
+        """Test normalize_acceleration_ms2 with various unit inputs"""
+        test_cases = [
+            ("1 m/s²", 1.0),
+            ("1 m/s^2", 1.0),
+            ("1 ms2", 1.0),
+            ("1 g", g0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_acceleration_ms2(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_acceleration_g_various_units(self):
+        """Test normalize_acceleration_g with various unit inputs"""
+        test_cases = [
+            ("1 g", 1.0),
+            ("1 m/s²", 1.0/g0),
+            ("1 m/s^2", 1.0/g0),
+            ("1 ms2", 1.0/g0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_acceleration_g(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_acceleration_functions_with_string_units(self):
+        """Test acceleration functions with normalize functions for string units"""
+        # Test normalize functions with string units
+        self.assertAlmostEqual(normalize_acceleration_ms2("1 g"), g0)
+        self.assertAlmostEqual(normalize_acceleration_ms2("2 g"), 2 * g0)
+        self.assertAlmostEqual(normalize_acceleration_g("1 m/s²"), 1.0/g0)
+        
+        # Test centrifugal_acceleration with string units (using LengthMeters and FrequencyHz types which have their own normalize)
+        self.assertAlmostEqual(centrifugal_acceleration("0.1 m", "100 Hz"), 39478.417, places=2)
+        self.assertAlmostEqual(centrifugal_acceleration("0.2 m", "10 Hz"), 789.568, places=2)
+        
+        # Test centrifuge_radius with string units
+        self.assertAlmostEqual(centrifuge_radius("39478.417 m/s²", "100 Hz"), 0.1, places=2)
+        self.assertAlmostEqual(centrifuge_radius("789.568 m/s²", "10 Hz"), 0.2, places=2)
