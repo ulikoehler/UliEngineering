@@ -44,7 +44,7 @@ class TestLarmorFrequency(unittest.TestCase):
         f1 = larmor_frequency("1 T", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)
         f2 = larmor_frequency("1 Tesla", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)
         assert_approx_equal(f1, f2)
-        
+
         # Test with mT
         f3 = larmor_frequency("1000 mT", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)
         f4 = larmor_frequency("1 T", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)

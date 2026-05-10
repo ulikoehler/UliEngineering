@@ -190,7 +190,7 @@ class TestGenerateDatetimeFilename(unittest.TestCase):
     def test_defaults_no_fractional(self):
         filename = generate_datetime_filename()
         self.assertTrue(re.match(r"data-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)
-    
+
     def test_custom_label(self):
         filename = generate_datetime_filename(label="qdata")
         self.assertTrue(re.match(r"qdata-\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{6}.csv", filename), msg=filename)

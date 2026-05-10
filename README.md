@@ -1,6 +1,6 @@
 # UliEngineering
 
-[![Unit tests](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml/badge.svg)](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f59d862b25524914b29ec5f0c0b80e7f)](https://www.codacy.com/gh/ulikoehler/UliEngineering/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ulikoehler/UliEngineering&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/ulikoehler/UliEngineering/branch/master/graph/badge.svg?token=qnmVG2tYQq)](https://codecov.io/gh/ulikoehler/UliEngineering) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering) ![License](https://img.shields.io/github/license/ulikoehler/UliEngineering.svg) 
+[![Unit tests](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml/badge.svg)](https://github.com/ulikoehler/UliEngineering/actions/workflows/test.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f59d862b25524914b29ec5f0c0b80e7f)](https://www.codacy.com/gh/ulikoehler/UliEngineering/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ulikoehler/UliEngineering&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/ulikoehler/UliEngineering/branch/master/graph/badge.svg?token=qnmVG2tYQq)](https://codecov.io/gh/ulikoehler/UliEngineering) [![Code Climate](https://codeclimate.com/github/ulikoehler/UliEngineering/badges/gpa.svg)](https://codeclimate.com/github/ulikoehler/UliEngineering) ![License](https://img.shields.io/github/license/ulikoehler/UliEngineering.svg)
 
 A Python3 library for:
     - Data science
@@ -45,7 +45,7 @@ After that you can use UliEngineering from any Python3 instance. Example:
 
 ```python
 $ python3
-Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
+Python 3.5.2 (default, Nov 17 2016, 17:05:23)
 [GCC 5.4.0 20160609] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> from UliEngineering.EngineerIO import *

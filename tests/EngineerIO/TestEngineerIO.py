@@ -144,8 +144,8 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
-        
-        
+
+
     def test_format_negative(self):
         self.assertEqual(self.io.format(-1.0e-15, "V"), '-1.00 fV')
         self.assertEqual(self.io.format(-234.6789e-3, "V"), '-235 mV')
@@ -260,7 +260,7 @@ class TestEngineerIO(unittest.TestCase):
     def testAutoFormatInvalid2(self):
         with self.assertRaises(UnannotatedReturnValueError):
             self.io.auto_format(None) # Not even callable
-            
+
     def testAutoFormatInvalid3(self):
         with self.assertRaises(UnannotatedReturnValueError):
             self.io.auto_format(7.5) # Not even callable
@@ -319,7 +319,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
     def test_unit_prefix_suffix_regex_compilation(self):
         """Test that the unit prefix suffix regex is compiled correctly."""
         self.assertIsNotNone(self.io.unit_prefix_suffix_regex)
-        
+
     def test_has_any_unit_prefix_with_suffix(self):
         """Test has_any_unit_prefix() with unit prefixes at the end."""
         # Test single character unit prefixes
@@ -327,23 +327,23 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "k")
         self.assertEqual(remainder, "123")
-        
+
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("456M")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "M")
         self.assertEqual(remainder, "456")
-        
+
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("789µ")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "µ")
         self.assertEqual(remainder, "789")
-        
+
         # Test micro variants
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("100μ")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "μ")
         self.assertEqual(remainder, "100")
-        
+
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("200u")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "u")
@@ -355,7 +355,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "123")
-        
+
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("456V")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
@@ -367,7 +367,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "1k23")
-        
+
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("5M67")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
@@ -399,7 +399,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
             ("1400Z", "Z", "1400"), # zetta
             ("1500Y", "Y", "1500"), # yotta
         ]
-        
+
         for input_str, expected_prefix, expected_remainder in test_cases:
             with self.subTest(input_str=input_str):
                 has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix(input_str)
@@ -412,12 +412,12 @@ class TestUnitPrefixRegex(unittest.TestCase):
         # Test with length instance that includes centimeter and decimeter prefixes
         from UliEngineering.EngineerIO.Length import EngineerLengthIO
         length_io = EngineerLengthIO.instance()
-        
+
         has_prefix, prefix_char, remainder = length_io.has_any_unit_prefix("100c")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "c")
         self.assertEqual(remainder, "100")
-        
+
         has_prefix, prefix_char, remainder = length_io.has_any_unit_prefix("200d")
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "d")
@@ -428,7 +428,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         # Create an instance with no unit prefixes
         config = EngineerIOConfiguration([], [], {})
         io_no_prefixes = EngineerIO(config)
-        
+
         has_prefix, prefix_char, remainder = io_no_prefixes.has_any_unit_prefix("123k")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
@@ -446,7 +446,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         custom_prefixes = {'a': -18., 'abc': -15., 'ab': -12.}
         config = EngineerIOConfiguration([], [], custom_prefixes)
         io_custom = EngineerIO(config)
-        
+
         # The regex should match the longest prefix first
         has_prefix, prefix_char, remainder = io_custom.has_any_unit_prefix("123abc")
         self.assertTrue(has_prefix)
@@ -457,15 +457,15 @@ class TestUnitPrefixRegex(unittest.TestCase):
         """Test that the unit prefix regex pattern is generated correctly"""
         # Test with known prefixes
         pattern = self.io.unit_prefix_suffix_regex.pattern
-        
+
         # Should contain escaped versions of unit prefixes
         self.assertIn(r'k', pattern)
         self.assertIn(r'M', pattern)
         self.assertIn(r'µ', pattern)
-        
+
         # Should end with $ to match only at end of string
         self.assertTrue(pattern.endswith('$'))
-        
+
         # Should have proper grouping
         self.assertTrue(pattern.startswith('('))
 
@@ -474,7 +474,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         # 'k' should match but 'K' should not (K is not in default unit prefixes)
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123k")
         self.assertTrue(has_prefix)
-        
+
         # Note: 'K' is actually Kelvin temperature unit, not a unit prefix in the default map
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123K")
         self.assertFalse(has_prefix)
@@ -486,7 +486,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertTrue(has_prefix)
         self.assertEqual(prefix_char, "µ")
         self.assertEqual(remainder, "500")
-        
+
         # Test with μ (alternative micro symbol)
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("600μ")
         self.assertTrue(has_prefix)
@@ -503,18 +503,18 @@ class TestUnitPrefixRegex(unittest.TestCase):
                     remainder = s[:-len(suffix)] if len(suffix) > 0 else s
                     return True, suffix, remainder
             return False, "", s
-        
+
         # Test cases that should produce identical results
         test_cases = [
-            "123k", "456M", "789µ", "100", "abc", "1k23", "test", 
+            "123k", "456M", "789µ", "100", "abc", "1k23", "test",
             "", "1.5m", "2.3G", "4.7p", "9.9n", "0f", "xyz123"
         ]
-        
+
         for test_case in test_cases:
             with self.subTest(test_case=test_case):
                 new_result = self.io.has_any_unit_prefix(test_case)
                 old_result = old_has_any_unit_prefix(test_case)
-                self.assertEqual(new_result, old_result, 
+                self.assertEqual(new_result, old_result,
                                f"Results differ for '{test_case}': new={new_result}, old={old_result}")
 
 
@@ -550,7 +550,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         ]
         config = EngineerIOConfiguration(units, [], {})
         io_with_units = EngineerIO(config)
-        
+
         pattern = io_with_units._generate_units_pattern()
         self.assertIsNotNone(pattern)
         self.assertIn('V', pattern)
@@ -563,7 +563,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         """Test that all compile methods are called during initialization."""
         # Create a new instance and verify all regex attributes exist
         io = EngineerIO()
-        
+
         # All regex compilation methods should have been called
         self.assertIsNotNone(hasattr(io, 'unit_alias_regex'))
         self.assertIsNotNone(hasattr(io, 'units_regex'))
@@ -581,7 +581,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         # Test existing alias
         self.assertEqual(io_with_aliases._resolve_unit_alias('sq m'), 'm²')
         self.assertEqual(io_with_aliases._resolve_unit_alias('volt'), 'V')
-        
+
         # Test non-existing alias (should return original)
         self.assertEqual(io_with_aliases._resolve_unit_alias('unknown'), 'unknown')
         self.assertEqual(io_with_aliases._resolve_unit_alias('A'), 'A')
@@ -590,7 +590,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         """Test that empty units/aliases are handled gracefully"""
         config = EngineerIOConfiguration([], [], {})
         io_empty = EngineerIO(config)
-        
+
         # Should not crash and should have None for regex patterns
         self.assertIsNone(io_empty.units_regex)
         self.assertIsNone(io_empty.unit_alias_regex)
@@ -611,24 +611,24 @@ class TestRegexCompilationMethods(unittest.TestCase):
         ]
         config = EngineerIOConfiguration(units, [], {})
         io_complex = EngineerIO(config)
-        
+
         # Should compile without errors
         self.assertIsNotNone(io_complex.units_regex)
         self.assertIsNotNone(io_complex.unit_alias_regex)
-        
+
         # Should be able to match complex patterns
         self.assertIsNotNone(io_complex.units_regex.search('100Ω'))
         self.assertIsNotNone(io_complex.units_regex.search('25°C'))
         self.assertIsNotNone(io_complex.unit_alias_regex.search('100 degrees celsius'))
         self.assertIsNotNone(io_complex.unit_alias_regex.search('50 ohm'))
-        
+
     def test_generate_unit_alias_pattern_empty(self):
         """Test unit alias pattern generation with empty aliases dict"""
         config = EngineerIOConfiguration([], [], {})
         io = EngineerIO(config)
         pattern = io._generate_unit_alias_pattern()
         self.assertIsNone(pattern)
-        
+
     def test_generate_unit_alias_pattern_with_spaces(self):
         """Test unit alias pattern generation with spaces in aliases"""
         units = [
@@ -645,7 +645,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIn(re.escape('cubic centimeter'), pattern)
         self.assertIn(re.escape('degrees per second'), pattern)
         self.assertIn(re.escape('meters per second'), pattern)
-        
+
     def test_pattern_compilation_with_fake_units(self):
         """Test that generated patterns compile correctly with fake units"""
         units = [
@@ -664,7 +664,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         # Both regexes should compile without errors
         self.assertIsNotNone(io.units_regex)
         self.assertIsNotNone(io.unit_alias_regex)
-        
+
         # Test that they can match their respective patterns
         self.assertIsNotNone(io.units_regex.search('100testunit'))
         self.assertIsNotNone(io.units_regex.search('50fakeΩ'))
@@ -684,7 +684,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         # Longest unit should match first
         match = io.units_regex.search('100ABCDEF')
         self.assertEqual(match.group(1), 'ABCDEF')
-        
+
         # Longest alias should match first
         match = io.unit_alias_regex.search('100 test unit long')
         self.assertEqual(match.group(1), 'test unit long')

@@ -162,7 +162,7 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
     if exclude is None:
         exclude = []
     exclude_set = set(exclude)
-    
+
     if instance is None:
         instance = EngineerIO.instance()
 

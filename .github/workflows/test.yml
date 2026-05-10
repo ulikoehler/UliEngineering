@@ -24,7 +24,7 @@ jobs:
     - name: Test with tox
       run: python -m tox
     - name: List files
-      run: ls -v 
+      run: ls -v
     - name: Upload coverage to Codecov.io
       if: matrix.python-version == '3.12'
       uses: codecov/codecov-action@v3

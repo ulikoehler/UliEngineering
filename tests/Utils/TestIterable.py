@@ -9,7 +9,7 @@ class TestListIterator(unittest.TestCase):
         it = ListIterator(iterable)
         self.assertEqual(len(it), 5)
         self.assertEqual(list(it), iterable)
-    
+
     def test_next(self):
         iterable = [3,4,5]
         it = ListIterator(iterable)
@@ -27,7 +27,7 @@ class TestListIterator(unittest.TestCase):
         self.assertEqual(next(it), 5)
         self.assertEqual(len(it), 0)
         self.assertEqual(list(it), [])
-    
+
 
 class TestPeekableIteratorWrapper(unittest.TestCase):
     def test_list_2without_peek(self):
@@ -116,4 +116,3 @@ class TestSkipFirst(unittest.TestCase):
     def test_gen(self):
         self.assertEqual([2,3,4,5], list(skip_first(v for v in [1,2,3,4,5])))
         self.assertEqual([], list(skip_first(v for v in [])))
-    

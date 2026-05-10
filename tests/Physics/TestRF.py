@@ -73,12 +73,12 @@ class TestRF(unittest.TestCase):
         q1 = quality_factor("8 MHz", "1 kHz")
         q2 = quality_factor("8000 kHz", "1000 Hz")
         assert_approx_equal(q1, q2)
-        
+
         # Test resonant_impedance with different inductance units
         i1 = resonant_impedance("100 µH", "10 nF", Q=30.0)
         i2 = resonant_impedance("0.0001 H", "10 nF", Q=30.0)
         assert_approx_equal(i1, i2)
-        
+
         # Test resonant_frequency with different capacitance units
         f1 = resonant_frequency("100 µH", "10 nF")
         f2 = resonant_frequency("100 µH", "0.00000001 F")

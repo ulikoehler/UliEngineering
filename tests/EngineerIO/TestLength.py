@@ -14,12 +14,12 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(normalize_length(1.0), 1.0)
         assert_approx_equal(normalize_length("1.0 m"), 1.0)
         assert_approx_equal(normalize_length("1.0 meter"), 1.0)
-        
+
         # Test with class instance
         assert_approx_equal(self.length_io.normalize_length(1.0), 1.0)
         assert_approx_equal(self.length_io.normalize_length("1.0 m"), 1.0)
         assert_approx_equal(self.length_io.normalize_length("1.0 meter"), 1.0)
-        
+
         assert_approx_equal(normalize_length("5.0 m"), 5.0)
         assert_approx_equal(normalize_length("5.0 meters"), 5.0)
         assert_approx_equal(normalize_length("3 m"), 3)
@@ -63,16 +63,16 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(normalize_length("3.33 Å"), 3.33e-10)
         assert_approx_equal(normalize_length("3.33 Angstrom"), 3.33e-10)
         assert_approx_equal(normalize_length("3.33 angstrom"), 3.33e-10)
-    
+
     def test_convert_length_to_meters(self):
         # Test with functions
         assert_approx_equal(convert_length_to_meters(1.0, "m"), 1.0)
         assert_approx_equal(convert_length_to_meters(1.0, "meter"), 1.0)
-        
+
         # Test with class instance
         assert_approx_equal(self.length_io.convert_length_to_meters(1.0, "m"), 1.0)
         assert_approx_equal(self.length_io.convert_length_to_meters(1.0, "meter"), 1.0)
-        
+
         assert_approx_equal(convert_length_to_meters(5.0, "m"), 5.0)
         assert_approx_equal(convert_length_to_meters(5.0, "meters"), 5.0)
         assert_approx_equal(convert_length_to_meters(3, "m"), 3)
@@ -122,12 +122,12 @@ class TestLength(unittest.TestCase):
         test_cases = [
             "1.0 m", "100 mm", "1 ft", "1 inch", "1 ly", "1 AU"
         ]
-        
+
         for case in test_cases:
             with self.subTest(case=case):
                 function_result = normalize_length(case)
                 class_result = self.length_io.normalize_length(case)
-                assert_approx_equal(function_result, class_result, 
+                assert_approx_equal(function_result, class_result,
                                   err_msg=f"Results differ for {case}")
 
     def test_class_convert_consistency(self):
@@ -135,12 +135,12 @@ class TestLength(unittest.TestCase):
         test_cases = [
             (1.0, "m"), (100.0, "mm"), (1.0, "ft"), (1.0, "inch")
         ]
-        
+
         for value, unit in test_cases:
             with self.subTest(value=value, unit=unit):
                 function_result = convert_length_to_meters(value, unit)
                 class_result = self.length_io.convert_length_to_meters(value, unit)
-                assert_approx_equal(function_result, class_result, 
+                assert_approx_equal(function_result, class_result,
                                   err_msg=f"Results differ for {value} {unit}")
 
     def test_convert_length_to_unit(self):
@@ -188,7 +188,7 @@ class TestLength(unittest.TestCase):
         input_list = ["1 m", "100 mm", "1 ft"]
         result_func = normalize_length(input_list)
         result_class = self.length_io.normalize_length(input_list)
-        
+
         expected = [1.0, 0.1, 0.3048]
         for i, val in enumerate(expected):
             assert_approx_equal(result_func[i], val)

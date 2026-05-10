@@ -11,14 +11,14 @@ def weigh_halves(arr, operator=np.sum):
     """
     Split a 1D array into two halves (right in the middle)
     and compute the weight of each half (i.e. sum of all values in that half).
-    
+
     Odd-sized arrays are handled by adding 1/2 of the middle element to each value.
-    
+
     The purpose of this function is to allow to center the "center of weight"
     in sliding window algorithms
-    
+
     Returns (weightLeft, weightReight)
-    
+
     Parameters:
     -----------
     arr : 1D NumPy array
@@ -49,7 +49,7 @@ def weight_symmetry(a, b):
     1 - (np.abs(a - b) / (a + b))
 
     This function is often used like this:
-    
+
     >>> weight_symmetry(*weigh_halves(arr))
     1.0
     """

@@ -41,12 +41,12 @@ def summing_amplifier_noninv(v1: VoltageV, v2: VoltageV, r1: ResistanceOhm, r2: 
 def noninverting_amplifier_gain(r1: ResistanceOhm, r2: ResistanceOhm):
     """
     Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
-    
+
     # 2D ASCII graphic with rectangular opamp
-    
+
     R1 is the resistor connected between the OpAmp output and the OpAmp IN(-).
     R2 is the resistor connected between the OpAmp IN(-) and GND.
-    
+
     R2 can also be infinity (np.inf), in which case the gain is 1.0.
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1

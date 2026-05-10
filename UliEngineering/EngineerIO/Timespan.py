@@ -24,10 +24,10 @@ def _timespan_unit_infos():
         UnitAlias('ns', aliases=['nanosecond', 'nanoseconds', 'nsec', 'nsecs']),
         UnitAlias('µs', aliases=['microsecond', 'microseconds', 'µsecond', 'µsec', 'usec', 'us']),
         UnitAlias('ms', aliases=['millisecond', 'milliseconds']),
-        
+
         # Base seconds unit
         UnitInfo('s', 1.0, ['second', 'seconds', 'sec', 'secs']),
-        
+
         # Units with custom conversion factors
         UnitInfo('min', 60, ['minute', 'minutes']),
         UnitInfo('h', 3600, ['hour', 'hours']),
@@ -38,7 +38,7 @@ def _timespan_unit_infos():
         UnitInfo('decade', 315569520, ['decades']),
         UnitInfo('century', 3155695200, ['centuries']),
         UnitInfo('millenium', 31556952000, ['millenia', 'millennium', 'millennia']),
-        
+
         # SI-prefixed years (using UnitAlias)
         UnitAlias('My', aliases=['megayear', 'megayears', 'Myr', 'Myrs']),
         UnitAlias('Gy', aliases=['gigayear', 'gigayears', 'Gyr', 'Gyrs']),
@@ -60,13 +60,13 @@ class EngineerTimespanIO(EngineerIO):
     """
     Specialized EngineerIO class for timespan operations
     """
-    
+
     _instance = None
-    
+
     def __init__(self):
         # Use timespan-specific configuration
         super().__init__(config=_create_timespan_config())
-    
+
     @returns_unit("s")
     def normalize_timespan(self, arg: NormalizableArgument) -> NormalizedArgument:
         """

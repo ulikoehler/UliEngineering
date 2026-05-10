@@ -54,7 +54,7 @@ class AutoDeleteTempfileGenerator:
         Force-delete all files and directories created by this instance.
         The class instance may be used without restriction after this call
         """
-        # 
+        #
         for filename in self.tempfiles:
             if os.path.isfile(filename):
                 os.remove(filename)

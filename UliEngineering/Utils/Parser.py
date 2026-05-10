@@ -29,4 +29,3 @@ def try_parse_int_or_float(s):
             return float(s)
         except ValueError:
             return s
-        

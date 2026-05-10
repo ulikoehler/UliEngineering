@@ -19,8 +19,8 @@ class TestLogarithmicAmplifier(unittest.TestCase):
             expected_output_voltage,
             places=6
         )
-        
-        
+
+
     def test_logarithmic_amplifier_output_voltage_ad5303(self):
         """Example from AD5303 datasheet, with amperes rather than watts"""
         # Test with known values
@@ -45,8 +45,8 @@ class TestLogarithmicAmplifier(unittest.TestCase):
             expected_input_current,
             places=6
         )
-        
-        
+
+
     def test_logarithmic_amplifier_input_current_ad5303(self):
         """Example from AD5303 datasheet, with amperes rather than watts"""
         # Test with known values

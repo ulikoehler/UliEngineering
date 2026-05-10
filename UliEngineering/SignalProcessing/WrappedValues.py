@@ -20,7 +20,7 @@ class OnlineUnwrapper:
     def __init__(self, wrap_value=2**20, threshold=None):
         """
         Initialize the unwrapper.
-        
+
         Args:
             wrap_value: float
                 The value at which wrapping occurs.
@@ -35,28 +35,28 @@ class OnlineUnwrapper:
     def __call__(self, data):
         """
         Unwrap the given data.
-        
+
         Args:
             data: scalar or array-like
                 The input value(s) to unwrap.
-        
+
         Returns:
             The unwrapped value(s).
         """
         is_scalar = np.isscalar(data) or (isinstance(data, np.ndarray) and data.ndim == 0)
-        
+
         if is_scalar:
             val = float(data)
             if self.last_val is None:
                 self.last_val = val
                 return val
-            
+
             diff = val - self.last_val
             if diff > self.threshold:
                 self.correction -= self.wrap_value
             elif diff < -self.threshold:
                 self.correction += self.wrap_value
-            
+
             self.last_val = val
             return val + self.correction
 
@@ -97,7 +97,7 @@ class OnlineUnwrapper:
 def unwrap(series, wrap_value=2**20, threshold=None):
     """
     Unwrap wrapped values  by compensating for numerical wraps.
-    
+
     Args:
         series: list or np.array
             The input series of wrapped values.
@@ -110,23 +110,23 @@ def unwrap(series, wrap_value=2**20, threshold=None):
     """
     if threshold is None:
         threshold = wrap_value / 2
-        
+
     # Work with numpy array for performance and handling
     arr = np.array(series, dtype=np.float64)
-    
+
     # Calculate difference between consecutive samples
     # prepend=arr[0] makes the output same length as input, with first diff=0
     diff = np.diff(arr, prepend=arr[0])
-    
+
     # Detect and compensate wraps
     # If diff > threshold, it means value jumped up (e.g. 0 -> max), so we went 'backwards' in continuous space
     # We need to subtract wrap_value from this step
     diff[diff > threshold] -= wrap_value
-    
+
     # If diff < -threshold, it means value jumped down (e.g. max -> 0), so we went 'forwards' in continuous space
     # We need to add wrap_value to this step
     diff[diff < -threshold] += wrap_value
-    
+
     # Reconstruct the signal
     unwrapped = arr[0] + np.cumsum(diff)
     return unwrapped

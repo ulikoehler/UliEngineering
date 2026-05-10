@@ -152,7 +152,7 @@ def crystal_deviation_seconds_per_day(deviation: PPM):
     '1.73 s'
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24)
-    
+
 @returns_unit("s")
 def crystal_deviation_seconds_per_month(deviation: PPM):
     """

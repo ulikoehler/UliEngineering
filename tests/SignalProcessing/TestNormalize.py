@@ -7,7 +7,7 @@ import unittest
 import pytest
 
 class TestNormalize(unittest.TestCase):
-    
+
     @pytest.mark.filterwarnings("ignore: invalid value encountered in scalar divide")
     @pytest.mark.filterwarnings("ignore: Mean of empty slice")
     def test_center_to_zero(self):
@@ -32,7 +32,7 @@ class TestNormalize(unittest.TestCase):
         assert_allclose(normalize_max(np.asarray([-10., 1.])).data, [-10., 1.])
         assert_allclose(normalize_max(np.asarray([-10., 2.])).data, [-5., 1])
 
-    
+
     def test_normalize_minmax(self):
         assert_allclose(normalize_minmax([]).data, [])
         assert_allclose(normalize_minmax(np.asarray([0.])).data, [0.])

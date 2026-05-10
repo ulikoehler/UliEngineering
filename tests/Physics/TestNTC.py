@@ -50,7 +50,7 @@ class TestNTC(unittest.TestCase):
         r1 = ntc_resistance("47k", "4050K", "25°C")
         r2 = ntc_resistance("47000 Ω", "4050K", "25°C")
         assert_approx_equal(r1, r2)
-        
+
         # Test with k shorthand
         r3 = ntc_resistance("47k", "4050K", "25°C")
         r4 = ntc_resistance("47 k", "4050K", "25°C")

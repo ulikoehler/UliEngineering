@@ -209,7 +209,7 @@ def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False)
 def random_sample_chunks(arr, chunksize, num_samples):
     """
     Generate num_samples completely random sample chunks of size chunksize.
-    
+
     The random indexes are generated on initialization,
     so subsequent calls using the same index return the same sample.
 

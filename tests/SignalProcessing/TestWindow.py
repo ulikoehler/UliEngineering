@@ -7,7 +7,7 @@ import unittest
 
 class TestWindow(unittest.TestCase):
     def testWindowFunctor(self):
-        data = np.random.random_sample(1000) 
+        data = np.random.random_sample(1000)
         ftor = WindowFunctor(len(data), "blackman")
         # normal
         result = ftor(data)
@@ -17,7 +17,7 @@ class TestWindow(unittest.TestCase):
         assert_allclose(result, data)
 
     def testWindow(self):
-        data = np.random.random_sample(1000) 
+        data = np.random.random_sample(1000)
         # normal
         result = create_and_apply_window(data, "blackman")
         assert_allclose(result, data * np.blackman(1000))

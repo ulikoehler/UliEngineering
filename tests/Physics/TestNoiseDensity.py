@@ -49,7 +49,7 @@ class TestNoiseDensity(unittest.TestCase):
         n1 = actual_noise("100 µV", "100 Hz")
         n2 = actual_noise("0.0001 V", "100 Hz")
         assert_approx_equal(n1, n2)
-        
+
         # Test with different frequency units
         n3 = actual_noise("100 µV", "0.1 kHz")
         n4 = actual_noise("100 µV", "100 Hz")

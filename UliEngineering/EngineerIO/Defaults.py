@@ -56,13 +56,13 @@ def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float
         'Z': 21.0,
         'Y': 24.0
     }
-    
+
     if include_length_unit_prefixes:
         unit_prefixes.update({
             'c': -2.0,  # e.g. centimeter
             'd': -1.0   # e.g. decimeter
         })
-    
+
     return unit_prefixes
 
 def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
@@ -84,34 +84,34 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
 
         # Temperature
         UnitInfo('K', aliases=['Kelvin', 'kelvin']),
-        
+
         # Time units
         UnitInfo('s', aliases=['second', 'seconds', 'sec']),
         UnitInfo('h', aliases=['hour', 'hours', 'hr']),
         UnitInfo('min', aliases=['minute', 'minutes']),
-        
+
         # Fraction/percentage units
         UnitInfo('ppm', factor=1e-6, aliases=['parts per million']),
         UnitInfo('ppb', factor=1e-9, aliases=['parts per billion']),
         UnitInfo('ppt', factor=1e-12, aliases=['parts per trillion']),
         UnitInfo('%', factor=0.01, aliases=['percent', 'pct', 'percentage']),
-        
+
         # Moles (normalized to Avogadro's number)
         UnitInfo('mol', factor=N_A, aliases=['mole', 'moles']),
         # Weight units
         UnitInfo('Da', aliases=['Dalton', 'Daltons', 'dalton', 'daltons']),
-        
+
         # Lighting units
         UnitInfo('lm', aliases=['lumen', 'lumens']),
         UnitInfo('lx', aliases=['lux']),
         UnitInfo('cd', aliases=['candela', 'candelas']),
-        
+
         # Composite units
         UnitInfo('C/W'),
         UnitInfo('€/km'),
         UnitInfo('€/m'),
         UnitInfo('F/m'),
-        
+
         # Currency units
         UnitInfo('€', aliases=['Euro', 'Euros', 'euro', 'euros']),
         UnitInfo('$', aliases=['Dollar', 'Dollars', 'dollar', 'dollars', 'USD']),
@@ -128,7 +128,7 @@ def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
 
 def replace_comma_dot(s: str) -> str:
     return s.replace(",", ".")
-    
+
 def default_interpunctation_transform_map() -> Dict[Tuple[bool, bool, bool], Callable]:
     return {
         # Found nothing or only point -> no modification required

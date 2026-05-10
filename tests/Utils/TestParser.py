@@ -18,4 +18,3 @@ class TestParseIntFloat(unittest.TestCase):
         self.assertEqual(try_parse_int_or_float("1.0"), 1.0)
         self.assertEqual(try_parse_int_or_float("-2.225"), -2.225)
         self.assertEqual(try_parse_int_or_float("bx3613"), "bx3613")
-    

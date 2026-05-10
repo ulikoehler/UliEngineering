@@ -58,7 +58,7 @@ class TestThermistorTemperature(unittest.TestCase):
             thermistor_temperature(100e3, beta=1234,R0=100e3, T0=23.456),
             23.456
         )
-        
+
     def test_numeric(self):
         # Test case 1: Numeric inputs
         resistance = 10000  # 10kΩ

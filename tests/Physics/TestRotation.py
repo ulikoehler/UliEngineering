@@ -92,23 +92,23 @@ class TestRotationOther(unittest.TestCase):
         # Test rpm_to_Hz with various inputs
         self.assertAlmostEqual(rpm_to_Hz("60 rpm"), 1.)
         self.assertAlmostEqual(rpm_to_Hz("120 rpm"), 2.)
-        
+
         # Test hz_to_rpm with various inputs
         self.assertAlmostEqual(hz_to_rpm("1 Hz"), 60.)
         self.assertAlmostEqual(hz_to_rpm("2 Hz"), 120.)
-        
+
         # Test angular_speed with various inputs
         self.assertAlmostEqual(angular_speed("1 Hz"), 1*2*math.pi)
         self.assertAlmostEqual(angular_speed("60 rpm"), 1*2*math.pi)
-        
+
         # Test rotation_linear_speed with various inputs
         self.assertAlmostEqual(rotation_linear_speed("1 m", "1 Hz"), 1*2*math.pi)
         self.assertAlmostEqual(rotation_linear_speed("1 m", "60 rpm"), 1*2*math.pi)
-        
+
         # Test centrifugal_force with various inputs
         self.assertAlmostEqual(centrifugal_force("1 m", "60 rpm", "500 g"), 0.5 * (2 * math.pi) ** 2, places=6)
         self.assertAlmostEqual(centrifugal_force("1 m", "1 Hz", "0.5 kg"), 0.5 * (2 * math.pi) ** 2, places=6)
-        
+
         # Test rotating_liquid_pressure with various inputs
         self.assertAlmostEqual(rotating_liquid_pressure("1 g/cm^3", "60 rpm", "1 m"), 1000 * (2 * math.pi) ** 2, places=6)
         self.assertAlmostEqual(rotating_liquid_pressure("1000 kg/m^3", "1 Hz", "1 m"), 1000 * (2 * math.pi) ** 2, places=6)

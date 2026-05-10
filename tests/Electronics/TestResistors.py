@@ -12,7 +12,7 @@ class TestResistors(unittest.TestCase):
         assert_approx_equal(parallel_resistors(1000.0, 1000.0), 500.0)
         assert_approx_equal(parallel_resistors(1000.0, 1000.0, 500.0), 250.0)
         assert_approx_equal(parallel_resistors("1kΩ", "1kΩ"), 500.0)
-        
+
     def test_parallel_resistors_special_cases(self):
         assert_approx_equal(parallel_resistors(), np.inf)
         assert_approx_equal(parallel_resistors(0.0, 150.0), 0.)
@@ -26,12 +26,12 @@ class TestResistors(unittest.TestCase):
 
     def test_standard_resistors(self):
         self.assertTrue(len(list(standard_resistors())) > 500)
-        
+
     def test_standard_resistors_in_range(self):
         resistors = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
         resistors2 = standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96)
         self.assertEqual(resistors, resistors2)
-        
+
         self.assertTrue(len(list(resistors)) > 500)
         self.assertEqual(len([resistor for resistor in resistors if resistor < 1 or resistor > 10e6]), 0)
 
@@ -53,7 +53,7 @@ class TestResistors(unittest.TestCase):
         assert_approx_equal(resistor_value_by_voltage_and_power("12V", "1W"), 144.0)  # 12²/1 = 144Ω
         assert_approx_equal(resistor_value_by_voltage_and_power("5V", "0.5W"), 50.0)  # 5²/0.5 = 50Ω
         assert_approx_equal(resistor_value_by_voltage_and_power("3.3V", "100mW"), 108.9)  # 3.3²/0.1 = 108.9Ω
-        
+
         # Test with different units
         assert_approx_equal(resistor_value_by_voltage_and_power("1000mV", "10mW"), 100.0)  # 1²/0.01 = 100Ω
         self.assertEqual(auto_format(resistor_value_by_voltage_and_power, "12V", "1W"), "144 Ω")

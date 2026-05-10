@@ -142,7 +142,7 @@ def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, ini
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
-    
+
     Keyword Arguments
     -----------------
     capacitance : number or Engineer string
@@ -169,7 +169,7 @@ def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
-    
+
     Keyword Arguments
     -----------------
     capacitance : number or Engineer string
@@ -303,9 +303,9 @@ def capacitor_capacitance_by_energy(energy: EnergyJ, voltage: VoltageV, starting
     - The energy stored in joules
     - The voltage the capacitor is charged to
     - The starting voltage (optional, default 0V)
-    
+
     The capacitance is returned in farads.
-    
+
     The formula accounts for the energy difference between the final and starting voltages:
     Energy = 0.5 * C * (V_final^2 - V_starting^2)
     Therefore: C = 2 * Energy / (V_final^2 - V_starting^2)
@@ -328,7 +328,7 @@ def capacitor_charging_energy(capacitance: CapacitanceFarad, end_voltage: Voltag
 
     Returns:
     The energy required in joules.
-    
+
     The energy required is the difference between the final and initial stored energy:
     Energy_required = 0.5 * C * (V_end^2 - V_start^2)
     """

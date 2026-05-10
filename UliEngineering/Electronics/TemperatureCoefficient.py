@@ -20,7 +20,7 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
     computes the actual value of the component at temperature.
 
     The coefficient of temperature is interpreted in accordance with MIL-STD-202G.
-    
+
     Keyword arguments
     -----------------
     nominal : number or string
@@ -43,7 +43,7 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
     Returns
     -------
     float
-        A unit-less value representing the value of the component at the given temperature. 
+        A unit-less value representing the value of the component at the given temperature.
     """
     # Normalize nominal and coefficient
     nominal = normalize_numeric(nominal) if isinstance(nominal, str) else nominal
@@ -65,7 +65,7 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
     tdelta = temperature - tref
     factor = 1. + (tdelta * coefficient)
     return nominal * factor
-    
+
 
 def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str|float = "100ppm", tolerance: NormalizableArgument = "0 %", tmin: NormalizableArgument = "-40 °C", tmax: NormalizableArgument = "85 °C", tref: NormalizableArgument = "25 °C", significant_digits=4):
     """
@@ -81,7 +81,7 @@ def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str
     applying the temperature coefficient.
 
     The min/max values are computed in accordance with MIL-STD-202 method 304.
-    
+
     The coefficient and static tolerance can be given as number or as string
     e.g. as ppm, ppb or %
     and is interpreted as "plus-minus" value.
@@ -154,8 +154,8 @@ def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str
         tol_min_value * (1. + (tdelta_pos * tempco)),
         tol_max_value * (1. + (tdelta_pos * tempco))
     ]
-    
+
     min_temp = min(args)
     max_temp = max(args)
- 
+
     return ValueRange(min_temp, max_temp, unit, significant_digits)

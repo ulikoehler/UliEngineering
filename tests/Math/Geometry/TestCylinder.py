@@ -63,7 +63,7 @@ class TestHollowCylinder(unittest.TestCase):
     def test_hollow_cylinder_volume(self, outer_radius, inner_radius, height, expected):
         self.assertAlmostEqual(hollow_cylinder_volume(outer_radius, inner_radius, height), expected, delta=.025)
         self.assertAlmostEqual(hollow_cylinder_volume(f"{outer_radius}", f"{inner_radius}", f"{height}"), expected, delta=.025)
-   
+
 
     @parameterized.expand([
         # Wolfram Alpha as a reference

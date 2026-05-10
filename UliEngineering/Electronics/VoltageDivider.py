@@ -22,7 +22,7 @@ __all__ = ["voltage_divider_ratio", "top_resistor_by_ratio",
 def voltage_divider_ratio(rtop: ResistanceOhm, rbot: ResistanceOhm, rload: ResistanceOhm = np.inf):
     """
     Compute the division ratio of a voltage divider.
-    
+
     If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
@@ -34,7 +34,7 @@ def voltage_divider_ratio(rtop: ResistanceOhm, rbot: ResistanceOhm, rload: Resis
 def voltage_divider_voltage(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: VoltageV, rload: ResistanceOhm = np.inf):
     """
     Compute the voltage output of a voltage divider
-    
+
     If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
@@ -47,7 +47,7 @@ def voltage_divider_voltage(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Volta
 def voltage_divider_current(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: VoltageV, rload: ResistanceOhm = np.inf):
     """
     Compute the current through the top resistor of a voltage divider.
-    
+
     If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
@@ -83,7 +83,7 @@ def voltage_divider_power(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Voltage
     VoltageDividerPower(top=210 mW, bottom=840 µW, total=211 mW
     >>> voltage_divider_power("250k", "1k", "230V").total
     0.2107569721115538
-    
+
     If rload is supplied, additional load (in parallel to R2) is taken into account.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop

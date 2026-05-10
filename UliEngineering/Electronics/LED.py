@@ -59,10 +59,10 @@ def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward:
     Computes the required series resistor power for operating a LED with
     forward voltage [vforward] at current [ioperating] on a
     supply voltage of [vsupply].
-    
+
     The resulting power value is the minimum rated value for the resistor
     for continous operation
- 
+
     Tolerances are not taken into account.
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply

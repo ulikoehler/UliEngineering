@@ -20,13 +20,13 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     using a quantile-based method to exclude
     outliers (in the time delta domain) and
     computes the by 1 / mean
-    
+
     Using a low ignore_percentile value is only
     desirable if the dataset is small and therefore
     does not average properly due to lack of samples.
     In most cases, using a high ignore percentile
     like 10 is recommended.
-    
+
     Returns a float (samplerate) [1/s].
 
     If t is a LinRange() object, returns t.samplerate()
@@ -79,7 +79,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
         The source timestamps.
         If these are numbers, you must supply time_factor to
         specify the resolution of the number.
-        If they are 
+        If they are
     new_samplerate : float
         The new datarate in Hz
     assume_sorted : bool
@@ -94,7 +94,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
         array means. This is required to interpret new_samplerate.
         If time_factor=1e6, it means that a difference of 1.0
         in two timestamps means a difference of 1/1e6 seconds.
-    
+
     Returns
     -------
     A LinSpace() (acts like a numpy array but doesn't consume any memory)

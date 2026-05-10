@@ -40,7 +40,7 @@ class ListIterator:
         """Remaining values"""
         return self._remaining
 
-    
+
 
 
 def iterable_to_iterator(_it):
@@ -76,7 +76,7 @@ class PeekableIteratorWrapper:
         if len(self.buffer) > 0:
             return self.buffer.pop()
         return next(self.child)
-    
+
     def __len__(self):
         """
         Returns len(child). Only supported
@@ -101,7 +101,7 @@ class PeekableIteratorWrapper:
             return True
         except StopIteration:
             return False
-            
+
 
     def unget(self, v):
         """

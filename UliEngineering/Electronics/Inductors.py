@@ -16,7 +16,7 @@ def ideal_inductor_current_change_rate(inductance: InductanceH, voltage: Voltage
     """
     Compute the rise or fall rate of current in an ideal inductor,
     if there's [voltage] across it.
-    
+
     Parameters
     ----------
     inductance: number or Engineer string

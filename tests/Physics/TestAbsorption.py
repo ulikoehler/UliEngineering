@@ -258,7 +258,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         l1 = absorption_length_from_absorption_coefficient("1 1/m")
         l2 = absorption_length_from_absorption_coefficient("1 m⁻¹")
         self.assertAlmostEqual(l1, l2)
-        
+
         # Test remaining_light_fraction with different length units
         f1 = remaining_light_fraction("1 m", "1 1/m")
         f2 = remaining_light_fraction("1000 mm", "1 m⁻¹")

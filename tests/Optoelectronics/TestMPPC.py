@@ -11,7 +11,7 @@ class TestMPPC(unittest.TestCase):
         # Test with numeric inputs
         result = pixel_capacitance_from_terminal_capacitance(900e-12, 14331)
         assert_approx_equal(result, 900e-12 / 14331)
-        
+
         # Test with string inputs
         result = pixel_capacitance_from_terminal_capacitance("900pF", "14331")
         assert_approx_equal(result, 900e-12 / 14331)

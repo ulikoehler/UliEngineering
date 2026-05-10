@@ -79,11 +79,11 @@ class TestCentrifugalAcceleration(unittest.TestCase):
         self.assertAlmostEqual(normalize_acceleration_ms2("1 g"), g0)
         self.assertAlmostEqual(normalize_acceleration_ms2("2 g"), 2 * g0)
         self.assertAlmostEqual(normalize_acceleration_g("1 m/s²"), 1.0/g0)
-        
+
         # Test centrifugal_acceleration with string units (using LengthMeters and FrequencyHz types which have their own normalize)
         self.assertAlmostEqual(centrifugal_acceleration("0.1 m", "100 Hz"), 39478.417, places=2)
         self.assertAlmostEqual(centrifugal_acceleration("0.2 m", "10 Hz"), 789.568, places=2)
-        
+
         # Test centrifuge_radius with string units
         self.assertAlmostEqual(centrifuge_radius("39478.417 m/s²", "100 Hz"), 0.1, places=2)
         self.assertAlmostEqual(centrifuge_radius("789.568 m/s²", "10 Hz"), 0.2, places=2)

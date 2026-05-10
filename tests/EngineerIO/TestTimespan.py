@@ -12,7 +12,7 @@ class TestEngineerTimespanIO(unittest.TestCase):
     def test_float_int_input(self):
         assert_approx_equal(self.io.normalize_timespan(1), 1)
         assert_approx_equal(self.io.normalize_timespan(1.25), 1.25)
-    
+
     def test_numpy_input(self):
         assert_approx_equal(self.io.normalize_timespan(np.float64(1)), 1)
         assert_approx_equal(self.io.normalize_timespan(np.float64(1.25)), 1.25)

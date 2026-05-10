@@ -28,8 +28,8 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application as a total power (integrated per second).
-    
-    Ref: 
+
+    Ref:
     http://rohmfs.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/power_loss_appli-e.pdf
 
     Parameters
@@ -54,8 +54,8 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
     """
     Compute the gate charge loss of a MOSFET in a switch-mode
     power-supply application per switching cycle.
-    
-    Ref: 
+
+    Ref:
     http://rohmfs.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/power_loss_appli-e.pdf
 
     Parameters
@@ -76,7 +76,7 @@ def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply
     """
     Compute the gate capacitance of a MOSFET in a switch-mode
     power-supply application.
-    
+
     Parameters
     ----------
     total_gate_charge: number or Engineer string

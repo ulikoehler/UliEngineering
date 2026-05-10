@@ -59,17 +59,17 @@ class EngineerIO(object):
         # Use default configuration if none provided
         if config is None:
             config = EngineerIOConfiguration.default()
-            
+
         self._numeric_allowed = set("+0123456789-e.")
-        
+
         # Interpunctation config. Default allows both comma and dot as decimal separators, and handles thousands separators correctly
         self._interpunct_transform_map = default_interpunctation_transform_map()
-        
+
         # Extract units and aliases from unit_infos
         self.units = set()
         self.unit_aliases = {}
         self.unit_factors = {}  # Maps unit (canonical) to its conversion factor
-        
+
         for unit_info in config.units:
             if isinstance(unit_info, UnitInfo):
                 # Add canonical unit to units set
@@ -83,7 +83,7 @@ class EngineerIO(object):
                 # Add all aliases pointing to canonical unit
                 for alias in unit_info.aliases:
                     self.unit_aliases[alias] = unit_info.canonical
-        
+
         self.unit_prefix_map = config.si_prefix_map
         # Build prefix regex
         _prefix_set = "|".join(re.escape(pfx) for pfx in config.unit_prefixes)
@@ -111,7 +111,7 @@ class EngineerIO(object):
         # Create the inverse mapping from exponent to unit prefix
         self.exp_unit_prefix_map = {}  # Key: exp // 3, Value: unit prefix
         self.unit_prefix_exp_map = {'': 0.0}  # Key: unit prefix, value: exponent (empty string for no unit prefix)
-        
+
         # Copy the unit prefix map and add it to unit_prefix_exp_map
         for unit_prefix, exponent in self.unit_prefix_map.items():
             self.unit_prefix_exp_map[unit_prefix] = exponent
@@ -120,10 +120,10 @@ class EngineerIO(object):
             # Only store the first unit prefix for each exponent (for formatting)
             if exp_key not in self.exp_unit_prefix_map:
                 self.exp_unit_prefix_map[exp_key] = unit_prefix
-        
+
         # Add empty unit prefix for base unit (exponent 0)
         self.exp_unit_prefix_map[0] = ""
-        
+
         # Compute min/max SI value
         if self.exp_unit_prefix_map:
             self.exp_map_min = min(self.exp_unit_prefix_map.keys())
@@ -131,7 +131,7 @@ class EngineerIO(object):
         else:
             self.exp_map_min = 0
             self.exp_map_max = 0
-            
+
     def _generate_unit_alias_pattern(self):
         """
         Generate a regex pattern to match unit aliases at the end of strings.
@@ -139,11 +139,11 @@ class EngineerIO(object):
         """
         if not self.unit_aliases:
             return None
-        
+
         # Sort aliases by length (longest first) to ensure proper matching
         # e.g. "square millimeters" should match before "millimeters"
         sorted_aliases = sorted(self.unit_aliases.keys(), key=len, reverse=True)
-        
+
         # Escape each alias for regex and join with |
         escaped_aliases = [re.escape(alias) for alias in sorted_aliases]
         return f"({'|'.join(escaped_aliases)})$"
@@ -156,7 +156,7 @@ class EngineerIO(object):
         if pattern is None:
             self.unit_alias_regex = None
             return
-        
+
         # NOTE: Needs to be case-sensitive for some special units
         self.unit_alias_regex = re.compile(pattern, flags=re.UNICODE)
 
@@ -167,11 +167,11 @@ class EngineerIO(object):
         """
         if not self.units:
             return None
-        
+
         # Sort units by length (longest first) to ensure proper matching
         # e.g. "Angstrom" should match before "A"
         sorted_units = sorted(self.units, key=len, reverse=True)
-        
+
         # Escape each unit for regex and join with |
         escaped_units = [re.escape(unit) for unit in sorted_units]
         return f"({'|'.join(escaped_units)})$"
@@ -184,7 +184,7 @@ class EngineerIO(object):
         if pattern is None:
             self.units_regex = None
             return
-        
+
         # NOTE: Needs to be case-sensitive for some special units
         self.units_regex = re.compile(pattern, flags=re.UNICODE)
 
@@ -195,14 +195,14 @@ class EngineerIO(object):
         if not self.all_unit_prefixes:
             self.unit_prefix_suffix_regex = None
             return
-        
+
         # Sort unit prefixes by length (longest first) to ensure proper matching
         sorted_prefixes = sorted(self.all_unit_prefixes, key=len, reverse=True)
-        
+
         # Escape each prefix for regex and join with |
         escaped_prefixes = [re.escape(prefix) for prefix in sorted_prefixes]
         pattern = f"({'|'.join(escaped_prefixes)})$"
-        
+
         # NOTE: Needs to be case-sensitive for unit prefixes
         self.unit_prefix_suffix_regex = re.compile(pattern, flags=re.UNICODE)
 
@@ -222,13 +222,13 @@ class EngineerIO(object):
         """
         if not self.unit_prefix_suffix_regex:
             return False, "", s
-        
+
         match = self.unit_prefix_suffix_regex.search(s)
         if match:
             unit_prefix_char = match.group(1)
             remainder = s[:match.start()]
             return True, unit_prefix_char, remainder
-        
+
         return False, "", s
 
     def split_input(self, s):
@@ -288,7 +288,7 @@ class EngineerIO(object):
                 # This case occurs e.g. if you use pnJ, in which case it's not clear what that means.
                 # (pico-nano-Joules??!?)
                 # Special rule for "m" (meters): "cm" must be a valid prefix, plus unit
-                # So if exactly 2 valid prefixes are detected, and the the first one is 
+                # So if exactly 2 valid prefixes are detected, and the the first one is
                 detected_prefixes = [ch for ch in s if ch in self.all_unit_prefixes]
                 if len(detected_prefixes) == 2 and detected_prefixes[-1] == 'm':
                     # for "cm", use "c"
@@ -307,7 +307,7 @@ class EngineerIO(object):
                 unit_prefix_char = s[unit_prefix_index]
                 is_between_digits = (unit_prefix_index > 0 and unit_prefix_index < len(s) - 1 and
                                     s[unit_prefix_index - 1].isdigit() and s[unit_prefix_index + 1].isdigit())
-                
+
                 if is_between_digits:
                     # Unit prefix-as-decimal-separator --> there must be no other decimal separator
                     if "." in s:  # Comma-to-dot conversion already handled by normalize_interpunctation
@@ -347,14 +347,14 @@ class EngineerIO(object):
                 # (and let the rest of the code handle it).
                 # This is since the aliased unit may contain a SI prefix such as
                 # "sq cm" => "cm²"
-                # Hence, we need to replace the matched alias by the unit 
+                # Hence, we need to replace the matched alias by the unit
                 # in the string, and the safest way to do that is to use the match indexes
                 start_idx = alias_match.start(1)
                 end_idx = alias_match.end(1)
                 # Modify the string in-place
                 s = s[:start_idx] + canonical_unit + s[end_idx:]
                 # Now continue with the loop
-        
+
         # Check for units using compiled regex
         if self.units_regex:
             unit_match = self.units_regex.search(s)
@@ -373,7 +373,7 @@ class EngineerIO(object):
                 # Remove extra whitespace
                 remainder = remainder.rstrip(self.strippable)
                 return UnitSplitResult(remainder, unit_prefix, unit)
-        
+
         # Fallback: No unit found
         value_str, unit = s, ''
         # Remove extra whitespace
@@ -397,7 +397,7 @@ class EngineerIO(object):
         value.
 
         Returns a NormalizeResult() or None if the conversion could not be performed.
-        
+
         prefix_exponent is used for converting area & volume units etc
 
         See split_input() for further details on supported formats
@@ -415,20 +415,20 @@ class EngineerIO(object):
             return [self.normalize(elem) for elem in s]
         # Perform splitting
         split_result = self.split_input(s.strip())
-        
+
         # Compute the factor to multiply with based on the SI prefix
         # e.g. "k" => 1e3, "m" => 1e-3
         prefix_multiplicator = (10 ** self.unit_prefix_exp_map[split_result.unit_prefix_char])**prefix_exponent if split_result.unit_prefix_char else 1
-        
+
         # Get unit factor
         unit = split_result.unit
         unit_factor = 1.0
         if unit:
             unit_factor = self.unit_factors.get(unit, 1.0)
-        
+
         num = float(split_result.number)
         final_value = num * prefix_multiplicator * unit_factor
-        
+
         return NormalizeResult(
             prefix=split_result.prefix,
             value=final_value,
@@ -508,7 +508,7 @@ class EngineerIO(object):
         # Pre-multiply the value
         multiplier = 10.0 ** -(suffix_idx * 3)
         return multiplier, self.exp_unit_prefix_map[suffix_idx]
-    
+
     def extract_return_unit(self, fn):
         """
         Extract the return unit from a function's annotation.
@@ -534,7 +534,7 @@ class EngineerIO(object):
 
     def auto_print(self, *args, **kwargs):
         print(self.auto_format(*args, **kwargs))
-        
+
     def normalize_iterable(self, arg, func):
         """
         Normalize an iterable (works for lists, tuples, numpy arrays and generators)
@@ -611,7 +611,7 @@ class EngineerIO(object):
             return normalize_result.value
         # It's an iterable
         return self.normalize_iterable(arg, func=partial(self.normalize_numeric_verify_unit, unit=unit))
-    
+
     @classmethod
     def instance(cls):
         """
@@ -636,7 +636,7 @@ class EngineerIO(object):
         # during interpunctation normalization,
         # depending on (commaFound, dotFound, commaFoundFirst).
         # Must contain every possible variant
-        
+
         commaIdx = s.find(",")
         pointIdx = s.find(".")
         foundComma = commaIdx is not None

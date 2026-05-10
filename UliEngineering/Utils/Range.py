@@ -24,7 +24,7 @@ def normalize_minmax_tuple(arg, name="field"):
     """
     Interprets arg either a single +- value or as
     a 2-tuple of + and - values.
-    All vaues 
+    All vaues
 
     If arg is a tuple:
         Return ValueRange(arg[0], arg[1]) (strings are normalized)

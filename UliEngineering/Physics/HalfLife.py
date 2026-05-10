@@ -153,7 +153,7 @@ def half_life_from_decayed_quantity(timespan: TimespanSeconds, decayed_quantity,
     timespan = normalize_timespan(timespan)
     decayed_quantity = normalize_numeric(decayed_quantity)
     initial_quantity = normalize_numeric(initial_quantity)
-    
+
     return -timespan / (np.log(1-decayed_quantity / initial_quantity)/_ln2)
 
 def half_life_from_fraction_remaining(timespan: TimespanSeconds, fraction_remaining) -> float:

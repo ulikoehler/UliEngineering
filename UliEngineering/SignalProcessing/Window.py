@@ -90,7 +90,7 @@ class WindowFunctor:
     def __call__(self, data, inplace=False):
         """
         Apply this window to a data array.
-        
+
         Parameters
         ----------
         data : numpy array-like

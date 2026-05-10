@@ -49,7 +49,7 @@ def ms2_to_g(ms2: AccelerationMs2):
 @returns_unit("m/s²")
 def centrifugal_acceleration(radius: LengthMeters, speed: FrequencyHz):
     """
-    Compute the centrifugal acceleration given 
+    Compute the centrifugal acceleration given
 
     Online calculator available here:
     https://techoverflow.net/2020/04/20/centrifuge-acceleration-calculator-from-rpm-and-diameter/
@@ -77,7 +77,7 @@ def centrifugal_acceleration(radius: LengthMeters, speed: FrequencyHz):
 @returns_unit("m")
 def centrifuge_radius(acceleration: AccelerationMs2, speed: FrequencyHz):
     """
-    Compute the centrifugal acceleration given 
+    Compute the centrifugal acceleration given
 
     Online calculator available here:
     https://techoverflow.net/2020/04/20/centrifuge-diameter-calculator-from-acceleration-rpm/

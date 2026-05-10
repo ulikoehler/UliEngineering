@@ -24,13 +24,13 @@ __all__ = [
 def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArgument = 25.0, t2: NormalizableArgument = 100.0):
     """
     Compute the B value of a thermistor given its resistance at two temperatures
-    
+
     The formula is B = (T1*T2) / (T2-T1) * ln(R1/R2)
     with T1 and T2 being the temperatures in Kelvin and R1 and R2 being the resistances
-    
+
     t1/t2 can be given either as strings e.g. "0°F", "100°C", "300K" or as numbers
     r1/r2 can be given either as strings e.g. "1kΩ", "1MΩ" or as numbers
-    
+
     Returns the B value (unitless)
     """
     # Normalize to Kelvin (temperature needs special handling)
@@ -38,20 +38,20 @@ def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArg
     t2 = normalize_temperature_kelvin(t2)
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
-   
+
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
 @returns_unit("°C")
 def thermistor_temperature(resistance: ResistanceOhm, beta: NormalizableArgument = 3950.0, R0: ResistanceOhm = 100e3, T0: NormalizableArgument = 25.0):
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
-    
+
     Parameters:
     - resistance: The measured resistance of the thermistor in Ohms, for which to calculate the temperature.
     - beta: The Beta constant of the thermistor.
     - R0: The resistance of the thermistor at reference temperature T0 (default is 10kOhms).
     - T0: The reference temperature in Celsius (default is 25°C).
-    
+
     Returns:
     - Temperature in degrees.
     """

@@ -30,7 +30,7 @@ class TestTemperatureCoefficient(unittest.TestCase):
         self.assertEqual(str(value_range_over_temperature("1 kΩ", "1.006 %")),
             str(ValueRange(346, 1604, "Ω"))
         )
-    
+
     def test_value_range_over_temperature_tolerance(self):
         # Test with +- the same ppm input#
         # Wolfram Alpha verified: "(1+100ppm*60)*1.0*101%", "(1-(100ppm*65))*1.00*99%"
@@ -42,7 +42,7 @@ class TestTemperatureCoefficient(unittest.TestCase):
         # Test with custom temperature range
         result = value_range_over_temperature("1 kΩ", "100 ppm", tmin="0 °C", tmax="50 °C")
         self.assertEqual(str(result), str(ValueRange(997.5, 1002.5, "Ω")))
-        
+
     def test_value_range_over_temperature_custom_tref(self):
         # Test with custom reference temperature
         result = value_range_over_temperature("1 kΩ", "100 ppm", tref="20 °C")
@@ -125,28 +125,28 @@ class TestValueAtTemperature(unittest.TestCase):
         # Test with numpy arrays if supported
         temperatures = np.array([15, 25, 35])
         expected = np.array([999.0, 1000.0, 1001.0])
-        
+
         results = []
         for temp in temperatures:
             results.append(value_at_temperature("1 kΩ", temp, "100 ppm"))
-        
+
         assert_allclose(results, expected, rtol=1e-10)
 
     def test_value_at_temperature_realistic_scenarios(self):
         # Test realistic component scenarios
-        
+
         # Precision resistor: 25 ppm/°C, -40°C to +85°C
         r_cold = value_at_temperature("10 kΩ", "-40 °C", "25 ppm")
         r_hot = value_at_temperature("10 kΩ", "85 °C", "25 ppm")
         self.assertAlmostEqual(r_cold, 9983.75, places=2)
         self.assertAlmostEqual(r_hot, 10015.0, places=1)
-        
+
         # Crystal oscillator: -20 ppm/°C
         f_cold = value_at_temperature("32.768 kHz", "0 °C", "-20 ppm")
         f_hot = value_at_temperature("32.768 kHz", "50 °C", "-20 ppm")
         self.assertAlmostEqual(f_cold, 32.784384e3, places=6)
         self.assertAlmostEqual(f_hot, 32.751616e3, places=6)
-        
+
         # Capacitor: +150 ppm/°C
         c_cold = value_at_temperature("100 nF", "-25 °C", "150 ppm")
         c_hot = value_at_temperature("100 nF", "75 °C", "150 ppm")
@@ -158,15 +158,15 @@ class TestTemperatureCoefficientEdgeCases(unittest.TestCase):
         # Test error handling for invalid inputs
         with self.assertRaises(ValueError):
             value_range_over_temperature(None, "100 ppm")
-            
+
         # Test with empty string should work (might be interpreted as 0)
         # This depends on the normalize function behavior
-        
+
     def test_extreme_coefficients(self):
         # Test with very large coefficients
         result = value_at_temperature("1 kΩ", "35 °C", "10 %")
         self.assertAlmostEqual(result, 2000.0, places=1)
-        
+
         # Test with very small coefficients
         result = value_at_temperature("1 kΩ", "35 °C", "1 ppb")
         self.assertAlmostEqual(result, 1000.00001, places=8)
@@ -176,7 +176,7 @@ class TestTemperatureCoefficientEdgeCases(unittest.TestCase):
         result_ppm = value_at_temperature("1 kΩ", "35 °C", "100 ppm")
         result_percent = value_at_temperature("1 kΩ", "35 °C", "0.01 %")
         result_numeric = value_at_temperature("1 kΩ", "35 °C", 100e-6)
-        
+
         assert_approx_equal(result_ppm, result_percent)
         assert_approx_equal(result_ppm, result_numeric)
 
@@ -184,7 +184,7 @@ class TestTemperatureCoefficientEdgeCases(unittest.TestCase):
         # Test at exactly the reference temperature
         result = value_range_over_temperature("1 kΩ", "100 ppm", tmin="25 °C", tmax="25 °C")
         self.assertEqual(str(result), str(ValueRange(1000, 1000, "Ω")))
-        
+
         # Test with inverted temperature range (tmin > tmax)
         result = value_range_over_temperature("1 kΩ", "100 ppm", tmin="85 °C", tmax="-40 °C")
         # Should still work correctly (min/max will be computed properly)

@@ -39,9 +39,9 @@ Grams = Annotated[NormalizedComputable, normalize_grams]
 class DNANucleotideWeights:
     """
     Molecular weights of the four DNA nucleotides in g/mol.
-    
+
     This includes the phosphate group and the deoxyribose sugar.
-    
+
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
     A: float = 313.2   # Adenine
@@ -54,14 +54,14 @@ class RNANucleotideWeights:
     """
     Molecular weights of the four RNA nucleotides in g/mol.
     This includes the backbone phosphate group.
-    
+
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
     A: float = 329.2   # Adenine
     U: float = 306.2   # Uracil
     G: float = 345.2   # Guanine
     C: float = 305.2   # Cytosine
-    
+
 
 @dataclass
 class NucleotideFractions:

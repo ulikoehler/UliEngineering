@@ -781,7 +781,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         nu1 = kinematic_viscosity("1 mPa·s", "1000 kg/m³")
         nu2 = kinematic_viscosity("0.001 Pa·s", "1000 kg/m³")
         assert_approx_equal(nu1, nu2)
-        
+
         # Test poiseuille_flow_rate with different length units
         Q1 = poiseuille_flow_rate("10 mm", "1 kPa", "1 m", "1 Pa·s")
         Q2 = poiseuille_flow_rate("0.01 m", "1000 Pa", "1 m", "1 Pa·s")

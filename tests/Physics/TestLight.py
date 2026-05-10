@@ -52,7 +52,7 @@ class TestLight(unittest.TestCase):
         v1 = lumen_to_candela_by_apex_angle("25 lumen", "120°")
         v2 = lumen_to_candela_by_apex_angle("25 lm", "120°")
         assert_approx_equal(v1, v2)
-        
+
         # Test with different angle units
         v3 = lumen_to_candela_by_apex_angle("25 lm", "120 deg")
         v4 = lumen_to_candela_by_apex_angle("25 lm", "120°")

@@ -209,7 +209,7 @@ try:
         return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
         x and y value, with the 1st dimension being sorted in descending order.
 
-        The comparator may be 
+        The comparator may be
 
         This means that ret[0] contains the x, y coordinate of the most significant extremum
         (where the significancy is determined by the comparator)
@@ -266,7 +266,7 @@ def find_false_runs(arr):
 def runs_ignore_borders(runs, size=-1, ignore_start=True, ignore_end=True):
     """
     Ignore the first and/or the last run if they start at 0 or end at the array size respectively.
-    
+
     Parameters
     ----------
     runs : array_like

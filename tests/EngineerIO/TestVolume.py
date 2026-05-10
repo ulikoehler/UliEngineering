@@ -15,12 +15,12 @@ class TestVolume(unittest.TestCase):
         assert_approx_equal(normalize_volume(1.0), 1.0)
         assert_approx_equal(normalize_volume(5.0), 5.0)
         assert_approx_equal(normalize_volume(3), 3)
-        
+
         # Test with class instance
         assert_approx_equal(self.volume_io.normalize_volume(1.0), 1.0)
         assert_approx_equal(self.volume_io.normalize_volume(5.0), 5.0)
         assert_approx_equal(self.volume_io.normalize_volume(3), 3)
-        
+
         # None handling
         self.assertIsNone(normalize_volume(None))
 
@@ -43,7 +43,7 @@ class TestVolume(unittest.TestCase):
         assert_approx_equal(self.volume_io.normalize_volume("1 ft³"), scipy.constants.foot**3)
         assert_approx_equal(normalize_volume("1 yd³"), scipy.constants.yard**3)
         assert_approx_equal(self.volume_io.normalize_volume("1 yd³"), scipy.constants.yard**3)
-        
+
         # Test alias forms
         assert_approx_equal(normalize_volume("1 cubic inch"), scipy.constants.inch**3)
         assert_approx_equal(self.volume_io.normalize_volume("1 cubic foot"), scipy.constants.foot**3)
@@ -70,7 +70,7 @@ class TestVolume(unittest.TestCase):
         assert_approx_equal(self.volume_io.normalize_volume("1.0 Å³"), 1e-30)
         assert_approx_equal(normalize_volume("1.0 angstrom cubed"), 1e-30)
         assert_approx_equal(self.volume_io.normalize_volume("1.0 A^3"), 1e-30)
-        
+
         # Bohr radius cubed
         bohr_volume = (scipy.constants.physical_constants['Bohr radius'][0])**3
         assert_approx_equal(normalize_volume("1.0 bohr³"), bohr_volume)
@@ -81,11 +81,11 @@ class TestVolume(unittest.TestCase):
         au_volume = (scipy.constants.au)**3
         assert_approx_equal(normalize_volume("1.0 AU³"), au_volume)
         assert_approx_equal(self.volume_io.normalize_volume("1.0 astronomical unit cubed"), au_volume)
-        
+
         pc_volume = (scipy.constants.parsec)**3
         assert_approx_equal(normalize_volume("1.0 pc³"), pc_volume)
         assert_approx_equal(self.volume_io.normalize_volume("1.0 parsec cubed"), pc_volume)
-        
+
         ly_volume = (scipy.constants.c * scipy.constants.Julian_year)**3
         assert_approx_equal(normalize_volume("1.0 ly³"), ly_volume)
         assert_approx_equal(self.volume_io.normalize_volume("1.0 light year cubed"), ly_volume)

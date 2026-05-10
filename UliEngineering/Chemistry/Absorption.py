@@ -38,7 +38,7 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient: Absorp
     Compute the absorption length (in meters) from the extinction coefficient (in 1/m).
     Absorption length is defined as the distance over which the intensity drops to 1/e.
     Formula: absorption_length = 1 / absorption_coefficient):
-    
+
     NOTE: The absopriotn coefficient must bei in 1/m, not in 1/cm or any other unit.
 
     Parameters:
@@ -126,7 +126,7 @@ def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, w
     Uses the formula:
         alpha = (2 * omega * kappa) / c
     where omega = 2 * pi * c / wavelength
-    
+
     Source:
     SOLID STATE PHYSICS, Part II, M. S. Dresselhaus, Formula 5.2
     https://web.mit.edu/course/6/6.732/www/6.732-pt2.pdf

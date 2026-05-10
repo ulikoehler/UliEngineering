@@ -125,19 +125,19 @@ class TestRamp(unittest.TestCase):
         rise = 3.5
         # Min acc for C2 is 2*pi*A/T^2 approx 6.28*100/12.25 approx 51
         acc = 60.0
-        y = periodic_ramp(freq, sr, amplitude=amp, rise_time=rise, fall_time=3.5, high_time=3.0, 
+        y = periodic_ramp(freq, sr, amplitude=amp, rise_time=rise, fall_time=3.5, high_time=3.0,
                           acceleration=acc, length=10, continuity="C2")
-        
+
         # Check value at t=1 (inside acceleration phase)
         # t1 calculation
         term = rise**2 - (2 * np.pi * amp) / acc
         t1 = (rise - np.sqrt(term)) / 2.0
-        
+
         t_check = 1
         if t_check < t1:
             expected = (acc * t1 / np.pi) * (t_check - (t1 / np.pi) * np.sin(np.pi * t_check / t1))
             assert_almost_equal(y[t_check], expected)
-            
+
     def test_c2_continuity_too_low_acc(self):
         sr = 1000.0
         freq = 1.0
@@ -147,10 +147,10 @@ class TestRamp(unittest.TestCase):
         # C1 min: 4*10/0.01 = 4000
         # C2 min: 2*pi*10/0.01 = 6283
         acc = 5000.0 # Enough for C1, not for C2
-        
+
         # Should pass with C1 (default)
         periodic_ramp(freq, sr, amplitude=amp, rise_time=rise, fall_time=0.1, high_time=0.3, acceleration=acc, length=1.0, continuity="C1")
-        
+
         # Should fail with C2
         with self.assertRaises(OperationImpossibleException):
             periodic_ramp(freq, sr, amplitude=amp, rise_time=rise, fall_time=0.1, high_time=0.3, acceleration=acc, length=1.0, continuity="C2")

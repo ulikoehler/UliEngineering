@@ -16,10 +16,10 @@ def hash_file_native(file_path, tool="sha256sum"):
     """
     Hash a file using a native tool. This is generally faster
     for huge file since the data does not need to be copied into Python.
-    
+
     For many small files, it might be slower due to the overhead
     of calling the external tool.
-    
+
     This function does not neccessarily work in an OS-independent manner.
     """
     output = subprocess.check_output([tool, file_path], shell=False)
@@ -82,9 +82,9 @@ def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=F
     """
     List all files in a directory (recursively, depending on options)
     and compute the hash of each file.
-    
+
     The file hashes are computed concurrently using a ThreadPoolExecutor.
-    
+
     Returns tuples (filename, hash).
     If relative_paths is True, the filename is relative to the directory.
     If relative_paths is False, the filename is absolute.

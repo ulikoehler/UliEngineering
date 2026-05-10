@@ -233,7 +233,7 @@ def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
     Note that in contrast to other functions in this module, this function
     does not generate a NumPy array of timestamps directly but instead yields
     a list of Python datetime objects.
-    
+
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second
     :param day The day of the month for which to generate one timestamp each second
@@ -259,7 +259,7 @@ def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
     Note that in contrast to other functions in this module, this function
     does not generate a NumPy array of timestamps directly but instead yields
     a list of Python datetime objects.
-    
+
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second
     :param day The day of the month for which to generate one timestamp each second
@@ -287,7 +287,7 @@ def yield_seconds_on_day(year=2022, month=6, day=15, tz=None):
     Note that in contrast to other functions in this module, this function
     does not generate a NumPy array of timestamps directly but instead yields
     a list of Python datetime objects.
-    
+
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second
     :param day The day of the month for which to generate one timestamp each second

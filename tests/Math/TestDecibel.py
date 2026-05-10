@@ -59,7 +59,7 @@ class TestDecibel(unittest.TestCase):
         assert_allclose(-9, value_to_dB(0.25, 2, factor=dBFactor.Power), 0.05)
         # Test string
         assert_allclose(6, value_to_dB("4 V", "2 V", factor=dBFactor.Field), 0.05)
-    
+
     def test_dB_to_ratio(self):
         self.assertAlmostEqual(dB_to_ratio(0), 1.0)
         self.assertAlmostEqual(dB_to_ratio(20), 10.0)

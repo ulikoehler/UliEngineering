@@ -112,7 +112,7 @@ class TestRTD(unittest.TestCase):
         data = np.asarray([602.55, 1000.000, 1385.055])
         expected = np.asarray([-100.0, 0.0, 100.0])
         tempassert(pt1000_temperature(data), expected)
-        
+
     def test_resistane_numpy_array(self):
         tempassert = functools.partial(assert_allclose, rtol=1e-3)
         data = np.asarray([-100.0, 0.0, 100.0])
@@ -168,8 +168,8 @@ class TestRTDPolynomialComputation(unittest.TestCase):
         r1 = pt1000_resistance("0 °C")
         r2 = pt1000_resistance("0 °C")
         assert_approx_equal(r1, r2)
-        
+
         # Test pt1000_temperature with different resistance units
         t1 = pt1000_temperature("1000 Ω")
         t2 = pt1000_temperature("1 kΩ")
-        assert_approx_equal(t1, t2) 
+        assert_approx_equal(t1, t2)

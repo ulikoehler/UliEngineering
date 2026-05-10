@@ -23,7 +23,7 @@ def _length_unit_infos():
     return [
         # Base meter unit
         UnitInfo('m', 1.0, ['meter', 'meters']),
-        
+
         # Imperial units
         UnitInfo('mil', 1e-3 * scipy.constants.inch, ['mils']),
         UnitInfo('in', scipy.constants.inch, ['"', 'inch', 'inches']),
@@ -32,12 +32,12 @@ def _length_unit_infos():
         UnitInfo('mile', scipy.constants.mile, ['miles']),
         UnitInfo('nautical mile', scipy.constants.nautical_mile, ['nautical miles']),
         UnitInfo('pt', scipy.constants.point, ['point', 'points']),
-        
+
         # Astronomical units
         UnitInfo('AU', scipy.constants.astronomical_unit, ['au', 'AUs']),
         UnitInfo('ly', scipy.constants.light_year, ['lightyear', 'lightyears', 'light years', 'light year']),
         UnitInfo('pc', scipy.constants.parsec, ['parsec', 'parsecs']),
-        
+
         # Other units
         UnitInfo('Å', scipy.constants.angstrom, ['angstrom', 'Angstrom']),
     ]
@@ -71,11 +71,11 @@ class EngineerLengthIO(EngineerIO):
     EngineerIO subclass specialized for length unit parsing and conversion.
     """
     _instance = None
-    
+
     def __init__(self):
         # Use length-specific configuration
         super().__init__(config=_create_length_config())
-    
+
     @classmethod
     def instance(cls):
         """
@@ -84,7 +84,7 @@ class EngineerLengthIO(EngineerIO):
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
-    
+
     @returns_unit("m")
     def normalize_length(self, s):
         """
@@ -102,7 +102,7 @@ class EngineerLengthIO(EngineerIO):
         - "9.15 kpc" => 2.8233949868947424e+17
         """
         return self.normalize_numeric(s)
-    
+
     @returns_unit("m")
     def convert_length_to_meters(self, value, unit):
         """

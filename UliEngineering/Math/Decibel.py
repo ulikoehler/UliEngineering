@@ -55,7 +55,7 @@ def dB_to_ratio(dB: NormalizableArgument, factor: NormalizableArgument = dBFacto
     """
     Convert a given ratio from a decibel value to the underlying quantity.
     The result is returned as a ratio to the 0 dB value.
-    
+
     For power quantities, set factor=dBFactor.Power
     For field quantities, set factor=dBFactor.Field
     """
@@ -67,7 +67,7 @@ def dB_to_ratio(dB: NormalizableArgument, factor: NormalizableArgument = dBFacto
 def value_to_dB(v: NormalizableArgument, v0: NormalizableArgument = 1.0, factor: NormalizableArgument = dBFactor.Field):
     """
     Convert a given quantity [v] to dB, with 0dB being [v0].
-    
+
     Returns -np.inf for negative values
     """
     v = normalize_numeric(v) if isinstance(v, str) else v
@@ -78,7 +78,7 @@ def value_to_dB(v: NormalizableArgument, v0: NormalizableArgument = 1.0, factor:
 def dB_to_value(dB: NormalizableArgument, v0: NormalizableArgument = 1.0, factor: NormalizableArgument = dBFactor.Field):
     """
     Convert a given decibel value [dB] to dB, with 0 dB being [v0].
-    
+
     Returns -np.inf for negative values
     """
     dB = normalize_numeric(dB) if isinstance(dB, str) else dB

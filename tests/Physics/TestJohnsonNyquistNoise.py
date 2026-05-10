@@ -50,17 +50,17 @@ class TestJohnsonNyquistNoise(unittest.TestCase):
         v1 = johnson_nyquist_noise_current("20000000 Ω", "10000 Hz", "20 °C")
         v2 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "20 °C")
         assert_approx_equal(v1, v2)
-        
+
         # Test with different frequency units
         v3 = johnson_nyquist_noise_current("20 MΩ", "10 kHz", "20 °C")
         v4 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "20 °C")
         assert_approx_equal(v3, v4)
-        
+
         # Test with different temperature units
         v5 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "293.15 K")
         v6 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "20 °C")
         assert_approx_equal(v5, v6)
-        
+
         # Test voltage with different units
         v7 = johnson_nyquist_noise_voltage("20000000 Ω", "10000 Hz", "20 °C")
         v8 = johnson_nyquist_noise_voltage("20 MΩ", "10000 Hz", "20 °C")

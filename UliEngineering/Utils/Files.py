@@ -118,7 +118,7 @@ def list_recursive(directory, relative=False, files_only=True):
     """
     List a directory recursively, yielding each filename
     (with the filename being relative to the directory).
-    
+
     The results are generated in no particular order.
 
     Parameters
@@ -145,17 +145,17 @@ def find_datasets_by_extension(namelist, extensions):
     """
     Searches for datasets that are located in the same directory
     and have the same name, but different extensions.
-    
+
     Finds only datasets where all extensions are present
     within a single directory with a single basename.
-    
+
     Usually you would acquire the namelist using
     list(UliEngineering.Utils.Files.list_recursive()) or
     UliEngineering.Utils.ZIP.list_zip()
-    
+
     Example:
     find_datasets_by_extension(list_zip("my.zip"), (".dbf", ".prj", ".shp"))
-    
+
     Parameters
     ----------
     namelist : iterable of strings
@@ -164,7 +164,7 @@ def find_datasets_by_extension(namelist, extensions):
         A list or tuple of extensions, starting with a dot,
         of files in the dataset that need to be present
         with the same prefix
-    
+
     Yields
     ------
     A list of filenames (each in the namelist) for

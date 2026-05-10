@@ -34,7 +34,7 @@ class FirstCharacterInStringIsUnitPrefixException(EngineerIOException):
     (pico-femto-Joules?!?).
     """
     pass
-    
+
 class MultipleUnitPrefixesException(EngineerIOException):
     """
     Raised if during parsing, multiple SI prefixes are detected, such as in pfJ

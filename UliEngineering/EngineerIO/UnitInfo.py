@@ -10,7 +10,7 @@ class UnitAlias:
     Represents a mapping of aliases to a canonical unit.
     This is used for units that don't have their own conversion factor
     but are alternative names for existing units.
-    
+
     Attributes:
     -----------
     canonical : str
@@ -20,7 +20,7 @@ class UnitAlias:
     """
     canonical: str
     aliases: List[str] = field(default_factory=list)
-    
+
     def matches_alias(self, alias_string: str) -> bool:
         """
         Check if the given string is one of the aliases.
@@ -29,7 +29,7 @@ class UnitAlias:
         -----------
         alias_string : str
             The alias string to check
-            
+
         Returns:
         --------
         bool
@@ -42,7 +42,7 @@ class UnitInfo:
     """
     Represents information about a unit including its canonical form,
     aliases, and conversion factor.
-    
+
     Attributes:
     -----------
     canonical : str
@@ -55,7 +55,7 @@ class UnitInfo:
     canonical: str
     factor: float = field(default=1.0)
     aliases: List[str] = field(default_factory=list)
-    
+
     def matches(self, unit_string: str) -> bool:
         """
         Check if the given unit string matches this unit (canonical or alias).
@@ -64,14 +64,14 @@ class UnitInfo:
         -----------
         unit_string : str
             The unit string to check
-            
+
         Returns:
         --------
         bool
             True if the unit string matches this unit
         """
         return unit_string == self.canonical or unit_string in self.aliases
-    
+
     def get_all_representations(self) -> List[str]:
         """
         Get all possible representations of this unit (canonical + aliases).
@@ -89,12 +89,12 @@ class EngineerIOConfiguration:
     units: List[Union[UnitInfo, UnitAlias]] = field()
     unit_prefixes: List[str] = field()
     si_prefix_map: Dict[str, float] = field()
-    
+
     @classmethod
     def default(cls) -> 'EngineerIOConfiguration':
         """
         Returns a default configuration with standard units and prefixes.
-        
+
         Returns:
         --------
         EngineerIOConfiguration

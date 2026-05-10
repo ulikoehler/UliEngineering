@@ -46,7 +46,7 @@ def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
     """
     Compute the resonance frequency of an LC oscillator circuit
     given the inductance and capacitance.
-    
+
     This function can likewise be used to compute the corner frequency f_p
     of a LC filter.
 
@@ -84,9 +84,9 @@ def rc_feedforward_pole_and_zero(r1: ResistanceOhm, r2: ResistanceOhm, cff: Capa
     """
     Compute the pole and zero of a resistor divider with a feedforward capacitor.
     This is useful to compute the compensation capacitor.
-    
+
     Cff is assumed to be in parallel with R1, while R2 goes to ground.
-    
+
     For reference, see
     https://www.ti.com/lit/an/slva289b/slva289b.pdf
     equations 1 and 2.
@@ -112,20 +112,20 @@ def rc_feedforward_pole_and_zero(r1: ResistanceOhm, r2: ResistanceOhm, cff: Capa
 def rc_time_constant(resistance: ResistanceOhm, capacitance: CapacitanceFarad):
     """
     Calculate the time constant (τ) of an RC circuit.
-    
+
     τ = R × C
-    
+
     The time constant represents the time required for the voltage
     across the capacitor to reach approximately 63.2% of its final value
     when charging, or to decay to 36.8% when discharging.
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
         The resistance value in Ohms
     capacitance : number or Engineer string
         The capacitance value in Farads
-        
+
     Returns
     -------
     float
@@ -139,20 +139,20 @@ def rc_time_constant(resistance: ResistanceOhm, capacitance: CapacitanceFarad):
 def rl_time_constant(resistance: ResistanceOhm, inductance: InductanceH):
     """
     Calculate the time constant (τ) of an RL circuit.
-    
+
     τ = L / R
-    
+
     The time constant represents the time required for the current
     through the inductor to reach approximately 63.2% of its final value
     when energizing, or to decay to 36.8% when de-energizing.
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
         The resistance value in Ohms
     inductance : number or Engineer string
         The inductance value in Henries
-        
+
     Returns
     -------
     float
@@ -166,19 +166,19 @@ def rl_time_constant(resistance: ResistanceOhm, inductance: InductanceH):
 def rl_cutoff_frequency(resistance: ResistanceOhm, inductance: InductanceH):
     """
     Calculate the cutoff frequency (fc) of an RL circuit.
-    
+
     fc = R / (2π × L)
-    
+
     This is the -3dB frequency where the output is 70.7% of the input
     in a low-pass or high-pass RL filter.
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
         The resistance value in Ohms
     inductance : number or Engineer string
         The inductance value in Henries
-        
+
     Returns
     -------
     float
@@ -193,9 +193,9 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
     """
     Calculate the time required for a capacitor to charge from initial_voltage
     to target_voltage when charging towards final_voltage through a resistor.
-    
+
     t = -R × C × ln((target_voltage - final_voltage) / (initial_voltage - final_voltage))
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -208,7 +208,7 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
         The final (asymptotic) voltage in Volts
     target_voltage : number or Engineer string
         The target voltage to reach in Volts
-        
+
     Returns
     -------
     float
@@ -219,12 +219,12 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
     initial_voltage = normalize_voltage(initial_voltage) if isinstance(initial_voltage, str) else initial_voltage
     final_voltage = normalize_voltage(final_voltage) if isinstance(final_voltage, str) else final_voltage
     target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
-    
+
     if abs(initial_voltage - final_voltage) < 1e-12:
         return 0.0  # Already at final voltage
     if abs(target_voltage - final_voltage) < 1e-12:
         return float('inf')  # Never reaches final voltage
-    
+
     return -resistance * capacitance * np.log((target_voltage - final_voltage) / (initial_voltage - final_voltage))
 
 @returns_unit("s")
@@ -232,9 +232,9 @@ def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, 
     """
     Calculate the time required for a capacitor to discharge from initial_voltage
     to target_voltage through a resistor (assuming discharge to 0V).
-    
+
     t = -R × C × ln(target_voltage / initial_voltage)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -245,7 +245,7 @@ def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, 
         The initial voltage across the capacitor in Volts
     target_voltage : number or Engineer string
         The target voltage to reach in Volts
-        
+
     Returns
     -------
     float
@@ -262,9 +262,9 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
     """
     Calculate the time required for current through an inductor to rise
     from 0 to target_current when approaching final_current.
-    
+
     t = -L/R × ln((final_current - target_current) / final_current)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -275,7 +275,7 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
         The final (asymptotic) current in Amperes
     target_current : number or Engineer string
         The target current to reach in Amperes
-        
+
     Returns
     -------
     float
@@ -285,12 +285,12 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     final_current = normalize_current(final_current) if isinstance(final_current, str) else final_current
     target_current = normalize_current(target_current) if isinstance(target_current, str) else target_current
-    
+
     if abs(target_current - final_current) < 1e-12:
         return float('inf')  # Never reaches final current
     if final_current == 0:
         return 0.0  # No current flow
-    
+
     return -(inductance / resistance) * np.log((final_current - target_current) / final_current)
 
 @returns_unit("s")
@@ -298,9 +298,9 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
     """
     Calculate the time required for current through an inductor to fall
     from initial_current to target_current (assuming decay to 0A).
-    
+
     t = -L/R × ln(target_current / initial_current)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -311,7 +311,7 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
         The initial current through the inductor in Amperes
     target_current : number or Engineer string
         The target current to reach in Amperes
-        
+
     Returns
     -------
     float
@@ -321,21 +321,21 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     initial_current = normalize_current(initial_current) if isinstance(initial_current, str) else initial_current
     target_current = normalize_current(target_current) if isinstance(target_current, str) else target_current
-    
+
     if initial_current == 0:
         return 0.0  # No initial current
     if target_current == 0:
         return float('inf')  # Never reaches zero current
-    
+
     return -(inductance / resistance) * np.log(target_current / initial_current)
 
 @returns_unit("V")
 def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, time: TimeS, initial_voltage: VoltageV=0, final_voltage: VoltageV=1):
     """
     Calculate the voltage across a capacitor at a given time after a step input.
-    
+
     V(t) = final_voltage + (initial_voltage - final_voltage) × exp(-t / (R × C))
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -348,7 +348,7 @@ def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, t
         The initial voltage across the capacitor in Volts (default: 0)
     final_voltage : number or Engineer string, optional
         The final voltage step in Volts (default: 1)
-        
+
     Returns
     -------
     float
@@ -366,9 +366,9 @@ def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, t
 def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: TimeS, final_current: CurrentA=1):
     """
     Calculate the current through an inductor at a given time after a step input.
-    
+
     I(t) = final_current × (1 - exp(-t × R / L))
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -379,7 +379,7 @@ def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: T
         The time at which to evaluate the response in seconds
     final_current : number or Engineer string, optional
         The final current step in Amperes (default: 1)
-        
+
     Returns
     -------
     float
@@ -396,16 +396,16 @@ def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: T
 def rlc_resonant_frequency(inductance: InductanceH, capacitance: CapacitanceFarad):
     """
     Calculate the resonant frequency of an RLC circuit.
-    
+
     f0 = 1 / (2π × sqrt(L × C))
-    
+
     Parameters
     ----------
     inductance : number or Engineer string
         The inductance value in Henries
     capacitance : number or Engineer string
         The capacitance value in Farads
-        
+
     Returns
     -------
     float
@@ -418,9 +418,9 @@ def rlc_resonant_frequency(inductance: InductanceH, capacitance: CapacitanceFara
 def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capacitance: CapacitanceFarad):
     """
     Calculate the quality factor (Q) of an RLC circuit.
-    
+
     Q = (1/R) × sqrt(L/C)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -429,7 +429,7 @@ def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capac
         The inductance value in Henries
     capacitance : number or Engineer string
         The capacitance value in Farads
-        
+
     Returns
     -------
     float
@@ -443,9 +443,9 @@ def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capac
 def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capacitance: CapacitanceFarad):
     """
     Calculate the damping ratio (ζ) of an RLC circuit.
-    
+
     ζ = R/2 × sqrt(C/L)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
@@ -454,13 +454,13 @@ def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capaci
         The inductance value in Henries
     capacitance : number or Engineer string
         The capacitance value in Farads
-        
+
     Returns
     -------
     float
         Damping ratio (dimensionless)
         ζ < 1: underdamped
-        ζ = 1: critically damped  
+        ζ = 1: critically damped
         ζ > 1: overdamped
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -472,16 +472,16 @@ def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capaci
 def rlc_bandwidth(resistance: ResistanceOhm, inductance: InductanceH):
     """
     Calculate the 3dB bandwidth of an RLC circuit.
-    
+
     BW = R / (2π × L)
-    
+
     Parameters
     ----------
     resistance : number or Engineer string
         The resistance value in Ohms
     inductance : number or Engineer string
         The inductance value in Henries
-        
+
     Returns
     -------
     float

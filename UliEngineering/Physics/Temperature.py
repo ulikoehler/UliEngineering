@@ -84,7 +84,7 @@ TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsi
 def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
     """
     Compute the temperature of a component, given its thermal resistance (theta),
-    its dissipated power and 
+    its dissipated power and
     """
     power_dissipated = normalize_numeric(power_dissipated) if isinstance(power_dissipated, str) else power_dissipated
     theta = normalize_numeric(theta) if isinstance(theta, str) else theta

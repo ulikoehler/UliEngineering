@@ -46,7 +46,7 @@ def list_zip(zippath):
 def read_from_zip(zippath, filepaths, binary=True):
     """
     Read one or multiple files from a ZIP, copying their contents to memory.
-    
+
     Parameters
     ----------
     zippath : path-like
@@ -57,7 +57,7 @@ def read_from_zip(zippath, filepaths, binary=True):
     binary : bool
         If True, returns a io.BytesIO().
         If False, returns a io.StringIO()
-        
+
     Returns
     -------
     If filepath is a string, a single file-like object (in-memory).
@@ -76,4 +76,3 @@ def read_from_zip(zippath, filepaths, binary=True):
                 iobufs.append(iof(inf.read()))
         # Return result
         return iobufs[0] if single_file else iobufs
-            

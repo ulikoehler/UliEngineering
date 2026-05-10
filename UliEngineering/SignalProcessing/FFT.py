@@ -46,7 +46,7 @@ class FFT(object):
         fft[1.0:] selects everything from 1.0 Hz to the max frequency
         fft[:100.0] selects everything from 1.0 Hz to the max frequency
 
-        fft[10.0] selects (frequency, value, angle) of 
+        fft[10.0] selects (frequency, value, angle) of
         """
         if isinstance(arg, slice) or isinstance(arg, tuple):
             if isinstance(arg, slice):
@@ -75,7 +75,7 @@ class FFT(object):
         if low is not None or high is not None:
             self = self[low:high]
         return self.frequencies[np.argmax(self.amplitudes)]
-    
+
     def dominant_value(self, low=None, high=None):
         """
         Return the value with the largest amplitude in a FFT spectrum.
@@ -102,7 +102,7 @@ class FFT(object):
         # Normalize to [amplitude unit] / Hz
         dHz = filtered.frequencies[-1] - filtered.frequencies[0]
         return np.sum(filtered.amplitudes) / dHz
-        
+
     def closest_frequency(self, frequency):
         """
         Find the closest frequency bin and value in an array of frequencies
@@ -115,7 +115,7 @@ class FFT(object):
         Find the closest frequency, value and angle
         Return (frequency of closest frequency bin, value, angle)
         as a FFTPoint object.
-        
+
         Use .frequency, .amplitude and .angle to access
         """
         idx = find_closest_index(self.frequencies, frequency)

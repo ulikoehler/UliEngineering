@@ -76,7 +76,7 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
         delta = max(w_guess * 1e-6, 1e-12)
         Z0_plus = microstrip_impedance(w_guess + delta, h, t, e_r)
         derivative = (Z0_plus - current_Z0) / delta
-        
+
         if derivative == 0:
             break
 
@@ -90,7 +90,7 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
     current_Z0 = microstrip_impedance(w_guess, h, t, e_r)
     if abs(current_Z0 - target_Z0) > tol:
         raise ValueError(f"Could not converge to Z0={target_Z0} Ohm. Best guess w={w_guess} m gave Z0={current_Z0} Ohm")
-    
+
     return w_guess
 
 @returns_unit("Ω")
@@ -185,7 +185,7 @@ def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = Re
     u = w / h
     g = d / h
     g10 = g**10
-    # Step 1: Determine effective e_r 
+    # Step 1: Determine effective e_r
     E0 = math.sqrt(w/(w + 12*h))
     E1 = (e_r + 1)/2
     E2 = (e_r-1)/2

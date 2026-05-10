@@ -34,7 +34,7 @@ def lumen_to_candela_by_apex_angle(flux: LuminousFluxLumen, angle: AngleDegrees)
         The luminous flux in Lux.
     angle : value, engineer string or NumPy array
         The apex angle of the emission cone, in degrees
-        For many LEDs, this is 
+        For many LEDs, this is
 
     >>> autoFormat(lumen_to_candela_by_apex_angle, "25 lm", "120°")
     '7.96 cd'
@@ -43,4 +43,3 @@ def lumen_to_candela_by_apex_angle(flux: LuminousFluxLumen, angle: AngleDegrees)
     angle = normalize_angle_degrees(angle)
     solid_angle = 2*np.pi*(1.-np.cos(np.deg2rad(angle)/2.0))
     return flux / solid_angle
-    

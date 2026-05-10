@@ -28,7 +28,7 @@ class TestLEDSeriesResistors(unittest.TestCase):
         self.assertEqual(auto_format(led_series_resistor_power, "5V", "10mA", "2V"), "30.0 mW")
         self.assertEqual(auto_format(led_series_resistor_power, "5V", "10mA", "3V"), "20.0 mW")
         self.assertEqual(auto_format(led_series_resistor_power, "12V", "10mA", "2V"), "100 mW")
-        
+
     def test_led_series_resistor_power_invalid(self):
         with pytest.raises(OperationImpossibleException):
             led_series_resistor_power("2V", "20mA", "3V")

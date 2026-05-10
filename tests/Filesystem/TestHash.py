@@ -35,7 +35,7 @@ class TestHashFile(unittest.TestCase):
             file_path = f.name
         self.assertEqual(hash_file_sha1(file_path), "943a702d06f34599aee1f8da8ef9f7296031d699")
         os.unlink(file_path)
-        
+
 class TestHashDirectory(unittest.TestCase):
     def setUp(self):
         self.tmpdir = tempfile.TemporaryDirectory()
