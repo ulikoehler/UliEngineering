@@ -7,8 +7,10 @@ For reference see e.g.
 https://www.electronics-tutorials.ws/io/thermistors.html
 """
 from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
+from .Diode import normalize_resistance, ResistanceOhm
 import numpy as np
 from UliEngineering.Physics.Temperature import kelvin_to_celsius
 
@@ -19,7 +21,7 @@ __all__ = [
     "thermistor_resistance",
 ]
 
-def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
+def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArgument = 25.0, t2: NormalizableArgument = 100.0):
     """
     Compute the B value of a thermistor given its resistance at two temperatures
     
@@ -34,13 +36,13 @@ def thermistor_b_value(r1, r2, t1=25.0, t2=100.0):
     # Normalize to Kelvin (temperature needs special handling)
     t1 = normalize_temperature_kelvin(t1)
     t2 = normalize_temperature_kelvin(t2)
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
    
     return (t1*t2) / (t2-t1) * np.log(r1/r2)
 
 @returns_unit("°C")
-def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0):
+def thermistor_temperature(resistance: ResistanceOhm, beta: NormalizableArgument = 3950.0, R0: ResistanceOhm = 100e3, T0: NormalizableArgument = 25.0):
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
     
@@ -53,14 +55,15 @@ def thermistor_temperature(resistance, beta=3950.0, R0=100e3, T0=25.0):
     Returns:
     - Temperature in degrees.
     """
-    R0 = normalize_numeric(R0)
+    R0 = normalize_resistance(R0) if isinstance(R0, str) else R0
     T0 = normalize_temperature_kelvin(T0)
-    resistance = normalize_numeric(resistance)
+    resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
+    beta = normalize_numeric(beta) if isinstance(beta, str) else beta
     temperature_kelvin = 1 / (1/T0 + (1/beta) * np.log(resistance/R0))
     return kelvin_to_celsius(temperature_kelvin)
 
 @returns_unit("Ω")
-def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0):
+def thermistor_resistance(temperature: NormalizableArgument, beta: NormalizableArgument = 3950.0, R0: ResistanceOhm = 100e3, T0: NormalizableArgument = 25.0):
     """
     Calculate the resistance of a thermistor given its temperature.
 
@@ -73,6 +76,8 @@ def thermistor_resistance(temperature, beta=3950.0, R0=100e3, T0=25.0):
     """
     temperature_kelvin = normalize_temperature_kelvin(temperature)
     t0_kelvin = normalize_temperature_kelvin(T0)
+    R0 = normalize_resistance(R0) if isinstance(R0, str) else R0
+    beta = normalize_numeric(beta) if isinstance(beta, str) else beta
     # Calculate the resistance using the inverse Steinhart-Hart equation
     # Wolfram Alpha: solve K = 1 / (1/T + (1/b) * log(R/R0)) for R
     resistance = R0 * np.exp(beta * (1/temperature_kelvin - 1/t0_kelvin))

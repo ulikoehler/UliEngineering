@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.Electronics.Thermistor import thermistor_b_value, thermistor_temperature, thermistor_resistance
+from UliEngineering.Electronics.Diode import ResistanceOhm
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 import unittest
 import numpy as np
 
@@ -119,3 +121,9 @@ class TestThermistorResistance(unittest.TestCase):
         T0 = 25.0  # 25°C
         expected_result = 10000.0 # Ω
         self.assertAlmostEqual(thermistor_resistance(temperature, beta, R0, T0), expected_result)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(NormalizableArgument)
