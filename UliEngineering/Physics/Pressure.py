@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Pressure utilities."""
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit, Pa, bar, m
+from UliEngineering.Units import Pa, bar, m
 
 __all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential"]
 

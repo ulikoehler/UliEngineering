@@ -40,7 +40,7 @@ class TestFilter(unittest.TestCase):
 
     def testInvalidPassType(self):
         with self.assertRaises(ValueError):
-            filt = SignalFilter(100.0, [1.0, 2.0], btype="foobar")
+            SignalFilter(100.0, [1.0, 2.0], btype="foobar")
 
     def test_normalize_frequencies(self):
         assert_allclose(1200., _normalize_frequencies(1200.))

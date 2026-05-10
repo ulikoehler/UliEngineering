@@ -22,10 +22,8 @@ class TestThermistorBValue(unittest.TestCase):
         r2 = 10000  # 10kΩ
         t1 = "298.15K"  # 25°C in Kelvin
         t2 = "373.15K"  # 100°C in Kelvin
-        t1_numeric = 25.0
-        t2_numeric = 100.0
-        t1_kelvin = t1_numeric + 273.15
-        t2_kelvin = t2_numeric + 273.15
+        t1_kelvin = 298.15
+        t2_kelvin = 373.15
         expected_result = (t1_kelvin * t2_kelvin) / (t2_kelvin - t1_kelvin) * np.log(r1 / r2)
         self.assertAlmostEqual(thermistor_b_value(r1, r2, t1, t2), expected_result)
 
@@ -46,10 +44,8 @@ class TestThermistorBValue(unittest.TestCase):
         r2 = 10000  # 10kΩ
         t1 = "77°F"  # 25°C
         t2 = "212°F"  # 100°C
-        t1_numeric = 25.0
-        t2_numeric = 100.0
-        t1_kelvin = t1_numeric + 273.15
-        t2_kelvin = t2_numeric + 273.15
+        t1_kelvin = 298.15
+        t2_kelvin = 373.15
         expected_result = (t1_kelvin * t2_kelvin) / (t2_kelvin - t1_kelvin) * np.log(r1 / r2)
         self.assertAlmostEqual(thermistor_b_value(r1, r2, t1, t2), expected_result)
 
@@ -65,10 +61,8 @@ class TestThermistorTemperature(unittest.TestCase):
         # Test case 1: Numeric inputs
         resistance = 10000  # 10kΩ
         beta = 3950.0
-        c = 0.0
         R0 = 100000.0  # 100kΩ
         T0 = 25.0  # 25°C
-        T0_kelvin = T0 + 273.15
         expected_result = 87.71967429595793 # °C
         self.assertAlmostEqual(thermistor_temperature(resistance, beta, R0, T0), expected_result)
 
@@ -76,10 +70,8 @@ class TestThermistorTemperature(unittest.TestCase):
         # Test case 2: Inputs with temperature in Kelvin
         resistance = 10000  # 10kΩ
         beta = 3950.0
-        c = 0.0
         R0 = 100000.0  # 100kΩ
         T0 = "298.15K"  # 25°C in Kelvin
-        T0_numeric = 25.0
         expected_result = 87.71967429595793 # °C
         self.assertAlmostEqual(thermistor_temperature(resistance, beta, R0, T0), expected_result)
 
@@ -87,10 +79,8 @@ class TestThermistorTemperature(unittest.TestCase):
         # Test case 3: Inputs with resistance in string format
         resistance = "10kΩ"
         beta = 3950.0
-        c = 0.0
         R0 = 100000.0  # 100kΩ
         T0 = 25.0  # 25°C
-        T0_kelvin = T0 + 273.15
         expected_result = 87.71967429595793 # °C
         self.assertAlmostEqual(thermistor_temperature(resistance, beta, R0, T0), expected_result)
 
@@ -109,7 +99,6 @@ class TestThermistorResistance(unittest.TestCase):
         beta = 3950.0
         R0 = 100000.0  # 100kΩ
         T0 = 25.0  # 25°C
-        T0_kelvin = T0 + 273.15
         expected_result = 10000.0 # Ω
         self.assertAlmostEqual(thermistor_resistance(temperature, beta, R0, T0), expected_result)
 
@@ -119,7 +108,6 @@ class TestThermistorResistance(unittest.TestCase):
         beta = 3950.0
         R0 = 100000.0  # 100kΩ
         T0 = "298.15K"  # 25°C in Kelvin
-        T0_numeric = 25.0
         expected_result = 10000.0 # Ω
         self.assertAlmostEqual(thermistor_resistance(temperature, beta, R0, T0), expected_result)
 
@@ -129,6 +117,5 @@ class TestThermistorResistance(unittest.TestCase):
         beta = 3950.0
         R0 = 100000.0  # 100kΩ
         T0 = 25.0  # 25°C
-        T0_kelvin = T0 + 273.15
         expected_result = 10000.0 # Ω
         self.assertAlmostEqual(thermistor_resistance(temperature, beta, R0, T0), expected_result)

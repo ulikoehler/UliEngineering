@@ -90,7 +90,6 @@ def test_nan_and_inf_are_preserved():
 
 
 def test_round_trip_with_wrapped_modulo():
-    rng = np.random.default_rng(12345)
     wrap_value = 360.0
     # Create a smooth increasing continuous series (differences << threshold)
     orig = np.linspace(100.0, 100.0 + 10000.0, 1000)

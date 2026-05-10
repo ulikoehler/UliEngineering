@@ -66,7 +66,7 @@ class TestIntInterval(unittest.TestCase):
 
     def testInvalidAdd(self):
         with self.assertRaises(Exception):
-            IntInterval(1, 10) + self
+            _ = IntInterval(1, 10) + self
 
     def testRangeArrayToIntIntervals(self):
         arr = np.asarray([[41, 60], [0, 30]])

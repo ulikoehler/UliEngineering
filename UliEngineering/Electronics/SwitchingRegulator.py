@@ -99,7 +99,6 @@ def buck_regulator_inductor_current(vin, vout, inductance, frequency, ioutmax) -
     
     Returns an InductorCurrent namedtuple with the peak and RMS current (unit: Amperes)
     """
-    D = buck_regulator_duty_cycle(vin, vout)
     ΔIL = buck_regulator_inductor_ripple_current(vin, vout, inductance, frequency, ioutmax)
     Ilpeak = ioutmax + ΔIL / 2
     Ilrms = (ioutmax**2 + ΔIL**2 / 12)**0.5

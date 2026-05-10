@@ -406,9 +406,6 @@ def serial_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=Fal
     # Convert None to bounds
     startidx = 0 if startidx is None else startidx
     endidx = x.shape[0] if endidx is None else endidx
-    # Prepare accumulation buffer
-    n_bins = endidx - startidx
-    fftPower = np.zeros(n_bins)
     # Prepare common window
     windowfun = WindowFunctor(fftsize, window, param=window_param)
     # Loop over chunks and compute one power value per chunk

@@ -147,7 +147,6 @@ class TestDNAWeightConcentration(unittest.TestCase):
             self.fail("Expected list or ndarray output")
 
     def test_zero_concentration(self):
-        mw = dna_molecular_weight(10, equal_dna_fractions)
         result = dnarna_weight_concentration_from_concentration("0 mol/l", 10, equal_dna_fractions)
         if isinstance(result, (list, np.ndarray)):
             self.assertAlmostEqual(result[0], 0.0, places=12)

@@ -4,7 +4,7 @@
 Utilities for acceleration
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit, Hz, rpm, m
+from UliEngineering.Units import Unit, Hz, rpm, m, g
 import numpy as np
 
 __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
@@ -46,7 +46,7 @@ def rotation_linear_speed(radius: m, speed: Hz):
 
 @returns_unit("N")
 @normalize_numeric_args
-def centrifugal_force(radius: m, speed: Hz, mass: Unit("g")):
+def centrifugal_force(radius: m, speed: Hz, mass: g):
     """
     Compute the centrifugal force of a [mass] rotation at [speed] at radius [radius]
     """
@@ -55,7 +55,7 @@ def centrifugal_force(radius: m, speed: Hz, mass: Unit("g")):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def rotating_liquid_pressure(density: Unit("kg/m³"), speed: Hz, radius: m):
+def rotating_liquid_pressure(density: Unit("kg/m^3"), speed: Hz, radius: m):
     """
     Compute the pressure in a body of liquid (relative to the steady-state pressure)
     The calculation does not include gravity.
