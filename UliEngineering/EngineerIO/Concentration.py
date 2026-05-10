@@ -1,4 +1,6 @@
 """Utilities for concentration."""
+from typing import Annotated
+
 from numpy import ndarray
 import numpy as np
 
@@ -6,11 +8,13 @@ from . import EngineerIO
 from .Decorators import returns_unit
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 from .Defaults import default_si_prefix_map
+from .Types import NormalizableArgument, NormalizedComputable
 from scipy.constants import N_A  # Avogadro's number
 
 __all__ = [
     "normalize_mass_concentration", "convert_mass_concentration_to_per_liter", "EngineerMassConcentrationIO",
-    "normalize_amount_concentration", "convert_amount_concentration_to_grams_per_liter", "EngineerAmountConcentrationIO"
+    "normalize_amount_concentration", "convert_amount_concentration_to_grams_per_liter", "EngineerAmountConcentrationIO",
+    "MassConcentrationPerLiter", "AmountConcentrationPerLiter"
 ]
 
 def amount_concentration_unit_infos():
@@ -156,7 +160,7 @@ def convert_amount_concentration_to_grams_per_liter(value, unit, instance=None):
     return instance.convert_amount_concentration_to_grams_per_liter(value, unit)
 
 @returns_unit("1/l")
-def normalize_amount_concentration(s, instance=None):
+def normalize_amount_concentration(s: NormalizableArgument, instance=None) -> NormalizedComputable:
     if instance is None:
         instance = EngineerAmountConcentrationIO.instance()
     return instance.normalize_amount_concentration(s)
@@ -168,7 +172,12 @@ def convert_mass_concentration_to_per_liter(value, unit, instance=None):
     return instance.convert_mass_concentration_to_per_liter(value, unit)
 
 @returns_unit("1/l")
-def normalize_mass_concentration(s, instance=None):
+def normalize_mass_concentration(s: NormalizableArgument, instance=None) -> NormalizedComputable:
     if instance is None:
         instance = EngineerMassConcentrationIO.instance()
     return instance.normalize_mass_concentration(s)
+
+
+# Unit type annotations
+AmountConcentrationPerLiter = Annotated[NormalizedComputable, normalize_amount_concentration]
+MassConcentrationPerLiter = Annotated[NormalizedComputable, normalize_mass_concentration]

@@ -3,14 +3,18 @@
 """
 Utilities for length
 """
+from typing import Annotated
+
 import scipy.constants
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Defaults import default_si_prefix_map
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from . import EngineerIO
 from .UnitInfo import EngineerIOConfiguration, UnitInfo
 
-__all__ = ["normalize_length", "convert_length_to_meters", "convert_length_to_unit", "EngineerLengthIO"]
+__all__ = ["normalize_length", "convert_length_to_meters", "convert_length_to_unit", "EngineerLengthIO",
+           "LengthMeters"]
 
 def _length_unit_infos():
     """
@@ -128,7 +132,7 @@ class EngineerLengthIO(EngineerIO):
 
 # Backward compatibility functions
 @returns_unit("m")
-def normalize_length(s, instance=None):
+def normalize_length(s: NormalizableArgument, instance=None) -> NormalizedComputable:
     """
     Normalize a length to meters.
     Returns the numeric value in m or None.
@@ -146,6 +150,10 @@ def normalize_length(s, instance=None):
     if instance is None:
         instance = EngineerLengthIO.instance()
     return instance.normalize_length(s)
+
+
+# Unit type annotations
+LengthMeters = Annotated[NormalizedComputable, normalize_length]
 
 @returns_unit("m")
 def convert_length_to_meters(value, unit, instance=None):

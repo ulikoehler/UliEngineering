@@ -3,17 +3,19 @@
 """
 Utilities for volume
 """
+from typing import Annotated
+
 from numpy import ndarray
 import scipy.constants
 import numpy as np
 
-from UliEngineering.EngineerIO.Types import NormalizeResult
+from UliEngineering.EngineerIO.Types import NormalizeResult, NormalizableArgument, NormalizedComputable
 from . import EngineerIO
 from .Decorators import returns_unit
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 from .Defaults import default_si_prefix_map
 
-__all__ = ["normalize_volume", "convert_volume_to_cubic_meters", "EngineerVolumeIO"]
+__all__ = ["normalize_volume", "convert_volume_to_cubic_meters", "EngineerVolumeIO", "VolumeCubicMeters"]
 
 def volume_unit_infos():
     return [
@@ -154,7 +156,7 @@ def convert_volume_to_cubic_meters(value, unit, instance=None):
     return instance.convert_volume_to_cubic_meters(value, unit)
 
 @returns_unit("m³")
-def normalize_volume(s, instance=None):
+def normalize_volume(s: NormalizableArgument, instance=None) -> NormalizedComputable:
     """
     Normalize a volume to cubic meters.
     Returns the numeric value in m³, a list or ndarray of converted values,
@@ -171,3 +173,7 @@ def normalize_volume(s, instance=None):
     if instance is None:
         instance = EngineerVolumeIO.instance()
     return instance.normalize_volume(s)
+
+
+# Unit type annotations
+VolumeCubicMeters = Annotated[NormalizedComputable, normalize_volume]

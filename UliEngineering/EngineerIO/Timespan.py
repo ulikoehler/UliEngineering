@@ -3,12 +3,14 @@
 """
 Timespan normalization and conversion utilities for UliEngineering
 """
-from typing import cast
+from typing import Annotated, cast
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
-from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedArgument
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedArgument, NormalizedComputable
 from . import EngineerIO
 from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
+
+__all__ = ["normalize_timespan", "TimespanSeconds"]
 
 def _timespan_unit_infos():
     """
@@ -82,9 +84,13 @@ class EngineerTimespanIO(EngineerIO):
             cls._instance = cls()
         return cls._instance
 
-def normalize_timespan(v: NormalizableArgument) -> NormalizedArgument:
+def normalize_timespan(v: NormalizableArgument) -> NormalizedComputable:
     """
     Normalize a given timespan to SI units (seconds).
     Numeric inputs are assumed to be in seconds.
     """
     return cast(EngineerTimespanIO, EngineerTimespanIO.instance()).normalize_timespan(v)
+
+
+# Unit type annotations
+TimespanSeconds = Annotated[NormalizedComputable, normalize_timespan]

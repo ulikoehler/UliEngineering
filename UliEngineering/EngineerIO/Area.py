@@ -3,17 +3,19 @@
 """
 Utilities for area
 """
+from typing import Annotated
+
 from numpy import ndarray
 import scipy.constants
 import numpy as np
 
-from UliEngineering.EngineerIO.Types import NormalizeResult
+from UliEngineering.EngineerIO.Types import NormalizeResult, NormalizableArgument, NormalizedComputable
 from . import EngineerIO
 from .Decorators import returns_unit
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 from .Defaults import default_si_prefix_map
 
-__all__ = ["normalize_area", "convert_area_to_square_meters", "EngineerAreaIO"]
+__all__ = ["normalize_area", "convert_area_to_square_meters", "EngineerAreaIO", "AreaSquareMeters"]
 
 def area_unit_infos():
     return [
@@ -155,7 +157,7 @@ def convert_area_to_square_meters(value, unit, instance=None):
     return instance.convert_area_to_square_meters(value, unit)
 
 @returns_unit("m²")
-def normalize_area(s, instance=None):
+def normalize_area(s: NormalizableArgument, instance=None) -> NormalizedComputable:
     """
     Normalize an area to square meters.
     Returns the numeric value in m², a list or ndarray of converted values,
@@ -172,3 +174,7 @@ def normalize_area(s, instance=None):
     if instance is None:
         instance = EngineerAreaIO.instance()
     return instance.normalize_area(s)
+
+
+# Unit type annotations
+AreaSquareMeters = Annotated[NormalizedComputable, normalize_area]
