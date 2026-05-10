@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Units, quantities and related"""
+"""Units, quantities and related."""
 from collections import namedtuple
 import functools
 
@@ -20,36 +20,41 @@ m = Unit("m")
 g = Unit("g")
 
 class UnannotatedReturnValueError(Exception):
-    """Raised if the automatic unit finder cannot find
-    the appropriate function annotation that
-    tells an auto-formatting function which unit is being used.
+    """
+    Raise if the automatic unit finder cannot find the appropriate function.
 
-    Returns the unit string.
+    The annotation tells an auto-formatting function which unit is being used.
+
+    Return the unit string.
     """
 
 
 class InvalidUnitInContextException(ValueError):
-    """Raised if the unit might not be a globally unknown or invalid unit, but in the given context it can't be used."""
+    """Raise if the unit can't be used in the given context."""
 
 
 class UnknownUnitInContextException(ValueError):
-    """Raised if the unit is not known in this context.
+    """
+    Raise if the unit is not known in this context.
 
-    The message should contain information on what type of
-    qua
-    ntity (e.g. length) is accepted.
+    The message should contain information on what type of entity (e.g. length)
+    is accepted.
     """
 
 class InvalidUnitCombinationException(ValueError):
-    """Raised if the units involved in an operation can't be
-    combined in the way requested, for example if the
-    user tries to add a voltage and a current.
+    """
+    Raise if the units involved in an operation can't be combined in the way requested.
+
+    For example, if the user tries to add a voltage and a current.
     """
 
 def find_returned_unit(fn):
-    """Given a function that is assumed to return a quantity
-    and annotated with the corresponding unit, determines
-    which is the unit returned by the function
+    """
+    Determine which unit is returned by a function.
+
+    Given a function that is assumed to return a quantity and annotated with
+    the corresponding unit, determine which is the unit returned by the
+    function.
     """
     if not callable(fn):
         raise ValueError("fn must be callable")

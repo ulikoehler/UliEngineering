@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Compression utilities.
-"""
+"""Compression utilities."""
 import gzip
 import bz2
 import lzma
@@ -28,12 +26,12 @@ __mode_map = {
 
 def auto_open(filename, mode="r", **kwargs):
     """
-    Automatically open a potentially compressed file using the right
-    library variant of open().
-    The correct decompression algorithm is selected by filename extension.
-    This function can be used instead of open() and automatically selects
-    the right mode (text or binary).
+    Automatically open a potentially compressed file.
 
+    Automatically open a potentially compressed file using the right library
+    variant of open(). The correct decompression algorithm is selected by
+    filename extension. This function can be used instead of open() and
+    automatically selects the right mode (text or binary).
     """
     extension = os.path.splitext(filename)[1]
     if extension not in __open_map:

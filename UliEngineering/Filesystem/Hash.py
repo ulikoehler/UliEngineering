@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Filesystem hashing utilities."""
 import hashlib
 from concurrent.futures import ThreadPoolExecutor
 import os
@@ -14,8 +15,9 @@ __all__ = [
 
 def hash_file_native(file_path, tool="sha256sum"):
     """
-    Hash a file using a native tool. This is generally faster
-    for huge file since the data does not need to be copied into Python.
+    Hash a file using a native tool.
+
+    This is generally faster for huge file since the data does not need to be copied into Python.
 
     Parameters
     ----------
@@ -123,8 +125,7 @@ def hash_file_sha1(file_path, binary=False, buffer_size=65536):
 
 def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=False, relative_paths=True, buffer_size=65536, concurrency=os.cpu_count()):
     """
-    List all files in a directory (recursively, depending on options)
-    and compute the hash of each file.
+    List all files in a directory and compute the hash of each file.
 
     The file hashes are computed concurrently using a ThreadPoolExecutor.
 

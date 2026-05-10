@@ -18,29 +18,28 @@ __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
 
 def hysteresis_threshold_ratios(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
-    Calculates hysteresis threshold factors for push-pull comparators
+    Calculate hysteresis threshold factors for push-pull comparators.
 
-    Assumes that r1 and r2 are used to divide Vcc using a fixed ratio to
-    obtain a threshold voltage.
-    Additionally, Rh sources or sinks current to the threshold voltage,
-    depending on the current state of the comparator.
-    Additionally it it assumed that the same voltage (Vcc) that feeds
-    the R1+R2 divider is output from the comparator and input to Rh.
+    Assume that r1 and r2 are used to divide Vcc using a fixed ratio to obtain
+    a threshold voltage. Additionally, Rh sources or sinks current to the
+    threshold voltage, depending on the current state of the comparator.
+    Additionally it is assumed that the same voltage (Vcc) that feeds the
+    R1+R2 divider is output from the comparator and input to Rh.
 
-    This function computes the (lower, upper) division ratios by
-    assuming rh is set either parallel with R1 (upper) or with R2 (lower).
+    This function computes the (lower, upper) division ratios by assuming
+    rh is set either parallel with R1 (upper) or with R2 (lower).
 
-    Returns a tuple (lower, upper) containing floats
-    representing the division ratios.
+    Return a tuple (lower, upper) containing floats representing the
+    division ratios.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
@@ -55,18 +54,20 @@ def hysteresis_threshold_ratios(r1: ResistanceOhm, r2: ResistanceOhm, rh: Resist
 
 def hysteresis_threshold_ratios_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
-    Same as hysteresis_threshold_ratios(), but for open-drain comparators.
-    In contrast to hysteresis_threshold_ratios(), ignores rh for the upper
-    threshold.
+    Calculate hysteresis threshold ratios for open-drain comparators.
+
+    This is similar to hysteresis_threshold_ratios(), but for open-drain
+    comparators. In contrast to hysteresis_threshold_ratios(), ignores rh for
+    the upper threshold.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
@@ -79,7 +80,7 @@ def hysteresis_threshold_ratios_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, 
     return (thl, thu)
 
 def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
-    """Internal push-pull & open-drain common code"""
+    """Internal push-pull and open-drain common code."""
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
     rh = normalize_resistance(rh) if isinstance(rh, str) else rh
@@ -89,50 +90,54 @@ def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
 
 def hysteresis_threshold_voltages(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm, vcc: VoltageV):
     """
-    Same as hysteresis_threshold_ratios(), but calculates actual
+    Calculate actual voltages instead of ratios for hysteresis thresholds.
+
+    This is similar to hysteresis_threshold_ratios(), but calculates actual
     voltages instead of ratios.
 
-    Returns (lower voltage, upper voltage), a tuple of floats.
+    Return (lower voltage, upper voltage), a tuple of floats.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     vcc : float or EngineerIO string
-        The supply voltage that drives the output of the comparator
-        and the R1/R2 network.
+        The supply voltage that drives the output of the comparator and the
+        R1/R2 network.
     """
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios)
 
 def hysteresis_threshold_voltages_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm, vcc: VoltageV):
     """
-    Same as hysteresis_threshold_ratios_opendrain(), but calculates actual
-    voltages instead of ratios.
+    Calculate actual voltages instead of ratios for open-drain comparators.
 
-    Returns (lower voltage, upper voltage), a tuple of floats.
+    This is similar to hysteresis_threshold_ratios_opendrain(), but calculates
+    actual voltages instead of ratios.
+
+    Return (lower voltage, upper voltage), a tuple of floats.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     vcc : float or EngineerIO string
-        The supply voltage that drives the output of the comparator
-        and the R1/R2 network.
+        The supply voltage that drives the output of the comparator and the
+        R1/R2 network.
     """
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios_opendrain)
 
 def __hysteresis_threshold_factors(r1, r2, rh, fn):
-    """Internal push-pull & open-drain common code"""
+    """Internal push-pull and open-drain common code."""
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
     rh = normalize_resistance(rh) if isinstance(rh, str) else rh
@@ -144,73 +149,76 @@ def __hysteresis_threshold_factors(r1, r2, rh, fn):
 
 def hysteresis_threshold_factors(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
-    Same as hysteresis_threshold_ratios(), but calculates the
-    factor (nominal R1+R2 division ratio / actual ratio) for
-    both the lower and the upper threshold instead of the ratios
+    Calculate the factor (nominal R1+R2 division ratio / actual ratio) for both
+    the lower and the upper threshold instead of the ratios.
 
-    Returns (lower factor, upper factor), a tuple of floats.
+    This is similar to hysteresis_threshold_ratios(), but calculates the factor
+    (nominal R1+R2 division ratio / actual ratio) for both the lower and the upper
+    threshold instead of the ratios.
 
-    This is useful e.g. for computing
+    Return (lower factor, upper factor), a tuple of floats.
+
+    This is useful e.g. for computing.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     """
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios)
 
 def hysteresis_threshold_factors_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
-    Same as hysteresis_threshold_ratios_opendrain(), but calculates the
-    factor (nominal R1+R2 division ratio / actual ratio) for
-    both the lower and the upper threshold instead of the ratios
+    Calculate the factor for open-drain comparators.
 
-    Returns (lower factor, upper factor), a tuple of floats.
+    This is similar to hysteresis_threshold_ratios_opendrain(), but calculates
+    the factor (nominal R1+R2 division ratio / actual ratio) for both the lower
+    and the upper threshold instead of the ratios.
 
-    This is useful e.g. for computing
+    Return (lower factor, upper factor), a tuple of floats.
+
+    This is useful e.g. for computing.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     rh : float or EngineerIO string
-        The hysteresis resistor of the divider
+        The hysteresis resistor of the divider.
     """
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios_opendrain)
 
 def hysteresis_resistor(r1: ResistanceOhm, r2: ResistanceOhm, fh=0.05):
     """
-    Computes the hysteresis resistor Rh for a given
-    R1, R2 divider network and a given deviation factor.
+    Compute the hysteresis resistor Rh for a given R1, R2 divider network
+    and a given deviation factor.
 
-    The deviation factor fh represents the one-sided deviation
-    from the nominal R1/R2 ratio. The total hysteresis is +-fh,
-    i.e 2*fh.
+    The deviation factor fh represents the one-sided deviation from the
+    nominal R1/R2 ratio. The total hysteresis is +-fh, i.e 2*fh.
 
-    For example, for fh=0.05, the threshold will be 95% and 105%
-    of the nominal ratio respectively.
+    For example, for fh=0.05, the threshold will be 95% and 105% of the
+    nominal ratio respectively.
 
-    For open-drain comparators, fh represents the full deviation
-    as the upper threshold is equivalent to the nominal threshold.
-
+    For open-drain comparators, fh represents the full deviation as the
+    upper threshold is equivalent to the nominal threshold.
 
     Parameters
     ----------
     r1 : float or EngineerIO string
-        The top resistor of the divider
+        The top resistor of the divider.
     r2 : float or EngineerIO string
-        The bottom resistor of the divider
+        The bottom resistor of the divider.
     fh : float or EngineerIO string
         The deviation factor (e.g. 0.05 for 5% one-sided hysteresis
-         deviation from the nominal r1/r2 value)
+        deviation from the nominal r1/r2 value).
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2

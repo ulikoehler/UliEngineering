@@ -1,0 +1,1 @@
+"""Geometry utilities and calculations."""

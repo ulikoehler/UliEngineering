@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilities for FFT computation and visualization
-"""
+"""Utilities for decibel computation and conversion."""
 import numpy as np
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
@@ -19,9 +17,7 @@ __all__ = [
 ]
 
 def _safe_log10(v):
-    """
-    Log10 with negative input => -np.inf
-    """
+    """Log10 with negative input => -np.inf."""
     if isinstance(v, np.ndarray):
         v[v < 0] = 0
     else:
@@ -32,6 +28,7 @@ def _safe_log10(v):
 
 class dBFactor:
     """Pre-set values for factors."""
+
     Power = 10.
     Field = 20.
 
@@ -53,11 +50,12 @@ def ratio_to_dB(ratio: NormalizableArgument, factor: NormalizableArgument = dBFa
 
 def dB_to_ratio(dB: NormalizableArgument, factor: NormalizableArgument = dBFactor.Field):
     """
-    Convert a given ratio from a decibel value to the underlying quantity.
+    Convert a decibel value to the underlying quantity ratio.
+
     The result is returned as a ratio to the 0 dB value.
 
-    For power quantities, set factor=dBFactor.Power
-    For field quantities, set factor=dBFactor.Field
+    For power quantities, set factor=dBFactor.Power.
+    For field quantities, set factor=dBFactor.Field.
     """
     dB = normalize_numeric(dB) if isinstance(dB, str) else dB
     factor = normalize_numeric(factor) if isinstance(factor, str) else factor

@@ -12,16 +12,16 @@ __all__ = ["ideal_inductor_current_change_rate"]
 @returns_unit("A/s")
 def ideal_inductor_current_change_rate(inductance: InductanceH, voltage: VoltageV):
     """
-    Compute the rise or fall rate of current in an ideal inductor,
-    if there's [voltage] across it.
+    Compute the rise or fall rate of current in an ideal inductor.
+
+    Compute the rate if there's voltage across it.
 
     Parameters
     ----------
     inductance: number or Engineer string
-        The inductance in Henrys
+        The inductance in Henrys.
     voltage: number or Engineer string
-        The voltage across the inductor
-
+        The voltage across the inductor.
     """
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage

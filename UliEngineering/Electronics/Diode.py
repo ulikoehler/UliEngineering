@@ -33,15 +33,19 @@ __all__ = [
 
 
 def normalize_power(P: NormalizableArgument) -> NormalizedComputable:
+    """Normalize power to watts."""
     return normalize_with_known_units(P, {"W": 1.0, "mW": 1e-3, "µW": 1e-6, "kW": 1e3}, quantity_name="power")
 
 def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
+    """Normalize current to amperes."""
     return normalize_with_known_units(I, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
 
 def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
+    """Normalize voltage to volts."""
     return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
 
 def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
+    """Normalize resistance to ohms."""
     return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "Ohm": 1.0, "kΩ": 1e3, "kohm": 1e3, "KΩ": 1e3, "MΩ": 1e6, "Mohm": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
 
 PowerW = Annotated[NormalizedComputable, normalize_power]
@@ -56,40 +60,43 @@ def _validate_positive(name, value):
 
 
 class DiodeModel:
-    """
-    Base class for diode models that support analytic RC timing calculations.
-    """
+    """Base class for diode models that support analytic RC timing calculations."""
 
     def minimum_series_voltage(self):
+        """Return the minimum series voltage required."""
         raise NotImplementedError()
 
     def forward_voltage(self, current):
+        """Return the forward voltage at a given current."""
         raise NotImplementedError()
 
     def series_current(self, total_voltage, resistance):
+        """Return the series current for a given voltage and resistance."""
         raise NotImplementedError()
 
     def series_current_integral(self, total_voltage, resistance):
+        """Return the series current integral for a given voltage and resistance."""
         raise NotImplementedError()
 
 
 class SimpleDiodeModel(DiodeModel):
-    """
-    Constant forward-voltage diode model.
-    """
+    """Constant forward-voltage diode model."""
 
     def __init__(self, forward_voltage="0V"):
         """Initialize the SimpleDiodeModel with a forward voltage drop."""
         self.forward_voltage_drop = normalize_numeric(forward_voltage)
 
     def minimum_series_voltage(self):
+        """Return the minimum series voltage required."""
         return self.forward_voltage_drop
 
     def forward_voltage(self, current):
+        """Return the forward voltage at a given current."""
         current = normalize_numeric(current)
         return np.where(np.asarray(current) > 0, self.forward_voltage_drop, 0.0)
 
     def series_current(self, total_voltage, resistance):
+        """Return the series current for a given voltage and resistance."""
         total_voltage = normalize_numeric(total_voltage)
         resistance = normalize_numeric(resistance)
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -97,6 +104,7 @@ class SimpleDiodeModel(DiodeModel):
         return np.where(np.asarray(total_voltage) > self.forward_voltage_drop, current, 0.0)
 
     def series_current_integral(self, total_voltage, resistance):
+        """Return the series current integral for a given voltage and resistance."""
         total_voltage = normalize_numeric(total_voltage)
         resistance = normalize_numeric(resistance)
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -104,11 +112,10 @@ class SimpleDiodeModel(DiodeModel):
 
 
 class ShockleyDiodeModel(DiodeModel):
-    """
-    Shockley diode model with analytic series resistor solutions.
-    """
+    """Shockley diode model with analytic series resistor solutions."""
 
     def __init__(self, saturation_current, ideality_factor=1.0, temperature="25°C"):
+        """Initialize the ShockleyDiodeModel with parameters."""
         self.saturation_current = normalize_numeric(saturation_current)
         self.ideality_factor = normalize_numeric(ideality_factor)
         self.temperature = temperature
@@ -117,12 +124,15 @@ class ShockleyDiodeModel(DiodeModel):
 
     @property
     def voltage_scale(self):
+        """Return the voltage scale for the Shockley diode equation."""
         return _shockley_voltage_scale(self.ideality_factor, self.temperature)
 
     def minimum_series_voltage(self):
+        """Return the minimum series voltage for the diode."""
         return 0.0
 
     def forward_voltage(self, current):
+        """Return the forward voltage for a given current."""
         return shockley_diode_voltage(
             current,
             self.saturation_current,
@@ -140,11 +150,13 @@ class ShockleyDiodeModel(DiodeModel):
         return k, z
 
     def series_current(self, total_voltage, resistance):
+        """Return the series current for a given total voltage and resistance."""
         resistance = normalize_numeric(resistance)
         _, z = self._lambert_terms(total_voltage, resistance)
         return self.voltage_scale * z / resistance - self.saturation_current
 
     def series_current_integral(self, total_voltage, resistance):
+        """Return the series current integral for a given total voltage and resistance."""
         resistance = normalize_numeric(resistance)
         k, z = self._lambert_terms(total_voltage, resistance)
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -152,6 +164,7 @@ class ShockleyDiodeModel(DiodeModel):
 
 
 def normalize_diode_model(model):
+    """Normalize a diode model to a DiodeModel instance."""
     if model is None:
         return SimpleDiodeModel(0.0)
     if isinstance(model, DiodeModel):

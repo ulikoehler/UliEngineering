@@ -9,9 +9,9 @@ __all__ = ["create_zip_from_directory", "list_zip", "read_from_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
     """
-    Create a ZIP file from a directory that exists
-    on the filesystem. Adds all files recursively,
-    naming them correctly.
+    Create a ZIP file from a directory that exists on the filesystem.
+
+    Add all files recursively, naming them correctly.
 
     Parameters
     ----------
@@ -20,9 +20,9 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
     directory : path-like
         The directory to compress.
     include_rootdir : bool
-        If True, the basename of the directory is prepended
-        to each filename in the ZIP (i.e. when running unzip
-        on the ZIP, one directory is extracted).
+        If True, the basename of the directory is prepended to each filename
+        in the ZIP (i.e. when running unzip on the ZIP, one directory is
+        extracted).
     """
     basename = os.path.basename(directory)
     with zipfile.ZipFile(zippath, mode="w") as zipout:
@@ -37,9 +37,8 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
 def list_zip(zippath):
     """
     Get a list of entries in the ZIP.
-    Equivalent to calling .namelist() on the
-    opened ZIP file.
 
+    Equivalent to calling .namelist() on the opened ZIP file.
     """
     with zipfile.ZipFile(zippath) as zipin:
         return zipin.namelist()

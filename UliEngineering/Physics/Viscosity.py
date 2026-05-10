@@ -125,9 +125,9 @@ class AndradeConstants:
 @dataclass(frozen=True)
 class VFTConstants:
     """
-    Constants for the Vogel-Fulcher-Tammann (VFT) viscosity equation:
+    Constants for the Vogel-Fulcher-Tammann (VFT) viscosity equation.
 
-        η = A * exp(B / (T - T0))
+    η = A * exp(B / (T - T0))
 
     Parameters
     ----------
@@ -140,6 +140,7 @@ class VFTConstants:
     T0 : float
         Vogel temperature (K).  Must be strictly less than the operating T.
     """
+
     name: str
     A: float
     B: float
@@ -149,9 +150,9 @@ class VFTConstants:
 @dataclass(frozen=True)
 class SutherlandConstants:
     """
-    Constants for the Sutherland gas-viscosity model:
+    Constants for the Sutherland gas-viscosity model.
 
-        μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2)
+    μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2)
 
     Parameters
     ----------
@@ -164,6 +165,7 @@ class SutherlandConstants:
     C : float
         Sutherland constant (K).
     """
+
     name: str
     mu0: float
     T0: float
@@ -173,9 +175,9 @@ class SutherlandConstants:
 @dataclass(frozen=True)
 class SwindellsConstants:
     """
-    Constants for the Swindells empirical viscosity correlation:
+    Constants for the Swindells empirical viscosity correlation.
 
-        η = η_ref * 10^( -a * (T - T_ref) / (T + b) )
+    η = η_ref * 10^( -a * (T - T_ref) / (T + b) )
 
     Parameters
     ----------
@@ -190,6 +192,7 @@ class SwindellsConstants:
     b : float
         Temperature offset (K).
     """
+
     name: str
     eta_ref: float
     T_ref: float
@@ -200,9 +203,9 @@ class SwindellsConstants:
 @dataclass(frozen=True)
 class KestinConstants:
     """
-    Constants for the Kestin (three-parameter) viscosity correlation:
+    Constants for the Kestin (three-parameter) viscosity correlation.
 
-        η = A * exp( B / (T - C) )
+    η = A * exp( B / (T - C) )
 
     Parameters
     ----------
@@ -215,6 +218,7 @@ class KestinConstants:
     C : float
         Temperature offset (K).  Must be strictly less than operating T.
     """
+
     name: str
     A: float
     B: float
@@ -224,9 +228,9 @@ class KestinConstants:
 @dataclass(frozen=True)
 class BinghamConstants:
     """
-    Constants for a Bingham plastic fluid:
+    Constants for a Bingham plastic fluid.
 
-        τ = τ0 + μ_p * γ̇
+    τ = τ0 + μ_p * γ̇
 
     Parameters
     ----------
@@ -237,6 +241,7 @@ class BinghamConstants:
     mu_p : float
         Plastic viscosity (Pa·s).
     """
+
     name: str
     tau0: float
     mu_p: float
@@ -258,6 +263,7 @@ class LiquidViscosityData:
     density_kg_m3 : float, optional
         Typical density at room temperature (kg/m³).
     """
+
     name: str
     andrade: AndradeConstants = None
     vft: VFTConstants = None
@@ -279,6 +285,7 @@ class GasViscosityData:
     density_kg_m3 : float, optional
         Typical density at STP (kg/m³).
     """
+
     name: str
     sutherland: SutherlandConstants = None
     density_kg_m3: float = None

@@ -14,9 +14,10 @@ __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
 def value_at_temperature(nominal: NormalizableArgument, temperature: NormalizableArgument, coefficient: NormalizableArgument = "100 ppm", tref: NormalizableArgument = "25°C"):
     """
-    Given a component with a nominal value (nominal) at a reference temperature (tref)
-    and a fixed coefficient of temperature (coefficient, e.g. "100 ppm"),
-    computes the actual value of the component at temperature.
+    Compute the actual value of a component at a given temperature.
+
+    Given a component with a nominal value at a reference temperature and a
+    fixed temperature coefficient, compute the actual value at temperature.
 
     The coefficient of temperature is interpreted in accordance with MIL-STD-202G.
 
@@ -67,16 +68,15 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
 
 
 def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str|float = "100ppm", tolerance: NormalizableArgument = "0 %", tmin: NormalizableArgument = "-40 °C", tmax: NormalizableArgument = "85 °C", tref: NormalizableArgument = "25 °C", significant_digits=4):
-    """
-    Given a component which has a nominal value (e.g. "1 kΩ")
-    at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
+    Cuete mnimumndmximumpssbeof a componntoverthe
+    eniin  oempereturewrange.
 
-    Computes the mininimum and maximum possible value of that component
+h   Give ominamponlnt wath a nomunal value a(etreg and a. "1 kΩ")coefficint,    at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
+c/s Computeininimum and maximum possible value of that component
     over the entire temperature range.
-
-    Optionally, a component tolerance can be given (defaults to "0 %")
-    to also account for static (temperature-independent) differences.
-    Note that the tolerance is applied to the nominal value before
+ Optionally, a component to
+   lerance can be given (defaults to "0 %" to also account for static (temper
+   ature-independent) differenc Note that the tolerance is applied to the nominal value before
     applying the temperature coefficient.
 
     The min/max values are computed in accordance with MIL-STD-202 method 304.

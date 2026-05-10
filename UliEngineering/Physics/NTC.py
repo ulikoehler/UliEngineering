@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities regarding NTC thermistors
+"""Utilities regarding NTC thermistors.
 
-See http://www.vishay.com/docs/29053/ntcintro.pdf for details
+See http://www.vishay.com/docs/29053/ntcintro.pdf for details.
 """
 from typing import Annotated
 
@@ -20,6 +19,7 @@ __all__ = ["ntc_resistance", "ntc_resistances",
            "normalize_temperature", "TemperatureKelvin"]
 
 def normalize_resistance(resistance: NormalizableArgument) -> NormalizedComputable:
+    """Normalize resistance to Ohms."""
     return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0, "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9, "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0, "M": 1e6, "G": 1e9}, quantity_name="resistance")
 
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]

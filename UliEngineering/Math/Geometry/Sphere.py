@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Sphere geometry functions."""
 import math
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric

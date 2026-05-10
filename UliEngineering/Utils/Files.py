@@ -51,10 +51,7 @@ def count_lines(flo, isline=__standard_isline):
 
 def extract_numeric_column(flo, isline=__standard_isline, postproc=functoolz.identity,
                            preproc=_strip_newline, extractcol=_csv_firstcol, initsize=10000, **kwargs):
-    """
-    Like extract_column, but places the results in a numpy array.
-
-    """
+    """Like extract_column, but places the results in a numpy array."""
     # Open it if it is a string
     if isinstance(flo, str):
         with open(flo, "r", encoding="utf-8") as infile:
@@ -77,12 +74,15 @@ def extract_numeric_column(flo, isline=__standard_isline, postproc=functoolz.ide
 def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
                    postproc=functoolz.identity, extractcol=_csv_firstcol):
     """
-    Lazily extract a column from a file, for example extract a column from a CSV file.
-    The values are run through a postprocessing function and placed in a list which is returned.
-    Lines which do not pass the isline function are ignored.
+    Extract a column from a file.
 
-    The postprocessing function may return None, in which case the line is ignored.
+    Lazily extract a column from a file, for example extract a column from a
+    CSV file. The values are run through a postprocessing function and placed
+    in a list which is returned. Lines which do not pass the isline function
+    are ignored.
 
+    The postprocessing function may return None, in which case the line is
+    ignored.
     """
     # Open it if it is a string
     if isinstance(flo, str):
@@ -100,39 +100,36 @@ def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
 
 def write_textfile(path, text):
     """
-    Utility to write text to a file, auto-creating the directory tree.
-    Does not write a terminating newline.
+    Write text to a file, auto-creating the directory tree.
 
+    Does not write a terminating newline.
     """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as outfile:
         outfile.write(text)
 
 def read_textfile(path):
-    """
-    Utility to read utf-8 encoded text from a file.
-
-    """
+    """Read utf-8 encoded text from a file."""
     with open(path, "r", encoding="utf-8") as infile:
         return infile.read()
 
 def list_recursive(directory, relative=False, files_only=True):
     """
-    List a directory recursively, yielding each filename
-    (with the filename being relative to the directory).
+    List a directory recursively.
 
+    Yield each filename (with the filename being relative to the directory).
     The results are generated in no particular order.
 
     Parameters
     ----------
     directory : str | path-like
-        The directory to list
+        The directory to list.
     relative : bool
-        If True, yield relative paths
+        If True, yield relative paths.
     files_only : bool
-        If True, yield only files and ignore directories.s
-        If False, yield directories (the name ends with a slash)
-        The root directory is never yielded
+        If True, yield only files and ignore directories.
+        If False, yield directories (the name ends with a slash).
+        The root directory is never yielded.
     """
     for dirname, subdirs, files in os.walk(directory):
         for file in files:
@@ -145,15 +142,15 @@ def list_recursive(directory, relative=False, files_only=True):
 
 def find_datasets_by_extension(namelist, extensions):
     """
-    Searches for datasets that are located in the same directory
-    and have the same name, but different extensions.
+    Search for datasets with the same name but different extensions.
 
-    Finds only datasets where all extensions are present
-    within a single directory with a single basename.
+    Search for datasets that are located in the same directory and have the
+    same name, but different extensions. Find only datasets where all
+    extensions are present within a single directory with a single basename.
 
     Usually you would acquire the namelist using
     list(UliEngineering.Utils.Files.list_recursive()) or
-    UliEngineering.Utils.ZIP.list_zip()
+    UliEngineering.Utils.ZIP.list_zip().
 
     Example:
     find_datasets_by_extension(list_zip("my.zip"), (".dbf", ".prj", ".shp"))
@@ -161,16 +158,14 @@ def find_datasets_by_extension(namelist, extensions):
     Parameters
     ----------
     namelist : iterable of strings
-        A recursive directory list to find the datasets in
+        A recursive directory list to find the datasets in.
     extensions : iterable of strings (usually tuple)
-        A list or tuple of extensions, starting with a dot,
-        of files in the dataset that need to be present
-        with the same prefix
+        A list or tuple of extensions, starting with a dot, of files in the
+        dataset that need to be present with the same prefix.
 
     Yields
     ------
-    A list of filenames (each in the namelist) for
-    each dataset found
+    A list of filenames (each in the namelist) for each dataset found.
     """
     if len(extensions) == 0:
         raise ValueError("At least one extension must be given")

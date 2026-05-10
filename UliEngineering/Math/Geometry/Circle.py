@@ -13,9 +13,7 @@ __all__ = [
 
 @returns_unit("m²")
 def circle_area(radius: NormalizableArgument):
-    """
-    Compute the enclosed area of a circle from its radius
-    """
+    """Compute the enclosed area of a circle from its radius."""
     radius = normalize_numeric(radius) if isinstance(radius, str) else radius
     return math.pi * radius**2
 

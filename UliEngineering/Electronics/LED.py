@@ -37,9 +37,8 @@ class LEDForwardVoltages:
 @returns_unit("Ω")
 def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: VoltageV):
     """
-    Computes the required series resistor for operating a LED with
-    forward voltage [vforward] at current [ioperating] on a
-    supply voltage of [vsupply].
+    Compute the required series resistor for operating a LED with forward
+    voltage vforward at current ioperating on a supply voltage of vsupply.
 
     Tolerances are not taken into account.
 
@@ -56,7 +55,6 @@ def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: Volta
     -------
     float
         Required series resistor value in Ohms.
-
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -70,9 +68,9 @@ def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: Volta
 @returns_unit("W")
 def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward: VoltageV):
     """
-    Computes the required series resistor power for operating a LED with
-    forward voltage [vforward] at current [ioperating] on a
-    supply voltage of [vsupply].
+    Compute the required series resistor power for operating a LED with
+    forward voltage vforward at current ioperating on a supply voltage of
+    vsupply.
 
     The resulting power value is the minimum rated value for the resistor
     for continuous operation.
@@ -92,7 +90,6 @@ def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward:
     -------
     float
         Required resistor power in Watts.
-
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -109,8 +106,8 @@ def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward:
 def led_series_resistor_maximum_current(resistance: ResistanceOhm, power_rating: PowerW):
     """
     Compute the maximum current through a LED + series resistor combination,
-    so that the power rating of the resistor is not exceeded
-    (i.e. the current where the dissipated power is exactly the power rating).
+    so that the power rating of the resistor is not exceeded (i.e. the current
+    where the dissipated power is exactly the power rating).
 
     Tolerances are not taken into account.
 
@@ -125,7 +122,6 @@ def led_series_resistor_maximum_current(resistance: ResistanceOhm, power_rating:
     -------
     float
         Maximum current in Amperes.
-
     """
     power_rating = normalize_power(power_rating) if isinstance(power_rating, str) else power_rating
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -137,7 +133,8 @@ def led_series_resistor_maximum_current(resistance: ResistanceOhm, power_rating:
 def led_series_resistor_current(vsupply: VoltageV, resistance: ResistanceOhm, vforward: VoltageV):
     """
     Compute the current that flows through a LED + series resistor combination
-    when connected to a supply voltage [vsupply] and a series resistor of [resistance].
+    when connected to a supply voltage vsupply and a series resistor of
+    resistance.
 
     Tolerances are not taken into account.
 
@@ -154,7 +151,6 @@ def led_series_resistor_current(vsupply: VoltageV, resistance: ResistanceOhm, vf
     -------
     float
         Current through the LED in Amperes.
-
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance

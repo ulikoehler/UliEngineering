@@ -17,6 +17,7 @@ def normalize_with_known_units(
     default_factor: float = 1.0,
     quantity_name: str = "value",
 ) -> NormalizedComputable:
+    """Normalize a value with known unit factors."""
     if value is None:
         raise ValueError(f"Can't normalize {quantity_name} None")
 

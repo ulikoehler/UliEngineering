@@ -9,6 +9,7 @@ class NumPyEncoder(json.JSONEncoder):
     """A JSON encoder that is capable of encoding NumPy ndarray objects."""
 
     def default(self, obj):
+        """Serialize NumPy objects to JSON-compatible types."""
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         if isinstance(obj, np.number):  # Generic scalars

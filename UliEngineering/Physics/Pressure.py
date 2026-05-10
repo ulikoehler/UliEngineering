@@ -16,10 +16,12 @@ __all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential",
 
 
 def normalize_pressure_pascal(pressure: NormalizableArgument) -> NormalizedComputable:
+    """Normalize pressure to Pascals."""
     return normalize_with_known_units(pressure, {"Pa": 1.0, "bar": 1e5, "psi": 6894.76}, quantity_name="pressure")
 
 
 def normalize_pressure_bar(pressure: NormalizableArgument) -> NormalizedComputable:
+    """Normalize pressure to bar."""
     return normalize_with_known_units(pressure, {"bar": 1.0, "Pa": 1e-5, "psi": 0.0689476}, quantity_name="pressure")
 
 

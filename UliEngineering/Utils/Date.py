@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Utilities for date and datetime operations."""
 from collections import namedtuple
 from calendar import monthrange
 import numpy as np
@@ -47,14 +48,16 @@ def generate_datetime_filename(label="data", extension="csv", postfix=None, frac
 
 def number_of_days_in_month(year=2019, month=1):
     """
-    Returns the number of days in a month, e.g. 31 in January (month=1).
+    Return the number of days in a month, e.g. 31 in January (month=1).
+
     Takes into account leap days.
     """
     return monthrange(year, month)[1]
 
 def all_dates_in_year(year=2019):
     """
-    Iterates all dates in a specific year, taking into account leap days.
+    Iterate all dates in a specific year, taking into account leap days.
+
     Yields Date() objects (tuple of year/month/day).
     """
     for month in range(1, 13): # Month is always 1..12
@@ -63,76 +66,78 @@ def all_dates_in_year(year=2019):
 
 def extract_months(timestamps):
     """
-    Given an 1D array of np.datetime64 timestamps,
-    extract the month of each timestamps and return a
-    numpy array of the same size, containing the month number
-    (january = 1)
+    Extract the month from timestamps.
+
+    Given a 1D array of np.datetime64 timestamps, extract the month of each
+    timestamps and return a numpy array of the same size, containing the month
+    number (january = 1).
     """
     return np.asarray([dt.month for dt in timestamps.astype(datetime)])
 
 def extract_years(timestamps):
     """
-    Given an 1D array of np.datetime64 timestamps,
-    extract the month of each timestamps and return a
-    numpy array of the same size, containing the year number
-    (e.g. 2022)
+    Extract the year from timestamps.
+
+    Given a 1D array of np.datetime64 timestamps, extract the year of each
+    timestamps and return a numpy array of the same size, containing the year
+    number (e.g. 2022).
     """
     return np.asarray([dt.year for dt in timestamps.astype(datetime)])
 
 def extract_day_of_month(timestamps):
     """
-    Given an 1D array of np.datetime64 timestamps,
-    extract the month of each timestamps and return a
-    numpy array of the same size, containing the day of month
-    (1-31, depending on the month)
+    Extract the day of month from timestamps.
+
+    Given a 1D array of np.datetime64 timestamps, extract the day of month of
+    each timestamps and return a numpy array of the same size, containing the
+    day of month (1-31, depending on the month).
     """
     return np.asarray([dt.day for dt in timestamps.astype(datetime)])
 
 def extract_day_of_week(timestamps):
     """
-    Given an 1D array of np.datetime64 timestamps,
-    extract the month of each timestamps and return a
-    numpy array of the same size, containing the day of week
-    (Monday=1, Sunday=7)
+    Extract the day of week from timestamps.
+
+    Given a 1D array of np.datetime64 timestamps, extract the day of week of
+    each timestamps and return a numpy array of the same size, containing the
+    day of week (Monday=1, Sunday=7).
     """
     return np.asarray([dt.isoweekday() for dt in timestamps.astype(datetime)])
 
 def is_first_day_of_month(timestamps):
     """
-    Takes a Numpy array of np.datetime64.
+    Take a Numpy array of np.datetime64.
 
-    Returns a boolean array of the same length which is
-    true if the given date is on the first day of any month.
+    Return a boolean array of the same length which is true if the given
+    date is on the first day of any month.
 
-    This is related to is_first_day_of_month(), but implements
-    a slightly different algorithm
+    This is related to is_first_day_of_month(), but implements a slightly
+    different algorithm.
     """
     return extract_day_of_month(timestamps) == 1
 
 def is_first_day_of_week(timestamps):
     """
-    Takes a Numpy array of np.datetime64.
+    Take a Numpy array of np.datetime64.
 
-    Returns a boolean array of the same length which is
-    true if the given date is on the first day of any week.
+    Return a boolean array of the same length which is true if the given
+    date is on the first day of any week.
     """
     return extract_day_of_week(timestamps) == 1
 
 def is_month_change(timestamps, first_value_is_change=False):
     """
-    Takes a Numpy array of np.datetime64.
+    Take a Numpy array of np.datetime64.
 
-    Returns a boolean array of the same length which is
-    true if the given date is the first date in the given array
-    in that particular month
+    Return a boolean array of the same length which is true if the given
+    date is the first date in the given array in that particular month.
 
-    If first_value_is_change is True, the first element of the array will be True,
-    else it will be False.
+    If first_value_is_change is True, the first element of the array will be
+    True, else it will be False.
 
-    When using day-resolution datasets, this is often similar
-    to using is_first_day_of_month(), however this function
-    will only return True once for a given month,
-    whereas is_first_day_of_month() will return True for ANY
+    When using day-resolution datasets, this is often similar to using
+    is_first_day_of_month(), however this function will only return True once
+    for a given month, whereas is_first_day_of_month() will return True for ANY
     date that is on the 1st day of the month.
     """
     if len(timestamps) == 0:
@@ -142,14 +147,13 @@ def is_month_change(timestamps, first_value_is_change=False):
 
 def is_year_change(timestamps, first_value_is_change=False):
     """
-    Takes a Numpy array of np.datetime64.
+    Take a Numpy array of np.datetime64.
 
-    If first_value_is_change is True, the first element of the array will be True,
-    else it will be False.
+    If first_value_is_change is True, the first element of the array will be
+    True, else it will be False.
 
-    Returns a boolean array of the same length which is
-    true if the given date is the first date in the given array
-    in that particular year
+    Return a boolean array of the same length which is true if the given
+    date is the first date in the given array in that particular year.
     """
     if len(timestamps) == 0:
         return np.asarray([], dtype=bool)
@@ -158,11 +162,14 @@ def is_year_change(timestamps, first_value_is_change=False):
 
 def generate_days(ndays, year=2022, month=1, day=1):
     """
-    Generate an 1d array of [ndays] timestamps, starting at the given day,
-    each timestamp being exactly one day from the previous one.
+    Generate a 1d array of timestamps.
+
+    Generate a 1d array of [ndays] timestamps, starting at the given day, each
+    timestamp being exactly one day from the previous one.
+
     The given date will be the first timestamp.
 
-    Returns a array of np.datetime64[us]
+    Return a array of np.datetime64[us].
 
     >>> generate_days(5, 2022, 1, 1)
     ['2022-01-01T00:00:00.000000',
@@ -184,11 +191,14 @@ def generate_days(ndays, year=2022, month=1, day=1):
 
 def generate_months(nmonths, year=2022, month=1, day=1):
     """
-    Generate an 1d array of [ndays] timestamps, starting at the given day,
+    Generate a 1d array of monthly timestamps.
+
+    Generate a 1d array of [nmonths] timestamps, starting at the given day,
     each timestamp being exactly one month from the previous one.
+
     The given date will be the first timestamp.
 
-    Returns a array of np.datetime64[us]
+    Return a array of np.datetime64[us].
 
     >>> generate_months(5, 2022, 1, 1)
     ['2022-01-01T00:00:00.000000',
@@ -204,11 +214,14 @@ def generate_months(nmonths, year=2022, month=1, day=1):
 
 def generate_years(nyears, year=2022, month=1, day=1):
     """
-    Generate an 1d array of [ndays] timestamps, starting at the given day,
+    Generate a 1d array of yearly timestamps.
+
+    Generate a 1d array of [nyears] timestamps, starting at the given day,
     each timestamp being exactly one year from the previous one.
+
     The given date will be the first timestamp.
 
-    Returns a array of np.datetime64[us]
+    Return a array of np.datetime64[us].
 
     >>> generate_years(5, 2022, 1, 1)
     ['2022-01-01T00:00:00.000000',
@@ -224,15 +237,17 @@ def generate_years(nyears, year=2022, month=1, day=1):
 
 def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
     """
-    For each hour on the given day in the given timezone,
-    yield a Python datetime object representing this timestamp.
+    Yield a Python datetime for each hour on the given day.
 
-    Note that this function is not DST-aware and for a day having 25 hours
-    due to the change, it will still only generate 24*60 timestamps.
+    For each hour on the given day in the given timezone, yield a Python datetime
+    object representing this timestamp.
 
-    Note that in contrast to other functions in this module, this function
-    does not generate a NumPy array of timestamps directly but instead yields
-    a list of Python datetime objects.
+    Note that this function is not DST-aware and for a day having 25 hours due
+    to the change, it will still only generate 24*60 timestamps.
+
+    Note that in contrast to other functions in this module, this function does
+    not generate a NumPy array of timestamps directly but instead yields a list
+    of Python datetime objects.
 
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second
@@ -250,15 +265,17 @@ def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
 
 def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
     """
-    For each minute on the given day in the given timezone,
-    yield a Python datetime object representing this timestamp.
+    Yield a Python datetime for each minute on the given day.
 
-    Note that this function is not DST-aware and for a day having 25 hours
-    due to the change, it will still only generate 24*60 timestamps.
+    For each minute on the given day in the given timezone, yield a Python datetime
+    object representing this timestamp.
 
-    Note that in contrast to other functions in this module, this function
-    does not generate a NumPy array of timestamps directly but instead yields
-    a list of Python datetime objects.
+    Note that this function is not DST-aware and for a day having 25 hours due
+    to the change, it will still only generate 24*60 timestamps.
+
+    Note that in contrast to other functions in this module, this function does
+    not generate a NumPy array of timestamps directly but instead yields a list
+    of Python datetime objects.
 
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second
@@ -277,16 +294,18 @@ def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
 
 def yield_seconds_on_day(year=2022, month=6, day=15, tz=None):
     """
-    For each second on the given day in the given timezone,
-    yield a Python datetime object representing this timestamp.
+    Yield a Python datetime for each second on the given day.
 
-    Note that this function is not DST-aware and for a day having 25 hours
-    due to the change, it will still only generate 24*60 timestamps.
+    For each second on the given day in the given timezone, yield a Python datetime
+    object representing this timestamp.
+
+    Note that this function is not DST-aware and for a day having 25 hours due
+    to the change, it will still only generate 24*60 timestamps.
     Furthermore, this function is not leap-second aware.
 
-    Note that in contrast to other functions in this module, this function
-    does not generate a NumPy array of timestamps directly but instead yields
-    a list of Python datetime objects.
+    Note that in contrast to other functions in this module, this function does
+    not generate a NumPy array of timestamps directly but instead yields a list
+    of Python datetime objects.
 
     :param year The year of the day for which to generate one timestamp each second
     :param month The month for which to generate one timestamp each second

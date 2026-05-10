@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""Utilities for handling NaN values."""
 from collections.abc import Iterable
 import numpy as np
 

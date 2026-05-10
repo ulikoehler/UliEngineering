@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utility to calculate MOSFETs
-"""
+"""Utilities to calculate MOSFET parameters."""
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
@@ -19,6 +17,7 @@ __all__ = [
 
 
 def normalize_charge(Q: NormalizableArgument) -> NormalizedComputable:
+    """Normalize charge to coulombs."""
     return normalize_with_known_units(Q, {"C": 1.0, "mC": 1e-3, "µC": 1e-6, "nC": 1e-9}, quantity_name="charge")
 
 ChargeC = Annotated[NormalizedComputable, normalize_charge]
@@ -55,8 +54,8 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
 @returns_unit("J")
 def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
-    Compute the gate charge loss of a MOSFET in a switch-mode
-    power-supply application per switching cycle.
+    Compute the gate charge loss of a MOSFET in a switch-mode power-supply
+    application per switching cycle.
 
     Ref:
     http://rohmfs.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/power_loss_appli-e.pdf
@@ -82,8 +81,8 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
 @returns_unit("F")
 def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
-    Compute the gate capacitance of a MOSFET in a switch-mode
-    power-supply application.
+    Compute the gate capacitance of a MOSFET in a switch-mode power-supply
+    application.
 
     Parameters
     ----------

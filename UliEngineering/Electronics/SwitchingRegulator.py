@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for computing switching regulator parameters.
-"""
+"""Utilities for computing switching regulator parameters."""
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from collections import namedtuple
@@ -92,10 +90,12 @@ def buck_regulator_inductor_ripple_current(vin: VoltageV, vout: VoltageV, induct
     return (vin - vout) * D / (inductance * frequency)
 
 def buck_regulator_inductor_current(vin: VoltageV, vout: VoltageV, inductance: InductanceH, frequency: FrequencyHz, ioutmax: CurrentA) -> InductorCurrent:
-    """Compute an estimation for the peak, RMS & ripple inductor current.
-    This does not include any safety factors
+    """
+    Compute an estimation for the peak, RMS & ripple inductor current.
 
-    This can be used to determine inductor value
+    This does not include any safety factors.
+
+    This can be used to determine inductor value.
 
     This approach is based on the formula found in the LM76002 datasheet
     from Texas instruments:
@@ -177,13 +177,14 @@ def buck_regulator_inductor_rms_current(vin: VoltageV, vout: VoltageV, inductanc
 
 @returns_unit("F")
 def buck_regulator_min_capacitance_method1(ripple_current: CurrentA, permissible_ripple_voltage: VoltageV, frequency: FrequencyHz):
-    """Basic output capacitance calculation, based on the formula:
-    C > 2*ΔIL / (fsw * ΔVout)
-    where ΔIL is the inductor ripple current, fsw is the switching frequency,
-    and ΔVout is the permissible ripple voltage.
+    """
+    Compute the basic output capacitance.
 
-    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
-    Formula 35
+    Based on the formula: C > 2*ΔIL / (fsw * ΔVout) where ΔIL is the inductor
+    ripple current, fsw is the switching frequency, and ΔVout is the permissible
+    ripple voltage.
+
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf Formula 35.
 
     """
     ripple_current = normalize_current(ripple_current) if isinstance(ripple_current, str) else ripple_current
@@ -193,15 +194,14 @@ def buck_regulator_min_capacitance_method1(ripple_current: CurrentA, permissible
 
 @returns_unit("F")
 def buck_regulator_min_capacitance_method2(inductance: InductanceH, nominal_output_voltage: VoltageV, output_voltage_ripple: VoltageV, max_load_current: CurrentA, light_load_current: CurrentA):
-    """Compute the minimum capacitance required for a buck regulator
-    based on the load current and the peak permissible output voltage.
+    """
+    Compute the minimum capacitance required for a buck regulator.
 
-    Cout > L * (Ioutmax² - Ioutmin²) / (Vpeak² - Vnom²)
+    Based on the load current and the peak permissible output voltage.
 
-    with Vpeak = Vnominal + output_voltage_ripple/2
+    Cout > L * (Ioutmax² - Ioutmin²) / (Vpeak² - Vnom²) with Vpeak = Vnominal + output_voltage_ripple/2
 
-    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
-    Formula 36
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf Formula 36.
 
     """
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -216,13 +216,14 @@ def buck_regulator_min_capacitance_method2(inductance: InductanceH, nominal_outp
 
 @returns_unit("F")
 def buck_regulator_min_capacitance_method3(switching_frequency: FrequencyHz, output_voltage_ripple: VoltageV, ripple_current: CurrentA):
-    """Compute the minimum capacitance required for a buck regulator
-    based on the load current and the peak permissible output voltage.
+    """
+    Compute the minimum capacitance required for a buck regulator.
+
+    Based on the load current and the peak permissible output voltage.
 
     Cout > 1/(8 * fsw) * 1/ (ΔVout / ΔIL)
 
-    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
-    Formula 37
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf Formula 37.
 
     """
     switching_frequency = normalize_frequency(switching_frequency) if isinstance(switching_frequency, str) else switching_frequency
@@ -240,11 +241,12 @@ def buck_regulator_min_capacitance(
     max_load_current: CurrentA,
     light_load_current: CurrentA
 ):
-    """Calculate the minimum capacitance required for a buck regulator by taking
-    the maximum of three different calculation methods.
+    """
+    Calculate the minimum capacitance required for a buck regulator.
 
-    This conservative approach ensures all design constraints are met by using
-    the largest capacitance value calculated from the three methods.
+    Take the maximum of three different calculation methods. This conservative
+    approach ensures all design constraints are met by using the largest capacitance
+    value calculated from the three methods.
 
     Parameters
     ----------
@@ -323,7 +325,9 @@ def buck_regulator_output_capacitor_rms_current(
     inductance: InductanceH,
     switching_frequency: FrequencyHz,
 ):
-    """Compute the RMS current rating of the output capacitor.
+    """
+    Compute the RMS current rating of the output capacitor.
+
     This is based on the formula:
 
     Irms = (Vout * (Vinmax-Vout)) / (sqrt(12) * Vinmax * L * fsw)
@@ -331,8 +335,7 @@ def buck_regulator_output_capacitor_rms_current(
     where Vout is the output voltage, Vinmax is the maximum input voltage,
     L is the inductance, and fsw is the switching frequency.
 
-    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
-    Formula 39
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf Formula 39.
 
     """
     input_voltage_max = normalize_voltage(input_voltage_max) if isinstance(input_voltage_max, str) else input_voltage_max
@@ -345,8 +348,10 @@ def buck_regulator_output_capacitor_rms_current(
 
 @returns_unit("W")
 def buck_regulator_catch_diode_power(vinmax: VoltageV, vout: VoltageV, iout: CurrentA, fsw: FrequencyHz, v_d="0.7V", c_j="200pF"):
-    """Compute the minimum required power rating of the catch diode
-    for non-synchronous buck regulators.
+    """
+    Compute the minimum required power rating of the catch diode.
+
+    For non-synchronous buck regulators.
 
     P_D = ((Vinmax - Vout) * Iout * Vd) / (Vinmax) + (Cj * fsw * (Vin + Vd)²)/2
     where:
@@ -357,8 +362,7 @@ def buck_regulator_catch_diode_power(vinmax: VoltageV, vout: VoltageV, iout: Cur
     * Cj is the junction capacitance of the diode (at Vinmax)
     * fsw is the switching frequency
 
-    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf
-    Formula 40
+    Source: https://www.ti.com/lit/ds/symlink/tps54561.pdf Formula 40.
 
     """
     vinmax = normalize_voltage(vinmax) if isinstance(vinmax, str) else vinmax

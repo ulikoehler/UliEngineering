@@ -9,6 +9,7 @@ __all__ = ["BoundingBox"]
 
 class BoundingBox(object):
     """A 2D bounding box."""
+
     def __init__(self, points):
         """Compute the upright 2D bounding box for a set of 2D coordinates in a (n,2) numpy array.
 
@@ -40,12 +41,12 @@ class BoundingBox(object):
 
     @property
     def area(self):
-        """width * height."""
+        """Width * height."""
         return self.width * self.height
 
     @property
     def aspect_ratio(self):
-        """width / height."""
+        """Width / height."""
         return self.width / self.height
 
     @property

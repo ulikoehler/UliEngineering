@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities regarding temperatures
-"""
+"""Utilities regarding temperatures."""
 from typing import Annotated
 
 from UliEngineering.EngineerIO import normalize, normalize_numeric
@@ -47,8 +45,9 @@ def fahrenheit_to_celsius(f: NormalizableArgument):
 def normalize_temperature(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
     """
     Normalize a temperature to kelvin.
-    If it is a number or it has no unit, assume it is a default unit
-    Else, evaluate the unit(K, °C, °F, C, F)
+
+    If it is a number or it has no unit, assume it is a default unit. Else,
+    evaluate the unit (K, °C, °F, C, F).
     """
     unit = ""
     if isinstance(t, str):
@@ -72,7 +71,12 @@ normalize_temperature_kelvin = normalize_temperature
 
 @returns_unit("°C")
 def normalize_temperature_celsius(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
-    """Like normalize_temperature(), but returns a value in celsius instead of Kelvin."""
+    """
+    Normalize a temperature to celsius.
+
+    Like normalize_temperature(), but returns a value in celsius instead of
+    Kelvin.
+    """
     return kelvin_to_celsius(normalize_temperature(t, default_unit))
 
 
@@ -83,8 +87,8 @@ TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsi
 @returns_unit("°C")
 def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
     """
-    Compute the temperature of a component, given its thermal resistance (theta),
-    its dissipated power and
+    Compute the temperature of a component given its thermal resistance,
+    dissipated power, and ambient temperature.
     """
     power_dissipated = normalize_numeric(power_dissipated) if isinstance(power_dissipated, str) else power_dissipated
     theta = normalize_numeric(theta) if isinstance(theta, str) else theta

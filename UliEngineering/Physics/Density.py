@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""Density utilities and pre-defined material densities."""
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
@@ -9,10 +10,7 @@ from UliEngineering.EngineerIO import normalize_numeric
 from ._normalize import normalize_with_known_units
 
 __all__ = ["Densities", "density_by_volume_and_weight", "normalize_density_kg_per_m3", "DensityKgPerM3"]
-
-"""
-Pre-defined densities for various materials in kg/m³.
-"""
+"""Pre-defined densities for various materials in kg/m³."""
 Densities: dict[str, float] = {
     # Various (pure) metals
     "Aluminium": 2700., # Source: https://en.wikipedia.org/wiki/Aluminium
@@ -60,6 +58,7 @@ Densities: dict[str, float] = {
 
 
 def normalize_density_kg_per_m3(density: NormalizableArgument) -> NormalizedComputable:
+    """Normalize density to kg/m³."""
     return normalize_with_known_units(
         density,
         {
@@ -79,7 +78,8 @@ DensityKgPerM3 = Annotated[NormalizedComputable, normalize_density_kg_per_m3]
 
 @returns_unit("kg/m³")
 def density_by_volume_and_weight(volume: NormalizableArgument, weight: NormalizableArgument):
-    """Calculates the density of a material by its volume and weight.
+    """
+    Calculate the density of a material by its volume and weight.
 
     Parameters
     ----------
@@ -91,7 +91,7 @@ def density_by_volume_and_weight(volume: NormalizableArgument, weight: Normaliza
     Returns
     -------
     float
-        Density of the material in kg/m³.
+        Density in kg/m³.
     """
 
     volume = normalize_numeric(volume) if isinstance(volume, str) else volume
