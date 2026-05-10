@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.Electronics.PropagationSpeed import propagation_speed, propagation_delay
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 import scipy.constants
 import unittest
 
@@ -20,3 +21,8 @@ class TestPropagationSpeed(unittest.TestCase):
     def test_propagation_delay_dielectric(self):
         # 1 m in dielectric with e_r=4 should be 2 / c seconds
         self.assertAlmostEqual(propagation_delay(1.0, e_r=4.0, mu_r=1.0), 2.0 / scipy.constants.c, places=12)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(NormalizableArgument)

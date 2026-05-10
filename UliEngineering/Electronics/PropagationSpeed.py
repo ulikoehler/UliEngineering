@@ -4,14 +4,16 @@
 import scipy.constants
 import numpy as np
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
+from UliEngineering.EngineerIO.Length import normalize_length
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 
 __all__ = ["propagation_speed", "propagation_delay", "velocity_factor"]
 
 
 @returns_unit("m/s")
-@normalize_numeric_args
-def propagation_speed(e_r: float = 1.0, mu_r: float = 1.0):
+def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
     Compute the propagation speed in a homogeneous medium characterized
     by the relative permittivity (e_r) and relative permeability (mu_r).
@@ -32,13 +34,14 @@ def propagation_speed(e_r: float = 1.0, mu_r: float = 1.0):
     >>> propagation_speed(4.0)
     149896229.0
     """
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
+    mu_r = normalize_numeric(mu_r) if isinstance(mu_r, str) else mu_r
     c0 = scipy.constants.c
     return c0 / np.sqrt(e_r * mu_r)
 
 
 @returns_unit("s")
-@normalize_numeric_args
-def propagation_delay(length, e_r: float = 1.0, mu_r: float = 1.0):
+def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
     Compute the propagation delay for a given physical length in a medium
     with relative permittivity e_r and relative permeability mu_r.
@@ -52,20 +55,22 @@ def propagation_delay(length, e_r: float = 1.0, mu_r: float = 1.0):
     >>> propagation_delay('1 m', 4.0)
     6.671281903963041e-09
     """
-
+    length = normalize_length(length) if isinstance(length, str) else length
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
+    mu_r = normalize_numeric(mu_r) if isinstance(mu_r, str) else mu_r
     v = propagation_speed(e_r=e_r, mu_r=mu_r)
     return length / v
 
 
 @returns_unit("")
-@normalize_numeric_args
-def velocity_factor(e_r: float = 1.0, mu_r: float = 1.0):
+def velocity_factor(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
     Return the velocity factor (unitless) for the medium, i.e. the ratio of the
     propagation speed to the speed of light in vacuum.
 
     velocity_factor = v / c = 1 / sqrt(e_r * mu_r)
     """
-
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
+    mu_r = normalize_numeric(mu_r) if isinstance(mu_r, str) else mu_r
     return 1.0 / np.sqrt(e_r * mu_r)
 
