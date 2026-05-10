@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
+
+import numpy as np
+
+NormalizableScalar = str | bytes | int | float | np.generic
+NormalizableArgument = NormalizableScalar | np.ndarray | Iterable[NormalizableScalar]
+NormalizedArgument = int | float | np.generic | np.ndarray
+NormalizedComputable = float | np.ndarray
 
 @dataclass
 class UnitSplitResult:

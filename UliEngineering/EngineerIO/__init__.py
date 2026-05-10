@@ -33,13 +33,14 @@ from ..Exceptions import (FirstCharacterInStringIsUnitPrefixException,
                           MultipleUnitPrefixesException,
                           RemainderOfStringContainsNonNumericCharacters)
 from ..Utils.NaN import none_to_nan
-from .Types import NormalizeResult, SplitResult, UnitSplitResult
+from .Types import NormalizableArgument, NormalizedArgument, NormalizedComputable, NormalizeResult, SplitResult, UnitSplitResult
 from .UnitInfo import EngineerIOConfiguration, UnitAlias, UnitInfo
 
 __all__ = ["EngineerIO",
            "auto_format", "normalize_numeric", "format_value", "auto_print",
            "normalize_engineer_notation", "normalize_engineer_notation_safe",
-           "normalize_numeric_verify_unit", "SplitResult"]
+           "normalize_numeric_verify_unit", "SplitResult",
+           "NormalizableArgument", "NormalizedArgument", "NormalizedComputable"]
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
     """
@@ -692,7 +693,7 @@ def normalize_numeric(v):
 def normalize(v):
     return EngineerIO.instance().normalize(v)
 
-def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+def normalize_timespan(v: NormalizableArgument) -> NormalizedArgument:
     raise NotImplementedError("Please use normalize_timespan() from UliEngineering.EngineerIO.Timespan instead!")
 
 def auto_format(v, *args, **kwargs):

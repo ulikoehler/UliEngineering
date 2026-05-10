@@ -3,9 +3,10 @@
 """
 Timespan normalization and conversion utilities for UliEngineering
 """
-import numpy as np
+from typing import cast
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedArgument
 from . import EngineerIO
 from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
 
@@ -65,7 +66,7 @@ class EngineerTimespanIO(EngineerIO):
         super().__init__(config=_create_timespan_config())
     
     @returns_unit("s")
-    def normalize_timespan(self, arg: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+    def normalize_timespan(self, arg: NormalizableArgument) -> NormalizedArgument:
         """
         Normalize a given timespan to SI units (seconds).
         Numeric inputs are assumed to be in seconds.
@@ -81,9 +82,9 @@ class EngineerTimespanIO(EngineerIO):
             cls._instance = cls()
         return cls._instance
 
-def normalize_timespan(v: str | bytes | int | float | np.generic | np.ndarray) -> int | float | np.generic | np.ndarray:
+def normalize_timespan(v: NormalizableArgument) -> NormalizedArgument:
     """
     Normalize a given timespan to SI units (seconds).
     Numeric inputs are assumed to be in seconds.
     """
-    return EngineerTimespanIO.instance().normalize_timespan(v)
+    return cast(EngineerTimespanIO, EngineerTimespanIO.instance()).normalize_timespan(v)

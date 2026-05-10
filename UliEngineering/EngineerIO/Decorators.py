@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from collections.abc import Iterable
 import functools
 import inspect
-from typing import Annotated, Any, Callable, Optional, get_args, get_origin, get_type_hints
+from typing import Annotated, Any, Callable, Optional, ParamSpec, TypeVar, cast, overload, get_args, get_origin, get_type_hints
+
+import numpy as np
 
 from UliEngineering.EngineerIO import EngineerIO
 from UliEngineering.Units import InvalidUnitInContextException, Unit
 
 
 Normalizer = Callable[[Any], Any]
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 def _normalize_length_arg(value):
@@ -42,15 +47,13 @@ def returns_unit(unit):
     Usage: @returns_unit("A").
     """
     def decorator(fn):
-        fn._returns_unit = unit
+        cast(Any, fn)._returns_unit = unit
         return fn
     return decorator
 
-def _normalize_scalar_arg(arg, normalizer):
-    if isinstance(arg, tuple):
-        return tuple(normalizer(value) for value in arg)
-    if isinstance(arg, list):
-        return [normalizer(value) for value in arg]
+def _normalize_scalar_arg(arg: Any, normalizer):
+    if isinstance(arg, Iterable) and not isinstance(arg, (str, bytes, np.ndarray)):
+        return np.asarray([normalizer(value) for value in arg])
     return normalizer(arg)
 
 
@@ -109,6 +112,16 @@ def _build_param_normalizers(func, sig, exclude_set, instance: EngineerIO):
     return param_normalizers
 
 
+@overload
+def normalize_args(func: Callable[P, R], *, exclude=None, instance:Optional[EngineerIO] = None) -> Callable[..., R]:
+    ...
+
+
+@overload
+def normalize_args(func: None = None, *, exclude=None, instance:Optional[EngineerIO] = None) -> Callable[[Callable[P, R]], Callable[..., R]]:
+    ...
+
+
 def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
     """
     Decorator that normalizes arguments before calling the wrapped function.
@@ -116,8 +129,12 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
     Parameters can declare how they should be normalized using type annotations.
     The most pythonic form is ``typing.Annotated`` metadata:
 
-    - ``Annotated[float, Hz]`` verifies the unit and scales to the canonical unit
-    - ``Annotated[float, normalize_area]`` delegates to a specialized converter
+    The annotation base type should describe the normalized value that the
+    function body receives after coercion. Metadata describes how raw caller
+    inputs are normalized.
+
+    - ``Annotated[NormalizedComputable, Hz]`` verifies the unit and scales to the canonical unit
+    - ``Annotated[NormalizedComputable, normalize_area]`` delegates to a specialized converter
 
     Parameters without metadata still use ``normalize_numeric()`` for backwards
     compatibility with existing functions.
@@ -135,7 +152,7 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
         result = add("1.5k", "2.3k")  # Will convert to add(1500.0, 2300.0)
 
         @normalize_args
-        def rotation_speed(speed: Annotated[float, Hz]):
+        def rotation_speed(speed: Annotated[NormalizedComputable, Hz]):
             return speed
 
         @normalize_args(exclude=['unit'])
@@ -149,7 +166,7 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
     if instance is None:
         instance = EngineerIO.instance()
 
-    def decorator(func):
+    def decorator(func: Callable[P, R]) -> Callable[..., R]:
         sig = inspect.signature(func)
         param_normalizers = _build_param_normalizers(func, sig, exclude_set, instance)
 
@@ -167,7 +184,7 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
 
         new_sig = sig.replace(parameters=new_params)
 
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             param_names = list(sig.parameters.keys())
 
             normalized_args = []
@@ -193,16 +210,26 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
 
             return func(*bound_args.args, **bound_args.kwargs)
 
-        functools.update_wrapper(wrapper, func)
-        wrapper.__signature__ = new_sig
-        wrapper._returns_unit = getattr(func, "_returns_unit", None)
+        wrapped = cast(Callable[..., R], functools.update_wrapper(wrapper, func))
+        cast(Any, wrapped).__signature__ = new_sig
+        cast(Any, wrapped)._returns_unit = getattr(func, "_returns_unit", None)
 
-        return wrapper
+        return wrapped
 
     if func is None:
         return decorator
     else:
         return decorator(func)
+
+
+@overload
+def normalize_numeric_args(func: Callable[P, R], *, exclude=None, instance:Optional[EngineerIO] = None) -> Callable[..., R]:
+    ...
+
+
+@overload
+def normalize_numeric_args(func: None = None, *, exclude=None, instance:Optional[EngineerIO] = None) -> Callable[[Callable[P, R]], Callable[..., R]]:
+    ...
 
 
 def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
@@ -217,7 +244,7 @@ def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[Enginee
     if instance is None:
         instance = EngineerIO.instance()
 
-    def decorator(func):
+    def decorator(func: Callable[P, R]) -> Callable[..., R]:
         sig = inspect.signature(func)
 
         new_params = []
@@ -234,7 +261,7 @@ def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[Enginee
 
         new_sig = sig.replace(parameters=new_params)
 
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             param_names = list(sig.parameters.keys())
 
             normalized_args = []
@@ -258,11 +285,11 @@ def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[Enginee
 
             return func(*bound_args.args, **bound_args.kwargs)
 
-        functools.update_wrapper(wrapper, func)
-        wrapper.__signature__ = new_sig
-        wrapper._returns_unit = getattr(func, "_returns_unit", None)
+        wrapped = cast(Callable[..., R], functools.update_wrapper(wrapper, func))
+        cast(Any, wrapped).__signature__ = new_sig
+        cast(Any, wrapped)._returns_unit = getattr(func, "_returns_unit", None)
 
-        return wrapper
+        return wrapped
 
     if func is None:
         return decorator
