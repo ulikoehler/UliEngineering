@@ -14,14 +14,26 @@ where:
     z = charge number of the ion
     I = ionic strength (mol/L)
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
+from UliEngineering.Physics.Temperature import normalize_temperature
 import numpy as np
 
 __all__ = [
     "davies_activity_coefficient",
     "davies_log_activity_coefficient",
     "debye_huckel_A_parameter",
+    "normalize_ionic_strength", "IonicStrengthMolar",
 ]
+
+
+def normalize_ionic_strength(ionic_strength: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(ionic_strength, {"M": 1.0, "mol/L": 1.0, "mol/l": 1.0, "mM": 1e-3, "µM": 1e-6}, quantity_name="ionic strength")
+
+IonicStrengthMolar = Annotated[NormalizedComputable, normalize_ionic_strength]
 
 
 def debye_huckel_A_parameter(T=298.15, epsilon_r=78.4):
@@ -44,12 +56,12 @@ def debye_huckel_A_parameter(T=298.15, epsilon_r=78.4):
     float
         Debye-Hückel A parameter in (mol/L)^(-1/2).
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     return 1.8246e6 / (epsilon_r * T)**1.5
 
 
-@normalize_numeric_args
 @returns_unit("")
-def davies_log_activity_coefficient(z, I, A=0.509):
+def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
     """
     Compute log10 of the activity coefficient using the Davies equation.
 
@@ -69,13 +81,13 @@ def davies_log_activity_coefficient(z, I, A=0.509):
     float
         log10 of the activity coefficient (dimensionless).
     """
+    I = normalize_ionic_strength(I) if isinstance(I, str) else I
     sqrt_I = np.sqrt(I)
     return -A * z**2 * (sqrt_I / (1.0 + sqrt_I) - 0.3 * I)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def davies_activity_coefficient(z, I, A=0.509):
+def davies_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
     """
     Compute the activity coefficient using the Davies equation.
 
