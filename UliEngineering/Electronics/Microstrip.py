@@ -8,8 +8,9 @@ import math
 from collections import namedtuple
 
 from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import normalize_length
+from .Diode import normalize_resistance, ResistanceOhm
 
 __all__ = ["Z0", "microstrip_impedance", "differential_microstrip_impedance",
            "RelativePermittivity", "microstrip_width"]
@@ -26,7 +27,7 @@ class RelativePermittivity():
     FR4 = 4.8 # Varies widely (approximate range: 3.9..4.8)
 
 @returns_unit("m")
-def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4, max_iter:int=1000, tol:float=1e-9):
+def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4, max_iter: int = 1000, tol: float = 1e-9):
     """
     Compute the width of a single-ended outer-layer microstrip given its impedance,
     height, thickness, and the relative permittivity of the substrate.
@@ -37,7 +38,7 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
 
     Parameters
     ----------
-    Z0 : number or engineer string
+    target_Z0 : number or engineer string
         The characteristic impedance of the microstrip in ohms
     h : number or engineer string
         Trace height of the substrate between the bottom
@@ -56,17 +57,17 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
     float
         The width of the microstrip in meters
     """
-    Z0 = normalize_numeric(Z0)
-    h = normalize_length(h)
-    t = normalize_length(t)
-    e_r = normalize_numeric(e_r)
+    target_Z0 = normalize_resistance(target_Z0) if isinstance(target_Z0, str) else target_Z0
+    h = normalize_length(h) if isinstance(h, str) else h
+    t = normalize_length(t) if isinstance(t, str) else t
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
     # Initial guess using simplified formula (for thin traces)
-    w_guess = h * (8 * math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) - 2) / (math.exp(2 * Z0 * math.sqrt(e_r + 1) / 377) + 2)
+    w_guess = h * (8 * math.exp(2 * target_Z0 * math.sqrt(e_r + 1) / 377) - 2) / (math.exp(2 * target_Z0 * math.sqrt(e_r + 1) / 377) + 2)
 
     # Iterative solution
     for _ in range(max_iter):
         current_Z0 = microstrip_impedance(w_guess, h, t, e_r)
-        error = current_Z0 - Z0
+        error = current_Z0 - target_Z0
 
         if abs(error) < tol:
             return w_guess
@@ -87,13 +88,13 @@ def microstrip_width(Z0="50 Ω", h="140 μm", t="35 μm", e_r=RelativePermittivi
 
     # Check if we converged
     current_Z0 = microstrip_impedance(w_guess, h, t, e_r)
-    if abs(current_Z0 - Z0) > tol:
-        raise ValueError(f"Could not converge to Z0={Z0} Ohm. Best guess w={w_guess} m gave Z0={current_Z0} Ohm")
+    if abs(current_Z0 - target_Z0) > tol:
+        raise ValueError(f"Could not converge to Z0={target_Z0} Ohm. Best guess w={w_guess} m gave Z0={current_Z0} Ohm")
     
     return w_guess
 
 @returns_unit("Ω")
-def microstrip_impedance(w, h="140 μm", t="35 μm", e_r=RelativePermittivity.FR4):
+def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4):
     """
     Compute the impedance of a single-eded
     outer-layer microstrip using its width, height and
@@ -115,10 +116,10 @@ def microstrip_impedance(w, h="140 μm", t="35 μm", e_r=RelativePermittivity.FR
     e_r : number or engineer string
         Relative permittivity of the dielectric
     """
-    w = normalize_length(w)
-    h = normalize_length(h)
-    t = normalize_length(t)
-    e_r = normalize_numeric(e_r)
+    w = normalize_length(w) if isinstance(w, str) else w
+    h = normalize_length(h) if isinstance(h, str) else h
+    t = normalize_length(t) if isinstance(t, str) else t
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
     # Formula from https://www.allaboutcircuits.com/tools/microstrip-impedance-calculator/
     Y0 = np.square(t / (w * math.pi + 1.1 * t * math.pi))
     Y1 = math.sqrt(np.square(t / h) + Y0)
@@ -139,8 +140,7 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
 ])
 
 @returns_unit("Ω")
-@normalize_numeric_args
-def differential_microstrip_impedance(w, d, h="140μm", t="35 μm", e_r=RelativePermittivity.FR4):
+def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = RelativePermittivity.FR4):
     """
     Compute the impedance of a differential (edge-coupled)
     outer-layer microstrip using its width, height, the distance
@@ -171,6 +171,11 @@ def differential_microstrip_impedance(w, d, h="140μm", t="35 μm", e_r=Relative
     e_r : number or engineer string
         Relative permittivity of the dielectric
     """
+    w = normalize_length(w) if isinstance(w, str) else w
+    d = normalize_length(d) if isinstance(d, str) else d
+    h = normalize_length(h) if isinstance(h, str) else h
+    t = normalize_length(t) if isinstance(t, str) else t
+    e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
     # Formula from https://www.allaboutcircuits.com/tools/edge-coupled-microstrip-impedance-calculator/
     # Secondary source: https://www.eeweb.com/tools/edge-coupled-microstrip-impedance
     # NOTE: Uppercase first-letter variables are just utilitarian

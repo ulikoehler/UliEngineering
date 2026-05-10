@@ -44,7 +44,7 @@ def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
 
 def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "kΩ": 1e3, "MΩ": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
+    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "Ohm": 1.0, "kΩ": 1e3, "kohm": 1e3, "KΩ": 1e3, "MΩ": 1e6, "Mohm": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
 
 PowerW = Annotated[NormalizedComputable, normalize_power]
 CurrentA = Annotated[NormalizedComputable, normalize_current]

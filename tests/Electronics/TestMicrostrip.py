@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from UliEngineering.Electronics.Microstrip import microstrip_width, microstrip_impedance
+from UliEngineering.Electronics.Diode import ResistanceOhm
 import unittest
 import numpy as np
 
@@ -60,3 +61,20 @@ class TestMicrostrip(unittest.TestCase):
         w1 = microstrip_width(50, h="1.6mm", t="35um", e_r=4.8)
         w2 = microstrip_width("50 Ohm", h=1.6e-3, t=35e-6, e_r=4.8)
         assert_allclose(w1, w2)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+
+    def test_microstrip_functions_various_units(self):
+        """Test microstrip functions with various unit inputs"""
+        # Test with different unit representations
+        w1 = microstrip_width("50 Ω", h="1.6 mm", t="35 µm", e_r=4.8)
+        w2 = microstrip_width("50000 mΩ", h="1600 µm", t="35000 nm", e_r=4.8)
+        assert_allclose(w1, w2)
+
+        # Test impedance with different units
+        z1 = microstrip_impedance(w1, h="1.6 mm", t="35 µm")
+        z2 = microstrip_impedance(w2, h="1600 µm", t="35000 nm")
+        assert_allclose(z1, z2)
