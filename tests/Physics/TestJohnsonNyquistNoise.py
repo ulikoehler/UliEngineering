@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
+from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Physics.JohnsonNyquistNoise import (
     johnson_nyquist_noise_current, johnson_nyquist_noise_voltage,
     normalize_resistance, ResistanceOhm,

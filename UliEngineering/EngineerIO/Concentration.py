@@ -131,8 +131,8 @@ class EngineerMassConcentrationIO(EngineerIO):
     """
     _instance = None
 
-    def """Initialize the EngineerMassConcentrationIO."""
-        __init__(self):
+    def __init__(self):
+        """Initialize the EngineerMassConcentrationIO."""
         super().__init__(config=_create_mass_concentration_config())
 
     @classmethod

@@ -69,7 +69,8 @@ def buck_regulator_duty_cycle(vin: VoltageV, vout: VoltageV) -> float:
 
 @returns_unit("A")
 def buck_regulator_inductor_ripple_current(vin: VoltageV, vout: VoltageV, inductance: InductanceH, frequency: FrequencyHz, ioutmax: CurrentA):
-    """Compute the ripple current ΔIL in the inductor.
+    """
+    Compute the ripple current ΔIL in the inductor.
 
     This can be used to determine the peak current rating of the inductor.
 
@@ -149,7 +150,8 @@ def buck_regulator_inductor_peak_current(vin: VoltageV, vout: VoltageV, inductan
 
 @returns_unit("A")
 def buck_regulator_inductor_rms_current(vin: VoltageV, vout: VoltageV, inductance: InductanceH, frequency: FrequencyHz, ioutmax: CurrentA, safety_factor=1.2):
-    """Compute the RMS inductor current rating.
+    """
+    Compute the RMS inductor current rating.
 
     This can be used to determine the RMS current rating of the inductor.
     The required RMS current rating is typically lower than the peak current rating,

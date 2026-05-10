@@ -28,6 +28,7 @@ def normalize_max(signal):
         Use .data to access the data.
         Use .factor to access the factor that signal was divided by.
         Use .offset to access the offset that was subtracted from signal.
+
     """
     if len(signal) == 0:
         return NormalizationResult([], 1., 0.)
@@ -51,6 +52,7 @@ def normalize_minmax(signal):
         A NormalizationResult() object.
         Use .data to access the data.
         Use .factor to access the factor that signal was divided by.
+
         Use .offset to access the offset that was subtracted from signal.
     """
     if len(signal) == 0:
@@ -73,6 +75,7 @@ def center_to_zero(signal):
     NormalizationResult
         A NormalizationResult() object.
         Use .data to access the data.
+
         Use .factor to access the factor that signal was divided by.
         Use .offset to access the offset that was subtracted from signal.
     """
@@ -90,6 +93,7 @@ def normalize_plusminus_peak(signal):
     -------
     NormalizationResult
         A NormalizationResult() object.
+
         Use .data to access the data.
         Use .factor to access the factor that signal was divided by.
         Use .offset to access the offset that was subtracted from signal.

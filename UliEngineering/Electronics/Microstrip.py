@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Microstrip utilities
-"""
+"""Microstrip utilities."""
 import scipy.constants
 import numpy as np
 import math
@@ -19,7 +17,8 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
 
 class RelativePermittivity():
-    """Default values for relative permittivity of different materials.
+    """
+    Default values for relative permittivity of different materials.
 
     Best to choose a specific value for your material, since these vary widely.
     """

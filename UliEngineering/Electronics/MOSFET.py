@@ -24,7 +24,8 @@ ChargeC = Annotated[NormalizedComputable, normalize_charge]
 
 @returns_unit("W")
 def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, frequency: FrequencyHz = "100 kHz"):
-    """Compute the gate charge loss of a MOSFET in a switch-mode power-supply application as a total power (integrated per second).
+    """
+    Compute the gate charge loss of a MOSFET in a switch-mode power-supply application as a total power (integrated per second).
 
     Ref:
     http://rohmfs.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/power_loss_appli-e.pdf

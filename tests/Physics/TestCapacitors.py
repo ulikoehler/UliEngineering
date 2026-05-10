@@ -403,7 +403,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, test_capacitance, places=12)
 
     def test_round_trip_with_capacitor_energy(self):
-        """Test round-trip calculations between capacitor_energy and capacitor_capacitance_by_energy"""
+        """Test round-trip calculations between capacitor_energy and capacitor_capacitance_by_energy."""
         # Test various capacitance and voltage combinations
         test_cases = [
             (1e-6, 5.0),    # 1 µF, 5V
@@ -425,7 +425,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
                 self.assertAlmostEqual(calculated_capacitance, original_capacitance, places=12)
 
     def test_round_trip_with_starting_voltage(self):
-        """Test round-trip calculations with non-zero starting voltages"""
+        """Test round-trip calculations with non-zero starting voltages."""
         test_cases = [
             (100e-6, 2.0, 10.0),  # 100 µF, 2V->10V
             (1e-3, 1.0, 5.0),     # 1 mF, 1V->5V
@@ -448,7 +448,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
                 self.assertAlmostEqual(calculated_capacitance, original_capacitance, places=12)
 
     def test_energy_calculation_verification(self):
-        """Test that calculated capacitance produces correct energy when used with capacitor_energy"""
+        """Test that calculated capacitance produces correct energy when used with capacitor_energy."""
         test_energies = [1e-9, 1e-6, 1e-3, 1.0, 100.0]  # nJ to 100J
         test_voltages = [1.0, 3.3, 5.0, 12.0, 24.0]     # Various voltages
 
@@ -536,7 +536,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(cap2, expected_cap2, places=10)
 
     def test_auto_format_functionality(self):
-        """Test auto_format integration"""
+        """Test auto_format integration."""
         self.assertEqual(auto_format(capacitor_capacitance_by_energy, "18.75 J", "5.0 V"), "1.50 F")
         self.assertEqual(auto_format(capacitor_capacitance_by_energy, "1.25 mJ", "5.0 V"), "100 µF")
 
@@ -633,7 +633,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(energy, 0.0, places=12)
 
     def test_negative_energy_discharge(self):
-        """Test that discharging (higher start voltage) gives negative energy"""
+        """Test that discharging (higher start voltage) gives negative energy."""
         capacitance = 1.0  # F
         starting_voltage = 10.0  # V
         end_voltage = 5.0       # V
@@ -876,7 +876,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
                 self.assertAlmostEqual(calculated, expected, places=12)
 
     def test_scaling_relationships(self):
-        """Test how capacitance scales with area and distance"""
+        """Test how capacitance scales with area and distance."""
         base_area = 1e-4
         base_distance = 1e-3
         epsilon = 8.854e-12

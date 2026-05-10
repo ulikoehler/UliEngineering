@@ -60,7 +60,9 @@ def _validate_positive(name, value):
 
 
 class DiodeModel:
-    """Base class for diode models that support analytic RC timing calculations."""
+    """
+    Base class for diode models that support analytic RC timing calculations.
+    """
 
     def minimum_series_voltage(self):
         """Return the minimum series voltage required."""
@@ -80,7 +82,9 @@ class DiodeModel:
 
 
 class SimpleDiodeModel(DiodeModel):
-    """Constant forward-voltage diode model."""
+    """
+    Constant forward-voltage diode model.
+    """
 
     def __init__(self, forward_voltage="0V"):
         """Initialize the SimpleDiodeModel with a forward voltage drop."""

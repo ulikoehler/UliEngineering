@@ -12,7 +12,7 @@ import numpy as np
 
 class TestDaviesEquation(unittest.TestCase):
     def test_debye_huckel_A_parameter_default(self):
-        """Test Debye-Hückel A parameter at 25°C in water.""""
+        """Test Debye-Hückel A parameter at 25°C in water."""
         A = debye_huckel_A_parameter()
         self.assertAlmostEqual(A, 0.511, places=3)
 

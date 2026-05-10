@@ -191,9 +191,10 @@ def timedelta64_resolution(tdelta):
     """
     s = str(tdelta.dtype) # e.g. 'timedelta64[us]'
     match = _resolution_re.match(s)
-    if match is None:
+    if match is not None:
        return match.group(1)
-datetime64_resolution(dt):
+
+def datetime64_resolution(dt):
     """
     Given a datetime64 object, returns its resolution as a string,
     e.g. 'us' or 'ms'.

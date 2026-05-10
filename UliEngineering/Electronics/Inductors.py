@@ -22,6 +22,7 @@ def ideal_inductor_current_change_rate(inductance: InductanceH, voltage: Voltage
         The inductance in Henrys.
     voltage: number or Engineer string
         The voltage across the inductor.
+
     """
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage

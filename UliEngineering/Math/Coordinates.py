@@ -8,7 +8,9 @@ __all__ = ["BoundingBox"]
 
 
 class BoundingBox(object):
-    """A 2D bounding box."""
+    """
+    A 2D bounding box.
+    """
 
     def __init__(self, points):
         """Compute the upright 2D bounding box for a set of 2D coordinates in a (n,2) numpy array.

@@ -5,7 +5,7 @@
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Types import NormalizableArgument
-from .Electronics.Capacitors import normalize_capacitance, CapacitanceFarad
+from UliEngineering.Electronics.Capacitors import normalize_capacitance, CapacitanceFarad
 
 __all__ = [
     "pixel_capacitance_from_terminal_capacitance"

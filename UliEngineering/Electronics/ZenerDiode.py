@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for computing different aspects and complexities of voltage dividers
-"""
+"""Utilities for computing different aspects and complexities of voltage dividers."""
 __all__ = ["zener_diode_power_dissipation"]
 
 from UliEngineering.EngineerIO.Decorators import returns_unit

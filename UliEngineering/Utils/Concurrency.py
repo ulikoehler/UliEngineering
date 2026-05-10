@@ -8,8 +8,7 @@ __all__ = ["QueuedThreadExecutor"]
 
 
 class QueuedThreadExecutor(concurrent.futures.ThreadPoolExecutor):
-    """
-    Thread pool executor with configurable queue size.
+    """Thread pool executor with configurable queue size.
 
     In contrast to the normal ThreadPoolExecutor, this executor has the
     advantage of having a configurable queue size, enabling more efficient

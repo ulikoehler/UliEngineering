@@ -93,7 +93,6 @@ def density_by_volume_and_weight(volume: NormalizableArgument, weight: Normaliza
     float
         Density in kg/m³.
     """
-
     volume = normalize_numeric(volume) if isinstance(volume, str) else volume
     weight = normalize_numeric(weight) if isinstance(weight, str) else weight
     return weight / volume

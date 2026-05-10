@@ -20,7 +20,7 @@ class TestPitzer(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_pitzer_B_gamma_scalar(self):
-        """Test Pitzer B^γ with scalar input
+        """Test Pitzer B^γ with scalar input"""
         result = pitzer_B_gamma(I=1.0, beta0=0.0765, beta1=0.2664)
         self.assertIsInstance(result, float)
 

@@ -25,8 +25,7 @@ __mode_map = {
 }
 
 def auto_open(filename, mode="r", **kwargs):
-    """
-    Automatically open a potentially compressed file.
+    """Automatically open a potentially compressed file.
 
     Automatically open a potentially compressed file using the right library
     variant of open(). The correct decompression algorithm is selected by

@@ -22,7 +22,7 @@ class TestIonExchange(unittest.TestCase):
         self.assertGreater(K, 0)
 
     def test_separation_factor_scalar(self):
-        """Test separation factor with scalar input
+        """Test separation factor with scalar input"""
         alpha = separation_factor(q_A=0.1, C_B=0.1, q_B=0.05, C_A=0.1)
         self.assertIsInstance(alpha, float)
         self.assertGreater(alpha, 1.0)

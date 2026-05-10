@@ -30,12 +30,15 @@ class UnannotatedReturnValueError(Exception):
 
 
 class InvalidUnitInContextException(ValueError):
-    """Raise if the unit can't be used in the given context."""
+    """
+    Raise if the unit can't be used in the given context.
+    """
 
 
 class UnknownUnitInContextException(ValueError):
     """
     Raise if the unit is not known in this context.
+
 
     The message should contain information on what type of entity (e.g. length)
     is accepted.

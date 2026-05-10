@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Thermistor computations.
+"""
+Thermistor computations.
 
 For reference see e.g. https://www.electronics-tutorials.ws/io/thermistors.html
 """
@@ -30,6 +31,7 @@ def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArg
     t1/t2 can be given either as strings e.g. "0°F", "100°C", "300K" or as
     numbers. r1/r2 can be given either as strings e.g. "1kΩ", "1MΩ" or as
     numbers.
+
 
     Return the B value (unitless).
     """

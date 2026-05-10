@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
+from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Physics.RF import (
     quality_factor, resonant_impedance, resonant_frequency, resonant_inductance,
     normalize_inductance, InductanceHenry,

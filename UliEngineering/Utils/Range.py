@@ -8,7 +8,9 @@ __all__ = ["ValueRange", "normalize_minmax_tuple"]
 _ValueRange = namedtuple("ValueRange", ["min", "max", "unit"])
 
 class ValueRange(_ValueRange):
-    """Represent a range of values with optional unit."""
+    """
+    Represent a range of values with optional unit.
+    """
 
     def __new__(cls, min_val, max_val, unit=None, significant_digits=4):
         """Create a new ValueRange instance."""
@@ -22,8 +24,10 @@ class ValueRange(_ValueRange):
 
     @property
     def minmax(self):
-        """Return (min, max). Utility e.g. for unpacking a ValueRange ignoring Unit.
-
+        """Retun (min, max). Utility e.g. for unpacking a ValueRange ignoring Unit.
+-------
+    
+           
         Returns:
             tuple: A tuple containing the minimum and maximum values of the range.
         """
@@ -36,12 +40,17 @@ def normalize_minmax_tuple(arg, name="field"):
     If arg is a tuple:
         Return ValueRange(arg[0], arg[1]) (strings are normalized)
     Else:
-        Return ValueRange(-arg, +arg) (strings are normalized)
-
-    name is for debugging purposes and shown in the exception string.
+    Pa ameter eturn ValueRange(-arg, +arg) (strings are normalized)
+----------
+ :
+       
+     is f: r debugging p
+p       oses and shown in the exception string.
 
     Args:
-        arg (float or tuple): The input value(s) to normalize.
+    -------
+    arg (float
+       or tuple): The input value(s) to normalize.
         name (str, optional): The name of the field being normalized. Defaults to "field".
 
     Returns:

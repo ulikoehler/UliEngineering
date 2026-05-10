@@ -172,8 +172,9 @@ def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side=
     return IntInterval(idx - around, idx + around)
 
 def sorted_range_indices(arr, low, high):
-    """Compute (startidx, endidx) for a given sorted array for a given low, high range
-    so that all x in arr[startidx:endidx] is within (low, high)
+    """
+    Compute (startidx, endidx) for a given sorted array for a given low, high range
+    so that all x in arr[startidx:endidx] is within (low, high).
 
     Commonly used for selecting frequency ranges from an FFT frequency.
     """
@@ -365,8 +366,9 @@ def random_slice(arr, size):
     """
     if isinstance(arr, numbers.Integral):
         alen = arr
-    # Assume numpy-like
-    alen = arr.shape[0]
+    else:
+        # Assume numpy-like
+        alen = arr.shape[0]
     if alen < size:
         msg = f"Array of size {alen} is not large enough to hold interval of size {size}"
         raise ValueError(msg)

@@ -12,8 +12,7 @@ __all__ = ["sphere_volume_by_radius",
 
 @returns_unit("m³")
 def sphere_volume_by_radius(radius: NormalizableArgument):
-    """
-    Compute the volume of a sphere of a given radius.
+    """Compute the volume of a sphere of a given radius.
 
     Parameters
     ----------

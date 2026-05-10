@@ -16,7 +16,9 @@ __all__ = [
 
 class LEDForwardVoltages:
 
-    """Common LED forward voltage values.
+    """
+    Common LED forward voltage values.
+    
     Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm.
     NOTE: These do NOT necessarily represent the actual forward voltages
     of any LED you choose but rather the typical forward voltage at nominal
@@ -53,6 +55,7 @@ def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: Volta
 
     Returns
     -------
+
     float
         Required series resistor value in Ohms.
     """
