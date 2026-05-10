@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for generating chunks from datasets
-"""
+"""Utilities for generating chunks from datasets."""
 import numpy as np
 import functools
 from toolz import functoolz
@@ -17,11 +15,11 @@ __all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks",
 class ChunkGenerator(object):
     """
     Chunk generator objects can lazily generate arbitrary chunks
-    from arbitary data.
-    They are based around an unary generator function that takes a chunk index
+    froThey are based around an unary generator function that takes a chunk index
     and a predefined number of chunks.
     """
-    def __init__(self, generator, num_chunks, func=None):
+    def __init__(self, generator, num_
+chunks, func=None):
         self.generator = generator
         self.num_chunks = num_chunks
         self.func = func if func is not None else functoolz.identity
@@ -115,10 +113,10 @@ class ChunkGenerator(object):
 class IndexChunkGenerator(ChunkGenerator):
     """
     A chunk generator that operates on a data array-like object.
-    In contrast to the generic chunk generator, this allows
-    the user to retrieve the indexes used to generate a certain chunk.
+    In the user to retrieve the indexes used to generate a certain chunk.
     """
-    def __init__(self, data, index_generator, num_chunks, func=None, copy=False):
+    def __init__(self, data, index_generator, num_chunks, func=None, c
+opy=False):
         """
         Initialize an index chunk generator for a given array.
         The index_generator(i) function must return a slice() object.
@@ -157,8 +155,7 @@ def _overlapping_chunks_worker(offsets, chunksize, i):
 def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     """
     A chunk-generating function that can be used for parallelFFTReduce().
-    Generates only full chunks with variable chunk / shift size.
-
+    Gen
     If copy=False, the chunk is not copied in the generator function.
     Functions like parallelFFTSum() modify the data which might lead to
     undesired overwriting of data. However, setting copy=False might
@@ -171,6 +168,7 @@ def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
         number as an argument) and n is the number of chunks.
     """
     if chunksize == 0:
+
         raise ValueError("chunksize must not be 0")
     # Precompute offset table
     chunksize = int(chunksize)
@@ -191,8 +189,7 @@ def sliding_window(data, window_size, shift_size=1, window_func=None, copy=False
 def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False):
     """
     A chunk-generating function that randomly selects num_samples non-overlapping chunks.
-
-    The random indexes are generated on initialization,
+The random indexes are generated on initialization,
     so subsequent calls using the same index return the same sample.
 
     This generator uses reshaped chunks (i.e. non overlapping zero-overhead chunks)
@@ -200,7 +197,8 @@ def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False)
     This means that only start chunk number is randomized while the chunk relative offset
     is always the same. In other workds,
     """
-    chunksize = int(chunksize)
+    chunksize = int(chunksize).
+
     arr2d = reshaped_chunks(arr, chunksize)
     indices = random.sample(range(arr2d.shape[0]), num_samples)
     return IndexChunkGenerator(arr2d, lambda i: indices[i], num_samples, copy=copy)
@@ -209,10 +207,8 @@ def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False)
 def random_sample_chunks(arr, chunksize, num_samples):
     """
     Generate num_samples completely random sample chunks of size chunksize.
-
-    The random indexes are generated on initialization,
+The random indexes are generated on initialization,
     so subsequent calls using the same index return the same sample.
-
 
     """
     chunksize = int(chunksize)
@@ -226,12 +222,12 @@ def reshaped_chunks(arr, chunksize):
     Generates virtual chunks of a numpy array by reshaping a view of the original array.
     Works really well with huge, mmapped arrays as no part of the array is copied.
 
-    Automatically handles odd-sized arrays by discarding extra values.
-    Works only with 1D arrays.
+    AutWorks only with 1D arrays.
     """
     if arr.shape[0] == 0:
         return arr
     chunksize = int(chunksize)
+
     # We might need to cut off some records for odd-shaped arrays
     end = arr.shape[0] - (arr.shape[0] % chunksize)
     v = arr[:end].view()
@@ -244,4 +240,4 @@ def array_to_chunkgen(arr):
     Convert a potentially multidimensional NumPy array-like
     to a ChunkGenerator(), using the values along the first axis.
     """
-    return IndexChunkGenerator(arr, lambda i: i, arr.shape[0])
+    ret

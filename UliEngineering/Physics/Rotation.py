@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for acceleration
-"""
+"""Utilities for acceleration."""
 from UliEngineering.EngineerIO.Length import LengthMeters
 from UliEngineering.EngineerIO.Decorators import normalize_args, returns_unit
 from UliEngineering.EngineerIO.Types import NormalizedComputable

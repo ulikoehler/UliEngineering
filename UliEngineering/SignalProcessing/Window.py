@@ -65,7 +65,10 @@ def create_and_apply_window(data, window_id="blackman", param=None, inplace=Fals
     return data * window
 
 class WindowFunctor:
-    """Initialize a window functor that initializes."""
+    """Initialize a window functor that initializes.
+
+    """
+
     def __init__(self, size, window_id="blackman", param=None):
         """
         Create a new WindowFunctor.
@@ -84,6 +87,7 @@ class WindowFunctor:
             See create_window() documentation
         """
         self.size = size
+        """Return the size of the window."""
         self.window = create_window(size, window_id, param=param)
 
     def __len__(self):

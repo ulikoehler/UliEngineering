@@ -29,7 +29,7 @@ class TestAutoOpen(unittest.TestCase):
             self.assertEqual("ghi\n", infile.read())
 
     def testInvalidExtension(self):
-        "Test auto_open with a .foo file"
+        """Test auto_open with a .foo file."""
         # No need to actually write the file!
         with self.assertRaises(ValueError):
             filename = os.path.join(self.tempdir, "test.foo")

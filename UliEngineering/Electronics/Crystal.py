@@ -29,9 +29,7 @@ PPM = Annotated[NormalizedComputable, normalize_ppm]
 
 @returns_unit("F")
 def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
-    """
-    Compute the load capacitors which should be used for a given crystal,
-    given that the load capacitors should be symmetric (i.e. have the same value).
+    """Compute the load capacitors which should be used for a given crystal, given that the load capacitors should be symmetric (i.e. have the same value).
 
     NOTE: You need to use a stray capacitance value that does NOT
     include the parasitic pin capacitance!
@@ -66,8 +64,7 @@ def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstr
 
 @returns_unit("F")
 def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
-    """
-    Compute the actual load capacitance of a crystal given:
+    """Compute the actual load capacitance of a crystal given.
 
     - The external capacitance value (use "10 pF" if your have a
     10 pF capacitor on each of the crystal pins).

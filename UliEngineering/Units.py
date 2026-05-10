@@ -29,17 +29,15 @@ class UnannotatedReturnValueError(Exception):
 
 
 class InvalidUnitInContextException(ValueError):
-    """Raised if the unit might not be a globally
-    unknown or invalid unit, but in the given context
-    it can't be used.
-    """
+    """Raised if the unit might not be a globally unknown or invalid unit, but in the given context it can't be used."""
 
 
 class UnknownUnitInContextException(ValueError):
     """Raised if the unit is not known in this context.
 
     The message should contain information on what type of
-    quantity (e.g. length) is accepted.
+    qua
+    ntity (e.g. length) is accepted.
     """
 
 class InvalidUnitCombinationException(ValueError):
@@ -52,9 +50,8 @@ def find_returned_unit(fn):
     """Given a function that is assumed to return a quantity
     and annotated with the corresponding unit, determines
     which is the unit returned by the function
-    """
-    if not callable(fn):
-        raise ValueError("fn must be callable")
+    """ if not callable(fn):     raise ValueError("fn must be callable".
+)
     # Access innermost function inside possibly nested partials
     annotatedFN = fn
     while isinstance(annotatedFN, functools.partial):

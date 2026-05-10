@@ -6,8 +6,7 @@ import collections.abc
 __all__ = ["PeekableIteratorWrapper", "ListIterator", "skip_first"]
 
 class ListIterator:
-    """
-    Takes an iterable (like a list)
+    """Takes an iterable (like a list)
     and exposes a generator-like interface.
 
     The given iterable must support len()
@@ -37,21 +36,18 @@ class ListIterator:
         return v
 
     def __len__(self):
-        """Remaining values"""
+        """Remaining values."""
         return self._remaining
 
 
 
 
 def iterable_to_iterator(_it):
-    """
-    Given an iterable (like a list), generates
-    an iterable out
-    """
+    """Given an iterable (like a list), generates
+    an iterable out."""
 
 class PeekableIteratorWrapper:
-    """
-    Wraps an iterator and provides the additional
+    """Wraps an iterator and provides the additional
     capability of 'peeking' and un-getting values.
 
     Works by storing un-got values in a buffer
@@ -62,10 +58,8 @@ class PeekableIteratorWrapper:
     (LIFO) so you can un-get multiple values.
     """
     def __init__(self, child):
-        """
-        Initialize a PeekableIteratorWrapper
-        with a given child iterator
-        """
+        """Initialize a PeekableIteratorWrapper
+        with a given child iterator."""
         self.buffer = []
         self.child = child
 
@@ -78,21 +72,17 @@ class PeekableIteratorWrapper:
         return next(self.child)
 
     def __len__(self):
-        """
-        Returns len(child). Only supported
-        if child support len().
-        """
+        """Returns len(child). Only supported
+        if child support len()."""
         return len(self.child)
 
     def has_next(self):
-        """
-        Returns False only if the next call to next()
+        """Returns False only if the next call to next()
         will raise StopIteration.
 
         This causes the next value to be generated from
         the child generator (and un-got) if there are no
-        values in the buffer
-        """
+        values in the buffer."""
         if len(self.buffer) > 0:
             return True
         try:
@@ -104,34 +94,28 @@ class PeekableIteratorWrapper:
 
 
     def unget(self, v):
-        """
-        Un-gets v so that v will be returned
+        """Un-gets v so that v will be returned
         on the next call to __next__ (unless
-        another value is un-got after this).
-        """
+        another value is un-got after this)."""
         self.buffer.append(v)
 
     def peek(self):
-        """
-        Get the next value without removing it from
+        """Get the next value without removing it from
         the iterator.
 
         Note: Multiple subsequent calls to peek()
         without any calls to __next__() in between
-        will return the same value.
-        """
+        will return the same value."""
         val = next(self)
         self.unget(val)
         return val
 
 def skip_first(it):
-    """
-    Skip the first element of an Iterator or Iterable,
+    """Skip the first element of an Iterator or Iterable,
     like a Generator or a list.
 
     This will always return a generator or raise TypeError()
-    in case the argument's type is not compatible
-    """
+    in case the argument's type is not compatible."""
     if isinstance(it, collections.abc.Iterator):
         try:
             next(it)

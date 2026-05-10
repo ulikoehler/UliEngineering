@@ -52,12 +52,12 @@ class TestTemperature(unittest.TestCase):
             normalize_temperature("1G50 G")
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(TemperatureKelvin)
         self.assertIsNotNone(TemperatureCelsius)
 
     def test_temperature_kelvin_various_units(self):
-        """Test TemperatureKelvin type with various unit inputs"""
+        """Test TemperatureKelvin type with various unit inputs."""
         test_cases = [
             ("0 °C", 273.15),
             ("1 °C", 274.15),
@@ -72,7 +72,7 @@ class TestTemperature(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_temperature_celsius_various_units(self):
-        """Test TemperatureCelsius type with various unit inputs"""
+        """Test TemperatureCelsius type with various unit inputs."""
         test_cases = [
             ("0 °C", 0.0),
             ("100 °C", 100.0),

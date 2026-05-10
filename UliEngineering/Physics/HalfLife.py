@@ -22,9 +22,7 @@ __all__ = [
 ]
 
 def half_lifes_passed(timespan: TimespanSeconds, half_life: TimespanSeconds) -> float:
-    """
-    Compute the number of half-lifes that have passed within a certain
-    timespan. The timespan can be a string or a number (in seconds).
+    """Compute the number of half-lifes that have passed within a certain timespan. The timespan can be a string or a number (in seconds).
 
     Parameters
     ----------

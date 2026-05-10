@@ -231,8 +231,7 @@ def normalize_numeric_args(func: None = None, *, exclude=None, instance:Optional
 
 
 def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
-    """Decorator that applies normalize_numeric to all arguments (args & kwargs)
-    of the decorated function before calling it.
+    """Decorator that applies normalize_numeric to all arguments (args & kwargs) of the decorated function before calling it.
     """
     if exclude is None:
         exclude = []

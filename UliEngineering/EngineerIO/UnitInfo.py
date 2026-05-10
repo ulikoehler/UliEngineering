@@ -6,8 +6,7 @@ from typing import Dict, List, Union
 
 @dataclass
 class UnitAlias:
-    """
-    Represents a mapping of aliases to a canonical unit.
+    """Represents a mapping of aliases to a canonical unit.
 
     This is used for units that don't have their own conversion factor
     but are alternative names for existing units.
@@ -16,8 +15,7 @@ class UnitAlias:
     aliases: List[str] = field(default_factory=list)
 
     def matches_alias(self, alias_string: str) -> bool:
-        """
-        Check if the given string is one of the aliases.
+        """Check if the given string is one of the aliases.
 
         Parameters
         ----------
@@ -33,8 +31,7 @@ class UnitAlias:
 
 @dataclass
 class UnitInfo:
-    """Represents information about a unit including its canonical form,
-    aliases, and conversion factor.
+    """Represents information about a unit including its canonical form, aliases, and conversion factor.
 
     Attributes
     ----------
@@ -51,8 +48,7 @@ class UnitInfo:
     aliases: List[str] = field(default_factory=list)
 
     def matches(self, unit_string: str) -> bool:
-        """
-        Check if the given unit string matches this unit (canonical or alias).
+        """Check if the given unit string matches this unit (canonical or alias).
 
         Parameters
         ----------
@@ -67,8 +63,7 @@ class UnitInfo:
         return unit_string == self.canonical or unit_string in self.aliases
 
     def get_all_representations(self) -> List[str]:
-        """
-        Get all possible representations of this unit (canonical + aliases).
+        """Get all possible representations of this unit (canonical + aliases).
 
         Returns
         -------
@@ -86,8 +81,7 @@ class EngineerIOConfiguration:
 
     @classmethod
     def default(cls) -> 'EngineerIOConfiguration':
-        """
-        Returns a default configuration with standard units and prefixes.
+        """Returns a default configuration with standard units and prefixes.
 
         Returns
         -------

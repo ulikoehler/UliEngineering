@@ -20,7 +20,7 @@ class TestPitzer(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_pitzer_B_gamma_scalar(self):
-        """Test Pitzer B^γ with scalar input"""
+        """Test Pitzer B^γ with scalar input
         result = pitzer_B_gamma(I=1.0, beta0=0.0765, beta1=0.2664)
         self.assertIsInstance(result, float)
 
@@ -31,7 +31,7 @@ class TestPitzer(unittest.TestCase):
         self.assertAlmostEqual(result, 1.5 * 0.00127, places=6)
 
     def test_pitzer_activity_coefficient_scalar(self):
-        """Test Pitzer activity coefficient with scalar input"""
+        """Test Pitzer activity coefficient with scalar input."""
         beta0, beta1, C_phi = PITZER_PARAMETERS["NaCl"]
         result = pitzer_activity_coefficient(m=1.0, z_plus=1, z_minus=1, nu_plus=1, nu_minus=1,
                                               beta0=beta0, beta1=beta1, C_phi=C_phi)
@@ -39,7 +39,7 @@ class TestPitzer(unittest.TestCase):
         self.assertGreater(result, 0)
 
     def test_pitzer_osmotic_coefficient_scalar(self):
-        """Test Pitzer osmotic coefficient with scalar input"""
+        """Test Pitzer osmotic coefficient with scalar input."""
         beta0, beta1, C_phi = PITZER_PARAMETERS["NaCl"]
         result = pitzer_osmotic_coefficient(m=1.0, z_plus=1, z_minus=1, nu_plus=1, nu_minus=1,
                                              beta0=beta0, beta1=beta1, C_phi=C_phi)
@@ -47,7 +47,7 @@ class TestPitzer(unittest.TestCase):
         self.assertGreater(result, 0)
 
     def test_pitzer_parameters_dict(self):
-        """Test that the Pitzer parameters dictionary exists"""
+        """Test that the Pitzer parameters dictionary exists."""
         self.assertIsInstance(PITZER_PARAMETERS, dict)
         self.assertIn("NaCl", PITZER_PARAMETERS)
         self.assertIn("KCl", PITZER_PARAMETERS)
@@ -63,7 +63,7 @@ class TestPitzer(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(MolalityMolKg)
 
     def test_normalize_molality_various_units(self):
@@ -80,7 +80,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_pitzer_functions_various_units(self):
-        """Test Pitzer functions with various unit inputs"""
+        """Test Pitzer functions with various unit inputs."""
         # Test with different molality units
         f1 = pitzer_f_gamma("1 mol/kg")
         f2 = pitzer_f_gamma("1000 mmol/kg")

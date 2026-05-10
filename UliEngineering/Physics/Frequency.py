@@ -42,13 +42,13 @@ def frequency_to_period(frequency: NormalizableArgument):
 
 @returns_unit("Hz")
 def period_to_frequency(period: NormalizableArgument):
-    """
-    Compute the frequency associated with a period.
+    """Compute the frequency associated with a period.
 
     Parameters
     ----------
     period : number or Engineer string or NumPy array-like
         The period in seconds
+
     """
     period = normalize_numeric(period) if isinstance(period, str) else period
     return 1./period

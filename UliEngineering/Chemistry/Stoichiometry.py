@@ -94,8 +94,7 @@ ATOMIC_WEIGHTS = {
 
 
 def parse_formula(formula):
-    """
-    Parse a chemical formula string into a dictionary of element counts.
+    """Parse a chemical formula string into a dictionary of element counts.
 
     Supports:
     - Simple formulas: "H2O", "NaCl", "C6H12O6"

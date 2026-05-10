@@ -22,30 +22,30 @@ class TestIonExchange(unittest.TestCase):
         self.assertGreater(K, 0)
 
     def test_separation_factor_scalar(self):
-        """Test separation factor with scalar input"""
+        """Test separation factor with scalar input
         alpha = separation_factor(q_A=0.1, C_B=0.1, q_B=0.05, C_A=0.1)
         self.assertIsInstance(alpha, float)
         self.assertGreater(alpha, 1.0)
 
     def test_distribution_coefficient_scalar(self):
-        """Test distribution coefficient with scalar input"""
+        """Test distribution coefficient with scalar input."""
         Kd = distribution_coefficient(q=0.1, C=0.01)
         self.assertIsInstance(Kd, float)
         self.assertGreater(Kd, 0)
 
     def test_ion_exchange_capacity_from_breakthrough_scalar(self):
-        """Test ion exchange capacity from breakthrough with scalar input"""
+        """Test ion exchange capacity from breakthrough with scalar input."""
         Q = ion_exchange_capacity_from_breakthrough(C_feed=0.1, V_breakthrough=10.0, mass_resin=100.0)
         self.assertIsInstance(Q, float)
         self.assertGreater(Q, 0)
 
     def test_donnan_potential_scalar(self):
-        """Test Donnan potential with scalar input"""
+        """Test Donnan potential with scalar input."""
         E = donnan_potential(z=1, C_in=0.1, C_out=1.0)
         self.assertIsInstance(E, float)
 
     def test_donnan_ratio_scalar(self):
-        """Test Donnan ratio with scalar input"""
+        """Test Donnan ratio with scalar input."""
         r = donnan_ratio(z=1, C_fixed=0.1, C_solution=0.1)
         self.assertIsInstance(r, float)
         self.assertGreater(r, 0)
@@ -53,13 +53,13 @@ class TestIonExchange(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ConcentrationMolar)
         self.assertIsNotNone(VolumeLiter)
         self.assertIsNotNone(MassGram)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),
@@ -73,7 +73,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_volume_various_units(self):
-        """Test normalize_volume with various unit inputs"""
+        """Test normalize_volume with various unit inputs."""
         test_cases = [
             ("1 L", 1.0),
             ("1 mL", 1e-3),
@@ -87,7 +87,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_mass_various_units(self):
-        """Test normalize_mass with various unit inputs"""
+        """Test normalize_mass with various unit inputs."""
         test_cases = [
             ("1 g", 1.0),
             ("1 mg", 1e-3),

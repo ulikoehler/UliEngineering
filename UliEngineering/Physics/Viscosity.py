@@ -600,8 +600,7 @@ def bingham_stress(shear_rate: ShearRate, constants: BinghamConstants = None):
 @returns_unit("m³/s")
 def poiseuille_flow_rate(radius: LengthMeter, pressure_drop: PressurePascal, length: LengthMeter, viscosity: DynamicViscosityPas):
     """
-    Compute volumetric flow rate for laminar flow in a cylindrical pipe
-    using Poiseuille's law.
+    Compute volumetric flow rate for laminar flow in a cylindrical pipe using Poiseuille's law.
 
         Q = π * r⁴ * ΔP / (8 * η * L)
 

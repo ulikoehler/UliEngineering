@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
-"""
-Utilities for JSON encoding and decoding.
-"""
+"""Utilities for JSON encoding and decoding."""
 import json
 import numpy as np
 
 
 class NumPyEncoder(json.JSONEncoder):
-    """
-    A JSON encoder that is capable of encoding NumPy ndarray objects.
-    """
+    """A JSON encoder that is capable of encoding NumPy ndarray objects."""
 
     def default(self, obj):
         if isinstance(obj, np.ndarray):

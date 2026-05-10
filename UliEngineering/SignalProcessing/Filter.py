@@ -74,14 +74,12 @@ def _check_filter_type(btype, freqs):
 
 
 class SignalFilter:
+    """High-level abstraction of a digital signal filter.
+
     """
-    
-    
-    High-level abstraction of a digital signal filter.
-    """
+
     def __init__(self, samplerate, freqs, btype="lowpass"):
-        """
-        Initialize a new filter.
+        """Initialize a new filter.
 
         Keyword arguments:
             samplerate: The sampling rate

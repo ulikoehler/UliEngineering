@@ -16,8 +16,7 @@ __all__ = [
 
 class LEDForwardVoltages:
 
-    """
-    Common LED forward voltage values.
+    """Common LED forward voltage values.
     Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm.
     NOTE: These do NOT necessarily represent the actual forward voltages
     of any LED you choose but rather the typical forward voltage at nominal
@@ -26,6 +25,7 @@ class LEDForwardVoltages:
     Note that diode testers test the forward voltage with rather low currents
     and the forward voltage might vary slightly at operating current.
     Take that into account when operating a LED near its maximum allowed current.
+
     """
     Infrared = 1.5
     Red = 1.6
@@ -56,6 +56,7 @@ def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: Volta
     -------
     float
         Required series resistor value in Ohms.
+
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -91,6 +92,7 @@ def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward:
     -------
     float
         Required resistor power in Watts.
+
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -123,6 +125,7 @@ def led_series_resistor_maximum_current(resistance: ResistanceOhm, power_rating:
     -------
     float
         Maximum current in Amperes.
+
     """
     power_rating = normalize_power(power_rating) if isinstance(power_rating, str) else power_rating
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -151,6 +154,7 @@ def led_series_resistor_current(vsupply: VoltageV, resistance: ResistanceOhm, vf
     -------
     float
         Current through the LED in Amperes.
+
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance

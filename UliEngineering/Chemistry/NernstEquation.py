@@ -66,6 +66,7 @@ def nernst_cell_potential(E0, n, Q, T=298.15):
     -------
     float
         Cell potential in Volts.
+
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     return E0 - (gas_constant * T) / (n * FARADAY_CONSTANT) * np.log(Q)
@@ -95,6 +96,7 @@ def nernst_half_cell_potential(E0, n, oxidized_concentration: ConcentrationMolar
     -------
     float
         Half-cell potential in Volts.
+
     """
     oxidized_concentration = normalize_concentration(oxidized_concentration) if isinstance(oxidized_concentration, str) else oxidized_concentration
     reduced_concentration = normalize_concentration(reduced_concentration) if isinstance(reduced_concentration, str) else reduced_concentration
@@ -124,6 +126,7 @@ def nernst_potential_at_25C(E0, n, Q):
     -------
     float
         Cell potential in Volts at 25 °C.
+
     """
     return E0 - (0.025693 / n) * np.log(Q)
 
@@ -151,6 +154,7 @@ def nernst_reaction_quotient_from_potential(E, E0, n, T=298.15):
     -------
     float
         Reaction quotient (dimensionless).
+
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     return np.exp((E0 - E) * n * FARADAY_CONSTANT / (gas_constant * T))

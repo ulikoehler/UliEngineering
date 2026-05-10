@@ -9,9 +9,7 @@ __all__ = ["current_by_power", "power_by_current_and_voltage"]
 
 @returns_unit("A")
 def current_by_power(power: PowerW = "25 W", voltage: VoltageV = "230 V"):
-    """
-    Given a device's power (or RMS power) and the voltage (or RMS voltage)
-    it runs on, compute how much current it will draw.
+    """Given a device's power (or RMS power) and the voltage (or RMS voltage) it runs on, compute how much current it will draw.
 
     Parameters
     ----------

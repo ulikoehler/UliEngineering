@@ -19,8 +19,7 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
 
 class RelativePermittivity():
-    """
-    Default values for relative permittivity of different materials.
+    """Default values for relative permittivity of different materials.
 
     Best to choose a specific value for your material, since these vary widely.
     """
@@ -28,8 +27,7 @@ class RelativePermittivity():
 
 @returns_unit("m")
 def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4, max_iter: int = 1000, tol: float = 1e-9):
-    """
-    Compute the width of a single-ended outer-layer microstrip given its impedance,
+    """Compute the width of a single-ended outer-layer microstrip given its impedance,
     height, thickness, and the relative permittivity of the substrate.
 
     This uses an iterative approach to solve microstrip_impedance()
@@ -56,6 +54,7 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
     -------
     float
         The width of the microstrip in meters.
+
     """
     target_Z0 = normalize_resistance(target_Z0) if isinstance(target_Z0, str) else target_Z0
     h = normalize_length(h) if isinstance(h, str) else h
@@ -95,8 +94,7 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
 
 @returns_unit("Ω")
 def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4):
-    """
-    Compute the impedance of a single-ended
+    """Compute the impedance of a single-ended
     outer-layer microstrip using its width, height and
     the relative permittivity of the substrate.
 
@@ -120,6 +118,7 @@ def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittiv
     -------
     float
         Impedance in Ohms.
+
     """
     w = normalize_length(w) if isinstance(w, str) else w
     h = normalize_length(h) if isinstance(h, str) else h
@@ -146,8 +145,7 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
 
 @returns_unit("Ω")
 def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = RelativePermittivity.FR4):
-    """
-    Compute the impedance of a differential (edge-coupled)
+    """Compute the impedance of a differential (edge-coupled)
     outer-layer microstrip using its width, height, the distance
     between the edges of the microstrips,
     the height of the substrate beneath the microstrip
@@ -181,6 +179,7 @@ def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = Re
     DifferentialMicrostripImpedance
         Named tuple containing single_ended_impedance, differential_impedance,
         even_mode_impedance, and odd_mode_impedance.
+
     """
     w = normalize_length(w) if isinstance(w, str) else w
     d = normalize_length(d) if isinstance(d, str) else d

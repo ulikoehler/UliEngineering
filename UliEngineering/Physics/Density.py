@@ -79,8 +79,7 @@ DensityKgPerM3 = Annotated[NormalizedComputable, normalize_density_kg_per_m3]
 
 @returns_unit("kg/m³")
 def density_by_volume_and_weight(volume: NormalizableArgument, weight: NormalizableArgument):
-    """
-    Calculates the density of a material by its volume and weight.
+    """Calculates the density of a material by its volume and weight.
 
     Parameters
     ----------
@@ -94,6 +93,7 @@ def density_by_volume_and_weight(volume: NormalizableArgument, weight: Normaliza
     float
         Density of the material in kg/m³.
     """
+
     volume = normalize_numeric(volume) if isinstance(volume, str) else volume
     weight = normalize_numeric(weight) if isinstance(weight, str) else weight
     return weight / volume

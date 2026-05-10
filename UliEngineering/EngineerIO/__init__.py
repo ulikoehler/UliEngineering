@@ -43,8 +43,8 @@ __all__ = ["EngineerIO",
            "NormalizableArgument", "NormalizedArgument", "NormalizedComputable"]
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
-    """
-    Default instance, used for global functions. Initialized on first use.
+    """Default instance, used for global functions. Initialized on first use.
+
     """
     def __init__(self, config: Optional[EngineerIOConfiguration] = None):
         """

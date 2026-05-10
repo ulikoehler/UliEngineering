@@ -102,6 +102,7 @@ def velocity_factor(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument 
     -------
     float
         Velocity factor (unitless).
+
     """
     e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
     mu_r = normalize_numeric(mu_r) if isinstance(mu_r, str) else mu_r

@@ -47,8 +47,7 @@ class IntInterval(__Interval):
     """
     @staticmethod
     def from_ranges(ranges):
-        """
-        Create a list of IntInterval instances from a range array
+        """Create a list of IntInterval instances from a range array.
 
         Parameters
         ----------
@@ -59,8 +58,7 @@ class IntInterval(__Interval):
 
     @staticmethod
     def to_ranges(intervals):
-        """
-        Converts a list of IntInterval instances to a 2d range array,
+        """Converts a list of IntInterval instances to a 2d range array,
         like the one returned by find_true_runs(),
         """
         return np.asarray([(interval[0], interval[1]) for interval in intervals])
@@ -73,9 +71,11 @@ class IntInterval(__Interval):
         return IntInterval(self.start + i, self.end + i)
 
     def __add__(self, i):
+        """Add an integer to the interval."""
         return self.__radd__(i)
 
     def __rsub__(self, i):
+        """Subtract the interval from an integer (reverse subtract)."""
         if not isinstance(i, numbers.Integral):
             raise TypeError("Can only substract integers from an interval")
         return IntInterval(i - self.start, i - self.end)
@@ -87,6 +87,7 @@ class IntInterval(__Interval):
         return IntInterval(self.start - i, self.end - i)
 
     def __call__(self, *args):
+        """Slice the interval over the provided arrays."""
         if not args:
             raise TypeError("Use one or multiple arrays to produce a slice of them")
         if len(args) == 1:
@@ -98,6 +99,7 @@ class IntInterval(__Interval):
         return self.end - self.start
 
     def __mul__(self, n):
+        """Multiply the interval by a number."""
         if not isinstance(n, numbers.Number):
             raise TypeError("Intervals can only be multiplied by numbers")
         if n == 1:
@@ -119,14 +121,14 @@ class IntInterval(__Interval):
         return self.__mul__(n)
 
     def __truediv__(self, n):
+        """Divide the interval by a number."""
         if not isinstance(n, numbers.Number):
             raise TypeError("Intervals can only be divided by numbers")
         return self.__mul__(1.0 / n)
 
 
 def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side="left"):
-    """
-    Find the index in a timestamp array that is closest to a given value.
+    """Find the index in a timestamp array that is closest to a given value.
     The timestamp array expected to be sorted in ascending order. It is
     expected to contain Epoch timestamps as either integral or floating-point type.
 
@@ -170,8 +172,7 @@ def select_by_datetime(timestamps, time, factor=1.0, around=None, ofs=0.0, side=
     return IntInterval(idx - around, idx + around)
 
 def sorted_range_indices(arr, low, high):
-    """
-    Compute (startidx, endidx) for a given sorted array for a given low, high range
+    """Compute (startidx, endidx) for a given sorted array for a given low, high range
     so that all x in arr[startidx:endidx] is within (low, high)
 
     Commonly used for selecting frequency ranges from an FFT frequency.
@@ -181,8 +182,7 @@ def sorted_range_indices(arr, low, high):
     return (startidx, endidx)
 
 def __mapAndSortIndices(x, y, idxs, sort_descending=True):
-    """
-    Map a list of indices to a y array and sort it by y.
+    """Map a list of indices to a y array and sort it by y.
     This is used in multiple selectByX() functions.
     """
     xvals = x[idxs]
@@ -194,8 +194,7 @@ def __mapAndSortIndices(x, y, idxs, sort_descending=True):
     return np.column_stack((xvals[idxs], yvals[idxs]))
 
 def _check_extrema_comparator(comparator):
-    """
-    Raise if the given comparator is neither np.greater nor np.less
+    """Raise if the given comparator is neither np.greater nor np.less.
     """
     if comparator != np.greater and comparator != np.less:
         raise ValueError("Comparator may only be np.greater or np.less")
@@ -204,8 +203,7 @@ def _check_extrema_comparator(comparator):
 try:
     import scipy.signal
     def find_sorted_extrema(x, y, comparator=np.greater, order=1, mode='clip'):
-        """
-        Find extrema using the given method and parameters, order them by y value and
+        """Find extrema using the given method and parameters, order them by y value and
         return a (n, 2)-shaped array that contains (for each extremum 0..n-1) the
         x and y value, with the 1st dimension being sorted in descending order.
 
@@ -234,8 +232,7 @@ except ModuleNotFoundError:
         raise NotImplementedError("You need to install scipy to use find_sorted_extrema()!")
 
 def select_by_threshold(fx, fy, thresh, comparator=np.greater):
-    """
-    Select values where a specific absolute threshold applies
+    """Select values where a specific absolute threshold applies
     Returns a (n, 2)-shaped array where
     ret[i] = (x, y) contains the x and y values
     and the array is sorted in descending order by absolute y values.
@@ -245,8 +242,7 @@ def select_by_threshold(fx, fy, thresh, comparator=np.greater):
     return __mapAndSortIndices(fx, fy, idxs, comparator == np.greater)
 
 def find_true_runs(arr):
-    """
-    Find runs of True values in a boolean array.
+    """Find runs of True values in a boolean array.
     This function is not intended to be used with arrays other than Booleans.
     The end element of the ranges is inclusive.
     Return a (n, 2)-shaped array where the 2nd dimension contain start and end indices.
@@ -264,8 +260,7 @@ def find_false_runs(arr):
     return find_true_runs(np.logical_not(arr))
 
 def runs_ignore_borders(runs, size=-1, ignore_start=True, ignore_end=True):
-    """
-    Ignore the first and/or the last run if they start at 0 or end at the array size respectively.
+    """Ignore the first and/or the last run if they start at 0 or end at the array size respectively.
 
     Parameters
     ----------
@@ -294,8 +289,7 @@ def __run_size_filter(minsize, maxsize):
     return _filt
 
 def filter_runs(runs, minsize=2, maxsize=np.inf):
-    """
-    Given a (n,2) array such as returned by findTrueRuns(), returns a new
+    """Given a (n,2) array such as returned by findTrueRuns(), returns a new
     (n-x,2) run list that contains only runs at least minSize in size and
     """
     return np.asarray(list(filter(__run_size_filter(minsize, maxsize), runs)))
@@ -316,8 +310,7 @@ __shrinkRangeMethodLUT = {
 
 
 def shrink_ranges(ranges, method="middle", **kwargs):
-    """
-    Take a (n, 2)-shaped range list like the one returned by find_true_runs()
+    """Take a (n, 2)-shaped range list like the one returned by find_true_runs()
     and shrink the ranges so they are only 1 wide. Returns a (n)-shaped array of indices.
 
     Currently supported shrinking methods are:
@@ -334,8 +327,7 @@ def shrink_ranges(ranges, method="middle", **kwargs):
 
 
 def select_ranges(ranges, arr):
-    """
-    Apply a range array like the one returned by find_true_runs().
+    """Apply a range array like the one returned by find_true_runs().
     Yields each array slice in order
 
     Parameters
@@ -351,15 +343,13 @@ def select_ranges(ranges, arr):
 
 
 def ranges_to_IntInterva(_ranges):
-    """
-    Convert a 2d range array, like the one returned by find_true_runs(),
+    """Convert a 2d range array, like the one returned by find_true_runs(),
     to a list of int ranges).
     """
 
 
 def find_nearest_idx(arr, v):
-    """
-    Find the index in the array which refers to the value with the least
+    """Find the index in the array which refers to the value with the least
     absolute difference from v.
     """
     # Original idea by unutbu @SO: http://stackoverflow.com/a/2566508/2597135
@@ -367,8 +357,7 @@ def find_nearest_idx(arr, v):
 
 
 def random_slice(arr, size):
-    """
-    Select a uniformly random slice of exactly a given size from the given array.
+    """Select a uniformly random slice of exactly a given size from the given array.
 
     Array may be a 1D numpy array or an integral which represents the array size.
 
@@ -405,8 +394,7 @@ class GeneratorCounter:
         self.iter = iter(self.gen)
 
     def reiter(self, reset_count=False):
-        """
-        Attempts to restart iterating over the generator.
+        """Attempts to restart iterating over the generator.
         This will work properly for lists, for example.
 
         Set reset_count to True to also reset the internal counter
@@ -416,6 +404,7 @@ class GeneratorCounter:
         self.iter = iter(self.gen)
 
     def __iter__(self):
+        """Return the iterator object."""
         return self
 
     def __next__(self):
@@ -425,12 +414,12 @@ class GeneratorCounter:
         return result
 
     def __len__(self):
+        """Return the count of items iterated so far."""
         return self.count
 
 
 def majority_vote_all(arr, return_absolute=False):
-    """
-    Perform a majority selection on the value in an array.
+    """Perform a majority selection on the value in an array.
     The values are required to be quantized, i.e. if no values are equal
     but only close together, this method won't work (try using a KDE-based method)
     This algorithm is fast and works for huge datasets, however,
@@ -454,8 +443,7 @@ def majority_vote_all(arr, return_absolute=False):
 
 
 def majority_vote(arr):
-    """
-    Wrapper for majority_vote_all() that only returns the most common value.
+    """Wrapper for majority_vote_all() that only returns the most common value.
     The frequency of the value is ignored. None is returned if arr is empty.
     """
     mv = majority_vote_all(arr)
@@ -463,15 +451,13 @@ def majority_vote(arr):
 
 
 def resample_discard(arr, divisor, ofs=0):
-    """
-    Resample with an integral divisor, discarding all other samples
+    """Resample with an integral divisor, discarding all other samples
     """
     return arr[ofs::divisor]
 
 
 def extract_by_reference(fx, fy, ref):
-    """
-    When ref is an array of arbitrary timestamp-like values,
+    """When ref is an array of arbitrary timestamp-like values,
     extracts a range from fx, fy so that the range represented by
     ref matches the range represented by the return value as close as possible.
 
@@ -492,8 +478,7 @@ def extract_by_reference(fx, fy, ref):
 
 
 def multiselect(lst, indices, convert=functoolz.identity):
-    """
-    Creates a new list from a list-like object, selecting only the indices
+    """Creates a new list from a list-like object, selecting only the indices
     in the index list, in the specified order.
 
     This works like numpy indexing with an index array.
@@ -519,8 +504,7 @@ def multiselect(lst, indices, convert=functoolz.identity):
 
 
 def find_closest_index(frequencies, frequency):
-    """
-    Find the closest frequency bin in an array of frequencies
+    """Find the closest frequency bin in an array of frequencies
     and return its index in the frequency array.
     """
     return np.argmin(np.abs(frequencies - frequency))

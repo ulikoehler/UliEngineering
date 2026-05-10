@@ -26,7 +26,7 @@ class TestDebyeHuckel(unittest.TestCase):
         self.assertEqual(len(log_gamma), 3)
 
     def test_debye_huckel_extended_scalar(self):
-        """Test extended Debye-Hückel equation with scalar input"""
+        """Test extended Debye-Hückel equation with scalar input."""
         log_gamma = debye_huckel_extended(z=1, I=0.1, a=0.3)
         self.assertIsInstance(log_gamma, float)
 

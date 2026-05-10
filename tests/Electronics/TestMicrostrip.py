@@ -8,9 +8,7 @@ import numpy as np
 
 class TestMicrostrip(unittest.TestCase):
     def test_microstrip_width_roundtrip(self):
-        """
-        Verify that microstrip_width() is the inverse of microstrip_impedance()
-        for a wide range of parameters.
+        """Verify that microstrip_width() is the inverse of microstrip_impedance() for a wide range of parameters.
 
         """
         # Test ranges
@@ -42,8 +40,8 @@ class TestMicrostrip(unittest.TestCase):
                                         err_msg=f"Failed for Z0={Z0}, h={h}, er={er}, t={t}, w={w}")
 
     def test_microstrip_width_specific_values(self):
-        """
-        Test specific known values or sanity checks
+        """Test specific known values or sanity checks.
+
         """
         # 50 Ohm on standard FR4 (1.6mm height, 35um copper)
         # Width should be around 3mm (roughly 2*h for FR4)
@@ -55,8 +53,8 @@ class TestMicrostrip(unittest.TestCase):
         self.assertLess(w_100, w_50)
 
     def test_microstrip_width_input_formats(self):
-        """
-        Test that string inputs work correctly (handled by decorators)
+        """Test that string inputs work correctly (handled by decorators).
+
         """
         w1 = microstrip_width(50, h="1.6mm", t="35um", e_r=4.8)
         w2 = microstrip_width("50 Ohm", h=1.6e-3, t=35e-6, e_r=4.8)
@@ -64,11 +62,11 @@ class TestMicrostrip(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
 
     def test_microstrip_functions_various_units(self):
-        """Test microstrip functions with various unit inputs"""
+        """Test microstrip functions with various unit inputs."""
         # Test with different unit representations
         w1 = microstrip_width("50 Ω", h="1.6 mm", t="35 µm", e_r=4.8)
         w2 = microstrip_width("50000 mΩ", h="1600 µm", t="35000 nm", e_r=4.8)

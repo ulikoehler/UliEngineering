@@ -33,8 +33,7 @@ LengthMeter = Annotated[NormalizedComputable, normalize_length]
 
 @returns_unit("m")
 def absorption_length_from_absorption_coefficient(absorption_coefficient: AbsorptionCoefficientPerMeter):
-    """
-    Compute the absorption length (in meters) from the extinction coefficient (in 1/m).
+    """Compute the absorption length (in meters) from the extinction coefficient (in 1/m).
     Absorption length is defined as the distance over which the intensity drops to 1/e.
     Formula: absorption_length = 1 / absorption_coefficient.
 
@@ -49,14 +48,14 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient: Absorp
     -------
     float or numpy.ndarray
         Absorption length in meters.
+
     """
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return np.reciprocal(absorption_coefficient)
 
 @returns_unit("1/m")
 def extinction_coefficient_from_absorption_length(absorption_length: LengthMeter):
-    """
-    Compute the extinction coefficient (in 1/m) from the absorption length (in meters).
+    """Compute the extinction coefficient (in 1/m) from the absorption length (in meters).
     Formula: extinction_coefficient = 1 / absorption_length.
 
     Parameters
@@ -68,14 +67,14 @@ def extinction_coefficient_from_absorption_length(absorption_length: LengthMeter
     -------
     float or numpy.ndarray
         Extinction coefficient in 1/m.
+
     """
     absorption_length = normalize_length(absorption_length) if isinstance(absorption_length, str) else absorption_length
     return np.reciprocal(absorption_length)
 
 @returns_unit("")
 def remaining_light_fraction(length: LengthMeter, absorption_coefficient: AbsorptionCoefficientPerMeter):
-    """
-    Compute the remaining fraction of light after passing through a medium of given length (in meters)
+    """Compute the remaining fraction of light after passing through a medium of given length (in meters)
     with a given extinction coefficient (in 1/m).
 
     Formula: fraction = exp(-absorption_coefficient * length).
@@ -91,6 +90,7 @@ def remaining_light_fraction(length: LengthMeter, absorption_coefficient: Absorp
     -------
     float or numpy.ndarray
         Remaining fraction of light (unitless).
+
     """
     length = normalize_length(length) if isinstance(length, str) else length
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
@@ -98,8 +98,7 @@ def remaining_light_fraction(length: LengthMeter, absorption_coefficient: Absorp
 
 @returns_unit("m")
 def length_from_remaining_fraction(remaining_fraction, absorption_coefficient: AbsorptionCoefficientPerMeter):
-    """
-    Compute the length of the medium (in meters) given the remaining fraction of light
+    """Compute the length of the medium (in meters) given the remaining fraction of light
     and the extinction coefficient (in 1/m).
 
     Formula: length = -ln(remaining_fraction) / absorption_coefficient.
@@ -115,14 +114,14 @@ def length_from_remaining_fraction(remaining_fraction, absorption_coefficient: A
     -------
     float or numpy.ndarray
         Length in meters.
+
     """
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return -np.log(remaining_fraction) / absorption_coefficient
 
 @returns_unit("m")
 def half_length(absorption_coefficient: AbsorptionCoefficientPerMeter):
-    """
-    Compute the half-length, i.e., the length of medium where the remaining fraction of light is 0.5,
+    """Compute the half-length, i.e., the length of medium where the remaining fraction of light is 0.5,
     for a given extinction coefficient (in 1/m).
 
     Parameters
@@ -134,13 +133,13 @@ def half_length(absorption_coefficient: AbsorptionCoefficientPerMeter):
     -------
     float or numpy.ndarray
         Half-length in meters.
+
     """
     return length_from_remaining_fraction(0.5, absorption_coefficient)
 
 @returns_unit("1/m")
 def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, wavelength: LengthMeter):
-    """
-    Compute the absorption coefficient (alpha, in 1/m) from the extinction coefficient (kappa, unitless)
+    """Compute the absorption coefficient (alpha, in 1/m) from the extinction coefficient (kappa, unitless)
     and the wavelength (in meters).
 
     Uses the formula:
@@ -162,6 +161,7 @@ def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, w
     -------
     float or numpy.ndarray
         Absorption coefficient alpha in 1/m.
+
     """
     wavelength = normalize_length(wavelength) if isinstance(wavelength, str) else wavelength
     omega = 2 * np.pi * speed_of_light / wavelength
@@ -183,14 +183,14 @@ class HaleQuerryAbsorptionData:
 
 class HaleQuerryAbsorptionModel:
 
-    """
-    Hale-Querry absorption model for water. Valid from 200nm to 200μm.
+    """Hale-Querry absorption model for water. Valid from 200nm to 200μm.
     Interpolated using a piecewise linear function.
 
     Input wavelength must be in nanometers (nm).
 
     Source: Hale, G. M., & Querry, M. R. (1973). Optical constants of water in the 200-nm to 200-μm wavelength region, Table 1
     Document available at: https://opg.optica.org/ao/viewmedia.cfm?uri=ao-12-3-555&seq=0
+
     """
     datapoints = [
         HaleQuerryAbsorptionData(200.0e-9, 1.1e-7, 1.396),
@@ -378,10 +378,8 @@ class HaleQuerryAbsorptionModel:
         )
 
     def __call__(self, wavelength):
-        """
-        Interpolate the extinction coefficient for the given wavelength (in meters).
-        Raises ValueError if wavelength is out of bounds.
-        """
+        """Interpolate the extinction coefficient for the given wavelength (in meters).
+        Raises ValueError if wavelength is out of bounds."""
         wavelength = normalize_length(wavelength)
         # Convert nm to μm for interpolation
         min_wl = self._wavelengths[0]

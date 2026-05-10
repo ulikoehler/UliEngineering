@@ -159,8 +159,7 @@ def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
     return error_matrix
 
 def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: VoltageV, target_voltage: VoltageV, load: ResistanceOhm = None):
-    """
-    Calculate the percentage deviation of a feedback network output voltage
+    """Calculate the percentage deviation of a feedback network output voltage
     from the target voltage.
 
     In a typical feedback network, r1 is the upper resistor (connected to input)
@@ -202,8 +201,7 @@ def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: 
     return deviation_percent
 
 class ResistorAroundValueCostFunctor(object):
-    """
-    Cost functor that evaluates how close a resistor value is to a target value
+    """Cost functor that evaluates how close a resistor value is to a target value
     using logarithmic criteria with configurable base.
 
     Returns the absolute difference in "orders of magnitude" between the
@@ -257,8 +255,7 @@ class ResistorAroundValueCostFunctor(object):
         return log_ratio
 
 class ResistorPowerCostFunctor(object):
-    """
-    Cost functor that evaluates resistor combinations based on power dissipation
+    """Cost functor that evaluates resistor combinations based on power dissipation
     when connected in series with a given input voltage.
 
     Returns infinite cost if any resistor exceeds maximum power rating,

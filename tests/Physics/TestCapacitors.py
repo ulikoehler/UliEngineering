@@ -558,7 +558,9 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertGreater(calculated_capacitance, 0)
 
 class TestCapacitorChargingEnergy(unittest.TestCase):
-    """Comprehensive tests for capacitor_charging_energy function."""
+    """Comprehensive tests for capacitor_charging_energy function.
+
+    """
 
     def test_basic_functionality_zero_starting_voltage(self):
         """Test basic energy calculation from 0V to target voltage"""

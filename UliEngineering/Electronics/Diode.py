@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for diode calculations using the Shockley diode equation.
-"""
+"""Utilities for diode calculations using the Shockley diode equation."""
 from typing import Annotated, cast
 
 from scipy.constants import elementary_charge, k as boltzmann_k
@@ -81,6 +79,7 @@ class SimpleDiodeModel(DiodeModel):
     """
 
     def __init__(self, forward_voltage="0V"):
+        """Initialize the SimpleDiodeModel with a forward voltage drop."""
         self.forward_voltage_drop = normalize_numeric(forward_voltage)
 
     def minimum_series_voltage(self):

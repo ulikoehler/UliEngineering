@@ -118,7 +118,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_volume_various_units(self):
-        """Test normalize_volume with various unit inputs"""
+        """Test normalize_volume with various unit inputs."""
         test_cases = [
             ("1 L", 1.0),
             ("1 mL", 1e-3),

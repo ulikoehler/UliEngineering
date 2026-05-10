@@ -44,7 +44,7 @@ class TestFrequencies(unittest.TestCase):
         assert_allclose(normalize_rpm(["60 rpm", "120 rpm"]), [1.0, 2.0])
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         # These should be importable and are Annotated types
         self.assertIsNotNone(FrequencyHz)
         self.assertIsNotNone(RotationFrequency)
@@ -53,7 +53,7 @@ class TestFrequencies(unittest.TestCase):
         self.assertEqual(RotationFrequency, FrequencyHz)
 
     def test_frequency_type_various_units(self):
-        """Test FrequencyHz type with various unit inputs"""
+        """Test FrequencyHz type with various unit inputs."""
         test_cases = [
             ("1 Hz", 1.0),
             ("1 kHz", 1000.0),
@@ -67,7 +67,7 @@ class TestFrequencies(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_rotation_rate_type_various_units(self):
-        """Test RotationRate type with various unit inputs"""
+        """Test RotationRate type with various unit inputs."""
         test_cases = [
             ("60 rpm", 1.0),
             ("120 rpm", 2.0),

@@ -17,7 +17,7 @@ from UliEngineering.Chemistry.Langmuir import (
 
 class TestLangmuir(unittest.TestCase):
     def test_langmuir_coverage_scalar(self):
-        """Test Langmuir coverage with scalar input"""
+        """Test Langmuir coverage with scalar input."""
         theta = langmuir_coverage(K=1.0, C=0.5)
         self.assertIsInstance(theta, float)
         self.assertGreater(theta, 0)
@@ -30,31 +30,31 @@ class TestLangmuir(unittest.TestCase):
         self.assertGreater(q, 0)
 
     def test_langmuir_constant_from_coverage_scalar(self):
-        """Test Langmuir constant from coverage with scalar input"""
+        """Test Langmuir constant from coverage with scalar input."""
         K = langmuir_constant_from_coverage(theta=0.5, C=1.0)
         self.assertIsInstance(K, float)
         self.assertGreater(K, 0)
 
     def test_langmuir_competitive_coverage_scalar(self):
-        """Test Langmuir competitive coverage with scalar input"""
+        """Test Langmuir competitive coverage with scalar input."""
         theta = langmuir_competitive_coverage(K_i=1.0, C_i=0.5, K_all=[1.0, 0.5], C_all=[0.5, 0.5])
         self.assertIsInstance(theta, float)
         self.assertGreater(theta, 0)
 
     def test_langmuir_inverse_linearized_scalar(self):
-        """Test Langmuir inverse linearized with scalar input"""
+        """Test Langmuir inverse linearized with scalar input."""
         inv_c, inv_q = langmuir_inverse_linearized(C=0.5, q=0.25)
         self.assertIsInstance(inv_c, float)
         self.assertIsInstance(inv_q, float)
 
     def test_langmuir_dissociation_rate_scalar(self):
-        """Test Langmuir dissociation rate with scalar input"""
+        """Test Langmuir dissociation rate with scalar input."""
         k_des = langmuir_dissociation_rate(k_ads=0.1, K=1.0)
         self.assertIsInstance(k_des, float)
         self.assertGreater(k_des, 0)
 
     def test_inverse_langmuir_coverage(self):
-        """Test inverse relationship between coverage and constant functions"""
+        """Test inverse relationship between coverage and constant functions."""
         K = 1.0
         C = 0.5
         theta = langmuir_coverage(K, C)
@@ -64,14 +64,14 @@ class TestLangmuir(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ConcentrationMolar)
         self.assertIsNotNone(AdsorptionCapacityMolG)
         self.assertIsNotNone(LangmuirConstantLMol)
         self.assertIsNotNone(RateConstantLMolS)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),
@@ -85,7 +85,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_adsorption_capacity_various_units(self):
-        """Test normalize_adsorption_capacity with various unit inputs"""
+        """Test normalize_adsorption_capacity with various unit inputs."""
         test_cases = [
             ("1 mol/g", 1.0),
             ("1 mmol/g", 1e-3),
@@ -98,7 +98,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_langmuir_constant_various_units(self):
-        """Test normalize_langmuir_constant with various unit inputs"""
+        """Test normalize_langmuir_constant with various unit inputs."""
         test_cases = [
             ("1 L/mol", 1.0),
             ("1 m³/mol", 1000.0),
@@ -109,7 +109,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_rate_constant_various_units(self):
-        """Test normalize_rate_constant with various unit inputs"""
+        """Test normalize_rate_constant with various unit inputs."""
         test_cases = [
             ("1 L/(mol·s)", 1.0),
             ("1 m³/(mol·s)", 1000.0),
@@ -121,7 +121,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_langmuir_functions_various_units(self):
-        """Test Langmuir functions with various unit inputs"""
+        """Test Langmuir functions with various unit inputs."""
         # Test with different concentration units
         theta1 = langmuir_coverage("1 L/mol", "0.5 M")
         theta2 = langmuir_coverage("1 L/mol", "500 mM")

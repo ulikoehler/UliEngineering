@@ -21,11 +21,11 @@ class TestCrystal(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(PPM)
 
     def test_normalize_ppm_various_units(self):
-        """Test normalize_ppm with various unit inputs"""
+        """Test normalize_ppm with various unit inputs."""
         test_cases = [
             ("1 ppm", 1e-6),
             ("1 ppb", 1e-9),
@@ -37,7 +37,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_crystal_functions_various_units(self):
-        """Test crystal functions with various unit inputs"""
+        """Test crystal functions with various unit inputs."""
         # Test deviation functions with different ppm units
         d1 = crystal_deviation_seconds_per_minute("20 ppm")
         d2 = crystal_deviation_seconds_per_minute("20000 ppb")

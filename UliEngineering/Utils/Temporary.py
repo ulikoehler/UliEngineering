@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities regarding temporary storage
-"""
+"""Utilities regarding temporary storage"""
 import tempfile
 import shutil
 import os

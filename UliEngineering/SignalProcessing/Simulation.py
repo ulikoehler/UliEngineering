@@ -16,8 +16,7 @@ __all__ = [
 
 
 def _generate_wave(genfn, frequency, samplerate, amplitude=1., length=1., phaseshift=0., timedelay=0., offset=0.):
-    """
-    Generate a wave using a given function of a specific frequency of a specific length.
+    """Generate a wave using a given function of a specific frequency of a specific length.
 
     :param frequency A np.sin-like generator function (period shall be 2*pi)
     :param frequency The frequency in Hz

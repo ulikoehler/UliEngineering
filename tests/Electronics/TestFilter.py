@@ -13,9 +13,7 @@ class TestFilter(unittest.TestCase):
         assert_approx_equal(lc_cutoff_frequency(3.3e-6, 22e-6), 18678.92254731818)
 
     def test_rc_cutoff_frequency(self):
-        """
-        Test the rc_cutoff_frequency function
-        """
+        """Test the rc_cutoff_frequency function."""
         # Verified using https://www.omnicalculator.com/physics/low-pass-filter
         # Test with string input
         assert_approx_equal(rc_cutoff_frequency("124k", "100pF"), 12835.07605579801)
@@ -23,9 +21,7 @@ class TestFilter(unittest.TestCase):
         assert_approx_equal(rc_cutoff_frequency(124e3, 100e-12), 12835.07605579801)
 
     def test_rc_feedforward_pole_and_zero(self):
-        """
-        Test the rc_feedforward_pole_and_zero function
-        """
+        """Test the rc_feedforward_pole_and_zero function."""
         # Manually verified using https://www.ti.com/lit/an/slva289b/slva289b.pdf
         #  Zero (Eq 1) : 1/(2*math.pi*124e3*100e-12) = 12835.07605579801
         #  Pole (Eq 2) : 1/(2*math.pi*100e-12) * (1/124e3 + 1/100e3) = 28750.570364987543

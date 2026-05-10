@@ -19,16 +19,19 @@ def default_unit_prefixes() -> List[str]:
 def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float]:
     """
     Generate a dictionary mapping SI prefixes to their corresponding exponents (in powers of 10).
+
     Parameters
     ----------
     include_length_unit_prefixes : bool, optional
         If True, includes additional prefixes commonly used for length units:
         centi- ('c', 10^-2) and deci- ('d', 10^-1). Default is False.
+
     Returns
     -------
     dict
         A dictionary where keys are string prefixes and values are the corresponding
         exponents (powers of 10). For example, 'k' maps to 3 (representing kilo-, or 10^3).
+
     Notes
     -----
     - For the micro prefix, three different symbols are supported: 'µ', 'μ', and 'u'

@@ -7,8 +7,7 @@ from typing import List, Tuple
 import re
 
 def split_nth(s, delimiter=",", nth=1):
-    """
-    Like s.split(delimiter), but only returns the nth string of split's return array.
+    """Like s.split(delimiter), but only returns the nth string of split's return array.
     Other strings or the split list itself are not generated.
 
     Using this function is ONLY recommended (because it's ONLY faster)
@@ -33,9 +32,7 @@ def split_nth(s, delimiter=",", nth=1):
 
 def suffix_list(s: str) -> List[str]:
     """
-    Return all suffixes for a string, including the string itself,
-    in order of ascending length.
-
+    Retin order of ascending length.
     Example: "foobar" => ['r', 'ar', 'bar', 'obar', 'oobar', 'foobar'].
     """
     return [s[-i:] for i in range(1, len(s) + 1)]

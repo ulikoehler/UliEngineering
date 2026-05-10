@@ -76,8 +76,8 @@ def ionic_strength_from_pairs(pairs):
 
 @returns_unit("mol/L")
 def ionic_strength_monovalent(concentration: ConcentrationMolar):
-    """
-    Compute ionic strength for a monovalent salt (e.g. NaCl).
+    """Compute ionic strength for a monovalent salt (e.g. NaCl).
+
     For a 1:1 electrolyte MX at concentration c, I = c.
 
     Parameters

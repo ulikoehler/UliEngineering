@@ -19,7 +19,7 @@ class TestLEDSeriesResistors(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ChargeC)
         self.assertIsNotNone(VoltageV)
         self.assertIsNotNone(FrequencyHz)

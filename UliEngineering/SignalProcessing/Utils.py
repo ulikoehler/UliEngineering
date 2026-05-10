@@ -138,7 +138,7 @@ class LinRange:
     Behaves like np.linspace. Use .view() to obtain a LinRange slice.
     """
     def __init__(self, start, stop, n, endpoint=True, dtype=float):
-        "Create a new LinRange object using a numpy.linspace-like constructor"
+        """Create a new LinRange object using a numpy.linspace-like constructor."""
         self.start = start
         self.stop = stop
         n = int(n)
@@ -149,47 +149,42 @@ class LinRange:
 
     @staticmethod
     def range(start, stop, step):
-        "Create a new LinRange object using a range()-like constructor"
+        """Create a new LinRange object using a range()-like constructor."""
         return LinRange(start, stop, int((stop - start) / step))
 
     def __len__(self):
+        """Return the size of the LinRange."""
         return self.size
 
     @property
     def mid(self):
-        "Return the middle of the current interval as a floating point value"
+        """Return the middle of the current interval as a floating point value."""
         return self.dtype((self.start + self.stop) / 2.)
 
     @property
     def shape(self):
+        """Return the shape of the LinRange."""
         return (self.size,)
 
     def astype(self, typearg):
-        """
-        Return self copy with a different data type
-        """
+        """Return self copy with a different data type."""
         return LinRange(self.start, self.stop, self.size, dtype=typearg)
 
     def copy(self):
-        """
-        Return self as a numpy array.
-        Designed to be compatible with numpy objects
+        """Return self as a numpy array.
+
+        Designed to be compatible with numpy objects.
         """
         return np.linspace(self.start, self.stop, self.size,
                            endpoint=self.endpoint, dtype=self.dtype)
 
     def view(self, start=None, stop=None, step=None):
-        """
-        Return a LinSpace view of self
-        """
+        """Return a LinSpace view of self."""
         istart, istop, istep = slice(start, stop, step).indices(self.size)
         return LinRange(self[istart], self[istop], (istop - istart) // istep, endpoint=False)
 
     def __getitem__(self, key):
-        """
-        Get:
-            - A numpy linrange slice
-        """
+        """Get a numpy linrange slice."""
         if isinstance(key, slice):
             istart, istop, istep = key.indices(self.size)
             return np.linspace(self[istart], self[istop], (istop - istart) // istep,
@@ -218,10 +213,10 @@ class LinRange:
         return self.start == other.start and self.stop == other.stop and self.step == other.step
 
     def samplerate(self):
-        """
-        Returns the samplerate as float (unit: Hz).
+        """Return the samplerate as float (unit: Hz).
+
         This works especially if step is a np.timedelta64 object.
-        Else "step" is assumed to be a <seconds> value
+        Else "step" is assumed to be a <seconds> value.
         """
         if isinstance(self.step, np.timedelta64):
             ns = self.step.astype("timedelta64[ns]").astype(int)

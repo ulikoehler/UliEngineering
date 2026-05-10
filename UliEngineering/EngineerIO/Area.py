@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Utilities for area"""
+"""Utilities for area."""
 from typing import Annotated
 
 from numpy import ndarray
@@ -76,6 +76,7 @@ class EngineerAreaIO(EngineerIO):
 
     """
     EngineerIO subclass specialized for area unit parsing and conversion.
+
     """
 
     _instance = None
@@ -96,8 +97,8 @@ class EngineerAreaIO(EngineerIO):
 
     @returns_unit("m²")
     def normalize_area(self, s):
-        """
-        Normalize an area to square meters.
+        """Normalize an area to square meters.
+
         Returns the numeric value in m², a list or ndarray of converted values,
         or None if the input is None.
 

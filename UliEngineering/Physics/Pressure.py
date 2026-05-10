@@ -29,8 +29,7 @@ PressureBar = Annotated[NormalizedComputable, normalize_pressure_bar]
 
 @returns_unit("bar")
 def pascal_to_bar(pressure: PressurePascal):
-    """
-    Convert the pressure in pascal to the pressure in bar.
+    """Convert the pressure in pascal to the pressure in bar.
 
     Parameters
     ----------
@@ -47,8 +46,7 @@ def pascal_to_bar(pressure: PressurePascal):
 
 @returns_unit("Pa")
 def bar_to_pascal(pressure: PressureBar):
-    """
-    Convert the pressure in bar to the pressure in Pascal.
+    """Convert the pressure in bar to the pressure in Pascal.
 
     Parameters
     ----------
@@ -65,8 +63,7 @@ def bar_to_pascal(pressure: PressureBar):
 
 @returns_unit("Pa")
 def barlow_tangential(outer_diameter: LengthMeters, inner_diameter: LengthMeters, pressure: PressurePascal):
-    """
-    Compute the tangential stress of a pressure vessel at [pressure] using Barlow's formula for thin-walled tubes.
+    """Compute the tangential stress of a pressure vessel at [pressure] using Barlow's formula for thin-walled tubes.
 
     Note that this formula only applies for (outer_diameter/inner_diameter) < 1.2!
     (this assumption is not checked). Otherwise, the stress distribution will be too uneven.
@@ -95,8 +92,7 @@ def barlow_tangential(outer_diameter: LengthMeters, inner_diameter: LengthMeters
 
 @returns_unit("Pa")
 def psi_to_pascal(pressure: PressurePascal):
-    """
-    Convert the pressure in psi to the pressure in Pascal.
+    """Convert the pressure in psi to the pressure in Pascal.
 
     Parameters
     ----------
@@ -114,8 +110,7 @@ def psi_to_pascal(pressure: PressurePascal):
 
 @returns_unit("bar")
 def psi_to_bar(pressure: PressurePascal):
-    """
-    Convert the pressure in psi to the pressure in bar.
+    """Convert the pressure in psi to the pressure in bar.
 
     Parameters
     ----------
@@ -133,8 +128,7 @@ def psi_to_bar(pressure: PressurePascal):
 
 @returns_unit("psi")
 def pascal_to_psi(pressure: PressurePascal):
-    """
-    Convert the pressure in Pascal to the pressure in psi.
+    """Convert the pressure in Pascal to the pressure in psi.
 
     Parameters
     ----------
@@ -152,8 +146,7 @@ def pascal_to_psi(pressure: PressurePascal):
 
 @returns_unit("psi")
 def bar_to_psi(pressure: PressureBar):
-    """
-    Convert the pressure in bar to the pressure in psi.
+    """Convert the pressure in bar to the pressure in psi.
 
     Parameters
     ----------

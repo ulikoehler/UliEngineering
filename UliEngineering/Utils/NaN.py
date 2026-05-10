@@ -6,6 +6,7 @@ import numpy as np
 def none_to_nan(value):
     """
     Convert None to NaN, otherwise return the value unchanged.
+
     This is useful for normalizing values in arrays.
     """
     # NOTE: string is iterable, so we need to check for that first

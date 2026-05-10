@@ -37,8 +37,7 @@ Grams = Annotated[NormalizedComputable, normalize_grams]
 
 @dataclass
 class DNANucleotideWeights:
-    """
-    Molecular weights of the four DNA nucleotides in g/mol.
+    """Molecular weights of the four DNA nucleotides in g/mol.
 
     This includes the phosphate group and the deoxyribose sugar.
 
@@ -52,8 +51,7 @@ class DNANucleotideWeights:
 @dataclass
 class RNANucleotideWeights:
     """
-    Molecular weights of the four RNA nucleotides in g/mol.
-    This includes the backbone phosphate group.
+    MolThis includes the backbone phosphate group.
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
@@ -65,9 +63,7 @@ class RNANucleotideWeights:
 
 @dataclass
 class NucleotideFractions:
-    """
-    Fractions of the five nucleotides (must sum to 1.0).
-    """
+    """Fractions of the five nucleotides (must sum to 1.0)."""
     A: float
     G: float
     C: float
@@ -87,8 +83,7 @@ class DNARNANucleotideFractionsByOrganism:
     Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules.
     Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11)
     """
-    Maize = NucleotideFractions(A=0.268, T=0.272, G=0.228, C=0.232, U=0.0)
-    Octopus = NucleotideFractions(A=0.332, T=0.316, G=0.176, C=0.176, U=0.0)
+    MaiOctopus = NucleotideFractions(A=0.332, T=0.316, G=0.176, C=0.176, U=0.0)
     Chicken = NucleotideFractions(A=0.280, T=0.284, G=0.220, C=0.216, U=0.0)
     Rat = NucleotideFractions(A=0.286, T=0.284, G=0.214, C=0.205, U=0.0)
     Human = NucleotideFractions(A=0.293, T=0.300, G=0.207, C=0.200, U=0.0)

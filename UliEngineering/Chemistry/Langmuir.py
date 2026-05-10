@@ -74,6 +74,7 @@ def langmuir_coverage(K: LangmuirConstantLMol, C: ConcentrationMolar):
     -------
     float
         Fractional coverage θ (dimensionless, 0 to 1).
+
     """
     K = normalize_langmuir_constant(K) if isinstance(K, str) else K
     C = normalize_concentration(C) if isinstance(C, str) else C

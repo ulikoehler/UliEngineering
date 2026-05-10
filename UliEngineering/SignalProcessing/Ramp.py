@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Signal processing module for generating ramp signals with configurable smoothing (acceleration).
-"""
+"""Signal processing module for generating ramp signals with configurable smoothing (acceleration)."""
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Exceptions import OperationImpossibleException

@@ -39,6 +39,7 @@ def list_zip(zippath):
     Get a list of entries in the ZIP.
     Equivalent to calling .namelist() on the
     opened ZIP file.
+
     """
     with zipfile.ZipFile(zippath) as zipin:
         return zipin.namelist()

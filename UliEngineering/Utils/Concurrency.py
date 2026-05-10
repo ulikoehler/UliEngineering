@@ -6,6 +6,7 @@ import queue
 
 __all__ = ["QueuedThreadExecutor"]
 
+
 class QueuedThreadExecutor(concurrent.futures.ThreadPoolExecutor):
     """
     In contrast to the normal ThreadPoolExecutor, this executor has
