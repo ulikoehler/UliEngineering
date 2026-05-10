@@ -20,37 +20,37 @@ def hash_file_native(file_path, tool="sha256sum"):
     Parameters
     ----------
     tool : str
-        The tool to use, e.g. "md5sum" or "sha256sum"
+        The tool to use, e.g. "md5sum" or "sha256sum".
     file_path : str
-        The path to the file to hash
+        The path to the file to hash.
 
     Returns
     -------
     str
-        The hash of the file
+        The hash of the file.
     """
     output = subprocess.check_output([tool, file_path], shell=False)
     return output.decode("utf-8").partition(" ")[0].strip()
 
 def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=65536):
     """
-    Compute the hash of a file using the specified hash algorithm using Python's hashlib
+    Compute the hash of a file using the specified hash algorithm using Python's hashlib.
 
     Parameters
     ----------
     file_path : str
-        The path to the file to hash
+        The path to the file to hash.
     hash_type : callable, optional
-        A function returning a hash object. Typically hashlib.sha256 or hashlib.md5
+        A function returning a hash object. Typically hashlib.sha256 or hashlib.md5.
     binary : bool, optional
-        If True, return binary hash instead of hexadecimal
+        If True, return binary hash instead of hexadecimal.
     buffer_size : int, optional
-        Buffer size for reading the file
+        Buffer size for reading the file.
 
     Returns
     -------
     str or bytes
-        If binary, the binary hash, otherwise the hexadecimal digest of the file hash
+        If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
     """
     hash_func = hash_type()
     with open(file_path, "rb") as file:
@@ -68,16 +68,16 @@ def hash_file_sha256(file_path, binary=False, buffer_size=65536):
     Parameters
     ----------
     file_path : str
-        The path to the file to hash
+        The path to the file to hash.
     binary : bool, optional
-        If True, return binary hash instead of hexadecimal
+        If True, return binary hash instead of hexadecimal.
     buffer_size : int, optional
-        Buffer size for reading the file
+        Buffer size for reading the file.
 
     Returns
     -------
     str or bytes
-        If binary, the binary hash, otherwise the hexadecimal digest of the file hash
+        If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
     """
     return hash_file(file_path, hash_type=hashlib.sha256, binary=binary, buffer_size=buffer_size)
 
@@ -88,16 +88,16 @@ def hash_file_md5(file_path, binary=False, buffer_size=65536):
     Parameters
     ----------
     file_path : str
-        The path to the file to hash
+        The path to the file to hash.
     binary : bool, optional
-        If True, return binary hash instead of hexadecimal
+        If True, return binary hash instead of hexadecimal.
     buffer_size : int, optional
-        Buffer size for reading the file
+        Buffer size for reading the file.
 
     Returns
     -------
     str or bytes
-        If binary, the binary hash, otherwise the hexadecimal digest of the file hash
+        If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
     """
     return hash_file(file_path, hash_type=hashlib.md5, binary=binary, buffer_size=buffer_size)
 
@@ -108,16 +108,16 @@ def hash_file_sha1(file_path, binary=False, buffer_size=65536):
     Parameters
     ----------
     file_path : str
-        The path to the file to hash
+        The path to the file to hash.
     binary : bool, optional
-        If True, return binary hash instead of hexadecimal
+        If True, return binary hash instead of hexadecimal.
     buffer_size : int, optional
-        Buffer size for reading the file
+        Buffer size for reading the file.
 
     Returns
     -------
     str or bytes
-        If binary, the binary hash, otherwise the hexadecimal digest of the file hash
+        If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
     """
     return hash_file(file_path, hash_type=hashlib.sha1, binary=binary, buffer_size=buffer_size)
 
@@ -131,19 +131,19 @@ def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=F
     Parameters
     ----------
     directory : str
-        The directory to hash
+        The directory to hash.
     recursive : bool, optional
-        If True, hash files recursively
+        If True, hash files recursively.
     hash_type : callable, optional
-        A function returning a hash object. Typically hashlib.sha256 or hashlib.md5
+        A function returning a hash object. Typically hashlib.sha256 or hashlib.md5.
     binary : bool, optional
-        If True, return binary hash instead of hexadecimal
+        If True, return binary hash instead of hexadecimal.
     relative_paths : bool, optional
-        If True, return relative paths, otherwise absolute paths
+        If True, return relative paths, otherwise absolute paths.
     buffer_size : int, optional
-        Buffer size for reading files
+        Buffer size for reading files.
     concurrency : int, optional
-        Number of concurrent threads
+        Number of concurrent threads.
 
     Returns
     -------
