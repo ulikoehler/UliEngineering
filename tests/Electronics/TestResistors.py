@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.Resistors import parallel_resistors, series_resistors, standard_resistors, standard_resistors_in_range, nearest_resistor, current_through_resistor, resistor_by_voltage_and_current, resistor_value_by_voltage_and_power, e96, e48
+from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV, CurrentA, PowerW
 from UliEngineering.EngineerIO import auto_format
 import unittest
 import numpy as np
@@ -56,4 +57,12 @@ class TestResistors(unittest.TestCase):
         # Test with different units
         assert_approx_equal(resistor_value_by_voltage_and_power("1000mV", "10mW"), 100.0)  # 1²/0.01 = 100Ω
         self.assertEqual(auto_format(resistor_value_by_voltage_and_power, "12V", "1W"), "144 Ω")
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(CurrentA)
+        self.assertIsNotNone(PowerW)
 
