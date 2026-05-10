@@ -10,6 +10,7 @@ from UliEngineering.Math.Decibel import (
     voltage_to_dBuV,
     power_to_dBm
 )
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 import numpy as np
 import unittest
 import pytest
@@ -84,3 +85,8 @@ class TestDecibel(unittest.TestCase):
         self.assertAlmostEqual(power_to_dBm(100e-3), 20)
         self.assertAlmostEqual(power_to_dBm(0.01e-3), -20)
         self.assertAlmostEqual(power_to_dBm(-1), -np.inf)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotation_exists(self):
+        """Test that NormalizableArgument is available"""
+        self.assertIsNotNone(NormalizableArgument)

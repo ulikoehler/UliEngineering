@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from UliEngineering.Math.Geometry.Cylinder import cylinder_volume, cylinder_side_surface_area, cylinder_surface_area, hollow_cylinder_volume, hollow_cylinder_inner_radius_by_volume
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from parameterized import parameterized
 import unittest
 import math
@@ -77,3 +78,8 @@ class TestHollowCylinder(unittest.TestCase):
         # NOTE: This uses the hollow_cylinder_volume() test cases except the ones that yield 0 volume
         self.assertAlmostEqual(hollow_cylinder_inner_radius_by_volume(outer_radius, volume, height), inner_radius, delta=.025)
         self.assertAlmostEqual(hollow_cylinder_inner_radius_by_volume(f"{outer_radius}", f"{volume}", f"{height}"), inner_radius, delta=.025)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotation_exists(self):
+        """Test that NormalizableArgument is available"""
+        self.assertIsNotNone(NormalizableArgument)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Math.Geometry.Sphere import sphere_volume_by_radius, sphere_volume_by_diameter, sphere_surface_area_by_radius, sphere_surface_area_by_diameter
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from parameterized import parameterized
 import numpy as np
 import unittest
@@ -34,3 +35,8 @@ class TestSphere(unittest.TestCase):
         assert_approx_equal(sphere_surface_area_by_diameter(radius*2), area)
         assert_approx_equal(sphere_surface_area_by_radius(f"{radius}"), area)
         assert_approx_equal(sphere_surface_area_by_diameter(radius*2), area)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotation_exists(self):
+        """Test that NormalizableArgument is available"""
+        self.assertIsNotNone(NormalizableArgument)

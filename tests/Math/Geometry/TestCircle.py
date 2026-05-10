@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Math.Geometry.Circle import circle_area, circle_circumference
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from parameterized import parameterized
 import numpy as np
 import unittest
@@ -27,4 +28,9 @@ class TestCircle(unittest.TestCase):
     def test_circle_circumference(self, radius):
         assert_approx_equal(circle_circumference(radius), 2*np.pi*radius)
         assert_approx_equal(circle_circumference(f"{radius}"), 2*np.pi*radius)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotation_exists(self):
+        """Test that NormalizableArgument is available"""
+        self.assertIsNotNone(NormalizableArgument)
 
