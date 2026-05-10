@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import numpy as np
 from dataclasses import dataclass
-from typing import List, Callable, Sequence
+from typing import List, Callable, Sequence, Annotated
 import itertools
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
 from UliEngineering.Electronics.Resistors import ESeries, standard_resistors, power_dissipated_in_resistor_by_current, series_resistors, current_through_resistor
+from .Diode import normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV, normalize_power, PowerW
 
 __all__ = [
     'ResistorSelection',
@@ -157,8 +159,7 @@ def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
     
     return error_matrix
 
-@normalize_numeric_args
-def feedback_network_error(r1, r2, input_voltage, target_voltage, load=None):
+def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: VoltageV, target_voltage: VoltageV, load: ResistanceOhm = None):
     """
     Calculate the percentage deviation of a feedback network output voltage
     from the target voltage.
@@ -185,6 +186,13 @@ def feedback_network_error(r1, r2, input_voltage, target_voltage, load=None):
     float
         Percentage deviation from target voltage (positive = higher, negative = lower)
     """
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    input_voltage = normalize_voltage(input_voltage) if isinstance(input_voltage, str) else input_voltage
+    target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
+    if load is not None:
+        load = normalize_resistance(load) if isinstance(load, str) else load
+    
     # Use voltage divider function with optional load
     rload = load if load is not None else np.inf
     actual_voltage = voltage_divider_voltage(r1, r2, input_voltage, rload=rload)
@@ -259,7 +267,7 @@ class ResistorPowerCostFunctor(object):
     highest power dissipation among the resistors.
     """
     
-    def __init__(self, input_voltage, maximum_power, maximum_cost=100.0):
+    def __init__(self, input_voltage: VoltageV, maximum_power: PowerW, maximum_cost: float = 100.0):
         """
         Initialize the power cost functor.
         
@@ -273,8 +281,10 @@ class ResistorPowerCostFunctor(object):
             Maximum cost value to return when power is at the limit.
             Default is 100.0.
         """
-        self.input_voltage = normalize_numeric(input_voltage)
-        self.maximum_power = normalize_numeric(maximum_power)
+        input_voltage = normalize_voltage(input_voltage) if isinstance(input_voltage, str) else input_voltage
+        maximum_power = normalize_power(maximum_power) if isinstance(maximum_power, str) else maximum_power
+        self.input_voltage = input_voltage
+        self.maximum_power = maximum_power
         self.maximum_cost = float(maximum_cost)
         
         if self.input_voltage < 0:

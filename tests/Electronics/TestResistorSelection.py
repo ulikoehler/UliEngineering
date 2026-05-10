@@ -3,6 +3,7 @@
 from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.ResistorSelection import ResistorSeriesCostFunctor, ResistorSeriesWeights, ResistorAroundValueCostFunctor, ResistorPowerCostFunctor
 from UliEngineering.Electronics.Resistors import resistor_value_by_voltage_and_power
+from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV, PowerW
 import unittest
 import numpy as np
 
@@ -654,3 +655,10 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
             assert_approx_equal(cost, expected_cost, significant=4)
         else:
             self.assertEqual(cost, float('inf'))
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(PowerW)
