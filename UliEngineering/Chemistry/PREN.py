@@ -12,7 +12,7 @@ Variants:
     PRE_N  = %Cr + 3.3 * %Mo + 16 * %N     (standard)
     PRE_NW = %Cr + 3.3 * (%Mo + 0.5 * %W) + 16 * %N  (includes tungsten)
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 
 __all__ = [
     "pren",
@@ -35,7 +35,6 @@ COMMON_STEEL_COMPOSITIONS = {
 }
 
 
-@normalize_numeric_args
 @returns_unit("")
 def pren(Cr, Mo, N):
     """
@@ -62,7 +61,6 @@ def pren(Cr, Mo, N):
     return Cr + 3.3 * Mo + 16.0 * N
 
 
-@normalize_numeric_args
 @returns_unit("")
 def pren_w(Cr, Mo, N, W):
     """
