@@ -11,7 +11,7 @@ from ._normalize import normalize_with_known_units
 __all__ = ["Densities", "density_by_volume_and_weight", "normalize_density_kg_per_m3", "DensityKgPerM3"]
 
 """
-Pre-defined densities for various materials in kg/m³
+Pre-defined densities for various materials in kg/m³.
 """
 Densities: dict[str, float] = {
     # Various (pure) metals

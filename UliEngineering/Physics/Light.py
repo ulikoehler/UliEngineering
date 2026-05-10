@@ -28,14 +28,20 @@ def lumen_to_candela_by_apex_angle(flux: LuminousFluxLumen, angle: AngleDegrees)
     assuming that the flux of <flux> is distributed equally around
     a cone with apex angle <angle>.
 
-    Keyword parameters
-    ------------------
-    flux : value, engineer string or NumPy array
-        The luminous flux in Lux.
-    angle : value, engineer string or NumPy array
-        The apex angle of the emission cone, in degrees
-        For many LEDs, this is
+    Parameters
+    ----------
+    flux : LuminousFluxLumen
+        The luminous flux in lumens.
+    angle : AngleDegrees
+        The apex angle of the emission cone, in degrees.
 
+    Returns
+    -------
+    float
+        Luminous intensity in candela.
+
+    Examples
+    --------
     >>> autoFormat(lumen_to_candela_by_apex_angle, "25 lm", "120°")
     '7.96 cd'
     """

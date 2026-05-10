@@ -18,7 +18,17 @@ __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
 @normalize_args
 def rpm_to_Hz(rpm_value: RotationRate) -> NormalizedComputable:
     """
-    Compute the rotational speed in Hz given the rotational speed in rpm
+    Compute the rotational speed in Hz given the rotational speed in rpm.
+
+    Parameters
+    ----------
+    rpm_value : RotationRate
+        Rotational speed in rpm.
+
+    Returns
+    -------
+    NormalizedComputable
+        Rotational speed in Hz.
     """
     return rpm_value
 
@@ -26,7 +36,17 @@ def rpm_to_Hz(rpm_value: RotationRate) -> NormalizedComputable:
 @normalize_args
 def hz_to_rpm(speed: FrequencyHz) -> NormalizedComputable:
     """
-    Compute the rotational speed in rpm given the rotational speed in Hz
+    Compute the rotational speed in rpm given the rotational speed in Hz.
+
+    Parameters
+    ----------
+    speed : FrequencyHz
+        Rotational speed in Hz.
+
+    Returns
+    -------
+    NormalizedComputable
+        Rotational speed in rpm.
     """
     return speed * 60.
 
@@ -36,7 +56,17 @@ rpm_to_rps = rpm_to_Hz
 @normalize_args
 def angular_speed(speed: RotationFrequency) -> NormalizedComputable:
     """
-    Compute Ω, the angular speed of a centrifugal system
+    Compute Ω, the angular speed of a centrifugal system.
+
+    Parameters
+    ----------
+    speed : RotationFrequency
+        Rotational frequency in Hz.
+
+    Returns
+    -------
+    NormalizedComputable
+        Angular speed in rad/s.
     """
     return 2*np.pi*speed
 
@@ -44,7 +74,19 @@ def angular_speed(speed: RotationFrequency) -> NormalizedComputable:
 @normalize_args
 def rotation_linear_speed(radius: LengthMeters, speed: RotationFrequency) -> NormalizedComputable:
     """
-    Compute the linear speed at a given [radius] for a centrifugal system rotating at [speed].
+    Compute the linear speed at a given radius for a centrifugal system rotating at speed.
+
+    Parameters
+    ----------
+    radius : LengthMeters
+        Radius from the center of rotation in meters.
+    speed : RotationFrequency
+        Rotational frequency in Hz.
+
+    Returns
+    -------
+    NormalizedComputable
+        Linear speed in m/s.
     """
     return radius * angular_speed(speed)
 
@@ -52,7 +94,21 @@ def rotation_linear_speed(radius: LengthMeters, speed: RotationFrequency) -> Nor
 @normalize_args
 def centrifugal_force(radius: LengthMeters, speed: RotationFrequency, mass: MassGrams) -> NormalizedComputable:
     """
-    Compute the centrifugal force of a [mass] rotation at [speed] at radius [radius]
+    Compute the centrifugal force of a mass rotating at speed at radius.
+
+    Parameters
+    ----------
+    radius : LengthMeters
+        Radius from the center of rotation in meters.
+    speed : RotationFrequency
+        Rotational frequency in Hz.
+    mass : MassGrams
+        Mass in grams.
+
+    Returns
+    -------
+    NormalizedComputable
+        Centrifugal force in Newtons.
     """
     mass = mass / 1000.0 # mass needs to be Kilograms TODO Improve
     return mass * angular_speed(speed)**2 * radius
@@ -61,10 +117,24 @@ def centrifugal_force(radius: LengthMeters, speed: RotationFrequency, mass: Mass
 @normalize_args
 def rotating_liquid_pressure(density: DensityKgPerM3, speed: RotationFrequency, radius: LengthMeters) -> NormalizedComputable:
     """
-    Compute the pressure in a body of liquid (relative to the steady-state pressure)
+    Compute the pressure in a body of liquid (relative to the steady-state pressure).
     The calculation does not include gravity.
 
-    Also see https://www.youtube.com/watch?v=kIH7wEq3H-M
-    Also see https://www.physicsforums.com/threads/pressure-of-a-rotating-bucket-of-liquid.38112/
+    Also see https://www.youtube.com/watch?v=kIH7wEq3H-M.
+    Also see https://www.physicsforums.com/threads/pressure-of-a-rotating-bucket-of-liquid.38112/.
+
+    Parameters
+    ----------
+    density : DensityKgPerM3
+        Density of the liquid in kg/m³.
+    speed : RotationFrequency
+        Rotational frequency in Hz.
+    radius : LengthMeters
+        Radius from the center of rotation in meters.
+
+    Returns
+    -------
+    NormalizedComputable
+        Pressure in Pascals.
     """
     return  density * angular_speed(speed)**2 * radius**2

@@ -36,10 +36,15 @@ def larmor_frequency(b0: MagneticFieldTesla, nucleus_larmor_frequency=NucleusLar
 
     Parameters
     ----------
-    b0 : float or str
-        Magnetic field strength in Tesla
+    b0 : MagneticFieldTesla
+        Magnetic field strength in Tesla.
     nucleus_larmor_frequency : float, optional
-        Larmor frequency of the nucleus in MHz/T
+        Larmor frequency of the nucleus in MHz/T.
+
+    Returns
+    -------
+    float
+        Larmor frequency in Hz.
     """
     b0 = normalize_magnetic_field(b0)
     return b0 * (nucleus_larmor_frequency * 1e6) # MHz/T -> Hz/T
