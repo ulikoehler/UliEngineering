@@ -72,7 +72,7 @@ normalize_temperature_kelvin = normalize_temperature
 
 @returns_unit("°C")
 def normalize_temperature_celsius(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
-    """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
+    """Like normalize_temperature(), but returns a value in celsius instead of Kelvin."""
     return kelvin_to_celsius(normalize_temperature(t, default_unit))
 
 

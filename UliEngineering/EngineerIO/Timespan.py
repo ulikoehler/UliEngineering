@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Timespan normalization and conversion utilities for UliEngineering
-"""
+"""Timespan normalization and conversion utilities for UliEngineering"""
 from typing import Annotated, cast
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
@@ -64,6 +62,7 @@ class EngineerTimespanIO(EngineerIO):
     _instance = None
 
     def __init__(self):
+        """Initialize the EngineerTimespanIO."""
         # Use timespan-specific configuration
         super().__init__(config=_create_timespan_config())
 

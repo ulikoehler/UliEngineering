@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-A python script to calculate E96 resistor values and do other useful things with resistors,
+"""A python script to calculate E96 resistor values and do other useful things with resistors,
 e.g. connect them in parallel and serial fashions.
 
-Originally published at techoverflow.net.
-"""
+Originally published at techoverflow.net."""
 import itertools
 import numpy as np
 from UliEngineering.EngineerIO import normalize_numeric

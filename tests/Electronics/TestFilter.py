@@ -199,13 +199,13 @@ class TestFilter(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(InductanceH)
         self.assertIsNotNone(FrequencyHz)
         self.assertIsNotNone(TimeS)
 
     def test_normalize_inductance_various_units(self):
-        """Test normalize_inductance with various unit inputs"""
+        """Test normalize_inductance with various unit inputs."""
         test_cases = [
             ("1 H", 1.0),
             ("1 mH", 1e-3),
@@ -218,7 +218,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_frequency_various_units(self):
-        """Test normalize_frequency with various unit inputs"""
+        """Test normalize_frequency with various unit inputs."""
         test_cases = [
             ("1 Hz", 1.0),
             ("1 kHz", 1e3),
@@ -231,7 +231,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_time_various_units(self):
-        """Test normalize_time with various unit inputs"""
+        """Test normalize_time with various unit inputs."""
         test_cases = [
             ("1 s", 1.0),
             ("1 ms", 1e-3),
@@ -244,7 +244,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_filter_functions_various_units(self):
-        """Test filter functions with various unit inputs"""
+        """Test filter functions with various unit inputs."""
         # Test rc_time_constant with different units
         tau1 = rc_time_constant("1 kΩ", "1 µF")
         tau2 = rc_time_constant("1000 ohm", "0.001 mF")

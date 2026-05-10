@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 """
-Utilities for JSON encoding and decoding
+Utilities for JSON encoding and decoding.
 """
 import json
 import numpy as np

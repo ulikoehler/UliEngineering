@@ -8,9 +8,7 @@ __all__ = ["BoundingBox"]
 
 
 class BoundingBox(object):
-    """
-    A 2D bounding box.
-    """
+    """A 2D bounding box."""
     def __init__(self, points):
         """
         Compute the upright 2D bounding box for a set of
@@ -49,17 +47,17 @@ class BoundingBox(object):
 
     @property
     def center(self):
-        """(x,y) center point of the bounding box"""
+        """(x,y) center point of the bounding box."""
         return (self.minx + self.width / 2, self.miny + self.height / 2)
 
     @property
     def max_dim(self):
-        """The larger dimension: max(width, height)"""
+        """The larger dimension: max(width, height)."""
         return max(self.width, self.height)
 
     @property
     def min_dim(self):
-        """The larger dimension: max(width, height)"""
+        """The smaller dimension: min(width, height)."""
         return min(self.width, self.height)
 
     def __repr__(self):

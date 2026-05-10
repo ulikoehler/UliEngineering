@@ -31,12 +31,12 @@ class TestHysteresis(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(VoltageV)
 
     def test_hysteresis_functions_various_units(self):
-        """Test hysteresis functions with various unit inputs"""
+        """Test hysteresis functions with various unit inputs."""
         # Test hysteresis_threshold_ratios with different resistance units
         ratios1 = hysteresis_threshold_ratios("1 kΩ", "1 kΩ", "1 kΩ")
         ratios2 = hysteresis_threshold_ratios("1000 ohm", "1000 ohm", "1000 ohm")

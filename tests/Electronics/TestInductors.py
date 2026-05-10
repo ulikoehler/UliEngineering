@@ -56,7 +56,7 @@ class TestInductors(unittest.TestCase):
         self.assertEqual(result, "5.00 kA/s")
 
     def test_numpy_arrays(self):
-        """Test with numpy arrays"""
+        """Test with numpy arrays."""
         inductances = np.array([1.0, 2.0, 0.5])  # H
         voltages = np.array([5.0, 4.0, 3.0])     # V
         expected_rates = np.array([5.0, 2.0, 6.0])  # A/s
@@ -149,7 +149,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(tiny_rate, expected_rate, places=15)
 
     def test_edge_cases_large_values(self):
-        """Test edge cases with large values"""
+        """Test edge cases with large values."""
         # Large inductance (power grid applications)
         large_inductance = 100   # H
         high_voltage = 10000     # V (10 kV)
@@ -296,12 +296,12 @@ class TestInductors(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(InductanceH)
         self.assertIsNotNone(VoltageV)
 
     def test_inductor_functions_various_units(self):
-        """Test inductor functions with various unit inputs"""
+        """Test inductor functions with various unit inputs."""
         # Test with different unit representations
         base_result = ideal_inductor_current_change_rate(1e-3, 5.0)  # 1mH, 5V
 

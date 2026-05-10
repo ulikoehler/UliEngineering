@@ -6,18 +6,10 @@ from typing import Dict, List, Union
 
 @dataclass
 class UnitAlias:
-    """
-    Represents a mapping of aliases to a canonical unit.
+    """Represents a mapping of aliases to a canonical unit.
     This is used for units that don't have their own conversion factor
     but are alternative names for existing units.
-
-    Attributes:
-    -----------
-    canonical : str
-        The canonical unit that these aliases map to
-    aliases : List[str]
-        List of alternative names that should map to the canonical unit
-    """
+    """ 
     canonical: str
     aliases: List[str] = field(default_factory=list)
 
@@ -39,12 +31,11 @@ class UnitAlias:
 
 @dataclass
 class UnitInfo:
-    """
-    Represents information about a unit including its canonical form,
+    """Represents information about a unit including its canonical form,
     aliases, and conversion factor.
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     canonical : str
         The canonical/standard form of the unit (e.g., 'Ω', 's', 'A')
     factor : float

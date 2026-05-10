@@ -339,6 +339,7 @@ class HaleQuerryAbsorptionModel:
     ]
 
     def __init__(self):
+        """Initialize the HaleQuerryAbsorptionModel."""
         # Extract wavelength and extinction coefficient arrays
         self._wavelengths = np.array([d.wavelength for d in self.datapoints])
         self._ext_coeffs = np.array([d.absorption_coefficient for d in self.datapoints])

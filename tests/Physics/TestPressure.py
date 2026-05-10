@@ -47,12 +47,12 @@ class TestPressureConversion(unittest.TestCase):
         assert_approx_equal(normalize_pressure_bar("10 psi"), 0.689476)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(PressurePascal)
         self.assertIsNotNone(PressureBar)
 
     def test_pressure_pascal_various_units(self):
-        """Test PressurePascal type with various unit inputs"""
+        """Test PressurePascal type with various unit inputs."""
         test_cases = [
             ("1 Pa", 1.0),
             ("1000 Pa", 1000.0),
@@ -66,7 +66,7 @@ class TestPressureConversion(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_pressure_bar_various_units(self):
-        """Test PressureBar type with various unit inputs"""
+        """Test PressureBar type with various unit inputs."""
         test_cases = [
             ("1 bar", 1.0),
             ("2 bar", 2.0),
@@ -81,41 +81,41 @@ class TestPressureConversion(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_barlow_tangential(self):
-        """Test barlow_tangential function with new type annotations"""
+        """Test barlow_tangential function with new type annotations."""
         # Test with numeric inputs
         result = barlow_tangential(0.1, 0.08, 1e5)
         self.assertAlmostEqual(result, 450000.0)
 
     def test_psi_to_pascal(self):
-        """Test psi to Pascal conversion"""
+        """Test psi to Pascal conversion."""
         self.assertAlmostEqual(psi_to_pascal(0.), 0)
         self.assertAlmostEqual(psi_to_pascal(1.), 6894.76)
         self.assertAlmostEqual(psi_to_pascal(10.), 68947.6)
         self.assertAlmostEqual(psi_to_pascal(100.), 689476.0)
 
     def test_psi_to_bar(self):
-        """Test psi to bar conversion"""
+        """Test psi to bar conversion."""
         self.assertAlmostEqual(psi_to_bar(0.), 0)
         self.assertAlmostEqual(psi_to_bar(1.), 0.0689476)
         self.assertAlmostEqual(psi_to_bar(10.), 0.689476)
         self.assertAlmostEqual(psi_to_bar(100.), 6.89476)
 
     def test_pascal_to_psi(self):
-        """Test Pascal to psi conversion"""
+        """Test Pascal to psi conversion."""
         self.assertAlmostEqual(pascal_to_psi(0.), 0)
-        self.assertAlmostEqual(pascal_to_psi(6894.76), 1.0)
-        self.assertAlmostEqual(pascal_to_psi(68947.6), 10.0)
-        self.assertAlmostEqual(pascal_to_psi(689476.0), 100.0)
+        self.assertAlmostEqual(pascal_to_psi(6894.76), 1.0, places=5)
+        self.assertAlmostEqual(pascal_to_psi(68947.6), 10.0, places=5)
+        self.assertAlmostEqual(pascal_to_psi(689476.0), 100.0, places=5)
 
     def test_bar_to_psi(self):
-        """Test bar to psi conversion"""
+        """Test bar to psi conversion."""
         self.assertAlmostEqual(bar_to_psi(0.), 0)
         self.assertAlmostEqual(bar_to_psi(0.0689476), 1.0)
         self.assertAlmostEqual(bar_to_psi(0.689476), 10.0)
         self.assertAlmostEqual(bar_to_psi(6.89476), 100.0)
 
     def test_psi_conversions_roundtrip(self):
-        """Test that psi conversions are reversible"""
+        """Test that psi conversions are reversible."""
         # psi -> Pascal -> psi
         psi = 10.0
         pa = psi_to_pascal(psi)

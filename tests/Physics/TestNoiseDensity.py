@@ -44,7 +44,7 @@ class TestNoiseDensity(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_noise_density_various_units(self):
-        """Test noise density functions with various unit inputs"""
+        """Test noise density functions with various unit inputs."""
         # Test with different voltage units
         n1 = actual_noise("100 µV", "100 Hz")
         n2 = actual_noise("0.0001 V", "100 Hz")

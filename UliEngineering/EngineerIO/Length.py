@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for length
-"""
+"""Utilities for length."""
 from typing import Annotated
 
 import scipy.constants
@@ -18,7 +16,7 @@ __all__ = ["normalize_length", "convert_length_to_meters", "convert_length_to_un
 
 def _length_unit_infos():
     """
-    Returns a list of UnitInfo objects for length units
+    Returns a list of UnitInfo objects for length units.
     """
     return [
         # Base meter unit
@@ -44,7 +42,7 @@ def _length_unit_infos():
 
 def _default_unit_prefix_map_length():
     """
-    Returns the default unit prefix map for length calculations (includes c and d prefixes)
+    Returns the default unit prefix map for length calculations (includes c and d prefixes).
     """
     return {
         'y': -24, 'z': -21, 'a': -18, 'f': -15, 'p': -12,
@@ -56,7 +54,7 @@ def _default_unit_prefix_map_length():
 
 def _create_length_config():
     """
-    Create a custom EngineerIOConfiguration for length units with extended SI prefixes
+    Create a custom EngineerIOConfiguration for length units with extended SI prefixes.
     """
     config = EngineerIOConfiguration.default()
     return EngineerIOConfiguration(
@@ -73,13 +71,14 @@ class EngineerLengthIO(EngineerIO):
     _instance = None
 
     def __init__(self):
+        """Initialize the EngineerLengthIO."""
         # Use length-specific configuration
         super().__init__(config=_create_length_config())
 
     @classmethod
     def instance(cls):
         """
-        Get the singleton instance of EngineerLengthIO
+        Get the singleton instance of EngineerLengthIO.
         """
         if cls._instance is None:
             cls._instance = cls()

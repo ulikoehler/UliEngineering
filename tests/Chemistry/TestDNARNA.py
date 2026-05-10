@@ -217,7 +217,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_grams_various_units(self):
-        """Test normalize_grams with various unit inputs"""
+        """Test normalize_grams with various unit inputs."""
         test_cases = [
             ("1 g", 1.0),
             ("1 mg", 1e-3),

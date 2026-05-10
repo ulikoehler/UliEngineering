@@ -336,7 +336,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
             assert_approx_equal(functor(high_value), functor(low_value), significant=6)
 
     def test_resistor_around_value_monotonicity(self):
-        """Test that distances increase monotonically as values get further apart"""
+        """Test that distances increase monotonically as values get further apart."""
         functor = ResistorAroundValueCostFunctor(1000.0)
 
         # Test increasing sequence of values above target

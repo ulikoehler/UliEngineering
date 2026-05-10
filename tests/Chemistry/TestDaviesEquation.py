@@ -12,28 +12,28 @@ import numpy as np
 
 class TestDaviesEquation(unittest.TestCase):
     def test_debye_huckel_A_parameter_default(self):
-        """Test Debye-Hückel A parameter at 25°C in water"""
+        """Test Debye-Hückel A parameter at 25°C in water.""""
         A = debye_huckel_A_parameter()
         self.assertAlmostEqual(A, 0.511, places=3)
 
     def test_debye_huckel_A_parameter_custom_temp(self):
-        """Test Debye-Hückel A parameter at different temperature"""
+        """Test Debye-Hückel A parameter at different temperature."""
         A = debye_huckel_A_parameter(T=300.0)
         self.assertAlmostEqual(A, 0.506, places=3)
 
     def test_davies_log_activity_coefficient_scalar(self):
-        """Test Davies equation for log activity coefficient with scalar input"""
+        """Test Davies equation for log activity coefficient with scalar input."""
         log_gamma = davies_log_activity_coefficient(z=1, I=0.1)
         self.assertIsInstance(log_gamma, float)
 
     def test_davies_log_activity_coefficient_array(self):
-        """Test Davies equation for log activity coefficient with array input"""
+        """Test Davies equation for log activity coefficient with array input."""
         I = np.array([0.01, 0.1, 0.5])
         log_gamma = davies_log_activity_coefficient(z=1, I=I)
         self.assertEqual(len(log_gamma), 3)
 
     def test_davies_activity_coefficient_scalar(self):
-        """Test Davies equation for activity coefficient with scalar input"""
+        """Test Davies equation for activity coefficient with scalar input."""
         gamma = davies_activity_coefficient(z=1, I=0.1)
         self.assertIsInstance(gamma, float)
         self.assertLess(gamma, 1.0)  # Activity coefficient should be < 1 for ions

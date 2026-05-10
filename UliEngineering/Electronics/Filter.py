@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Electronic filter and time constant utilities
+Electronic filter and time constant utilities.
 """
 from typing import Annotated
 

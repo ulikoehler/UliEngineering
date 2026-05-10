@@ -53,7 +53,7 @@ class TestPREN(unittest.TestCase):
         self.assertGreater(result, 20)  # 316 should have PREN > 20
 
     def test_pren_w_from_composition(self):
-        """Test PREN with tungsten using common steel composition"""
+        """Test PREN with tungsten using common steel composition."""
         comp = COMMON_STEEL_COMPOSITIONS["AlloyC276"]
         result = pren_w(Cr=comp["Cr"], Mo=comp["Mo"], N=comp["N"], W=comp["W"])
         self.assertIsInstance(result, float)

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Default values and configurations for the EngineerIO library.
-"""
+"""Default values and configurations for the EngineerIO library."""
 from toolz import functoolz
 from typing import Callable, Dict, List, Tuple, Union
 from UliEngineering.EngineerIO.UnitInfo import UnitAlias, UnitInfo

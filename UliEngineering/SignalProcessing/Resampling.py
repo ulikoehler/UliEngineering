@@ -99,7 +99,6 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     -------
     A LinSpace() (acts like a numpy array but doesn't consume any memory)
     that represents the new timespace
-    news
     """
     if len(t) == 0:
         raise ValueError("Empty time array given - can not perform any resampling")

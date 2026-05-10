@@ -83,6 +83,7 @@ class EngineerVolumeIO(EngineerIO):
     _instance = None
 
     def __init__(self):
+        """Initialize the EngineerVolumeIO."""
         # Use volume-specific configuration
         super().__init__(config=_create_volume_config())
 

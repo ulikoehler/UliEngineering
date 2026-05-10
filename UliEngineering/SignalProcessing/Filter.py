@@ -42,11 +42,11 @@ class NotComputedException(Exception):
 
 
 class FilterUnstableError(Exception):
-    """The generated filter is numerically unstable and must not be used"""
+    """The generated filter is numerically unstable and must not be used."""
 
 
 class FilterInvalidError(Exception):
-    """The generated filter is numerically unstable and must not be used"""
+    """The generated filter is numerically unstable and must not be used."""
 
 def _normalize_frequencies(freqs):
     # Normalize freqs: Allow [1.0] instead of 1.0
@@ -75,11 +75,13 @@ def _check_filter_type(btype, freqs):
 
 class SignalFilter:
     """
+    
+    
     High-level abstraction of a digital signal filter.
     """
     def __init__(self, samplerate, freqs, btype="lowpass"):
         """
-        Initialize a new filter
+        Initialize a new filter.
 
         Keyword arguments:
             samplerate: The sampling rate
@@ -104,7 +106,7 @@ class SignalFilter:
 
     def _filtfreq(self, f):
         """
-        Normalize frequencies with respect to the sampling rate
+        Normalize frequencies with respect to the sampling rate.
         """
         if isinstance(f, numbers.Number):
             return f / (0.5 * self.samplerate)
@@ -122,7 +124,7 @@ class SignalFilter:
 
     def iir(self, order, ftype="butter", rp=0.01, rs=100.0):
         """
-        Generate filter coefficients for an arbitrary IIR filter
+        Generate filter coefficients for an arbitrary IIR filter.
 
         Returns the current instance so it can be chained inline
         """
@@ -206,14 +208,10 @@ class SignalFilter:
 
 
 class ChainedFilter:
-    """
-    Chained filter object that applies a number of filters in series.
+    """Chained filter object that applies a number of filters in series.
     This can be used to deal with numerically unstable filters.
-
     filtfilt is used to avoid phase issues by repeated application.
-
-    Filters can be added to the end of the chain via +=
-    """
+    Filters can be added to the end of the chain via +=."""
     def __init__(self, filters, repeat=1):
         "The first filter in the filters list is applied first"
         if isinstance(filters, SignalFilter):
@@ -241,8 +239,8 @@ class ChainedFilter:
     @property
     def samplerate(self):
         """
-        Get the samplerate of the filter set or raise
-        This property is required for changing the samplerate of nested chained filters.
+        Get the samplerate of the filter set or raise.
+        This property is required for changing the sampling rate of nested chained filters.
         """
         if not self.filters:
             raise ValueError("Can't obtain sample rate of an empty filter set")
@@ -252,7 +250,7 @@ class ChainedFilter:
         return list(samplerates)[0]
 
     def __iadd__(self, f):
-        "Add a filter to the end of the chain"
+        "Add a filter to the end of the chain."
         self.filters.append(f)
         return self
 
@@ -273,22 +271,19 @@ class ChainedFilter:
         return all(f.is_stable() for f in self.filters)
 
     def as_samplerate(self, samplerate):
-        """Return"""
+        """Return a copy of the filter with a different samplerate."""
         # Do not copy if the filter already has the right samplerate
         if all(filt.samplerate == samplerate for filt in self.filters):
             return self
-        # Return new filter with new samplerate
-        return ChainedFilter([filt.as_samplerate(samplerate) for filt in self.filters])
 
 
 class SumFilter(ChainedFilter):
-    """
-    Chained filter object that applies a number of filters and sums the results.
+    """Chained filter object that applies a number of filters and sums the results.
     This can be used to combine multiple bandpass filters for multiband-bandpass.
     Filters can be added via +=.
     """
     def __init__(self, filters):
-        "The first filter in the filters list is applied first"
+        """The first filter in the filters list is applied first."""
         if isinstance(filters, SignalFilter):
             filters = [filters]
         self.filters = filters
@@ -298,13 +293,10 @@ class SumFilter(ChainedFilter):
 
 
 class FilterBank:
-    """
-    Represents a set of filters that can be accessed with arbitrary samplerates.
+    """Represents a set of filters that can be accessed with arbitrary samplerates.
     Utility class that eases the use of filters for multiple sampling rates.
-
     One FilterBank instance represents a set of filters at a specific samplerate
-    that can be easily recomputed with a different samplerate.
-    """
+    that can be easily recomputed with a different samplerate."""
     def __init__(self, samplerate):
         """
         Initialize a new FilterBank() with a specified standard sampling rate.

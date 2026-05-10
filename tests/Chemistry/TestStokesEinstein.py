@@ -15,36 +15,36 @@ from UliEngineering.Chemistry.StokesEinstein import (
 
 class TestStokesEinstein(unittest.TestCase):
     def test_stokes_einstein_diffusion_scalar(self):
-        """Test Stokes-Einstein diffusion coefficient with scalar input"""
+        """Test Stokes-Einstein diffusion coefficient with scalar input."""
         D = stokes_einstein_diffusion(r=1e-9, eta=WATER_VISCOSITY_25C, T=298.15)
         self.assertIsInstance(D, float)
         self.assertGreater(D, 0)
 
     def test_stokes_einstein_radius_scalar(self):
-        """Test Stokes-Einstein radius with scalar input"""
-        r = stokes_einstein_radius(D=1e-9, eta=WATER_VISCOSITY_25C, T=298.15)
+        """Test Stokes-Einstein radius with scalar input."""
+        r = stokes_einstein_radius(D=1e-12, eta=WATER_VISCOSITY_25C, T=298.15)
         self.assertIsInstance(r, float)
         self.assertGreater(r, 0)
 
     def test_stokes_einstein_viscosity_scalar(self):
-        """Test Stokes-Einstein viscosity with scalar input"""
+        """Test Stokes-Einstein viscosity with scalar input."""
         eta = stokes_einstein_viscosity(D=1e-9, r=1e-9, T=298.15)
         self.assertIsInstance(eta, float)
         self.assertGreater(eta, 0)
 
     def test_stokes_einstein_rotational_diffusion_scalar(self):
-        """Test Stokes-Einstein rotational diffusion with scalar input"""
+        """Test Stokes-Einstein rotational diffusion with scalar input."""
         Dr = stokes_einstein_rotational_diffusion(r=1e-9, eta=WATER_VISCOSITY_25C, T=298.15)
         self.assertIsInstance(Dr, float)
         self.assertGreater(Dr, 0)
 
     def test_water_viscosity_constant(self):
-        """Test that water viscosity constant exists"""
+        """Test that water viscosity constant exists."""
         self.assertIsInstance(WATER_VISCOSITY_25C, float)
         self.assertAlmostEqual(WATER_VISCOSITY_25C, 8.9e-4, places=6)
 
     def test_inverse_relationship(self):
-        """Test inverse relationship between diffusion and radius"""
+        """Test inverse relationship between diffusion and radius."""
         r_orig = 1e-9
         D = stokes_einstein_diffusion(r=r_orig, eta=WATER_VISCOSITY_25C, T=298.15)
         r_back = stokes_einstein_radius(D=D, eta=WATER_VISCOSITY_25C, T=298.15)
@@ -53,13 +53,13 @@ class TestStokesEinstein(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(RadiusM)
         self.assertIsNotNone(ViscosityPaS)
         self.assertIsNotNone(DiffusionCoefficientM2S)
 
     def test_normalize_radius_various_units(self):
-        """Test normalize_radius with various unit inputs"""
+        """Test normalize_radius with various unit inputs."""
         test_cases = [
             ("1 m", 1.0),
             ("1 nm", 1e-9),

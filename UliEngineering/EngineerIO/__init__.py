@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-A python script to normalize a wide variety of value notations
+A python script to normalize a wide variety of value notations.
 
 Examples of valid notations include:
     1,234.56kΩ
@@ -44,11 +44,11 @@ __all__ = ["EngineerIO",
 class EngineerIO(object):
     _instance: Optional["EngineerIO"] = None
     """
-    Default instance, used for global functions. Initialized on first use
+    Default instance, used for global functions. Initialized on first use.
     """
     def __init__(self, config: Optional[EngineerIOConfiguration] = None):
         """
-        Initialize a new EngineerIO instance with configuration object
+        Initialize a new EngineerIO instance with configuration object.
 
         Parameters:
         -----------
@@ -137,11 +137,13 @@ class EngineerIO(object):
         Generate a regex pattern to match unit aliases at the end of strings.
         Returns pattern string in format: "(alias1|alias2|...)$"
         """
+
         if not self.unit_aliases:
             return None
 
         # Sort aliases by length (longest first) to ensure proper matching
         # e.g. "square millimeters" should match before "millimeters"
+
         sorted_aliases = sorted(self.unit_aliases.keys(), key=len, reverse=True)
 
         # Escape each alias for regex and join with |

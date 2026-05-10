@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for area
-"""
+"""Utilities for area"""
 from typing import Annotated
 
 from numpy import ndarray
@@ -83,6 +81,7 @@ class EngineerAreaIO(EngineerIO):
     _instance = None
 
     def __init__(self):
+        """Initialize the EngineerAreaIO."""
         # Use area-specific configuration
         super().__init__(config=_create_area_config())
 

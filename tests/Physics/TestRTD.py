@@ -141,11 +141,11 @@ class TestRTDPolynomialComputation(unittest.TestCase):
         ptx_temperature(1234.0, 1155.1)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
 
     def test_normalize_resistance_various_units(self):
-        """Test normalize_resistance with various unit inputs"""
+        """Test normalize_resistance with various unit inputs."""
         test_cases = [
             ("1 Ω", 1.0),
             ("1 Ohm", 1.0),

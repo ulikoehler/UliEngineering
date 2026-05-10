@@ -663,7 +663,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         assert_allclose(calculated_energies, expected_energies, rtol=1e-10)
 
     def test_edge_cases_small_values(self):
-        """Test edge cases with very small values"""
+        """Test edge cases with very small values."""
         # Very small capacitance
         small_capacitance = 1e-12  # pF
         voltage_change = 1.0       # V
@@ -673,7 +673,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(energy, 0.5e-12, places=15)  # 0.5 pJ
 
     def test_edge_cases_large_values(self):
-        """Test edge cases with large values"""
+        """Test edge cases with large values."""
         # Large capacitance and voltage
         large_capacitance = 100  # F (supercapacitor range)
         high_voltage = 1000     # V
@@ -683,7 +683,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(energy, 50e6, places=5)  # 50 MJ
 
     def test_symmetry_properties(self):
-        """Test symmetry properties of the function"""
+        """Test symmetry properties of the function."""
         capacitance = 1.0  # F
         voltage_a = 3.0   # V
         voltage_b = 7.0   # V
@@ -695,7 +695,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(energy_a_to_b, -energy_b_to_a, places=12)
 
     def test_additivity_property(self):
-        """Test that energy is additive for multi-step charging"""
+        """Test that energy is additive for multi-step charging."""
         capacitance = 1.0  # F
         voltage_start = 1.0  # V
         voltage_middle = 4.0 # V

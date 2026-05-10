@@ -100,7 +100,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_ion_diameter_various_units(self):
-        """Test normalize_ion_diameter with various unit inputs"""
+        """Test normalize_ion_diameter with various unit inputs."""
         test_cases = [
             ("1 nm", 1.0),
             ("1 pm", 1e-3),

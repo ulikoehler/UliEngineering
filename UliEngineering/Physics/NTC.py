@@ -49,6 +49,19 @@ def ntc_resistances(r25: ResistanceOhm, b25, t0=-40, t1=85, resolution=0.1):
     """
     Compute the resistances over a temperature range with a given resolution.
 
+    Parameters
+    ----------
+    r25 : float or EngineerIO string
+        The NTC resistance at 25°C, sometimes also called "nominal resistance"
+    b25: float or EngineerIO string
+        The NTC b-constant (e.g. b25/50, b25/85 or b25/100)
+    t0 : temperature
+        The start temperature
+    t1 : temperature
+        The end temperature
+    resolution : temperature
+        The resolution of the temperature range
+
     Returns
     =======
     A (temperatures, values) tuple

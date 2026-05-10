@@ -765,7 +765,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_shear_rate_various_units(self):
-        """Test normalize_shear_rate with various unit inputs"""
+        """Test normalize_shear_rate with various unit inputs."""
         test_cases = [
             ("1 s⁻¹", 1.0),
             ("1/s", 1.0),

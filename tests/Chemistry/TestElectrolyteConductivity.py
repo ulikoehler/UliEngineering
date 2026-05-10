@@ -48,14 +48,14 @@ class TestElectrolyteConductivity(unittest.TestCase):
         self.assertAlmostEqual(kappa, 1.2, places=6)
 
     def test_inverse_conductivity_resistivity(self):
-        """Test inverse relationship between conductivity and resistivity"""
+        """Test inverse relationship between conductivity and resistivity."""
         kappa = 10.0
         rho = electrolyte_resistivity(kappa)
         kappa_calc = 1.0 / rho
         self.assertAlmostEqual(kappa, kappa_calc, places=10)
 
     def test_inverse_molar_conductivity(self):
-        """Test inverse relationship between molar conductivity functions"""
+        """Test inverse relationship between molar conductivity functions."""
         Lambda_m = 100.0
         c = 0.1
         kappa = electrolyte_conductivity_from_molar(Lambda_m, c)
@@ -65,7 +65,7 @@ class TestElectrolyteConductivity(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(MolarConductivitySCm2Mol)
         self.assertIsNotNone(ConcentrationMolar)
         self.assertIsNotNone(ConductivitySM)
@@ -73,7 +73,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(CellConstantPerMeter)
 
     def test_normalize_molar_conductivity_various_units(self):
-        """Test normalize_molar_conductivity with various unit inputs"""
+        """Test normalize_molar_conductivity with various unit inputs."""
         test_cases = [
             ("1 S·cm²/mol", 1.0),
             ("1 S·m²/mol", 10000.0),
@@ -84,7 +84,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),

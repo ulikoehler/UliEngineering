@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Units, quantities and related
-"""
+"""Units, quantities and related"""
 from collections import namedtuple
 import functools
 
@@ -22,8 +20,7 @@ m = Unit("m")
 g = Unit("g")
 
 class UnannotatedReturnValueError(Exception):
-    """
-    Raised if the automatic unit finder cannot find
+    """Raised if the automatic unit finder cannot find
     the appropriate function annotation that
     tells an auto-formatting function which unit is being used.
 
@@ -32,31 +29,27 @@ class UnannotatedReturnValueError(Exception):
 
 
 class InvalidUnitInContextException(ValueError):
-    """
-    Raised if the unit might not be a globally
+    """Raised if the unit might not be a globally
     unknown or invalid unit, but in the given context
     it can't be used
     """
 
 
 class UnknownUnitInContextException(ValueError):
-    """
-    Raised if the unit is not known in this context,
-    e.g. if "A" is used as a unit of length.
+    """Raised if the unit is not known in this context.
 
     The message should contain information on what type of
     quantity (e.g. length) is accepted.
     """
 
 class InvalidUnitCombinationException(ValueError):
-    """
-    Raised if the units involved in an operation can't be
+    """Raised if the units involved in an operation can't be
     combined in the way requested, for example if the
+    user tries to add a voltage and a current.
     """
 
 def find_returned_unit(fn):
-    """
-    Given a function that is assumed to return a quantity
+    """Given a function that is assumed to return a quantity
     and annotated with the corresponding unit, determines
     which is the unit returned by the function
     """

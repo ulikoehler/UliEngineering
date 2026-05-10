@@ -24,16 +24,17 @@ __Interval = collections.namedtuple("Interval", ["start", "end"])
 
 
 class IntInterval(__Interval):
-    """
-    Tuple-like type that represents an integral interval (or a slice) inside an
+    """Tuple-like type that represents an integral interval (or a slice) inside an
     integral space.
+    """ 
+    # This class:
+        # - allows easy ofsetting by e.g. adding a scalar and
+    # other convenience operations.
+        # - overrides __call__() for convenient slicing.
+        # - override __len__() for size determination
+        # - override __mul__ in a center-preserving manner
 
-    This class:
-        - allows easy ofsetting by e.g. adding a scalar and
-    other convenience operations.
-        - overrides __call__() for convenient slicing.
-        - override __len__() for size determination
-        - override __mul__ in a center-preserving manner
+    """
 
     Multiplying preserves the center of the interval (might be offset by one
         due to integral properties).
@@ -388,8 +389,7 @@ def random_slice(arr, size):
 
 
 class GeneratorCounter:
-    """
-    Utility class that provides zero-overhead counting for generators.
+    """Utility class that provides zero-overhead counting for generators.
     At any point in time, len(...) of this class provides the number of
     items iterated so far
 

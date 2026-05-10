@@ -46,14 +46,21 @@ def thermistor_temperature(resistance: ResistanceOhm, beta: NormalizableArgument
     """
     Calculate the temperature of a NTC thermistor using the Beta parameter model.
 
-    Parameters:
-    - resistance: The measured resistance of the thermistor in Ohms, for which to calculate the temperature.
-    - beta: The Beta constant of the thermistor.
-    - R0: The resistance of the thermistor at reference temperature T0 (default is 10kOhms).
-    - T0: The reference temperature in Celsius (default is 25°C).
+    Parameters
+    ----------
+    resistance : ResistanceOhm
+        The measured resistance of the thermistor in Ohms, for which to calculate the temperature.
+    beta : NormalizableArgument
+        The Beta constant of the thermistor.
+    R0 : ResistanceOhm
+        The resistance of the thermistor at reference temperature T0 (default is 10kOhms).
+    T0 : NormalizableArgument
+        The reference temperature in Celsius (default is 25°C).
 
-    Returns:
-    - Temperature in degrees.
+    Returns
+    -------
+    float
+        Temperature in degrees.
     """
     R0 = normalize_resistance(R0) if isinstance(R0, str) else R0
     T0 = normalize_temperature_kelvin(T0)

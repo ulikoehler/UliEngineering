@@ -12,9 +12,7 @@ __all__ = [
 ]
 
 class OnlineUnwrapper:
-
-    """
-    An online unwrapper that can process samples one by one or in chunks.
+    """An online unwrapper that can process samples one by one or in chunks.
     Maintains state between calls.
     """
     def __init__(self, wrap_value=2**20, threshold=None):

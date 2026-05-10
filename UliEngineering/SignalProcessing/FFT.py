@@ -31,23 +31,14 @@ except ModuleNotFoundError:
 FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
 
 class FFT(object):
-    """
-    FFT result wrapper that allows convenient access to various functions
-    """
+    """FFT result wrapper that allows convenient access to various functions"""
     def __init__(self, frequencies, amplitudes, angles=None):
         self.frequencies = frequencies
         self.amplitudes = amplitudes
         self.angles = angles
 
     def __getitem__(self, arg):
-        """
-        Select a frequency range:
-        fft[1.0:100.0] selects the 1.0 ... 100.0 Hz frequency range
-        fft[1.0:] selects everything from 1.0 Hz to the max frequency
-        fft[:100.0] selects everything from 1.0 Hz to the max frequency
-
-        fft[10.0] selects (frequency, value, angle) of
-        """
+        """Select a frequency range: fft[1.0:100.0] selects the 1.0 ... 100.0 Hz frequency range. fft[1.0:] selects everything from 1.0 Hz to the max frequency. fft[:100.0] selects everything from 1.0 Hz to the max frequency. fft[10.0] selects (frequency, value, angle) of."""
         if isinstance(arg, slice) or isinstance(arg, tuple):
             if isinstance(arg, slice):
                 start, end = arg.start, arg.stop
@@ -480,7 +471,7 @@ def fft_cut_dc_artifacts(fft, return_idx=False):
 
 
 def fft_cut_dc_artifacts_multi(fx, fys, return_idx=False):
-    """Remove FFT artifacts for a list of numpy arrays. Resizes all arrays to the same size"""
+    """Remove FFT artifacts for a list of numpy arrays. Resizes all arrays to the same size."""
     idx = max(fft_cut_dc_artifacts(FFT(None, fy), return_idx=True) for fy in fys)
     if return_idx:
         return idx

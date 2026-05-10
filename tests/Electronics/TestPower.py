@@ -25,13 +25,13 @@ class TestPower(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(PowerW)
         self.assertIsNotNone(CurrentA)
         self.assertIsNotNone(VoltageV)
 
     def test_power_functions_various_units(self):
-        """Test power functions with various unit inputs"""
+        """Test power functions with various unit inputs."""
         # Test current_by_power with different unit representations
         i1 = current_by_power("25 W", "100 V")
         i2 = current_by_power("25000 mW", "100000 mV")
