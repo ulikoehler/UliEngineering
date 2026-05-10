@@ -4,7 +4,8 @@
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO import normalize_numeric
 
 from ._normalize import normalize_with_known_units
 
@@ -26,8 +27,7 @@ RotationFrequency = FrequencyHz  # Alias for consistency
 RotationRate = Annotated[NormalizedComputable, normalize_rpm]
 
 @returns_unit("s")
-@normalize_numeric_args
-def frequency_to_period(frequency):
+def frequency_to_period(frequency: NormalizableArgument):
     """
     Compute the period associated with a frequency.
 
@@ -37,11 +37,11 @@ def frequency_to_period(frequency):
         The frequency in Hz
 
     """
+    frequency = normalize_numeric(frequency) if isinstance(frequency, str) else frequency
     return 1./frequency
 
 @returns_unit("Hz")
-@normalize_numeric_args
-def period_to_frequency(period):
+def period_to_frequency(period: NormalizableArgument):
     """
     Compute the frequency associated with a period.
 
@@ -50,4 +50,5 @@ def period_to_frequency(period):
     period : number or Engineer string or NumPy array-like
         The period in seconds
     """
+    period = normalize_numeric(period) if isinstance(period, str) else period
     return 1./period
