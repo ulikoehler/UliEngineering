@@ -5,10 +5,13 @@ Utilities regarding comparator / opamp hysteresis
 
 For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a.pdf
 """
+from typing import Annotated
+
 from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Electronics.Resistors import parallel_resistors
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio
+from .Diode import normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV
 
 __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_threshold_ratios_opendrain",
@@ -18,8 +21,7 @@ __all__ = ["hysteresis_threshold_ratios", "hysteresis_threshold_voltages",
            "hysteresis_resistor"]
 
 
-@normalize_numeric_args
-def hysteresis_threshold_ratios(r1, r2, rh):
+def hysteresis_threshold_ratios(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
     Calculates hysteresis threshold factors for push-pull comparators
 
@@ -45,6 +47,9 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    rh = normalize_resistance(rh) if isinstance(rh, str) else rh
     # Compute r1, r2 in parallel with rh
     r1rh = parallel_resistors(r1, rh)
     r2rh = parallel_resistors(r2, rh)
@@ -53,7 +58,7 @@ def hysteresis_threshold_ratios(r1, r2, rh):
     thu = voltage_divider_ratio(r1rh, r2)
     return (thl, thu)
 
-def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
+def hysteresis_threshold_ratios_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
     Same as hysteresis_threshold_ratios(), but for open-drain comparators.
     In contrast to hysteresis_threshold_ratios(), ignores rh for the upper
@@ -68,6 +73,9 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
     rh : float or EngineerIO string
         The hysteresis resistor of the divider
     """
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    rh = normalize_resistance(rh) if isinstance(rh, str) else rh
     # Compute r1, r2 in parallel with rh
     r2rh = parallel_resistors(r2, rh)
     # Compute thresholds
@@ -77,15 +85,14 @@ def hysteresis_threshold_ratios_opendrain(r1, r2, rh):
 
 def __hysteresis_threshold_voltages(r1, r2, rh, vcc, fn):
     """Internal push-pull & open-drain common code"""
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
-    vcc = normalize_numeric(vcc)
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    rh = normalize_resistance(rh) if isinstance(rh, str) else rh
+    vcc = normalize_voltage(vcc) if isinstance(vcc, str) else vcc
     thl, thu = fn(r1, r2, rh)
     return (thl * vcc, thu * vcc)
 
-@normalize_numeric_args
-def hysteresis_threshold_voltages(r1, r2, rh, vcc):
+def hysteresis_threshold_voltages(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm, vcc: VoltageV):
     """
     Same as hysteresis_threshold_ratios(), but calculates actual
     voltages instead of ratios.
@@ -107,8 +114,7 @@ def hysteresis_threshold_voltages(r1, r2, rh, vcc):
     return __hysteresis_threshold_voltages(
         r1, r2, rh, vcc, hysteresis_threshold_ratios)
 
-@normalize_numeric_args
-def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
+def hysteresis_threshold_voltages_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm, vcc: VoltageV):
     """
     Same as hysteresis_threshold_ratios_opendrain(), but calculates actual
     voltages instead of ratios.
@@ -132,17 +138,16 @@ def hysteresis_threshold_voltages_opendrain(r1, r2, rh, vcc):
 
 def __hysteresis_threshold_factors(r1, r2, rh, fn):
     """Internal push-pull & open-drain common code"""
-    r1 = normalize_numeric(r1)
-    r2 = normalize_numeric(r2)
-    rh = normalize_numeric(rh)
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    rh = normalize_resistance(rh) if isinstance(rh, str) else rh
     # Compute thresholds
     thl, thu = fn(r1, r2, rh)
     # Compute factors
     thnom = voltage_divider_ratio(r1, r2)
     return (thl / thnom, thu / thnom)
 
-@normalize_numeric_args
-def hysteresis_threshold_factors(r1, r2, rh):
+def hysteresis_threshold_factors(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
     Same as hysteresis_threshold_ratios(), but calculates the
     factor (nominal R1+R2 division ratio / actual ratio) for
@@ -164,8 +169,7 @@ def hysteresis_threshold_factors(r1, r2, rh):
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios)
 
-@normalize_numeric_args
-def hysteresis_threshold_factors_opendrain(r1, r2, rh):
+def hysteresis_threshold_factors_opendrain(r1: ResistanceOhm, r2: ResistanceOhm, rh: ResistanceOhm):
     """
     Same as hysteresis_threshold_ratios_opendrain(), but calculates the
     factor (nominal R1+R2 division ratio / actual ratio) for
@@ -187,8 +191,7 @@ def hysteresis_threshold_factors_opendrain(r1, r2, rh):
     return __hysteresis_threshold_factors(
         r1, r2, rh, hysteresis_threshold_ratios_opendrain)
 
-@normalize_numeric_args
-def hysteresis_resistor(r1, r2, fh=0.05):
+def hysteresis_resistor(r1: ResistanceOhm, r2: ResistanceOhm, fh=0.05):
     """
     Computes the hysteresis resistor Rh for a given
     R1, R2 divider network and a given deviation factor.
@@ -214,6 +217,8 @@ def hysteresis_resistor(r1, r2, fh=0.05):
         The deviation factor (e.g. 0.05 for 5% one-sided hysteresis
          deviation from the nominal r1/r2 value)
     """
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
     # NOTE: We compute rh for the lower threshold only
     thnom = voltage_divider_ratio(r1, r2)
     ratio_target = thnom * (1. - fh)
