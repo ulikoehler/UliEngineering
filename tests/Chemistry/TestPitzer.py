@@ -25,7 +25,7 @@ class TestPitzer(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_pitzer_C_gamma_scalar(self):
-        """Test Pitzer C^γ with scalar input"""
+        """Test Pitzer C^γ with scalar input."""
         result = pitzer_C_gamma(C_phi=0.00127)
         self.assertIsInstance(result, float)
         self.assertAlmostEqual(result, 1.5 * 0.00127, places=6)
@@ -53,7 +53,7 @@ class TestPitzer(unittest.TestCase):
         self.assertIn("KCl", PITZER_PARAMETERS)
 
     def test_pitzer_activity_coefficient_with_parameters(self):
-        """Test activity coefficient using common electrolyte parameters"""
+        """Test activity coefficient using common electrolyte parameters."""
         beta0, beta1, C_phi = PITZER_PARAMETERS["NaCl"]
         gamma = pitzer_activity_coefficient(m=1.0, z_plus=1, z_minus=1, nu_plus=1, nu_minus=1,
                                             beta0=beta0, beta1=beta1, C_phi=C_phi)
@@ -67,7 +67,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(MolalityMolKg)
 
     def test_normalize_molality_various_units(self):
-        """Test normalize_molality with various unit inputs"""
+        """Test normalize_molality with various unit inputs."""
         test_cases = [
             ("1 mol/kg", 1.0),
             ("1 m", 1.0),

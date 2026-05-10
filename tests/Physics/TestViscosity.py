@@ -753,7 +753,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_velocity_various_units(self):
-        """Test normalize_velocity with various unit inputs"""
+        """Test normalize_velocity with various unit inputs."""
         test_cases = [
             ("1 m/s", 1.0),
             ("1 km/h", 0.2777777777777778),

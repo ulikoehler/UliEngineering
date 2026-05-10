@@ -77,7 +77,7 @@ class TestEngineerTimespanIO(unittest.TestCase):
         self.assertIsNotNone(TimespanSeconds)
 
     def test_timespan_type_various_units(self):
-        """Test TimespanSeconds type with various unit inputs"""
+        """Test TimespanSeconds type with various unit inputs."""
         test_cases = [
             ("1 s", 1.0),
             ("1 min", 60.0),
@@ -93,7 +93,7 @@ class TestEngineerTimespanIO(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_timespan_function(self):
-        """Test the normalize_timespan function directly"""
+        """Test the normalize_timespan function directly."""
         assert_approx_equal(normalize_timespan("1 s"), 1.0)
         assert_approx_equal(normalize_timespan("1 min"), 60.0)
         assert_approx_equal(normalize_timespan("1 h"), 3600.0)

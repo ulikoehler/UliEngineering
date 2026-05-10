@@ -27,7 +27,7 @@ class TestHendersonHasselbalch(unittest.TestCase):
         self.assertAlmostEqual(ratio, 1.0, places=6)
 
     def test_henderson_hasselbalch_pKa_scalar(self):
-        """Test Henderson-Hasselbalch pKa calculation with scalar input"""
+        """Test Henderson-Hasselbalch pKa calculation with scalar input."""
         pKa = henderson_hasselbalch_pKa(pH=4.75, base_concentration=0.1, acid_concentration=0.1)
         self.assertIsInstance(pKa, float)
         self.assertAlmostEqual(pKa, 4.75, places=6)

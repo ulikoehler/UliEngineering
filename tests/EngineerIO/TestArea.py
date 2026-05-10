@@ -773,7 +773,7 @@ class TestUnitAliases(unittest.TestCase):
         self.assertIsNotNone(AreaSquareMeters)
 
     def test_area_type_various_units(self):
-        """Test AreaSquareMeters type with various unit inputs"""
+        """Test AreaSquareMeters type with various unit inputs."""
         test_cases = [
             ("1 m²", 1.0),
             ("1 m^2", 1.0),

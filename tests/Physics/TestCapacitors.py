@@ -465,7 +465,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
                     self.assertAlmostEqual(calculated_energy, energy, places=12)
 
     def test_energy_verification_with_starting_voltage(self):
-        """Test energy calculations with starting voltages match expected results"""
+        """Test energy calculations with starting voltages match expected results."""
         capacitance = 100e-6  # 100 µF
         start_voltage = 2.0   # V
         end_voltage = 8.0     # V
@@ -1039,7 +1039,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_current_various_units(self):
-        """Test normalize_current with various unit inputs"""
+        """Test normalize_current with various unit inputs."""
         test_cases = [
             ("1 A", 1.0),
             ("1 mA", 1e-3),
@@ -1052,7 +1052,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_energy_various_units(self):
-        """Test normalize_energy with various unit inputs"""
+        """Test normalize_energy with various unit inputs."""
         test_cases = [
             ("1 J", 1.0),
             ("1 mJ", 1e-3),
@@ -1065,7 +1065,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_permittivity_various_units(self):
-        """Test normalize_permittivity with various unit inputs"""
+        """Test normalize_permittivity with various unit inputs."""
         test_cases = [
             ("1 F/m", 1.0),
             ("1 F/meter", 1.0),
@@ -1077,7 +1077,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_capacitor_functions_various_units(self):
-        """Test capacitor functions with various unit inputs"""
+        """Test capacitor functions with various unit inputs."""
         # Test capacitor_energy with different units
         e1 = capacitor_energy("1 F", "1 V")
         e2 = capacitor_energy("1000 mF", "1000 mV")

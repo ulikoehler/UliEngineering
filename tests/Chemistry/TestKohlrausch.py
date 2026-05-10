@@ -45,7 +45,7 @@ class TestKohlrausch(unittest.TestCase):
         self.assertIn("Cl-", LIMITING_MOLAR_CONDUCTIVITIES)
 
     def test_inverse_kohlrausch_equation(self):
-        """Test inverse relationship between molar conductivity functions"""
+        """Test inverse relationship between molar conductivity functions."""
         Lambda_0 = 126.45
         c = 0.1
         K = 10.0

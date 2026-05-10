@@ -52,7 +52,7 @@ class TestStoichiometry(unittest.TestCase):
         self.assertAlmostEqual(result, 18.015, places=2)
 
     def test_grams_to_moles_scalar(self):
-        """Test grams to moles conversion"""
+        """Test grams to moles conversion."""
         result = grams_to_moles(grams=18.015, molar_mass=18.015)
         self.assertAlmostEqual(result, 1.0, places=5)
 
@@ -62,7 +62,7 @@ class TestStoichiometry(unittest.TestCase):
         self.assertIsInstance(result, float)
 
     def test_molarity_from_moles_volume_scalar(self):
-        """Test molarity calculation"""
+        """Test molarity calculation."""
         result = molarity_from_moles_volume(moles=1.0, volume_liters=1.0)
         self.assertAlmostEqual(result, 1.0, places=5)
 
@@ -106,7 +106,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_grams_various_units(self):
-        """Test normalize_grams with various unit inputs"""
+        """Test normalize_grams with various unit inputs."""
         test_cases = [
             ("1 g", 1.0),
             ("1 mg", 1e-3),

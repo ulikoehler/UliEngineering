@@ -16,7 +16,7 @@ class TestPREN(unittest.TestCase):
         self.assertAlmostEqual(result, expected, places=6)
 
     def test_pren_zero_molybdenum(self):
-        """Test PREN with zero molybdenum"""
+        """Test PREN with zero molybdenum."""
         result = pren(Cr=18.0, Mo=0.0, N=0.05)
         expected = 18.0 + 16.0 * 0.05
         self.assertAlmostEqual(result, expected, places=6)

@@ -73,7 +73,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_viscosity_various_units(self):
-        """Test normalize_viscosity with various unit inputs"""
+        """Test normalize_viscosity with various unit inputs."""
         test_cases = [
             ("1 Pa·s", 1.0),
             ("1 Pa*s", 1.0),
@@ -86,7 +86,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_diffusion_coefficient_various_units(self):
-        """Test normalize_diffusion_coefficient with various unit inputs"""
+        """Test normalize_diffusion_coefficient with various unit inputs."""
         test_cases = [
             ("1 m²/s", 1.0),
             ("1 cm²/s", 1e-4),
@@ -98,7 +98,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_stokes_einstein_functions_various_units(self):
-        """Test Stokes-Einstein functions with various unit inputs"""
+        """Test Stokes-Einstein functions with various unit inputs."""
         # Test with different radius units
         D1 = stokes_einstein_diffusion("1 nm", eta=WATER_VISCOSITY_25C, T=298.15)
         D2 = stokes_einstein_diffusion("1000 pm", eta=WATER_VISCOSITY_25C, T=298.15)

@@ -20,7 +20,7 @@ class TestDebyeHuckel(unittest.TestCase):
         self.assertIsInstance(log_gamma, float)
 
     def test_debye_huckel_limiting_law_array(self):
-        """Test Debye-Hückel limiting law with array input"""
+        """Test Debye-Hückel limiting law with array input."""
         I = np.array([0.001, 0.01, 0.1])
         log_gamma = debye_huckel_limiting_law(z_plus=1, z_minus=1, I=I)
         self.assertEqual(len(log_gamma), 3)
@@ -58,7 +58,7 @@ class TestDebyeHuckel(unittest.TestCase):
         self.assertAlmostEqual(gamma, 10.0 ** log_gamma, places=10)
 
     def test_consistency_extended(self):
-        """Test consistency between log and linear forms for extended equation"""
+        """Test consistency between log and linear forms for extended equation."""
         z = 1
         I = 0.1
         a = 0.3
@@ -73,7 +73,7 @@ class TestDebyeHuckel(unittest.TestCase):
         self.assertGreater(length, 0)
 
     def test_debye_length_array(self):
-        """Test Debye length with array input"""
+        """Test Debye length with array input."""
         I = np.array([0.01, 0.1, 1.0])
         length = debye_length(I=I)
         self.assertEqual(len(length), 3)

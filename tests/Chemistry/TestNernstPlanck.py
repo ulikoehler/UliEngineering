@@ -15,12 +15,12 @@ from UliEngineering.Chemistry.NernstPlanck import (
 
 class TestNernstPlanck(unittest.TestCase):
     def test_nernst_planck_flux_scalar(self):
-        """Test Nernst-Planck flux with scalar input"""
+        """Test Nernst-Planck flux with scalar input."""
         J = nernst_planck_flux(D=1e-9, dC_dx=1.0, z=1, C=1.0, dPhi_dx=1000.0)
         self.assertIsInstance(J, float)
 
     def test_nernst_planck_diffusion_flux_scalar(self):
-        """Test Nernst-Planck diffusion flux with scalar input"""
+        """Test Nernst-Planck diffusion flux with scalar input."""
         J = nernst_planck_diffusion_flux(D=1e-9, dC_dx=1.0)
         self.assertIsInstance(J, float)
         self.assertLess(J, 0)
@@ -37,13 +37,13 @@ class TestNernstPlanck(unittest.TestCase):
         self.assertGreater(D, 0)
 
     def test_ionic_mobility_from_diffusion_scalar(self):
-        """Test ionic mobility from diffusion with scalar input"""
+        """Test ionic mobility from diffusion with scalar input."""
         u = ionic_mobility_from_diffusion(D=1e-9, z=1)
         self.assertIsInstance(u, float)
         self.assertGreater(u, 0)
 
     def test_inverse_einstein_relation(self):
-        """Test inverse relationship between Einstein relation functions"""
+        """Test inverse relationship between Einstein relation functions."""
         D_orig = 1e-9
         u = ionic_mobility_from_diffusion(D_orig, 1)
         D_back = einstein_relation_diffusion_mobility(u)

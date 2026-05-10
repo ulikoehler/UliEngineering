@@ -38,7 +38,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_mosfet_functions_various_units(self):
-        """Test MOSFET functions with various unit inputs"""
+        """Test MOSFET functions with various unit inputs."""
         # Test with different unit representations
         p1 = mosfet_gate_charge_losses("39 nC", "10 V", "300 kHz")
         p2 = mosfet_gate_charge_losses("0.039 µC", "10000 mV", "0.3 MHz")

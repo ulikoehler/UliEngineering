@@ -100,7 +100,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_ion_exchange_functions_various_units(self):
-        """Test ion exchange functions with various unit inputs"""
+        """Test ion exchange functions with various unit inputs."""
         # Test with different concentration units
         K1 = selectivity_coefficient("0.1 M", "0.1 M", "0.05 M", "0.1 M")
         K2 = selectivity_coefficient("100 mM", "100 mM", "50 mM", "100 mM")

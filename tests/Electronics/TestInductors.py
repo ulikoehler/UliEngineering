@@ -208,7 +208,7 @@ class TestInductors(unittest.TestCase):
         self.assertLess(large_inductance_rate, rate)
 
     def test_switching_transient_calculations(self):
-        """Test calculations relevant to switching transients"""
+        """Test calculations relevant to switching transients."""
         # MOSFET gate driver circuit
         gate_inductance = 10e-9  # 10 nH (parasitic inductance)
         gate_voltage = 12.0      # V

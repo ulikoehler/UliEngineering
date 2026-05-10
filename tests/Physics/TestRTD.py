@@ -163,7 +163,7 @@ class TestRTDPolynomialComputation(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_rtd_functions_various_units(self):
-        """Test RTD functions with various resistance units"""
+        """Test RTD functions with various resistance units."""
         # Test pt1000_resistance with different resistance units
         r1 = pt1000_resistance("0 °C")
         r2 = pt1000_resistance("0 °C")

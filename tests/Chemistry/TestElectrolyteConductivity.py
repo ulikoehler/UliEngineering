@@ -137,7 +137,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_electrolyte_functions_various_units(self):
-        """Test electrolyte conductivity functions with various unit inputs"""
+        """Test electrolyte conductivity functions with various unit inputs."""
         # Test with different concentration units
         k1 = electrolyte_conductivity_from_molar("100 S·cm²/mol", "0.1 M")
         k2 = electrolyte_conductivity_from_molar("100 S·cm²/mol", "100 mM")

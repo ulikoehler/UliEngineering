@@ -24,7 +24,7 @@ class TestLangmuir(unittest.TestCase):
         self.assertLess(theta, 1)
 
     def test_langmuir_adsorbed_amount_scalar(self):
-        """Test Langmuir adsorbed amount with scalar input"""
+        """Test Langmuir adsorbed amount with scalar input."""
         q = langmuir_adsorbed_amount(q_max=1.0, K=1.0, C=0.5)
         self.assertIsInstance(q, float)
         self.assertGreater(q, 0)

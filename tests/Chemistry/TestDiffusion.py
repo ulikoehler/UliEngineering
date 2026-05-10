@@ -40,7 +40,7 @@ class TestFickLaws(unittest.TestCase):
         self.assertIsInstance(conc, float)
 
     def test_fick_thin_film_concentration_scalar(self):
-        """Test thin film concentration with scalar input"""
+        """Test thin film concentration with scalar input."""
         conc = fick_thin_film_concentration(M=1.0, D=1e-9, t=3600.0, x=0.001)
         self.assertIsInstance(conc, float)
 
@@ -51,7 +51,7 @@ class TestFickLaws(unittest.TestCase):
         self.assertGreater(D, 0)
 
     def test_inverse_diffusion_distance_time(self):
-        """Test inverse relationship between distance and time"""
+        """Test inverse relationship between distance and time."""
         D = 1e-9
         t = 3600.0
         x = fick_diffusion_distance(D, t)

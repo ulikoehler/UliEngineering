@@ -88,7 +88,7 @@ class TestRotationOther(unittest.TestCase):
         self.assertIsNotNone(DensityKgPerM3)
 
     def test_rotation_functions_with_type_annotations(self):
-        """Test rotation functions work with various unit inputs using new type annotations"""
+        """Test rotation functions work with various unit inputs using new type annotations."""
         # Test rpm_to_Hz with various inputs
         self.assertAlmostEqual(rpm_to_Hz("60 rpm"), 1.)
         self.assertAlmostEqual(rpm_to_Hz("120 rpm"), 2.)
