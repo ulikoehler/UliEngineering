@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-File utilities
-"""
+"""File utilities."""
 from toolz import functoolz
 import operator
 import os

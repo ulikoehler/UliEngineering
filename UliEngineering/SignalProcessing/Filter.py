@@ -38,7 +38,7 @@ __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
 
 
 class NotComputedException(Exception):
-    "The filter has not been computed yet"
+    """The filter has not been computed yet."""
 
 
 class FilterUnstableError(Exception):
@@ -257,6 +257,7 @@ class ChainedFilter:
         return self
 
     def __len__(self):
+        """Return the number of filters in the chain."""
         return len(self.filters)
 
     def __call__(self, d):
@@ -316,6 +317,7 @@ class FilterBank:
         self.filters[key] = value.as_samplerate(self.samplerate)
 
     def __getitem__(self, key):
+        """Get a filter from the filter bank by key."""
         return self.filters[key]
 
     def __contains__(self, key):

@@ -5,9 +5,11 @@ import numpy as np
 
 __all__ = ["BoundingBox"]
 
+
+
 class BoundingBox(object):
     """
-    A 2D bounding box
+    A 2D bounding box.
     """
     def __init__(self, points):
         """
@@ -61,5 +63,6 @@ class BoundingBox(object):
         return min(self.width, self.height)
 
     def __repr__(self):
+        """Return string representation of the bounding box."""
         return "BoundingBox({}, {}, {}, {})".format(
             self.minx, self.maxx, self.miny, self.maxy)

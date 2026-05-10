@@ -19,9 +19,9 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
 class RelativePermittivity():
     """
-    Default values for relative permittivity of different materials
-    
-    Best to choose a specific value for your material, since these vary widely
+    Default values for relative permittivity of different materials.
+
+    Best to choose a specific value for your material, since these vary widely.
     """
     FR4 = 4.8 # Varies widely (approximate range: 3.9..4.8)
 

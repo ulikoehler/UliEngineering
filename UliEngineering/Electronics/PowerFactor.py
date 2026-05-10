@@ -21,7 +21,7 @@ def power_factor_by_phase_angle(angle="10°", unit="degrees"):
     angle : number or Engineer string
         The phase angle between current and voltage.
     unit : "degrees", "deg" or "radians", "rad", "radiant"
-        The unit to interpret angle as
+        The unit to interpret angle as.
     """
     angle = normalize_numeric(angle)
     if unit in ["degrees", "deg"]:

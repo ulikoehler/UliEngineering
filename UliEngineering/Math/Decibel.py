@@ -29,7 +29,7 @@ def _safe_log10(v):
 
 
 class dBFactor:
-    """Pre-set values for factors"""
+    """Pre-set values for factors."""
     Power = 10.
     Field = 20.
 
@@ -38,12 +38,13 @@ class dBFactor:
 def ratio_to_dB(ratio, factor=dBFactor.Field):
     """
     Convert a given ratio to a decibel value.
-    For power quantities, set factor=dBFactor.Power
-    For field quantities, set factor=dBFactor.Field
 
-    dB = [factor] * log10(ratio)
+    For power quantities, set factor=dBFactor.Power.
+    For field quantities, set factor=dBFactor.Field.
 
-    Returns -np.inf for negative values
+    dB = [factor] * log10(ratio).
+
+    Returns -np.inf for negative values.
     """
     return factor * _safe_log10(ratio)
 

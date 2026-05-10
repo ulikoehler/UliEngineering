@@ -12,6 +12,7 @@ __all__ = [
 ]
 
 class OnlineUnwrapper:
+
     """
     An online unwrapper that can process samples one by one or in chunks.
     Maintains state between calls.

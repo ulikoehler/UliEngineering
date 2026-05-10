@@ -23,8 +23,8 @@ class UnitAlias:
     
     def matches_alias(self, alias_string: str) -> bool:
         """
-        Check if the given string is one of the aliases
-        
+        Check if the given string is one of the aliases.
+
         Parameters:
         -----------
         alias_string : str
@@ -58,8 +58,8 @@ class UnitInfo:
     
     def matches(self, unit_string: str) -> bool:
         """
-        Check if the given unit string matches this unit (canonical or alias)
-        
+        Check if the given unit string matches this unit (canonical or alias).
+
         Parameters:
         -----------
         unit_string : str
@@ -74,8 +74,8 @@ class UnitInfo:
     
     def get_all_representations(self) -> List[str]:
         """
-        Get all possible representations of this unit (canonical + aliases)
-        
+        Get all possible representations of this unit (canonical + aliases).
+
         Returns:
         --------
         List[str]

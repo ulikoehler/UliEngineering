@@ -41,22 +41,25 @@ def capacitor_rc_time_constant(capacitance, resistance):
 
     Parameters
     ----------
-    capacitance: The capacitance in farads.
-    resistance: The resistance in ohms.
+    capacitance : number or Engineer string
+        The capacitance in farads.
+    resistance : number or Engineer string
+        The resistance in ohms.
 
     Returns
     -------
-    The time constant in seconds.
+    float
+        The time constant in seconds.
     """
     return capacitance * resistance
 
 @returns_unit("h")
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.):
     """
-    Estimate the lifetime of a capacitor given
-    * Its working temperature (i.e. internal temperature)
-    * Its nominal lifetime at a nominal lifetime temperature
-    * Coefficient A: Temperature difference for which to assume a halving of the lifetime
+    Estimate the lifetime of a capacitor given its working temperature,
+    its nominal lifetime at a nominal lifetime temperature, and coefficient A.
+
+    Coefficient A is the temperature difference for which to assume a halving of the lifetime.
 
     Based on:
     https://www.illinoiscapacitor.com/tech-center/life-calculators.aspx
@@ -111,13 +114,21 @@ def capacitor_constant_current_discharge_time(capacitance, initial_voltage, curr
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
     
-    Keyword arguments:
-    - capacitance: The capacitance of the capacitor in farads.
-    - voltage: The initial voltage of the capacitor in volts.
-    - current: The charge current in amperes.
-    - target_voltage: The target voltage to discharge the capacitor to.
-    
-    Returns: The time in seconds.
+    Keyword Arguments
+    -----------------
+    capacitance : number or Engineer string
+        The capacitance of the capacitor in farads.
+    voltage : number or Engineer string
+        The initial voltage of the capacitor in volts.
+    current : number or Engineer string
+        The charge current in amperes.
+    target_voltage : number or Engineer string, optional
+        The target voltage to discharge the capacitor to.
+
+    Returns
+    -------
+    float
+        The time in seconds.
     """
     # Use charge function with "negative current"
     # Since from the view of the charge function, its generating a negative
@@ -131,13 +142,21 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
     
-    Keyword arguments:
-    - capacitance: The capacitance of the capacitor in farads.
-    - initial_voltage: The initial voltage of the capacitor in volts.
-    - current: The discharge current in amperes.
-    - target_voltage: The target voltage to discharge the capacitor to.
-    
-    Returns: The time in seconds.
+    Keyword Arguments
+    -----------------
+    capacitance : number or Engineer string
+        The capacitance of the capacitor in farads.
+    initial_voltage : number or Engineer string
+        The initial voltage of the capacitor in volts.
+    current : number or Engineer string
+        The discharge current in amperes.
+    target_voltage : number or Engineer string, optional
+        The target voltage to discharge the capacitor to.
+
+    Returns
+    -------
+    float
+        The time in seconds.
     """
     return capacitance * (initial_voltage - target_voltage) / current
 

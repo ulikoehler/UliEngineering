@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utility to calculate inductors
-"""
+"""Utility to calculate inductors."""
 
 __all__ = ["ideal_inductor_current_change_rate"]
 

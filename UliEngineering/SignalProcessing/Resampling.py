@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for selecting and finding specific attributes in datasets
-"""
+"""Utilities for selecting and finding specific attributes in datasets."""
 import math
 import functools
 import numpy as np

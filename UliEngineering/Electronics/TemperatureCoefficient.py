@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for computing temperature coefficients
-and their effects
-"""
+"""Utilities for computing temperature coefficients and their effects."""
 from collections.abc import Iterable
 
 import numpy as np
@@ -45,7 +42,8 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
 
     Returns
     -------
-    A unit-less value representing the value of the component at the given temperature 
+    float
+        A unit-less value representing the value of the component at the given temperature. 
     """
     # Note: MIL-STD-202: R-T characteristic: (R2 - R1)/ (R1 * (t2 - t1))
     # Normalize temperatures separately (they need special handling)
@@ -107,11 +105,13 @@ def value_range_over_temperature(nominal, coefficient:str|float="100ppm", tolera
         Numbers are interpreted as °C, strings are automatically converted.
     significant_digits : integer
         How many significant digits to show in the resulting value strings
+
     Returns
     -------
-    A ValueRange() instance containing strings with the correct unit, if any.
-    Example: ValueRange("99.5 Ω", "100.5 Ω")
-    Use .min and .max to get the min/max value
+    ValueRange
+        A ValueRange() instance containing strings with the correct unit, if any.
+        Example: ValueRange("99.5 Ω", "100.5 Ω")
+        Use .min and .max to get the min/max value
     """
     # NOTE: These will be in Kelvin after normalization!
     tmin = normalize_temperature(tmin)

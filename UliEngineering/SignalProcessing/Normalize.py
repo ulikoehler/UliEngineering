@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Functions for normalizing signals
-"""
+"""Functions for normalizing signals."""
 import numpy as np
 from collections import namedtuple
 

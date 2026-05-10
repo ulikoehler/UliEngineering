@@ -67,6 +67,7 @@ class IntInterval(__Interval):
 
 
     def __radd__(self, i):
+        """Add an integer to the interval (reverse add)."""
         if not isinstance(i, numbers.Integral):
             raise TypeError("Can only add integers to an interval")
         return IntInterval(self.start + i, self.end + i)
@@ -80,6 +81,7 @@ class IntInterval(__Interval):
         return IntInterval(i - self.start, i - self.end)
 
     def __sub__(self, i):
+        """Subtract an integer from the interval."""
         if not isinstance(i, numbers.Integral):
             raise TypeError("Can only substract integers from an interval")
         return IntInterval(self.start - i, self.end - i)
@@ -92,6 +94,7 @@ class IntInterval(__Interval):
         return tuple([arr[self.start:self.end] for arr in args])
 
     def __len__(self):
+        """Return the size of the interval."""
         return self.end - self.start
 
     def __mul__(self, n):
@@ -112,6 +115,7 @@ class IntInterval(__Interval):
         return IntInterval(self.start - toAdd, self.end + toAdd)
 
     def __rmul__(self, n):
+        """Multiply the interval by a number (reverse multiply)."""
         return self.__mul__(n)
 
     def __truediv__(self, n):
@@ -396,6 +400,7 @@ class GeneratorCounter:
         print(len(mycountinggen))
     """
     def __init__(self, gen):
+        """Initialize the generator counter."""
         self.gen = gen
         self.count = 0
         self.iter = iter(self.gen)

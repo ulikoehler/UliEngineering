@@ -1,19 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Comprehensive stoichiometry module.
-
-Provides functions for:
-- Parsing chemical formulas and extracting element compositions
-- Computing molecular weights from formulas
-- Balancing chemical equations
-- Mole/mass/volume conversions
-- Limiting reagent analysis
-- Percent composition
-- Empirical and molecular formula determination
-- Dilution and solution preparation
-- Molarity / Molality conversions
-"""
+"""Comprehensive stoichiometry module."""
 import re
 import numpy as np
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit

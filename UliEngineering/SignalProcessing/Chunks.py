@@ -123,7 +123,7 @@ class IndexChunkGenerator(ChunkGenerator):
         Initialize an index chunk generator for a given array.
         The index_generator(i) function must return a slice() object.
 
-        Keyword arguments:
+        Keyword Arguments
         ------------------
         func : function-like or None
             The chunk postprocessor function. Applied to every chunk.

@@ -13,7 +13,7 @@ __all__ = ["g_to_ms2", "ms2_to_g", "centrifugal_acceleration", "centrifuge_radiu
 @normalize_numeric_args
 def g_to_ms2(g):
     """
-    Compute the acceleration in m/s² given the acceleration in g
+    Compute the acceleration in m/s² given the acceleration in g.
     """
     return g * g0
 
@@ -21,7 +21,7 @@ def g_to_ms2(g):
 @normalize_numeric_args
 def ms2_to_g(ms2):
     """
-    Compute the acceleration in g given the acceleration in m/s²
+    Compute the acceleration in g given the acceleration in m/s².
     """
     return ms2 / g0
 
@@ -44,7 +44,8 @@ def centrifugal_acceleration(radius, speed):
 
     Returns
     -------
-    The acceleration in m/s²
+    float
+        The acceleration in m/s²
     """
     return 4 * np.pi**2 * radius * speed**2
 
@@ -68,6 +69,7 @@ def centrifuge_radius(acceleration, speed):
 
     Returns
     -------
-    The radius of the centrifuge in m
+    float
+        The radius of the centrifuge in m
     """
     return acceleration / (4 * np.pi**2 * speed**2)

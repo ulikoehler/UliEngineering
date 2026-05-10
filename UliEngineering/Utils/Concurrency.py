@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Concurrency utilities
-"""
+"""Concurrency utilities."""
 import concurrent.futures
 import os
 import queue

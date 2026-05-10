@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""
-Thread information
-"""
+"""Thread information."""
 from collections import namedtuple
 
 __all__ = ["ThreadParameters", "threads"]
 
 class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter", "core_diameter"])):
+
     """
     Parameters
     ==========

@@ -57,6 +57,7 @@ def pren(Cr, Mo, N):
     float
         PREN value (dimensionless). Higher values indicate better pitting resistance.
         Values > 32 are considered seawater-resistant.
+
     """
     return Cr + 3.3 * Mo + 16.0 * N
 
@@ -84,5 +85,6 @@ def pren_w(Cr, Mo, N, W):
     -------
     float
         PRE_NW value (dimensionless).
+
     """
     return Cr + 3.3 * (Mo + 0.5 * W) + 16.0 * N

@@ -12,11 +12,11 @@ __all__ = ["WindowFunctor", "create_window",
 
 def create_window(size, window_id="blackman", param=None):
     """
-    Create a new window numpy array
+    Create a new window numpy array.
+
     param is only used for some windows.
 
-    window_id can also be a function/functor which
-    is used to create the window.
+    window_id can also be a function/functor which is used to create the window.
 
     >>> create_window("blackman", 500)
     ... # NumPy array of size 500

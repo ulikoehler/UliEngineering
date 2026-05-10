@@ -126,6 +126,7 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
 
 
 class LinRange:
+
     """
     Combines the properties of numpy.linspace and Python3's range by providing
     a floating-point capable lazy range generator that does not keep the entire array

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilities for iterables
-"""
+"""Utilities for iterables."""
 import collections
 import collections.abc
 

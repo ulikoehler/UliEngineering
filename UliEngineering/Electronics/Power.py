@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilities to compute the power of a device
-"""
+"""Utilities to compute the power of a device."""
 
 __all__ = ["current_by_power", "power_by_current_and_voltage"]
 

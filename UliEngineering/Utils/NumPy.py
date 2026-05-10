@@ -26,7 +26,7 @@ def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max
     ----------
     arr : array_like
         The original array
-    val
+    val : any
         The new value to insert
     index : int > 0
         The index to insert value at

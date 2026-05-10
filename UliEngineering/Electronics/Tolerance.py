@@ -12,7 +12,6 @@ def value_range_over_tolerance(nominal, tolerance="1 %") -> ValueRange:
     """
     Compute the minimum and maximum value of a given component,
     given its nominal value and its tolerance.
-
     """
     normalized = normalize(nominal)
     nominal, unit = normalized.value, normalized.unit

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Utilities for propagation speed and propagation delay calculations."""
 import scipy.constants
 import numpy as np

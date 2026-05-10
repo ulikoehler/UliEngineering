@@ -13,7 +13,7 @@ def split_nth(s, delimiter=",", nth=1):
 
     Using this function is ONLY recommended (because it's ONLY faster)
     if the string contains MANY delimiters (multiple hundreds).
-    Else, use s.split(delimiter)[n - 1]
+    Else, use s.split(delimiter)[n - 1].
 
     Throws ValueError if the nth delimiter has not been found.
     """

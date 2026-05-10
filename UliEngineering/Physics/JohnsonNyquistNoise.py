@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Johnson Nyquist noise utilities for both voltage and current noise
+"""Johnson Nyquist noise utilities for both voltage and current noise.
 
-# Usage example
+Usage example:
 >>> from UliEngineering.Physics.JohnsonNyquistNoise import *
 >>> from UliEngineering.EngineerIO import autoFormat
 >>> print(autoFormat(johnson_nyquist_noise_current, "20 MΩ", 1000, "20 °C"))

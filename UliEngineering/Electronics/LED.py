@@ -1,15 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for LED calculations
-
-Usage example:
->>> from UliEngineering.Electronics.OpAmp import summing_amplifier_noninv
->>> # Example: sum 2.5V and 0.5V with a total sum-referred gain of 1.0
->>> formatValue(summing_amplifier_noninv(
-        "2.5V", "500mV", "1kΩ", "1kΩ", "1kΩ", "1kΩ"), "V"))
-
-"""
+"""Utilities for LED calculations."""
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.Exceptions import OperationImpossibleException
@@ -24,6 +15,7 @@ __all__ = [
 ]
 
 class LEDForwardVoltages:
+
     """
     Common LED forward voltage values.
     Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm

@@ -21,6 +21,7 @@ class AutoDeleteTempfileGenerator:
     you don't want to use the files any more.
     """
     def __init__(self):
+        """Initialize the AutoDeleteTempfileGenerator."""
         self.tempdirs = []
         self.tempfiles = []
 

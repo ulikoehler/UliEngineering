@@ -1,6 +1,4 @@
-"""
-Utilities for concentration
-"""
+"""Utilities for concentration."""
 from numpy import ndarray
 import numpy as np
 

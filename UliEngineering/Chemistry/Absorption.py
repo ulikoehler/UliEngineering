@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Absorption calculations for optical materials."""
 from dataclasses import dataclass
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
@@ -137,12 +139,14 @@ class HaleQuerryAbsorptionData:
     absorption_coefficient: float = None # Initialized from extinction_coefficient
 
     def __post_init__(self):
+        """Compute absorption_coefficient from extinction_coefficient and wavelength."""
         # Compute absorption_coefficient using the extinction_coefficient and wavelength
         self.absorption_coefficient = absorption_coefficient_from_extinction_coefficient(
             self.extinction_coefficient, self.wavelength
         )
 
 class HaleQuerryAbsorptionModel:
+
     """
     Hale-Querry absorption model for water. Valid from 200nm to 200μm.
     Interpolated using a piecewise linear function.

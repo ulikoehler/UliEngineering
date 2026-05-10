@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-A python script to calculate E96 resistor values
-... and do other useful things with resistors, e.g.
-connect them in parallel and serial fashions.
+A python script to calculate E96 resistor values and do other useful things with resistors,
+e.g. connect them in parallel and serial fashions.
 
-Originally published at techoverflow.net
-
+Originally published at techoverflow.net.
 """
 import itertools
 import numpy as np
@@ -95,8 +93,7 @@ e192 = tuple(ESeries.E192)
 @returns_unit("A")
 def current_through_resistor(resistor, voltage):
     """
-    Compute the current that flows through a resistor
-    using ohms law.
+    Compute the current that flows through a resistor using ohms law.
 
     Parameters
     ----------
@@ -111,8 +108,7 @@ def current_through_resistor(resistor, voltage):
 @returns_unit("V")
 def voltage_across_resistor(resistor, current):
     """
-    Compute the voltage that is dropped across
-    a resistor using ohms law.
+    Compute the voltage that is dropped across a resistor using ohms law.
 
     Parameters
     ----------
@@ -127,9 +123,8 @@ def voltage_across_resistor(resistor, current):
 @returns_unit("W")
 def power_dissipated_in_resistor_by_current(resistor, current):
     """
-    Compute the power that is dissipated in
-    a resistor using P=I²R given
-    its resistance and the current flowing through it
+    Compute the power that is dissipated in a resistor using P=I²R given its resistance
+    and the current flowing through it.
 
     Parameters
     ----------
@@ -144,9 +139,8 @@ def power_dissipated_in_resistor_by_current(resistor, current):
 @returns_unit("W")
 def power_dissipated_in_resistor_by_voltage(resistor, voltage):
     """
-    Compute the power that is dissipated in
-    a resistor using P=VI given
-    its resistance and the current flowing through it
+    Compute the power that is dissipated in a resistor using P=VI given its resistance
+    and the current flowing through it.
 
     Parameters
     ----------
