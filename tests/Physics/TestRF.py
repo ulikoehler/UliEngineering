@@ -7,7 +7,6 @@ from UliEngineering.Physics.RF import (
     normalize_capacitance, CapacitanceFarad,
     normalize_frequency, FrequencyHz
 )
-from UliEngineering.EngineerIO import auto_format
 import unittest
 
 class TestRF(unittest.TestCase):

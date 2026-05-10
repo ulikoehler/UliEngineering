@@ -323,31 +323,26 @@ class TestUnitPrefixRegex(unittest.TestCase):
     def test_has_any_unit_prefix_with_suffix(self):
         """Test has_any_unit_prefix() with unit prefixes at the end."""
         # Test single character unit prefixes
-        has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123k")
+        has_prefix, _, remainder = self.io.has_any_unit_prefix("123k")
         self.assertTrue(has_prefix)
-        self.assertEqual(prefix_char, "k")
         self.assertEqual(remainder, "123")
 
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("456M")
-        self.assertTrue(has_prefix)
+        self.assertTsfix)
         self.assertEqual(prefix_char, "M")
-        self.assertEqual(remainder, "456")
-
+        self.assertEqual(em
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("789µ")
-        self.assertTrue(has_prefix)
+        self.assertTsfix)
         self.assertEqual(prefix_char, "µ")
-        self.assertEqual(remainder, "789")
-
+        self.assertEqual(em
         # Test micro variants
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("100μ")
-        self.assertTrue(has_prefix)
-        self.assertEqual(prefix_char, "μ")
-        self.assertEqual(remainder, "100")
+        self.assertTsfix)
+        self.assertEqual(preremain)
 
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("200u")
-        self.assertTrue(has_prefix)
-        self.assertEqual(prefix_char, "u")
-        self.assertEqual(remainder, "200")
+        self.assertTsfix)
+        self.assertEqual(preremain)
 
     def test_has_any_unit_prefix_no_suffix(self):
         """Test has_any_unit_prefix() with no unit prefix at the end"""
@@ -356,37 +351,32 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "123")
 
-        has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("456V")
+        has_prefix, _, remainder = self.io.has_any_unit_prefix("456V")
         self.assertFalse(has_prefix)
-        self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "456V")
 
-    def test_has_any_unit_prefix_middle_position(self):
-        """Test has_any_unit_prefix() with unit prefix in middle (should not match)"""
-        has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("1k23")
+    def test_has_anypx_middle_position(self):
+        """Test has_any_unit_x_charer = self.io.has_any_unit_prefix("1k23")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "1k23")
 
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("5M67")
         self.assertFalse(has_prefix)
-        self.assertEqual(prefix_char, "")
+        self.assertEr_char, "")
         self.assertEqual(remainder, "5M67")
-
-    def test_has_any_unit_prefix_empty_string(self):
+refix_empty_string(self):
         """Test has_any_unit_prefix() with empty string"""
-        has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("")
+        has_prefix, _, remainder = self.io.has_any_unit_prefix("")
         self.assertFalse(has_prefix)
-        self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "")
 
     def test_has_any_unit_prefix_all_prefixes(self):
         """Test has_any_unit_prefix() with all supported unit prefixes"""
         test_cases = [
             ("100y", "y", "100"),  # yocto
-            ("200z", "z", "200"),  # zepto
-            ("300a", "a", "300"),  # atto
-            ("400f", "f", "400"),  # femto
+            ("200z","),  # zepto
+            ("300a", "a", "30 "400"to
             ("500p", "p", "500"),  # pico
             ("600n", "n", "600"),  # nano
             ("700µ", "µ", "700"),  # micro
@@ -423,14 +413,12 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(prefix_char, "d")
         self.assertEqual(remainder, "200")
 
-    def test_has_any_unit_prefix_no_regex(self):
+    def test_has_anypx_no_regex(self):
         """Test has_any_unit_prefix() when no unit prefix regex is compiled"""
-        # Create an instance with no unit prefixes
-        config = EngineerIOConfiguration([], [], {})
+        # Create an instaceConfiguration([], [], {})
         io_no_prefixes = EngineerIO(config)
 
-        has_prefix, prefix_char, remainder = io_no_prefixes.has_any_unit_prefix("123k")
-        self.assertFalse(has_prefix)
+        has_prefix, prefix_chas_pr
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "123k")
 
@@ -441,9 +429,8 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertIsNone(io_empty.unit_prefix_suffix_regex)
 
     def test_compile_unit_prefix_suffix_regex_sorting(self):
-        """Test that unit prefixes are sorted by length (longest first) in regex"""
-        # Create a custom instance with multi-character prefixes for testing
-        custom_prefixes = {'a': -18., 'abc': -15., 'ab': -12.}
+        """Test thatpxes are sorted by length (longest first) in regex"""
+        # Create a custom ins {'a':bc': -15., 'ab': -12.}
         config = EngineerIOConfiguration([], [], custom_prefixes)
         io_custom = EngineerIO(config)
 
@@ -489,21 +476,19 @@ class TestUnitPrefixRegex(unittest.TestCase):
 
         # Test with μ (alternative micro symbol)
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("600μ")
-        self.assertTrue(has_prefix)
+        self.assertTsfi_
         self.assertEqual(prefix_char, "μ")
         self.assertEqual(remainder, "600")
 
     def test_has_any_unit_prefix_performance_improvement(self):
         """Test that the new regex-based implementation is functionally equivalent to the old one"""
-        # Create a mock of the old implementation for comparison
+        # Create a m old implementation for comparison
         def old_has_any_unit_prefix(s):
-            """Old implementation using all_suffixes for comparison"""
-            for suffix in suffix_list(s):
+            """Old implemntuffix_list(s):
                 if suffix in self.io.all_unit_prefixes:
                     remainder = s[:-len(suffix)] if len(suffix) > 0 else s
-                    return True, suffix, remainder
-            return False, "", s
-
+                     , suffix, remainder
+            return False, ""
         # Test cases that should produce identical results
         test_cases = [
             "123k", "456M", "789µ", "100", "abc", "1k23", "test",

@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
-from typing import Annotated
 
 import numpy as np
-from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
-from UliEngineering.Physics._normalize import normalize_with_known_units
 from .Diode import normalize_current, CurrentA, normalize_voltage, VoltageV
 
 __all__ = [

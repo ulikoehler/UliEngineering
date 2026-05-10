@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Utilities for LED calculations."""
-from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.Electronics.Resistors import resistor_current_by_power

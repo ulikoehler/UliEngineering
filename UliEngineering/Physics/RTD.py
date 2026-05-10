@@ -17,7 +17,6 @@ https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-te
 """
 from typing import Annotated
 
-from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius, TemperatureKelvin
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable

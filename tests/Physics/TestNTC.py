@@ -4,7 +4,7 @@ from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.NTC import (
     ntc_resistance, ntc_resistances,
     normalize_resistance, ResistanceOhm,
-    normalize_temperature, TemperatureKelvin
+    TemperatureKelvin
 )
 import unittest
 
@@ -19,7 +19,7 @@ class TestNTC(unittest.TestCase):
 
     def test_ntc_resistances(self):
         # Currently mostly test if it runs
-        ts, values = ntc_resistances("47k", "4050K")
+        _, values = ntc_resistances("47k", "4050K")
 
     def test_type_annotations_exist(self):
         """Test that the new type annotations are available"""

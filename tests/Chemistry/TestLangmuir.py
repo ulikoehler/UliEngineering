@@ -13,7 +13,6 @@ from UliEngineering.Chemistry.Langmuir import (
     normalize_langmuir_constant, LangmuirConstantLMol,
     normalize_rate_constant, RateConstantLMolS,
 )
-import numpy as np
 
 
 class TestLangmuir(unittest.TestCase):

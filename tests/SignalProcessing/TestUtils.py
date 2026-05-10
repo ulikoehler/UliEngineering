@@ -104,14 +104,14 @@ class TestOptimumPolyfit(unittest.TestCase):
     def testBasic(self):
         x = np.linspace(-100., 100., 10000)
         y = np.square(x)
-        poly, deg, score = optimum_polyfit(x, y)
+        poly, _, score = optimum_polyfit(x, y)
         self.assertLess(score, 1e-10)
         self.assertEqual(np.max(np.abs(y - poly(x))), score)
 
     def testRandom(self):
         x = np.linspace(-100., 100., 1000)
         y = np.random.random_sample(x.size)
-        poly, deg, score = optimum_polyfit(x, y)
+        poly, _, score = optimum_polyfit(x, y)
 
 
 class TestLinSpace(unittest.TestCase):

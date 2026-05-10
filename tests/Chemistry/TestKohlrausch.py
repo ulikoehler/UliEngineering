@@ -10,7 +10,6 @@ from UliEngineering.Chemistry.Kohlrausch import (
     normalize_molar_conductivity, MolarConductivitySCm2Mol,
     normalize_concentration, ConcentrationMolar,
 )
-import numpy as np
 
 
 class TestKohlrausch(unittest.TestCase):

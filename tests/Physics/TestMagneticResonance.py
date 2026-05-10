@@ -4,7 +4,7 @@ from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.MagneticResonance import (
     larmor_frequency, NucleusLarmorFrequency,
     normalize_magnetic_field, MagneticFieldTesla,
-    normalize_frequency, FrequencyHz
+    FrequencyHz
 )
 import unittest
 

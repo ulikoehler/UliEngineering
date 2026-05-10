@@ -11,7 +11,6 @@ from UliEngineering.Chemistry.Henderson import (
     normalize_concentration, ConcentrationMolar,
     normalize_molar_conductivity, MolarConductivitySM2Mol,
 )
-import numpy as np
 
 
 class TestHendersonHasselbalch(unittest.TestCase):

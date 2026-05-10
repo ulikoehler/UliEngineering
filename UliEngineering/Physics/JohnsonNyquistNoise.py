@@ -11,7 +11,7 @@ Usage example:
 from typing import Annotated
 
 from .Temperature import normalize_temperature, TemperatureKelvin
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Physics.Frequency import FrequencyHz, normalize_frequency
 from ._normalize import normalize_with_known_units

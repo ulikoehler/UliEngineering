@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # # -*- coding: utf-8 -*-
-from typing import Annotated
-
 from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.EngineerIO.Timespan import normalize_timespan, TimespanSeconds
 import numpy as np
 

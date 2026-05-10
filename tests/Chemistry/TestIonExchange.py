@@ -12,7 +12,6 @@ from UliEngineering.Chemistry.IonExchange import (
     normalize_volume, VolumeLiter,
     normalize_mass, MassGram,
 )
-import numpy as np
 
 
 class TestIonExchange(unittest.TestCase):

@@ -11,7 +11,6 @@ from UliEngineering.Chemistry.NernstPlanck import (
     normalize_concentration, ConcentrationMolM3,
     normalize_ionic_mobility, IonicMobilityM2VS,
 )
-import numpy as np
 
 
 class TestNernstPlanck(unittest.TestCase):

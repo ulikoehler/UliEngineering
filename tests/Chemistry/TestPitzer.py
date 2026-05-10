@@ -11,7 +11,6 @@ from UliEngineering.Chemistry.Pitzer import (
     PITZER_PARAMETERS,
     normalize_molality, MolalityMolKg,
 )
-import numpy as np
 
 
 class TestPitzer(unittest.TestCase):

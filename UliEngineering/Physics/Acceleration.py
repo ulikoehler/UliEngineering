@@ -3,8 +3,7 @@
 """Acceleration utilities."""
 from typing import Annotated
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.EngineerIO.Length import LengthMeters
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Physics.Frequency import FrequencyHz
 from ._normalize import normalize_with_known_units

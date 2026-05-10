@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """Utility to calculate inductors."""
 
-from typing import Annotated
-
 import numpy as np
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from .Diode import normalize_voltage, VoltageV

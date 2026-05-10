@@ -14,7 +14,6 @@ from UliEngineering.Chemistry.Diffusion import (
     normalize_concentration, ConcentrationMolM3,
     normalize_energy, EnergyJPerMol,
 )
-import numpy as np
 
 
 class TestFickLaws(unittest.TestCase):

@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
-from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Length import normalize_length
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from ..Physics._normalize import normalize_with_known_units

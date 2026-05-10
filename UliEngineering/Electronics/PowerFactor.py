@@ -2,11 +2,8 @@
 """
 Utilities to compute the power factor
 """
-from typing import Annotated
-
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import returns_unit
-from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 import numpy as np
 
 __all__ = ["power_factor_by_phase_angle"]

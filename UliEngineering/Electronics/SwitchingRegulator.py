@@ -6,7 +6,7 @@ Utilities for computing switching regulator parameters.
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from collections import namedtuple
-from .Diode import normalize_voltage, VoltageV, normalize_current, CurrentA, normalize_resistance, ResistanceOhm, normalize_power, PowerW
+from .Diode import normalize_voltage, VoltageV, normalize_current, CurrentA, normalize_resistance, ResistanceOhm
 from .Filter import normalize_frequency, FrequencyHz, normalize_inductance, InductanceH
 from .Capacitors import normalize_capacitance, CapacitanceFarad
 

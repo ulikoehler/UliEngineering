@@ -5,10 +5,6 @@ Utilities regarding comparator / opamp hysteresis
 
 For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a.pdf
 """
-from typing import Annotated
-
-from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Electronics.Resistors import parallel_resistors
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio
 from .Diode import normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV

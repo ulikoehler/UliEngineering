@@ -4,7 +4,6 @@ import unittest
 from UliEngineering.Chemistry.Stoichiometry import (
     parse_formula,
     molecular_weight,
-    percent_composition,
     moles_to_grams,
     grams_to_moles,
     moles_to_particles,
@@ -29,7 +28,6 @@ from UliEngineering.Chemistry.Stoichiometry import (
     normalize_density, DensityKgL,
     normalize_molar_mass, MolarMassGMol,
 )
-import numpy as np
 
 
 class TestStoichiometry(unittest.TestCase):

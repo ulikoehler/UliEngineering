@@ -6,7 +6,6 @@ from UliEngineering.SignalProcessing.Simulation import sine_wave
 from UliEngineering.SignalProcessing.Chunks import ChunkGenerator, overlapping_chunks
 from parameterized import parameterized
 import numpy as np
-import numpy.random
 import unittest
 
 class TestFFT(unittest.TestCase):
@@ -96,7 +95,7 @@ class TestFFT(unittest.TestCase):
         ("With DC", False),
         ("Without DC", True),
     ])
-    def testParallelFFTReduce(self, name, removeDC):
+    def testParallelFFTReduce(self, _name, removeDC):
         d = np.random.random_sample(1000)
         chunkgen = overlapping_chunks(d, 100, 5)
         # Just test if it actually runs
@@ -158,8 +157,7 @@ class TestFFT(unittest.TestCase):
         with self.assertRaises(ValueError):
             d = np.random.random_sample(10)
             # Just test if it actually runs
-            x, y = simple_parallel_fft_reduce(d, 1000.0, 100)
-
+            _, _ = simple_parallel_fft_reduce(d, 1000.0, 100)
 
 class TestClosestFrequency(unittest.TestCase):
     def setUp(self):

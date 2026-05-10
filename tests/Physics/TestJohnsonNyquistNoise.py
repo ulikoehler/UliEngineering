@@ -7,7 +7,6 @@ from UliEngineering.Physics.JohnsonNyquistNoise import (
     normalize_temperature, TemperatureKelvin,
     normalize_frequency, FrequencyHz
 )
-from UliEngineering.EngineerIO import auto_format
 import unittest
 
 class TestJohnsonNyquistNoise(unittest.TestCase):

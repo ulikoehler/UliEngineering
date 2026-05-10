@@ -6,7 +6,6 @@ from collections.abc import Iterable
 import numpy as np
 from UliEngineering.EngineerIO import NormalizeResult, normalize, normalize_numeric
 from UliEngineering.EngineerIO.Types import NormalizableArgument
-from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
