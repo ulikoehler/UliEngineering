@@ -39,11 +39,13 @@ def capacitor_rc_time_constant(capacitance, resistance):
     """
     Compute the R/C time constant tau = R * C of a resistor-capacitor network.
 
-    Parameters:
-    - capacitance: The capacitance in farads.
-    - resistance: The resistance in ohms.
+    Parameters
+    ----------
+    capacitance: The capacitance in farads.
+    resistance: The resistance in ohms.
 
-    Returns:
+    Returns
+    -------
     The time constant in seconds.
     """
     return capacitance * resistance

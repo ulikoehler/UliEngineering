@@ -16,6 +16,7 @@ class QueuedThreadExecutor(concurrent.futures.ThreadPoolExecutor):
     slow or asynchronous queue feeders
     """
     def __init__(self, nthreads=None, queue_size=100):
+        """Initialize the executor with a configurable queue size."""
         if nthreads is None:
             nthreads = os.cpu_count() or 4
         super().__init__(nthreads)

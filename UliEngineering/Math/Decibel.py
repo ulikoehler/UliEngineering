@@ -27,6 +27,7 @@ def _safe_log10(v):
             return -np.inf
     return np.log10(v)
 
+
 class dBFactor:
     """Pre-set values for factors"""
     Power = 10.

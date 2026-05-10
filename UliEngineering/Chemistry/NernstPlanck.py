@@ -61,6 +61,7 @@ def nernst_planck_flux(D, dC_dx, z, C, dPhi_dx, T=298.15):
     -------
     float
         Ionic flux in mol/(m²·s).
+
     """
     return -D * (dC_dx + z * FARADAY_CONSTANT * C / (gas_constant * T) * dPhi_dx)
 

@@ -22,5 +22,6 @@ def ideal_inductor_current_change_rate(inductance, voltage):
         The inductance in Henrys
     voltage: number or Engineer string
         The voltage across the inductor
+
     """
     return np.divide(voltage, inductance)  # Returns inf when inductance is zero

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Coordinate functions, mainly for 2D coordinates
-"""
+"""Coordinate functions, mainly for 2D coordinates."""
 import numpy as np
 
 __all__ = ["BoundingBox"]

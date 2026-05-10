@@ -415,6 +415,7 @@ class GeneratorCounter:
         return self
 
     def __next__(self):
+        """Get the next element from the selection."""
         result = next(self.iter)  # raises if no next value
         self.count += 1
         return result

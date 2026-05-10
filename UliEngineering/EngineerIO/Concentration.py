@@ -92,6 +92,7 @@ def _create_mass_concentration_config():
         si_prefix_map=default_si_prefix_map(include_length_unit_prefixes=True)
     )
 
+
 class EngineerAmountConcentrationIO(EngineerIO):
     """
     EngineerIO subclass specialized for amount concentration unit parsing and conversion.

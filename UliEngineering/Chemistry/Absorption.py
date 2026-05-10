@@ -32,6 +32,7 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient):
 
     Returns:
     - Absorption length in meters.
+
     """
     return np.reciprocal(absorption_coefficient)
 
