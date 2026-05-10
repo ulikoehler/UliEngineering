@@ -15,13 +15,31 @@ For other r0 values, you can precalculate the polynomial.
 For details read:
 https://techoverflow.net/blog/2016/01/02/accurate-calculation-of-pt100-pt1000-temperature-from-resistance/
 """
+from typing import Annotated
+
 from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.Physics.Temperature import normalize_temperature_celsius
+from UliEngineering.Physics.Temperature import normalize_temperature_celsius, TemperatureKelvin
 from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ._normalize import normalize_with_known_units
 import functools
 from collections import namedtuple
 import numpy as np
 import numbers
+
+__all__ = [
+    "ptx_resistance", "ptx_temperature",
+    "check_correction_polynomial_quality", "compute_correction_polynomial",
+    "pt100_resistance", "pt1000_resistance",
+    "pt100_temperature", "pt1000_temperature",
+    "normalize_resistance", "ResistanceOhm",
+    "normalize_temperature_celsius", "TemperatureKelvin"
+]
+
+def normalize_resistance(resistance: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0, "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9, "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0, "M": 1e6, "G": 1e9}, quantity_name="resistance")
+
+ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 PTCoefficientStandard = namedtuple("PTCoefficientStandard", ["a", "b", "c"])
 
@@ -37,14 +55,14 @@ pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
 
 
 @returns_unit("Ω")
-def ptx_resistance(r0, t, standard=ptxITS90):
+def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptxITS90):
     """
     Compute the PTx resistance at a given temperature.
     The reference for the test code is a DIN PT1000.
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
-    r0 = normalize_numeric(r0)
+    r0 = normalize_resistance(r0)
     t = normalize_temperature_celsius(t)
     A, B = standard.a, standard.b
     # C := 0 for t > 0, else std.c. This also works for numpy arrays
@@ -56,7 +74,7 @@ def ptx_resistance(r0, t, standard=ptxITS90):
 
 
 @returns_unit("°C")
-def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
+def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptxITS90, poly=None):
     """
     Compute the PTx temperature at a given temperature.
 
@@ -67,8 +85,8 @@ def ptx_temperature(r0, r, standard=ptxITS90, poly=None):
 
     See http://www.thermometricscorp.com/pt1000 for reference
     """
-    r0 = normalize_numeric(r0)
-    r = normalize_numeric(r)
+    r0 = normalize_resistance(r0)
+    r = normalize_resistance(r)
     A, B = standard.a, standard.b
     # Select
     if poly is None:

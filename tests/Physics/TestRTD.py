@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
-from UliEngineering.Physics.RTD import pt1000_resistance, pt100_resistance, pt1000_temperature, pt100_temperature, check_correction_polynomial_quality, ptx_temperature, compute_correction_polynomial, noCorrection
+from UliEngineering.Physics.RTD import (
+    pt1000_resistance, pt100_resistance, pt1000_temperature, pt100_temperature,
+    check_correction_polynomial_quality, ptx_temperature, compute_correction_polynomial, noCorrection,
+    normalize_resistance, ResistanceOhm
+)
 import functools
 import numpy as np
 import unittest
@@ -134,4 +138,38 @@ class TestRTDPolynomialComputation(unittest.TestCase):
 
     def test_nonstandard_r0(self):
         # Check if ptx_temperature() runs correctly with poly=None with nonstandard r0
-        ptx_temperature(1234.0, 1155.1) 
+        ptx_temperature(1234.0, 1155.1)
+
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+
+    def test_normalize_resistance_various_units(self):
+        """Test normalize_resistance with various unit inputs"""
+        test_cases = [
+            ("1 Ω", 1.0),
+            ("1 Ohm", 1.0),
+            ("1 ohm", 1.0),
+            ("1 kΩ", 1000.0),
+            ("1 MΩ", 1e6),
+            ("1 GΩ", 1e9),
+            ("1 k", 1000.0),
+            ("1 M", 1e6),
+            ("1 G", 1e9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_resistance(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_rtd_functions_various_units(self):
+        """Test RTD functions with various resistance units"""
+        # Test pt1000_resistance with different resistance units
+        r1 = pt1000_resistance("0 °C")
+        r2 = pt1000_resistance("0 °C")
+        assert_approx_equal(r1, r2)
+        
+        # Test pt1000_temperature with different resistance units
+        t1 = pt1000_temperature("1000 Ω")
+        t2 = pt1000_temperature("1 kΩ")
+        assert_approx_equal(t1, t2) 
