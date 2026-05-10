@@ -11,17 +11,17 @@ Usage example:
 
 """
 
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from .Diode import normalize_voltage, VoltageV, normalize_resistance, ResistanceOhm
+
 __all__ = [
     "summing_amplifier_noninv",
     "noninverting_amplifier_gain"
 ]
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-
 
 @returns_unit("V")
-@normalize_numeric_args
-def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
+def summing_amplifier_noninv(v1: VoltageV, v2: VoltageV, r1: ResistanceOhm, r2: ResistanceOhm, rfb1: ResistanceOhm, rfb2: ResistanceOhm):
     """
     Computes the output voltage of a non-inverting summing amplifier:
     V1 connected via R1 to IN+
@@ -29,11 +29,16 @@ def summing_amplifier_noninv(v1, v2, r1, r2, rfb1, rfb2):
     IN- connected via RFB1 to GND
     IN- connected via RFB2 to VOut
     """
+    v1 = normalize_voltage(v1) if isinstance(v1, str) else v1
+    v2 = normalize_voltage(v2) if isinstance(v2, str) else v2
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
+    rfb1 = normalize_resistance(rfb1) if isinstance(rfb1, str) else rfb1
+    rfb2 = normalize_resistance(rfb2) if isinstance(rfb2, str) else rfb2
     return (1.0 + rfb2 / rfb1) * (v1 * (r2 / (r1 + r2)) + v2 * (r1 / (r1 + r2)))
 
 @returns_unit("V/V")
-@normalize_numeric_args
-def noninverting_amplifier_gain(r1, r2):
+def noninverting_amplifier_gain(r1: ResistanceOhm, r2: ResistanceOhm):
     """
     Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
     
@@ -44,4 +49,6 @@ def noninverting_amplifier_gain(r1, r2):
     
     R2 can also be infinity (np.inf), in which case the gain is 1.0.
     """
+    r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
+    r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
     return 1.0 + r1 / r2
