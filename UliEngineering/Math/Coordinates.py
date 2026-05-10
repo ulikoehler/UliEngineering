@@ -16,6 +16,11 @@ class BoundingBox(object):
 
         You can access the bbox using the
         (minx, maxx, miny, maxy) members.
+
+        Parameters
+        ----------
+        points : numpy.ndarray
+            Array of 2D coordinates with shape (n, 2).
         """
         if len(points.shape) != 2 or points.shape[1] != 2:
             raise ValueError("Points must be a (n,2), array but it has shape {}".format(
@@ -27,17 +32,17 @@ class BoundingBox(object):
 
     @property
     def width(self):
-        """X-axis extent of the bounding box"""
+        """X-axis extent of the bounding box."""
         return self.maxx - self.minx
 
     @property
     def height(self):
-        """Y-axis extent of the bounding box"""
+        """Y-axis extent of the bounding box."""
         return self.maxy - self.miny
 
     @property
     def area(self):
-        """width * height"""
+        """width * height."""
         return self.width * self.height
 
     @property

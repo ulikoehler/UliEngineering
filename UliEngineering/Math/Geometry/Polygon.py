@@ -18,7 +18,19 @@ def polygon_lines(coords, closed=True):
     If closed==True, a line is included between the last and the first point.
     Note that the last->first pair appears first in the list.
 
-    Algorithm: http://stackoverflow.com/a/42407359/2597135
+    Algorithm: http://stackoverflow.com/a/42407359/2597135.
+
+    Parameters
+    ----------
+    coords : numpy.ndarray
+        Array of XY coordinates with shape (n, 2).
+    closed : bool, optional
+        If True, include a line between the last and first point. Default is True.
+
+    Returns
+    -------
+    numpy.ndarray
+        Array of coordinate pairs with shape (n, 2, 2).
     """
     if len(coords.shape) != 2 or coords.shape[1] != 2:
         raise ValueError("Wrong shape for polygon lines input (expect (n,2)): {}".format(
@@ -29,14 +41,19 @@ def polygon_lines(coords, closed=True):
 
 def polygon_area(coords):
     """
-    Compute the area of a polygon using the Shoelace formula
+    Compute the area of a polygon using the Shoelace formula.
 
-    Numpy hints from http://stackoverflow.com/a/30408825/2597135
+    Numpy hints from http://stackoverflow.com/a/30408825/2597135.
 
     Parameters
     ----------
-    coords : numpy array-like
-        The coords in a (n,2) array
+    coords : numpy.ndarray
+        The coords in a (n,2) array.
+
+    Returns
+    -------
+    float
+        Area of the polygon.
     """
     if len(coords.shape) != 2 or coords.shape[1] != 2:
         raise ValueError("Wrong shape for polygon area input (expect (n,2)): {}".format(
