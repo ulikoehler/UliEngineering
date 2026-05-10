@@ -8,8 +8,8 @@ from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import normalize_length
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Physics._normalize import normalize_with_known_units
-from UliEngineering.Electronics.Diode import normalize_diode_model
-from UliEngineering.Physics.Temperature import normalize_temperature_celsius
+from UliEngineering.Physics.Temperature import normalize_temperature
+from UliEngineering.Electronics.Diode import normalize_diode_model, normalize_current, CurrentA, normalize_voltage, VoltageV
 
 import numpy as np
 
@@ -28,8 +28,6 @@ __all__ = [
     "capacitor_charging_energy",
     "normalize_capacitance", "CapacitanceFarad",
     "normalize_resistance", "ResistanceOhm",
-    "normalize_voltage", "VoltageV",
-    "normalize_current", "CurrentA",
     "normalize_energy", "EnergyJ",
     "normalize_permittivity", "PermittivityFm",
 ]
@@ -41,12 +39,6 @@ def normalize_capacitance(C: NormalizableArgument) -> NormalizedComputable:
 def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "kΩ": 1e3, "MΩ": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
 
-def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
-
-def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(I, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
-
 def normalize_energy(E: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(E, {"J": 1.0, "mJ": 1e-3, "µJ": 1e-6, "kJ": 1e3}, quantity_name="energy")
 
@@ -55,8 +47,6 @@ def normalize_permittivity(epsilon: NormalizableArgument) -> NormalizedComputabl
 
 CapacitanceFarad = Annotated[NormalizedComputable, normalize_capacitance]
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
-VoltageV = Annotated[NormalizedComputable, normalize_voltage]
-CurrentA = Annotated[NormalizedComputable, normalize_current]
 EnergyJ = Annotated[NormalizedComputable, normalize_energy]
 PermittivityFm = Annotated[NormalizedComputable, normalize_permittivity]
 def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltage, target_drive_voltage, diode_model, initial_voltage, target_voltage):
@@ -101,8 +91,8 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
     Based on:
     https://www.illinoiscapacitor.com/tech-center/life-calculators.aspx
     """
-    temp = normalize_temperature_celsius(temp)
-    nominal_lifetime_temperature = normalize_temperature_celsius(nominal_lifetime_temperature)
+    temp = normalize_temperature(temp)
+    nominal_lifetime_temperature = normalize_temperature(nominal_lifetime_temperature)
     nominal_lifetime = normalize_numeric(nominal_lifetime)
     # Compute lifetime
     tdelta = temp - nominal_lifetime_temperature

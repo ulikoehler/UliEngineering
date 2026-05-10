@@ -3,7 +3,7 @@
 """
 Utilities for diode calculations using the Shockley diode equation.
 """
-from typing import cast
+from typing import Annotated, cast
 
 from scipy.constants import elementary_charge, k as boltzmann_k
 from scipy.special import lambertw
@@ -11,7 +11,9 @@ from scipy.special import lambertw
 import numpy as np
 
 from UliEngineering.EngineerIO import normalize_numeric
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics._normalize import normalize_with_known_units
 from UliEngineering.Physics.Temperature import normalize_temperature_kelvin
 
 __all__ = [
@@ -25,7 +27,24 @@ __all__ = [
     "shockley_diode_saturation_current",
     "shockley_diode_small_signal_resistance",
     "shockley_diode_power",
+    "normalize_power", "PowerW",
+    "normalize_current", "CurrentA",
+    "normalize_voltage", "VoltageV",
 ]
+
+
+def normalize_power(P: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(P, {"W": 1.0, "mW": 1e-3, "µW": 1e-6, "kW": 1e3}, quantity_name="power")
+
+def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(I, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
+
+def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
+
+PowerW = Annotated[NormalizedComputable, normalize_power]
+CurrentA = Annotated[NormalizedComputable, normalize_current]
+VoltageV = Annotated[NormalizedComputable, normalize_voltage]
 
 
 def _validate_positive(name, value):
@@ -157,8 +176,7 @@ def diode_thermal_voltage(temperature="25°C"):
 
 
 @returns_unit("A")
-@normalize_numeric_args(exclude=["temperature"])
-def shockley_diode_current(voltage, saturation_current, ideality_factor=1.0, temperature="25°C"):
+def shockley_diode_current(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
     """
     Compute the diode current using the Shockley diode equation.
 
@@ -171,14 +189,15 @@ def shockley_diode_current(voltage, saturation_current, ideality_factor=1.0, tem
     Returns:
     The diode current in amperes.
     """
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
+    saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current
     _validate_positive("saturation_current", saturation_current)
     voltage_scale = _shockley_voltage_scale(ideality_factor, temperature)
     return saturation_current * np.expm1(voltage / voltage_scale)
 
 
 @returns_unit("V")
-@normalize_numeric_args(exclude=["temperature"])
-def shockley_diode_voltage(current, saturation_current, ideality_factor=1.0, temperature="25°C"):
+def shockley_diode_voltage(current: CurrentA, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
     """
     Compute the diode voltage from the Shockley diode equation.
 
@@ -191,6 +210,8 @@ def shockley_diode_voltage(current, saturation_current, ideality_factor=1.0, tem
     Returns:
     The diode voltage in volts.
     """
+    current = normalize_current(current) if isinstance(current, str) else current
+    saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current
     _validate_positive("saturation_current", saturation_current)
     if np.any(current <= -saturation_current):
         raise ValueError("current must be greater than -saturation_current")
@@ -199,8 +220,7 @@ def shockley_diode_voltage(current, saturation_current, ideality_factor=1.0, tem
 
 
 @returns_unit("A")
-@normalize_numeric_args(exclude=["temperature"])
-def shockley_diode_saturation_current(voltage, current, ideality_factor=1.0, temperature="25°C"):
+def shockley_diode_saturation_current(voltage: VoltageV, current: CurrentA, ideality_factor=1.0, temperature="25°C"):
     """
     Compute the saturation current from one operating point.
 
@@ -213,6 +233,8 @@ def shockley_diode_saturation_current(voltage, current, ideality_factor=1.0, tem
     Returns:
     The diode saturation current in amperes.
     """
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
+    current = normalize_current(current) if isinstance(current, str) else current
     if np.any(voltage == 0):
         raise ValueError("voltage must be non-zero to infer saturation current")
     voltage_scale = _shockley_voltage_scale(ideality_factor, temperature)
@@ -220,8 +242,7 @@ def shockley_diode_saturation_current(voltage, current, ideality_factor=1.0, tem
 
 
 @returns_unit("Ω")
-@normalize_numeric_args(exclude=["temperature"])
-def shockley_diode_small_signal_resistance(current, ideality_factor=1.0, temperature="25°C"):
+def shockley_diode_small_signal_resistance(current: CurrentA, ideality_factor=1.0, temperature="25°C"):
     """
     Compute the small-signal resistance $r_d = nV_T/I$ of a diode.
 
@@ -233,14 +254,14 @@ def shockley_diode_small_signal_resistance(current, ideality_factor=1.0, tempera
     Returns:
     The small-signal resistance in ohms.
     """
+    current = normalize_current(current) if isinstance(current, str) else current
     voltage_scale = _shockley_voltage_scale(ideality_factor, temperature)
     with np.errstate(divide="ignore", invalid="ignore"):
         return np.divide(voltage_scale, current)
 
 
 @returns_unit("W")
-@normalize_numeric_args(exclude=["temperature"])
-def shockley_diode_power(voltage, saturation_current, ideality_factor=1.0, temperature="25°C"):
+def shockley_diode_power(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
     """
     Compute the power dissipated by a diode from the Shockley equation.
 
@@ -253,4 +274,6 @@ def shockley_diode_power(voltage, saturation_current, ideality_factor=1.0, tempe
     Returns:
     The diode power in watts.
     """
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
+    saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current
     return voltage * shockley_diode_current(voltage, saturation_current, ideality_factor, temperature)

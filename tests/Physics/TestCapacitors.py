@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy, parallel_plate_capacitors_capacitance, normalize_capacitance, CapacitanceFarad, normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV, normalize_current, CurrentA, normalize_energy, EnergyJ, normalize_permittivity, PermittivityFm
+from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy, parallel_plate_capacitors_capacitance, normalize_capacitance, CapacitanceFarad, normalize_resistance, ResistanceOhm, normalize_energy, EnergyJ, normalize_permittivity, PermittivityFm
+from UliEngineering.Electronics.Diode import normalize_current, CurrentA, normalize_voltage, VoltageV
 from UliEngineering.Electronics.Diode import DiodeModel, ShockleyDiodeModel, SimpleDiodeModel
 from UliEngineering.EngineerIO import auto_format
 import numpy as np

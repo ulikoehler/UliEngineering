@@ -13,6 +13,7 @@ from UliEngineering.Electronics.Diode import (
     shockley_diode_saturation_current,
     shockley_diode_small_signal_resistance,
     shockley_diode_voltage,
+    normalize_power, PowerW,
 )
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
@@ -151,3 +152,28 @@ class TestDiode(unittest.TestCase):
         cold_voltage = shockley_diode_voltage("1mA", "1pA", temperature="0°C")
         hot_voltage = shockley_diode_voltage("1mA", "1pA", temperature="100°C")
         self.assertLess(cold_voltage, hot_voltage)
+
+class TestNormalizeFunctions(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(PowerW)
+
+    def test_normalize_power_various_units(self):
+        """Test normalize_power with various unit inputs"""
+        test_cases = [
+            ("1 W", 1.0),
+            ("1 mW", 1e-3),
+            ("1 µW", 1e-6),
+            ("1 kW", 1e3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_power(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_diode_functions_various_units(self):
+        """Test diode functions with various unit inputs"""
+        # Test shockley_diode_current with different units
+        i1 = shockley_diode_current("1 V", "1 A")
+        i2 = shockley_diode_current("1000 mV", "1000 mA")
+        self.assertAlmostEqual(i1, i2)
