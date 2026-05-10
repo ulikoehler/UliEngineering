@@ -13,6 +13,7 @@ NormalizationResult = namedtuple("NormalizationResult", ["data", "factor", "offs
 def normalize_max(signal):
     """
     Normalize signal by dividing by its max value.
+
     Does not perform any offset adjustment.
 
     This approach works well for data that is guaranteed to be

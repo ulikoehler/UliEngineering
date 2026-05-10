@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-String utilities and algorithms
-"""
+"""String utilities and algorithms."""
 
 __all__ = ["split_nth", "suffix_list", "partition_at_numeric_to_nonnumeric_boundary"]
 

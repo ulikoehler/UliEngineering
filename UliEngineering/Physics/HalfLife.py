@@ -27,6 +27,7 @@ def half_lifes_passed(timespan, half_life) -> float:
 
     Examples:
         half_lifes_passed("1h", half_life="1min") => 1/60
+
     """
     timespan = normalize_timespan(timespan)
     half_life = normalize_timespan(half_life)

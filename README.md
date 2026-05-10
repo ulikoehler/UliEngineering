@@ -43,7 +43,7 @@ While *scipy* is technically optional and listed as an optional dependency, many
 
 After that you can use UliEngineering from any Python3 instance. Example:
 
-```
+```python
 $ python3
 Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
 [GCC 5.4.0 20160609] on linux

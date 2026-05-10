@@ -6,6 +6,7 @@ A python script to calculate E96 resistor values
 connect them in parallel and serial fashions.
 
 Originally published at techoverflow.net
+
 """
 import itertools
 import numpy as np

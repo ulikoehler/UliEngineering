@@ -17,6 +17,7 @@ def yearly_interest_to_equivalent_monthly_interest(interest):
     the following holds True:
 
     (1+monthly_interest)**12-1 == yearly_interest
+
     """
     # 12 months per year
     # monthly interest is 12th root of yearly interest

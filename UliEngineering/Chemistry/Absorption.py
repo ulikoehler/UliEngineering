@@ -53,7 +53,7 @@ def extinction_coefficient_from_absorption_length(absorption_length):
 @returns_unit("")
 def remaining_light_fraction(length, absorption_coefficient):
     """
-    Compute the remaining fraction of light after passing through a medium of given length (in meters)
+    Compute the remaining fraction of light after passing through a medium of given length (in meters).
     with a given extinction coefficient (in 1/m).
 
     Formula: fraction = exp(-absorption_coefficient * length)

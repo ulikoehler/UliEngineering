@@ -19,10 +19,10 @@ class NucleusLarmorFrequency:
 def larmor_frequency(b0, nucleus_larmor_frequency=NucleusLarmorFrequency.H1):
     """
     Get the magnetic resonance frequency (larmor frequency)
-    for a given nucleus in a given magnetic field strength B0
-    
+    for a given nucleus in a given magnetic field strength B0.
+
     Note that the frequency is given in Hz, not in MHz!
-    
+
     :param b0: Magnetic field strength in Tesla
     :param nucleus_larmor_frequency: Larmor frequency of the nucleus in MHz/T
     """

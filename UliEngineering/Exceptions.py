@@ -17,6 +17,7 @@ class OperationImpossibleException(Exception):
     Raised if operation with the given parameters is impossible,
     i.e. they have the correct forward but the given application
     can't work with this specific set of values.
+
     """
     pass
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose, assert_array_less
-from UliEngineering.Physics.RTD import pt1000_resistance, pt100_resistance, pt1000_temperature, pt100_temperature
+from UliEngineering.Physics.RTD import pt1000_resistance, pt100_resistance, pt1000_temperature, pt100_temperature, check_correction_polynomial_quality, ptx_temperature
 import functools
 import numpy as np
 import unittest

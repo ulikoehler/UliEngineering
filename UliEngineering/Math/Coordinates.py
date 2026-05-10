@@ -44,7 +44,7 @@ class BoundingBox(object):
 
     @property
     def aspect_ratio(self):
-        """width / height"""
+        """width / height."""
         return self.width / self.height
 
     @property

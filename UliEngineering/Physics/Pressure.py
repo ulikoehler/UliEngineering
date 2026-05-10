@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Pressure utilities
-"""
+"""Pressure utilities."""
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit
+from UliEngineering.Units import Unit, Pa, bar, m
 
 __all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential"]
 
 @returns_unit("bar")
 @normalize_numeric_args
-def pascal_to_bar(pressure: Unit("Pa")):
+def pascal_to_bar(pressure: Pa):
     """
     Convert the pressure in pascal to the pressure in bar
     """
@@ -18,7 +16,7 @@ def pascal_to_bar(pressure: Unit("Pa")):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def bar_to_pascal(pressure: Unit("bar")):
+def bar_to_pascal(pressure: bar):
     """
     Convert the pressure in bar to the pressure in Pascal
     """
@@ -26,7 +24,7 @@ def bar_to_pascal(pressure: Unit("bar")):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def barlow_tangential(outer_diameter: Unit("m"), inner_diameter: Unit("m"), pressure: Unit("Pa")):
+def barlow_tangential(outer_diameter: m, inner_diameter: m, pressure: Pa):
     """
     Compute the tangential stress of a pressure vessel at [pressure] using Barlow's formula for thin-walled tubes.
 

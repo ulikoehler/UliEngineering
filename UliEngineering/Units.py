@@ -8,9 +8,17 @@ import functools
 
 __all__ = ["Unit", "UnannotatedReturnValueError",
            "InvalidUnitInContextException", "InvalidUnitCombinationException",
-           "find_returned_unit", "UnknownUnitInContextException"]
+           "find_returned_unit", "UnknownUnitInContextException",
+           "Hz", "Pa", "rpm", "bar", "m"]
 
 Unit = namedtuple("Unit", ["unit"])
+
+# Common unit constants for type annotations
+Hz = Unit("Hz")
+Pa = Unit("Pa")
+rpm = Unit("rpm")
+bar = Unit("bar")
+m = Unit("m")
 
 class UnannotatedReturnValueError(Exception):
     """

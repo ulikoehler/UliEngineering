@@ -631,12 +631,10 @@ class EngineerIO(object):
         Only points and commata are potentially modified.
         Other characters and digits are not handled.
         """
-        """
-        Map of a transform to apply to the string
-        during interpunctation normalization,
-        depending on (commaFound, dotFound, commaFoundFirst).
-        Must contain every possible variant
-        """
+        # Map of a transform to apply to the string
+        # during interpunctation normalization,
+        # depending on (commaFound, dotFound, commaFoundFirst).
+        # Must contain every possible variant
         
         commaIdx = s.find(",")
         pointIdx = s.find(".")

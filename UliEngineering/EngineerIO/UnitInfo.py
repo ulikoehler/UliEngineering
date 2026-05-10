@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Unit information dataclass for UliEngineering
-"""
+"""Unit info utilities."""
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 

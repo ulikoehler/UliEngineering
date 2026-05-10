@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Circle geometry functions
-"""
+"""Circle geometry functions."""
 import math
 
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit

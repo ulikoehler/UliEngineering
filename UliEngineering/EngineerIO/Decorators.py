@@ -10,7 +10,9 @@ from UliEngineering.EngineerIO import EngineerIO
 def returns_unit(unit):
     """
     Decorator to annotate a function with a custom return unit string.
+
     Usage: @returns_unit("A")
+
     """
     def decorator(fn):
         fn._returns_unit = unit

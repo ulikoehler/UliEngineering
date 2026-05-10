@@ -10,6 +10,7 @@ class TestMicrostrip(unittest.TestCase):
         """
         Verify that microstrip_width() is the inverse of microstrip_impedance()
         for a wide range of parameters.
+
         """
         # Test ranges
         impedances = np.linspace(20, 150, 20)  # 20 to 150 Ohms

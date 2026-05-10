@@ -2,7 +2,7 @@
 import numpy as np
 from toolz import functoolz
 from numpy.testing import assert_array_equal, assert_allclose
-from UliEngineering.SignalProcessing.Chunks import overlapping_chunks, random_sample_chunks, random_sample_chunks_nonoverlapping, sliding_window, reshaped_chunks
+from UliEngineering.SignalProcessing.Chunks import overlapping_chunks, random_sample_chunks, random_sample_chunks_nonoverlapping, sliding_window, reshaped_chunks, array_to_chunkgen
 from UliEngineering.SignalProcessing.Window import WindowFunctor
 from UliEngineering.SignalProcessing.Utils import rms
 from parameterized import parameterized

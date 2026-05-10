@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Functions for Multi-Pixel photon counters (MPPCs)
-"""
+"""Functions for Multi-Pixel photon counters (MPPC utilities)."""
 
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 

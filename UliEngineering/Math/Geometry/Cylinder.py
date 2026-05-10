@@ -54,6 +54,7 @@ def cylinder_weight_by_diameter(diameter, length, density=8000):
     The density is in kg/m³, the diameter and length must be given in mm.
 
     The default density is an approximation for steel.
+
     """
     return cylinder_volume(diameter/2., length) * density
 

@@ -4,7 +4,7 @@
 Utilities for acceleration
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit
+from UliEngineering.Units import Unit, Hz, rpm, m
 import numpy as np
 
 __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
@@ -12,15 +12,15 @@ __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
 
 @returns_unit("Hz")
 @normalize_numeric_args
-def rpm_to_Hz(rpm: Unit("rpm")):
+def rpm_to_Hz(rpm_value: rpm):
     """
     Compute the rotational speed in Hz given the rotational speed in rpm
     """
-    return rpm / 60.
+    return rpm_value / 60.
 
 @returns_unit("rpm")
 @normalize_numeric_args
-def hz_to_rpm(speed: Unit("Hz")):
+def hz_to_rpm(speed: Hz):
     """
     Compute the rotational speed in rpm given the rotational speed in Hz
     """
@@ -30,7 +30,7 @@ rpm_to_rps = rpm_to_Hz
 
 @returns_unit("1/s")
 @normalize_numeric_args
-def angular_speed(speed: Unit("Hz")):
+def angular_speed(speed: Hz):
     """
     Compute Ω, the angular speed of a centrifugal system
     """
@@ -38,7 +38,7 @@ def angular_speed(speed: Unit("Hz")):
 
 @returns_unit("m/s")
 @normalize_numeric_args
-def rotation_linear_speed(radius: Unit("m"), speed: Unit("Hz")):
+def rotation_linear_speed(radius: m, speed: Hz):
     """
     Compute the linear speed at a given [radius] for a centrifugal system rotating at [speed].
     """
@@ -46,7 +46,7 @@ def rotation_linear_speed(radius: Unit("m"), speed: Unit("Hz")):
 
 @returns_unit("N")
 @normalize_numeric_args
-def centrifugal_force(radius: Unit("m"), speed: Unit("Hz"), mass: Unit("g")):
+def centrifugal_force(radius: m, speed: Hz, mass: Unit("g")):
     """
     Compute the centrifugal force of a [mass] rotation at [speed] at radius [radius]
     """
@@ -55,7 +55,7 @@ def centrifugal_force(radius: Unit("m"), speed: Unit("Hz"), mass: Unit("g")):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def rotating_liquid_pressure(density: Unit("kg/m³"), speed: Unit("Hz"), radius: Unit("m")):
+def rotating_liquid_pressure(density: Unit("kg/m³"), speed: Hz, radius: m):
     """
     Compute the pressure in a body of liquid (relative to the steady-state pressure)
     The calculation does not include gravity.

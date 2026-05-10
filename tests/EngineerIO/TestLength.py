@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Length import normalize_length, EngineerLengthIO
+from UliEngineering.EngineerIO.Length import normalize_length, EngineerLengthIO, convert_length_to_meters, convert_length_to_unit
 import unittest
 
 class TestLength(unittest.TestCase):

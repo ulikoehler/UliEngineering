@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for FFT computation and visualization
-"""
+"""Utilities for FFT computation and visualization."""
 import numpy as np
 import functools
 from UliEngineering.EngineerIO import normalize_numeric

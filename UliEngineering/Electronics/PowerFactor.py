@@ -11,7 +11,8 @@ __all__ = ["power_factor_by_phase_angle"]
 @returns_unit("")
 def power_factor_by_phase_angle(angle="10°", unit="degrees"):
     """
-    Compute the power factor given the phase angle between current and voltage
+    Compute the power factor given the phase angle between current and voltage.
+
     This approach only returns the correct power factor if current and voltage
     are both sinusoidal.
 

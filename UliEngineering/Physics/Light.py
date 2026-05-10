@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for computations related to noise density
-"""
+"""Light utilities."""
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 import numpy as np
 

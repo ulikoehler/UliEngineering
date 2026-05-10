@@ -83,6 +83,7 @@ def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
     Lines which do not pass the isline function are ignored.
 
     The postprocessing function may return None, in which case the line is ignored.
+
     """
     # Open it if it is a string
     if isinstance(flo, str):

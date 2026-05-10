@@ -226,6 +226,19 @@ class ChainedFilter:
             self.filters *= repeat
 
     @property
+    def is_computed(self):
+        """
+        Return True if the filter has been computed (i.e. if the filter has been
+        applied to some data).
+        """
+        if not self.filters:
+            raise ValueError("Can't obtain sample rate of an empty filter set")
+        samplerates = set(filt.samplerate for filt in self.filters)
+        if len(samplerates) > 1:
+            raise FilterInvalidError("ChainedFilter instance contains filters with different samplerates")
+        return all(filt.a is not None for filt in self.filters)
+
+    @property
     def samplerate(self):
         """
         Get the samplerate of the filter set or raise

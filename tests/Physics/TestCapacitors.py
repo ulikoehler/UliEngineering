@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy
+from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy, parallel_plate_capacitors_capacitance
 from UliEngineering.Electronics.Diode import DiodeModel, ShockleyDiodeModel, SimpleDiodeModel
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
@@ -81,6 +81,7 @@ class TestCapacitors(unittest.TestCase):
 
 class TestCapacitorResistorTiming(unittest.TestCase):
     class CustomDiodeModel(DiodeModel):
+        """Custom diode model for testing."""
         def minimum_series_voltage(self):
             return 0.2
 
@@ -373,7 +374,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, expected_capacitance, places=10)
 
     def test_non_zero_starting_voltage(self):
-        """Test capacitance calculation with non-zero starting voltage"""
+        """Test capacitance calculation with non-zero starting voltage."""
         starting_voltage = "2.0 V"
         final_voltage = "5.0 V"
         capacitance = 1.5       # F
@@ -616,7 +617,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
                 self.assertAlmostEqual(charging_energy, expected_energy, places=12)
 
     def test_zero_energy_cases(self):
-        """Test cases where no energy is required"""
+        """Test cases where no energy is required."""
         capacitance = 1.0  # F
         voltage = 5.0     # V
         
@@ -710,7 +711,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(direct_energy, total_step_energy, places=12)
 
     def test_real_world_scenarios(self):
-        """Test realistic capacitor charging scenarios"""
+        """Test realistic capacitor charging scenarios."""
         # Smartphone camera flash capacitor
         flash_cap = 100e-6  # 100 µF
         flash_voltage = 300  # V
@@ -794,7 +795,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(zero_energy, 0.0, places=12)
 
     def test_units_consistency(self):
-        """Test that function works correctly with various unit combinations"""
+        """Test that function works correctly with various unit combinations."""
         # All combinations should give same result when properly converted
         base_result = capacitor_charging_energy(1e-3, 5.0, 0.0)  # 1mF, 5V
         

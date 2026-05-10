@@ -51,7 +51,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("128.2882"), 50.0) # Non-series with custom weight
 
     def test_tolerance_handling(self):
-        """Test tolerance parameter functionality"""
+        """Test tolerance parameter functionality."""
         # Strict tolerance
         strict_functor = ResistorSeriesCostFunctor(tolerance=0.0001)  # 0.01%
         
@@ -96,7 +96,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("18Ω"), 1.0)   # E12 cost, not E24 cost
 
     def test_wide_resistance_range(self):
-        """Test with a wide range of resistance values"""
+        """Test with a wide range of resistance values."""
         functor = ResistorSeriesCostFunctor()
         
         # Test very small resistances
@@ -179,7 +179,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
             assert_approx_equal(result1, result2)
 
     def test_performance_consistency(self):
-        """Test that the functor performs consistently across multiple calls"""
+        """Test that the functor performs consistently across multiple calls."""
         functor = ResistorSeriesCostFunctor()
         
         # Test same value multiple times
@@ -295,7 +295,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         self.assertLess(functor(500.0), 1.0)
 
     def test_resistor_around_value_edge_cases(self):
-        """Test edge cases and error conditions"""
+        """Test edge cases and error conditions."""
         # Test with zero and negative values
         functor = ResistorAroundValueCostFunctor(1000.0)
         
@@ -324,7 +324,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
             ResistorAroundValueCostFunctor(1000.0, base=1.0)
 
     def test_resistor_around_value_symmetry(self):
-        """Test that the function is symmetric (same distance for X and 1/X)"""
+        """Test that the function is symmetric (same distance for X and 1/X)."""
         functor = ResistorAroundValueCostFunctor(1000.0)
         
         # Test symmetry for various multipliers
@@ -372,7 +372,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         assert_approx_equal(functor_frac("47kΩ"), 1.0)
 
     def test_resistor_around_value_precision(self):
-        """Test precision with very close values"""
+        """Test precision with very close values."""
         functor = ResistorAroundValueCostFunctor(1000.0)
         
         # Test very small differences
@@ -506,7 +506,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
             ResistorPowerCostFunctor("12V", "1W", -10.0)
 
     def test_power_cost_scaling_behavior(self):
-        """Test that cost scales properly with power utilization"""
+        """Test that cost scales properly with power utilization."""
         functor = ResistorPowerCostFunctor("10V", "1W", maximum_cost=100.0)
         
         # Calculate scenarios with different power levels
@@ -584,7 +584,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
             assert_approx_equal(cost1, cost2, significant=6)
 
     def test_power_cost_reproducibility(self):
-        """Test that repeated calls give same results"""
+        """Test that repeated calls give same results."""
         functor = ResistorPowerCostFunctor("9V", "0.5W", 75.0)
         
         # Test same calculation multiple times
@@ -596,7 +596,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
             assert_approx_equal(result, results[0])
 
     def test_power_cost_known_calculations(self):
-        """Test against hand-calculated known values"""
+        """Test against hand-calculated known values."""
         # Known scenario: 12V across 100Ω + 200Ω series
         # Total R = 300Ω, I = 12V/300Ω = 0.04A = 40mA
         # P1 = I²R1 = 0.0016 * 100 = 0.16W
