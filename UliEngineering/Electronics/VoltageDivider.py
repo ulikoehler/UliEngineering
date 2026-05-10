@@ -24,6 +24,20 @@ def voltage_divider_ratio(rtop: ResistanceOhm, rbot: ResistanceOhm, rload: Resis
     Compute the division ratio of a voltage divider.
 
     If rload is supplied, additional load (in parallel to R2) is taken into account.
+
+    Parameters
+    ----------
+    rtop : ResistanceOhm
+        Top resistor value.
+    rbot : ResistanceOhm
+        Bottom resistor value.
+    rload : ResistanceOhm, optional
+        Load resistance in parallel to R2. Default is infinity.
+
+    Returns
+    -------
+    float
+        Division ratio.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot
@@ -33,9 +47,25 @@ def voltage_divider_ratio(rtop: ResistanceOhm, rbot: ResistanceOhm, rload: Resis
 @returns_unit("V")
 def voltage_divider_voltage(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: VoltageV, rload: ResistanceOhm = np.inf):
     """
-    Compute the voltage output of a voltage divider
+    Compute the voltage output of a voltage divider.
 
     If rload is supplied, additional load (in parallel to R2) is taken into account.
+
+    Parameters
+    ----------
+    rtop : ResistanceOhm
+        Top resistor value.
+    rbot : ResistanceOhm
+        Bottom resistor value.
+    vin : VoltageV
+        Input voltage.
+    rload : ResistanceOhm, optional
+        Load resistance in parallel to R2. Default is infinity.
+
+    Returns
+    -------
+    float
+        Output voltage in Volts.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot
@@ -49,6 +79,22 @@ def voltage_divider_current(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Volta
     Compute the current through the top resistor of a voltage divider.
 
     If rload is supplied, additional load (in parallel to R2) is taken into account.
+
+    Parameters
+    ----------
+    rtop : ResistanceOhm
+        Top resistor value.
+    rbot : ResistanceOhm
+        Bottom resistor value.
+    vin : VoltageV
+        Input voltage.
+    rload : ResistanceOhm, optional
+        Load resistance in parallel to R2. Default is infinity.
+
+    Returns
+    -------
+    float
+        Current through the top resistor in Amperes.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot
@@ -64,7 +110,7 @@ class VoltageDividerPower(namedtuple("VoltageDividerPower", [
     "top", "bottom", "load", "total"
 ])):
     """
-    Represents the power dissipated in different parts of a voltage
+    Represents the power dissipated in different parts of a voltage divider.
     """
 
     def __repr__(self):
@@ -85,6 +131,22 @@ def voltage_divider_power(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Voltage
     0.2107569721115538
 
     If rload is supplied, additional load (in parallel to R2) is taken into account.
+
+    Parameters
+    ----------
+    rtop : ResistanceOhm
+        Top resistor value.
+    rbot : ResistanceOhm
+        Bottom resistor value.
+    vin : VoltageV
+        Input voltage.
+    rload : ResistanceOhm, optional
+        Load resistance in parallel to R2. Default is infinity.
+
+    Returns
+    -------
+    VoltageDividerPower
+        Power dissipated in different parts of the voltage divider.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot
@@ -102,8 +164,20 @@ def voltage_divider_power(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Voltage
 @returns_unit("Ω")
 def top_resistor_by_ratio(rbottom: ResistanceOhm, ratio: NormalizableArgument):
     """
-    Compute the bottom resistor of a voltage divider given the top resistor value
-    and the division ration
+    Compute the top resistor of a voltage divider given the bottom resistor value
+    and the division ratio.
+
+    Parameters
+    ----------
+    rbottom : ResistanceOhm
+        Bottom resistor value.
+    ratio : NormalizableArgument
+        Division ratio.
+
+    Returns
+    -------
+    float
+        Top resistor value in Ohms.
     """
     rbottom = normalize_resistance(rbottom) if isinstance(rbottom, str) else rbottom
     ratio = normalize_numeric(ratio) if isinstance(ratio, str) else ratio
@@ -113,7 +187,19 @@ def top_resistor_by_ratio(rbottom: ResistanceOhm, ratio: NormalizableArgument):
 def bottom_resistor_by_ratio(rtop: ResistanceOhm, ratio: NormalizableArgument):
     """
     Compute the bottom resistor of a voltage divider given the top resistor value
-    and the division ration
+    and the division ratio.
+
+    Parameters
+    ----------
+    rtop : ResistanceOhm
+        Top resistor value.
+    ratio : NormalizableArgument
+        Division ratio.
+
+    Returns
+    -------
+    float
+        Bottom resistor value in Ohms.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     ratio = normalize_numeric(ratio) if isinstance(ratio, str) else ratio
@@ -123,18 +209,23 @@ def bottom_resistor_by_ratio(rtop: ResistanceOhm, ratio: NormalizableArgument):
 def feedback_top_resistor(vexp: VoltageV, rbot: ResistanceOhm, vfb: VoltageV, rload: ResistanceOhm = np.inf):
     """
     Utility to compute the top feedback resistor
-    in a voltage feedback network (e.g. for a DC/DC converter)
+    in a voltage feedback network (e.g. for a DC/DC converter).
 
     Parameters
     ----------
-    vexp : float
-        The voltage at between top and bottom of the voltage divider
-    rbot : float
-        The known bottom resistor
-    vfb : float
-        The feedback voltage that is servoed by the regulator
-    rload : float
-        A load resistor in parallel to the bottom resistor
+    vexp : VoltageV
+        The voltage at between top and bottom of the voltage divider.
+    rbot : ResistanceOhm
+        The known bottom resistor.
+    vfb : VoltageV
+        The feedback voltage that is servoed by the regulator.
+    rload : ResistanceOhm, optional
+        A load resistor in parallel to the bottom resistor. Default is infinity.
+
+    Returns
+    -------
+    float
+        Top feedback resistor value in Ohms.
     """
     vexp = normalize_voltage(vexp) if isinstance(vexp, str) else vexp
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot
@@ -148,16 +239,21 @@ def feedback_top_resistor(vexp: VoltageV, rbot: ResistanceOhm, vfb: VoltageV, rl
 def feedback_bottom_resistor(vexp: VoltageV, rtop: ResistanceOhm, vfb: VoltageV):
     """
     Utility to compute the bottom feedback resistor
-    in a voltage feedback network (e.g. for a DC/DC converter)
+    in a voltage feedback network (e.g. for a DC/DC converter).
 
     Parameters
     ----------
-    vexp : float
-        The voltage at between top and bottom of the voltage divider
-    rtop : float
-        The known top resistor
-    vfb : float
-        The feedback voltage that is servoed by the regulator
+    vexp : VoltageV
+        The voltage at between top and bottom of the voltage divider.
+    rtop : ResistanceOhm
+        The known top resistor.
+    vfb : VoltageV
+        The feedback voltage that is servoed by the regulator.
+
+    Returns
+    -------
+    float
+        Bottom feedback resistor value in Ohms.
     """
     vexp = normalize_voltage(vexp) if isinstance(vexp, str) else vexp
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
@@ -174,12 +270,19 @@ def feedback_actual_voltage(rtop: ResistanceOhm, rbot: ResistanceOhm, vfb: Volta
 
     Parameters
     ----------
-    rtop : float
-        The top resistor of the voltage divider
-    rbot : float
-        The bottom resistor of the voltage divider
-    vfb : float
-        The feedback voltage
+    rtop : ResistanceOhm
+        The top resistor of the voltage divider.
+    rbot : ResistanceOhm
+        The bottom resistor of the voltage divider.
+    vfb : VoltageV
+        The feedback voltage.
+    rload : ResistanceOhm, optional
+        Load resistance. Default is infinity.
+
+    Returns
+    -------
+    float
+        Actual output voltage in Volts.
     """
     rtop = normalize_resistance(rtop) if isinstance(rtop, str) else rtop
     rbot = normalize_resistance(rbot) if isinstance(rbot, str) else rbot

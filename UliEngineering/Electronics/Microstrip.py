@@ -34,28 +34,28 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
 
     This uses an iterative approach to solve microstrip_impedance()
     for width since there's no closed-form solution.
-    (Newton-Raphson method)
+    (Newton-Raphson method).
 
     Parameters
     ----------
     target_Z0 : number or engineer string
-        The characteristic impedance of the microstrip in ohms
+        The characteristic impedance of the microstrip in ohms.
     h : number or engineer string
         Trace height of the substrate between the bottom
-        of the microstrip and the ground plane (converted to meters)
+        of the microstrip and the ground plane (converted to meters).
     t : number or engineer string
-        The trace thickness of the microstrip (converted to meters)
+        The trace thickness of the microstrip (converted to meters).
     e_r : number or engineer string
-        Relative permittivity of the dielectric
+        Relative permittivity of the dielectric.
     max_iter : int
-        Maximum number of iterations for the solver
+        Maximum number of iterations for the solver.
     tol : float
-        Tolerance for convergence in ohms
+        Tolerance for convergence in ohms.
 
     Returns
     -------
     float
-        The width of the microstrip in meters
+        The width of the microstrip in meters.
     """
     target_Z0 = normalize_resistance(target_Z0) if isinstance(target_Z0, str) else target_Z0
     h = normalize_length(h) if isinstance(h, str) else h
@@ -96,25 +96,30 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
 @returns_unit("Ω")
 def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4):
     """
-    Compute the impedance of a single-eded
+    Compute the impedance of a single-ended
     outer-layer microstrip using its width, height and
     the relative permittivity of the substrate.
 
-    We use a more exact equation involving the strip height
+    We use a more exact equation involving the strip height.
 
     Ref: https://www.allaboutcircuits.com/tools/microstrip-impedance-calculator/
 
     Parameters
     ----------
     w : number or engineer string
-        The trace width of the microstrip
+        The trace width of the microstrip.
     h : number or engineer string
         Trace height of the substrate between the bottom
-        of the microstrip and the ground plane
+        of the microstrip and the ground plane.
     t : number or engineer string
-        The trace thickness of the microstrip
+        The trace thickness of the microstrip.
     e_r : number or engineer string
-        Relative permittivity of the dielectric
+        Relative permittivity of the dielectric.
+
+    Returns
+    -------
+    float
+        Impedance in Ohms.
     """
     w = normalize_length(w) if isinstance(w, str) else w
     h = normalize_length(h) if isinstance(h, str) else h
@@ -152,24 +157,30 @@ def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = Re
           does not affect the differential impedance. It is only used for the
           single-ended impedance.
 
-    NOTE: Odd modes are present when the microstrip is driven to a different polarity
-    NOTE: Even modes are present when the microstrip is driven to the same polarity
+    NOTE: Odd modes are present when the microstrip is driven to a different polarity.
+    NOTE: Even modes are present when the microstrip is driven to the same polarity.
 
     Ref: https://www.eeweb.com/tools/edge-coupled-microstrip-impedance
 
     Parameters
     ----------
     w : number or engineer string
-        The trace width of the microstrip
+        The trace width of the microstrip.
     d : number or engineer string
-        Distance between the edges of the microstrip lines
+        Distance between the edges of the microstrip lines.
     h : number or engineer string
         Trace height of the substrate between the bottom
-        of the microstrip and the ground plane
+        of the microstrip and the ground plane.
     t : number or engineer string
-        The trace thickness of the microstrip
+        The trace thickness of the microstrip.
     e_r : number or engineer string
-        Relative permittivity of the dielectric
+        Relative permittivity of the dielectric.
+
+    Returns
+    -------
+    DifferentialMicrostripImpedance
+        Named tuple containing single_ended_impedance, differential_impedance,
+        even_mode_impedance, and odd_mode_impedance.
     """
     w = normalize_length(w) if isinstance(w, str) else w
     d = normalize_length(d) if isinstance(d, str) else d

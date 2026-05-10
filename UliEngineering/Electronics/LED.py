@@ -18,8 +18,8 @@ class LEDForwardVoltages:
 
     """
     Common LED forward voltage values.
-    Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm
-    NOTE: These do NOT neccessarily represent the actual forward voltages
+    Source: http://www.elektronik-kompendium.de/sites/bau/1109111.htm.
+    NOTE: These do NOT necessarily represent the actual forward voltages
     of any LED you choose but rather the typical forward voltage at nominal
     current.
 
@@ -42,6 +42,20 @@ def led_series_resistor(vsupply: VoltageV, ioperating: CurrentA, vforward: Volta
     supply voltage of [vsupply].
 
     Tolerances are not taken into account.
+
+    Parameters
+    ----------
+    vsupply : VoltageV
+        Supply voltage in Volts.
+    ioperating : CurrentA
+        Operating current in Amperes.
+    vforward : VoltageV
+        Forward voltage of the LED in Volts.
+
+    Returns
+    -------
+    float
+        Required series resistor value in Ohms.
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -60,9 +74,23 @@ def led_series_resistor_power(vsupply: VoltageV, ioperating: CurrentA, vforward:
     supply voltage of [vsupply].
 
     The resulting power value is the minimum rated value for the resistor
-    for continous operation
+    for continuous operation.
 
     Tolerances are not taken into account.
+
+    Parameters
+    ----------
+    vsupply : VoltageV
+        Supply voltage in Volts.
+    ioperating : CurrentA
+        Operating current in Amperes.
+    vforward : VoltageV
+        Forward voltage of the LED in Volts.
+
+    Returns
+    -------
+    float
+        Required resistor power in Watts.
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     ioperating = normalize_current(ioperating) if isinstance(ioperating, str) else ioperating
@@ -83,6 +111,18 @@ def led_series_resistor_maximum_current(resistance: ResistanceOhm, power_rating:
     (i.e. the current where the dissipated power is exactly the power rating).
 
     Tolerances are not taken into account.
+
+    Parameters
+    ----------
+    resistance : ResistanceOhm
+        Series resistor value in Ohms.
+    power_rating : PowerW
+        Power rating of the resistor in Watts.
+
+    Returns
+    -------
+    float
+        Maximum current in Amperes.
     """
     power_rating = normalize_power(power_rating) if isinstance(power_rating, str) else power_rating
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -97,6 +137,20 @@ def led_series_resistor_current(vsupply: VoltageV, resistance: ResistanceOhm, vf
     when connected to a supply voltage [vsupply] and a series resistor of [resistance].
 
     Tolerances are not taken into account.
+
+    Parameters
+    ----------
+    vsupply : VoltageV
+        Supply voltage in Volts.
+    resistance : ResistanceOhm
+        Series resistor value in Ohms.
+    vforward : VoltageV
+        Forward voltage of the LED in Volts.
+
+    Returns
+    -------
+    float
+        Current through the LED in Amperes.
     """
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance

@@ -34,14 +34,19 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
 
     Parameters
     ----------
-    total_gate_charge: number or Engineer string
+    total_gate_charge : ChargeC
         The total gate charge in Coulomb.
         For multiple MOSFETs such as in synchronous applications,
         add their gate charges together.
-    vsupply: number or Engineer string
-        The gate driver supply voltage in Volts
-    frequency: number or Engineer string
-        The switching frequency in Hz
+    vsupply : VoltageV
+        The gate driver supply voltage in Volts.
+    frequency : FrequencyHz
+        The switching frequency in Hz.
+
+    Returns
+    -------
+    float
+        Gate charge loss in Watts.
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
@@ -60,12 +65,17 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
 
     Parameters
     ----------
-    total_gate_charge: number or Engineer string
+    total_gate_charge : ChargeC
         The total gate charge in Coulomb.
         For multiple MOSFETs such as in synchronous applications,
         add their gate charges together.
-    vsupply: number or Engineer string
-        The gate driver supply voltage in Volts
+    vsupply : VoltageV
+        The gate driver supply voltage in Volts.
+
+    Returns
+    -------
+    float
+        Gate charge loss per cycle in Joules.
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
@@ -79,12 +89,17 @@ def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply
 
     Parameters
     ----------
-    total_gate_charge: number or Engineer string
+    total_gate_charge : ChargeC
         The total gate charge in Coulomb.
         For multiple MOSFETs such as in synchronous applications,
         add their gate charges together.
-    vsupply: number or Engineer string
-        The gate driver supply voltage in Volts
+    vsupply : VoltageV
+        The gate driver supply voltage in Volts.
+
+    Returns
+    -------
+    float
+        Gate capacitance in Farads.
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply

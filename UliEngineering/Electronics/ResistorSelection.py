@@ -127,18 +127,18 @@ def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
     """
     Compute an error matrix for selecting two resistors.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     error_function : callable
         Function that takes (r1, r2) and returns the percentage deviation
-        from the desired value
+        from the desired value.
     r1_sequence : array-like
-        Sequence of resistor values for the first resistor
+        Sequence of resistor values for the first resistor.
     r2_sequence : array-like
-        Sequence of resistor values for the second resistor
+        Sequence of resistor values for the second resistor.
 
-    Returns:
-    --------
+    Returns
+    -------
     numpy.ndarray
         2D array where rows represent r1_sequence and columns represent r2_sequence.
         Each element contains the error percentage for that resistor combination.
@@ -345,16 +345,25 @@ def select_resistors(
     """
     Select optimal resistor combinations based on error and cost criteria.
 
-    Args:
-        error_function: Function that computes error given (r1, r2)
-        error_cutoff: Maximum acceptable error value
-        r1_options: Sequence of possible R1 values
-        r2_options: Sequence of possible R2 values
-        cost_functions: List of cost functions taking (r1, r2, error) as arguments
-        cost_cutoff: Maximum acceptable total cost value. Default is 100.0.
+    Parameters
+    ----------
+    error_function : callable
+        Function that computes error given (r1, r2).
+    error_cutoff : float
+        Maximum acceptable error value.
+    r1_options : Sequence[float]
+        Sequence of possible R1 values.
+    r2_options : Sequence[float]
+        Sequence of possible R2 values.
+    cost_functions : List[callable]
+        List of cost functions taking (r1, r2, error) as arguments.
+    cost_cutoff : float, optional
+        Maximum acceptable total cost value. Default is 100.0.
 
-    Returns:
-        List of ResistorSelection objects sorted by total cost (ascending)
+    Returns
+    -------
+    List[ResistorSelection]
+        List of ResistorSelection objects sorted by total cost (ascending).
     """
     results = []
 
