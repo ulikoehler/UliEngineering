@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Henderson-Hasselbalch equation for pH/buffer calculations.
+"""Henderson-Hasselbalch equation for pH/buffer calculations.
 
-The Henderson-Hasselbalch equation relates pH, pKa, and the ratio
+The Henderson-Hasselbalch equation relates pH, pKa, and the ratio.
 of conjugate base to weak acid concentrations:
 
     pH = pKa + log10([A⁻] / [HA])
@@ -47,10 +46,9 @@ FARADAY_CONSTANT = physical_constants["Faraday constant"][0]
 
 @returns_unit("")
 def henderson_hasselbalch_pH(pKa, base_concentration: ConcentrationMolar, acid_concentration: ConcentrationMolar):
-    """
-    Compute pH using the Henderson-Hasselbalch equation.
+    """Compute pH using the Henderson-Hasselbalch equation.
 
-    pH = pKa + log10([A⁻] / [HA])
+    pH = pKa + log10([A⁻] / [HA]).
 
     Parameters
     ----------
@@ -74,10 +72,9 @@ def henderson_hasselbalch_pH(pKa, base_concentration: ConcentrationMolar, acid_c
 
 @returns_unit("")
 def henderson_hasselbalch_ratio(pH, pKa):
-    """
-    Compute the [A⁻]/[HA] ratio from pH and pKa.
+    """Compute the [A⁻]/[HA] ratio from pH and pKa.
 
-    [A⁻] / [HA] = 10^(pH - pKa)
+    [A⁻] / [HA] = 10^(pH - pKa).
 
     Parameters
     ----------
@@ -90,16 +87,16 @@ def henderson_hasselbalch_ratio(pH, pKa):
     -------
     float
         Ratio of conjugate base to acid concentration (dimensionless).
+    
     """
     return 10.0 ** (pH - pKa)
 
 
 @returns_unit("")
 def henderson_hasselbalch_pKa(pH, base_concentration: ConcentrationMolar, acid_concentration: ConcentrationMolar):
-    """
-    Compute pKa from pH and concentrations using the Henderson-Hasselbalch equation.
+    """Compute pKa from pH and concentrations using the Henderson-Hasselbalch equation.
 
-    pKa = pH - log10([A⁻] / [HA])
+    pKa = pH - log10([A⁻] / [HA]).
 
     Parameters
     ----------
@@ -114,6 +111,7 @@ def henderson_hasselbalch_pKa(pH, base_concentration: ConcentrationMolar, acid_c
     -------
     float
         pKa value (dimensionless).
+    
     """
     base_concentration = normalize_concentration(base_concentration) if isinstance(base_concentration, str) else base_concentration
     acid_concentration = normalize_concentration(acid_concentration) if isinstance(acid_concentration, str) else acid_concentration
@@ -122,8 +120,8 @@ def henderson_hasselbalch_pKa(pH, base_concentration: ConcentrationMolar, acid_c
 
 @returns_unit("V")
 def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: ConcentrationMolar, T=298.15):
-    """
-    Compute the liquid junction potential using the Henderson equation
+    """Compute the liquid junction potential using the Henderson equation
+    
     for a simple 1:1 electrolyte (e.g. KCl).
 
     E_j = (R*T/F) * (t+ - t-) * ln(c₂/c₁)
@@ -147,6 +145,7 @@ def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: Co
     -------
     float
         Liquid junction potential in Volts.
+    
     """
     c1 = normalize_concentration(c1) if isinstance(c1, str) else c1
     c2 = normalize_concentration(c2) if isinstance(c2, str) else c2
@@ -156,10 +155,9 @@ def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: Co
 
 @returns_unit("V")
 def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, lambda_minus: MolarConductivitySM2Mol, c1: ConcentrationMolar, c2: ConcentrationMolar, T=298.15):
-    """
-    Compute the liquid junction potential using ionic conductivities.
+    """Compute the liquid junction potential using ionic conductivities.
 
-    E_j = (R*T/F) * (λ+ - λ-)/(λ+ + λ-) * ln(c₁/c₂)
+    E_j = (R*T/F) * (λ+ - λ-)/(λ+ + λ-) * ln(c₁/c₂).
 
     Parameters
     ----------
@@ -178,6 +176,7 @@ def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, la
     -------
     float
         Liquid junction potential in Volts.
+    
     """
     lambda_plus = normalize_molar_conductivity(lambda_plus) if isinstance(lambda_plus, str) else lambda_plus
     lambda_minus = normalize_molar_conductivity(lambda_minus) if isinstance(lambda_minus, str) else lambda_minus
@@ -190,10 +189,9 @@ def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, la
 
 @returns_unit("mol/L")
 def buffer_capacity(C_total: ConcentrationMolar, Ka, H_concentration: ConcentrationMolar):
-    """
-    Compute the buffer capacity β of a buffer solution.
+    """Compute the buffer capacity β of a buffer solution.
 
-    β = 2.303 * C_total * Ka * [H⁺] / (Ka + [H⁺])²
+    β = 2.303 * C_total * Ka * [H⁺] / (Ka + [H⁺])².
 
     Parameters
     ----------
@@ -208,6 +206,7 @@ def buffer_capacity(C_total: ConcentrationMolar, Ka, H_concentration: Concentrat
     -------
     float
         Buffer capacity in mol/L (amount of acid/base needed to change pH by 1).
+    
     """
     C_total = normalize_concentration(C_total) if isinstance(C_total, str) else C_total
     H_concentration = normalize_concentration(H_concentration) if isinstance(H_concentration, str) else H_concentration

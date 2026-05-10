@@ -168,12 +168,12 @@ class TestAmountConcentration(unittest.TestCase):
             normalize_amount_concentration("   ")
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(MassConcentrationPerLiter)
         self.assertIsNotNone(AmountConcentrationPerLiter)
 
     def test_mass_concentration_type_various_units(self):
-        """Test MassConcentrationPerLiter type with various unit inputs"""
+        """Test MassConcentrationPerLiter type with various unit inputs."""
         test_cases = [
             ("1 g/l", 1.0),
             ("1 mg/l", 1e-3),
@@ -187,7 +187,7 @@ class TestAmountConcentration(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_amount_concentration_type_various_units(self):
-        """Test AmountConcentrationPerLiter type with various unit inputs"""
+        """Test AmountConcentrationPerLiter type with various unit inputs."""
         test_cases = [
             ("1 mol/l", 1.0),
             ("1 M", 1.0),

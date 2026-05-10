@@ -8,9 +8,8 @@ __all__ = ["ValueRange", "normalize_minmax_tuple"]
 _ValueRange = namedtuple("ValueRange", ["min", "max", "unit"])
 
 class ValueRange(_ValueRange):
-    """
-    Represent a range of values with optional unit.
-    """
+    
+    """Represent a range of values with optional unit."""
 
     def __new__(cls, min_val, max_val, unit=None, significant_digits=4):
         """Create a new ValueRange instance."""
@@ -24,37 +23,36 @@ class ValueRange(_ValueRange):
 
     @property
     def minmax(self):
-        """Retun (min, max). Utility e.g. for unpacking a ValueRange ignoring Unit.
--------
-    
-           
-        Returns:
-            tuple: A tuple containing the minimum and maximum values of the range.
+        """Return (min, max). Utility e.g. for unpacking a ValueRange ignoring Unit.
+
+        Returns
+        -------
+        tuple
+            A tuple containing the minimum and maximum values of the range.
+        
         """
         return (self.min, self.max)
 
 def normalize_minmax_tuple(arg, name="field"):
-    """
-    Interprets arg either a single +- value or as a 2-tuple of + and - values.
+    """Interpret arg either as a single +- value or as a 2-tuple of + and - values.
 
     If arg is a tuple:
         Return ValueRange(arg[0], arg[1]) (strings are normalized)
     Else:
-    Pa ameter eturn ValueRange(-arg, +arg) (strings are normalized)
-----------
- :
-       
-     is f: r debugging p
-p       oses and shown in the exception string.
+        Return ValueRange(-arg, +arg) (strings are normalized)
 
-    Args:
+    Parameters
+    ----------
+    arg : float or tuple
+        The input value(s) to normalize.
+    name : str, optional
+        The name of the field being normalized. Defaults to "field".
+
+    Returns
     -------
-    arg (float
-       or tuple): The input value(s) to normalize.
-        name (str, optional): The name of the field being normalized. Defaults to "field".
-
-    Returns:
-        ValueRange: A normalized ValueRange instance.
+    ValueRange
+        A normalized ValueRange instance.
+    
     """
     # Parse coefficient and compute min & max factors
     if isinstance(arg, tuple):

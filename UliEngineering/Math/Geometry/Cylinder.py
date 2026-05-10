@@ -45,8 +45,7 @@ def hollow_cylinder_volume(outer_radius: NormalizableArgument, inner_radius: Nor
     return cylinder_volume(outer_radius, height) - cylinder_volume(inner_radius, height)
 
 def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
-    """
-    Compute the weight of a cylinder by its diameter, length and density.
+    """Compute the weight of a cylinder by its diameter, length and density.
 
     The density is in kg/m³, the diameter and length must be given in mm.
     The default density is an approximation for steel.
@@ -57,8 +56,7 @@ def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: Normaliz
     return cylinder_volume(diameter/2., length) * density
 
 def cylinder_weight_by_radius(radius: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
-    """
-    Compute the weight of a cylinder by its radius, length and density.
+    """Compute the weight of a cylinder by its radius, length and density.
 
     The density is in kg/m³, the radius and length must be given in mm.
     The default density is an approximation for steel.
@@ -69,8 +67,7 @@ def cylinder_weight_by_radius(radius: NormalizableArgument, length: Normalizable
     return cylinder_volume(radius, length) * density
 
 def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
-    """
-    Compute the weight of a cylinder by its cross-sectional area, length and density.
+    """Compute the weight of a cylinder by its cross-sectional area, length and density.
 
     The density is in kg/m³, the area and length must be given in mm² and mm.
     The default density is an approximation for steel.
@@ -82,9 +79,7 @@ def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: 
 
 @returns_unit("m")
 def hollow_cylinder_inner_radius_by_volume(outer_radius: NormalizableArgument, volume: NormalizableArgument, height: NormalizableArgument):
-    """
-    Compute the inner radius of a hollow cylinder given outer radius, height, and volume.
-    """
+    """Compute the inner radius of a hollow cylinder given outer radius, height, and volume."""
     outer_radius = normalize_numeric(outer_radius) if isinstance(outer_radius, str) else outer_radius
     volume = normalize_numeric(volume) if isinstance(volume, str) else volume
     height = normalize_numeric(height) if isinstance(height, str) else height

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crystal oscillator utilities
-"""
+"""Crystal oscillator utilities."""
 from typing import Annotated
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
@@ -31,7 +29,7 @@ PPM = Annotated[NormalizedComputable, normalize_ppm]
 def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
     """Compute the load capacitors which should be used for a given crystal, given that the load capacitors should be symmetric (i.e. have the same value).
 
-    NOTE: You need to use a stray capacitance value that does NOT
+    NOTE: You need to use a stray capacitance value that does NOT.
     include the parasitic pin capacitance!
 
     Based on (C1 * C2) / (C1 + C2) + Cstray
@@ -53,6 +51,7 @@ def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstr
     -------
     float
         Required load capacitor value in Farads.
+    
     """
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
@@ -91,6 +90,7 @@ def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad="3 pF
     -------
     float
         Actual load capacitance in Farads.
+    
     """
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
@@ -109,8 +109,8 @@ def _crystal_deviation_seconds_per_x(deviation: PPM, n_secs):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_minute(deviation: PPM):
-    """
-    Compute how many seconds a crystal with given ppm
+    """Compute how many seconds a crystal with given ppm
+    
     deviation deviates per minute.
 
     Use a "n ppm"-like string or use an exponent-(-6)-based number.
@@ -131,13 +131,14 @@ def crystal_deviation_seconds_per_minute(deviation: PPM):
     -------
     float
         Deviation in seconds per minute.
+    
     """
     return _crystal_deviation_seconds_per_x(deviation, 60)
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_hour(deviation: PPM):
-    """
-    Compute how many seconds a crystal with given ppm
+    """Compute how many seconds a crystal with given ppm
+    
     deviation deviates per hour.
 
     Use a "n ppm"-like string or use an exponent-(-6)-based number.
@@ -158,13 +159,14 @@ def crystal_deviation_seconds_per_hour(deviation: PPM):
     -------
     float
         Deviation in seconds per hour.
+    
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600)
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_day(deviation: PPM):
-    """
-    Compute how many seconds a crystal with given ppm
+    """Compute how many seconds a crystal with given ppm
+    
     deviation deviates per standard day (24 hours a 3600 seconds).
 
     Use a "n ppm"-like string or use an exponent-(-6)-based number.
@@ -185,13 +187,14 @@ def crystal_deviation_seconds_per_day(deviation: PPM):
     -------
     float
         Deviation in seconds per day.
+    
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24)
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_month(deviation: PPM):
-    """
-    Compute how many seconds a crystal with given ppm
+    """Compute how many seconds a crystal with given ppm
+    
     deviation deviates per 31-day month (31 days a 3600*24s).
 
     Use a "n ppm"-like string or use an exponent-(-6)-based number.
@@ -212,13 +215,14 @@ def crystal_deviation_seconds_per_month(deviation: PPM):
     -------
     float
         Deviation in seconds per month.
+    
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24*31)
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_year(deviation: PPM):
-    """
-    Compute how many seconds a crystal with given ppm
+    """Compute how many seconds a crystal with given ppm
+    
     deviation deviates per 365-day year (365 days a 3600*24s).
 
     Use a "n ppm"-like string or use an exponent-(-6)-based number.
@@ -239,5 +243,6 @@ def crystal_deviation_seconds_per_year(deviation: PPM):
     -------
     float
         Deviation in seconds per year.
+    
     """
     return _crystal_deviation_seconds_per_x(deviation, 3600*24*365)

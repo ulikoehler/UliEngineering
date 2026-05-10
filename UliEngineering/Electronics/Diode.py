@@ -60,9 +60,9 @@ def _validate_positive(name, value):
 
 
 class DiodeModel:
-    """
-    Base class for diode models that support analytic RC timing calculations.
-    """
+
+    
+    """Base class for diode models that support analytic RC timing calculations."""
 
     def minimum_series_voltage(self):
         """Return the minimum series voltage required."""
@@ -82,9 +82,9 @@ class DiodeModel:
 
 
 class SimpleDiodeModel(DiodeModel):
-    """
-    Constant forward-voltage diode model.
-    """
+
+    
+    """Constant forward-voltage diode model."""
 
     def __init__(self, forward_voltage="0V"):
         """Initialize the SimpleDiodeModel with a forward voltage drop."""
@@ -116,6 +116,7 @@ class SimpleDiodeModel(DiodeModel):
 
 
 class ShockleyDiodeModel(DiodeModel):
+    
     """Shockley diode model with analytic series resistor solutions."""
 
     def __init__(self, saturation_current, ideality_factor=1.0, temperature="25°C"):
@@ -183,14 +184,18 @@ def _shockley_voltage_scale(ideality_factor, temperature):
 
 @returns_unit("V")
 def diode_thermal_voltage(temperature="25°C"):
-    """
-    Compute the thermal voltage $V_T = kT/q$ of a diode.
+    """Compute the thermal voltage $V_T = kT/q$ of a diode.
 
-    Parameters:
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The thermal voltage in volts.
+    Returns
+    -------
+    float
+        The thermal voltage in volts.
+
     """
     temperature_kelvin = cast(float, normalize_temperature_kelvin(temperature))
     return boltzmann_k * temperature_kelvin / elementary_charge
@@ -198,17 +203,24 @@ def diode_thermal_voltage(temperature="25°C"):
 
 @returns_unit("A")
 def shockley_diode_current(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """
-    Compute the diode current using the Shockley diode equation.
+    """Compute the diode current using the Shockley diode equation.
 
-    Parameters:
-    - voltage: The diode voltage in volts.
-    - saturation_current: The diode saturation current in amperes.
-    - ideality_factor: The ideality factor n.
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    voltage : str or float
+        The diode voltage in volts.
+    saturation_current : str or float
+        The diode saturation current in amperes.
+    ideality_factor : float, optional
+        The ideality factor n.
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The diode current in amperes.
+    Returns
+    -------
+    float
+        The diode current in amperes.
+
     """
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current
@@ -219,17 +231,24 @@ def shockley_diode_current(voltage: VoltageV, saturation_current: CurrentA, idea
 
 @returns_unit("V")
 def shockley_diode_voltage(current: CurrentA, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """
-    Compute the diode voltage from the Shockley diode equation.
+    """Compute the diode voltage from the Shockley diode equation.
 
-    Parameters:
-    - current: The diode current in amperes.
-    - saturation_current: The diode saturation current in amperes.
-    - ideality_factor: The ideality factor n.
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    current : str or float
+        The diode current in amperes.
+    saturation_current : str or float
+        The diode saturation current in amperes.
+    ideality_factor : float, optional
+        The ideality factor n.
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The diode voltage in volts.
+    Returns
+    -------
+    float
+        The diode voltage in volts.
+
     """
     current = normalize_current(current) if isinstance(current, str) else current
     saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current
@@ -242,17 +261,24 @@ def shockley_diode_voltage(current: CurrentA, saturation_current: CurrentA, idea
 
 @returns_unit("A")
 def shockley_diode_saturation_current(voltage: VoltageV, current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """
-    Compute the saturation current from one operating point.
+    """Compute the saturation current from one operating point.
 
-    Parameters:
-    - voltage: The diode voltage in volts.
-    - current: The diode current in amperes.
-    - ideality_factor: The ideality factor n.
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    voltage : str or float
+        The diode voltage in volts.
+    current : str or float
+        The diode current in amperes.
+    ideality_factor : float, optional
+        The ideality factor n.
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The diode saturation current in amperes.
+    Returns
+    -------
+    float
+        The diode saturation current in amperes.
+
     """
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     current = normalize_current(current) if isinstance(current, str) else current
@@ -264,16 +290,22 @@ def shockley_diode_saturation_current(voltage: VoltageV, current: CurrentA, idea
 
 @returns_unit("Ω")
 def shockley_diode_small_signal_resistance(current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """
-    Compute the small-signal resistance $r_d = nV_T/I$ of a diode.
+    """Compute the small-signal resistance $r_d = nV_T/I$ of a diode.
 
-    Parameters:
-    - current: The diode current in amperes.
-    - ideality_factor: The ideality factor n.
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    current : str or float
+        The diode current in amperes.
+    ideality_factor : float, optional
+        The ideality factor n.
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The small-signal resistance in ohms.
+    Returns
+    -------
+    float
+        The small-signal resistance in ohms.
+
     """
     current = normalize_current(current) if isinstance(current, str) else current
     voltage_scale = _shockley_voltage_scale(ideality_factor, temperature)
@@ -283,17 +315,24 @@ def shockley_diode_small_signal_resistance(current: CurrentA, ideality_factor=1.
 
 @returns_unit("W")
 def shockley_diode_power(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """
-    Compute the power dissipated by a diode from the Shockley equation.
+    """Compute the power dissipated by a diode from the Shockley equation.
 
-    Parameters:
-    - voltage: The diode voltage in volts.
-    - saturation_current: The diode saturation current in amperes.
-    - ideality_factor: The ideality factor n.
-    - temperature: The junction temperature.
+    Parameters.
+    ----------
+    voltage : str or float
+        The diode voltage in volts.
+    saturation_current : str or float
+        The diode saturation current in amperes.
+    ideality_factor : float, optional
+        The ideality factor n.
+    temperature : str or float
+        The junction temperature.
 
-    Returns:
-    The diode power in watts.
+    Returns
+    -------
+    float
+        The diode power in watts.
+
     """
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     saturation_current = normalize_current(saturation_current) if isinstance(saturation_current, str) else saturation_current

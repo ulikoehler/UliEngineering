@@ -28,13 +28,13 @@ class TestRF(unittest.TestCase):
         self.assertEqual(auto_format(resonant_inductance, "250 kHz", "10 nF"), '40.5 µH')
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(InductanceHenry)
         self.assertIsNotNone(CapacitanceFarad)
         self.assertIsNotNone(FrequencyHz)
 
     def test_normalize_inductance_various_units(self):
-        """Test normalize_inductance with various unit inputs"""
+        """Test normalize_inductance with various unit inputs."""
         test_cases = [
             ("1 H", 1.0),
             ("1 Henry", 1.0),
@@ -51,7 +51,7 @@ class TestRF(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_capacitance_various_units(self):
-        """Test normalize_capacitance with various unit inputs"""
+        """Test normalize_capacitance with various unit inputs."""
         test_cases = [
             ("1 F", 1.0),
             ("1 Farad", 1.0),

@@ -11,8 +11,7 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
                   rise_time=None, fall_time=None, high_time=None,
                   acceleration=None, length=1.0, phaseshift=0.0,
                   continuity="C1"):
-    """
-    Generate a periodic ramp (trapezoidal) signal with smoothed corners (knees) defined by acceleration.
+    """Generate a periodic ramp (trapezoidal) signal with smoothed corners (knees) defined by acceleration.
 
     The signal consists of 4 segments per period:
     1. Rise (Low -> High)
@@ -57,6 +56,7 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
     -------
     numpy.ndarray
         A numpy array containing the signal.
+    
     """
     frequency = normalize_numeric(frequency)
     samplerate = normalize_numeric(samplerate)
@@ -164,9 +164,7 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
     return y + offset
 
 def _compute_edge(t, duration, amplitude, acceleration, continuity, rising=True):
-    """
-    Compute the value of a rising or falling edge at times t (0 to duration).
-    """
+    """Compute the value of a rising or falling edge at times t (0 to duration)."""
     if duration <= 0:
         return np.full_like(t, amplitude if rising else 0.0)
 

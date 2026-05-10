@@ -8,8 +8,7 @@ from .Files import list_recursive
 __all__ = ["create_zip_from_directory", "list_zip", "read_from_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
-    """
-    Create a ZIP file from a directory that exists on the filesystem.
+    """Create a ZIP file from a directory that exists on the filesystem.
 
     Add all files recursively, naming them correctly.
 
@@ -23,6 +22,7 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
         If True, the basename of the directory is prepended to each filename
         in the ZIP (i.e. when running unzip on the ZIP, one directory is
         extracted).
+    
     """
     basename = os.path.basename(directory)
     with zipfile.ZipFile(zippath, mode="w") as zipout:
@@ -35,8 +35,7 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
                          if include_rootdir else filename)
 
 def list_zip(zippath):
-    """
-    Get a list of entries in the ZIP.
+    """Get a list of entries in the ZIP.
 
     Equivalent to calling .namelist() on the opened ZIP file.
     """
@@ -44,10 +43,9 @@ def list_zip(zippath):
         return zipin.namelist()
 
 def read_from_zip(zippath, filepaths, binary=True):
-    """
-    Read one or multiple files from a ZIP, copying their contents to memory.
+    """Read one or multiple files from a ZIP, copying their contents to memory.
 
-    Parameters
+    Parameters.
     ----------
     zippath : path-like
         The path of the ZIP file.
@@ -63,6 +61,7 @@ def read_from_zip(zippath, filepaths, binary=True):
     io.BytesIO or io.StringIO or list
         If filepath is a string, a single file-like object (in-memory).
         If filepath is any other iterable, a list of file-like in-memory objs.
+    
     """
     iof = io.BytesIO if binary else io.StringIO
     # Handle single file using the same code as multiple files

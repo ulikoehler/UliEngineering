@@ -13,9 +13,9 @@ from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
 __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
 def value_at_temperature(nominal: NormalizableArgument, temperature: NormalizableArgument, coefficient: NormalizableArgument = "100 ppm", tref: NormalizableArgument = "25°C"):
-    """
-    Given a component with a nominal value (nominal) at a reference temperature (tref)
-    and a fixed coefficient of temperature (coefficient, e.g. "100 ppm"),
+    """Given a component with a nominal value (nominal) at a reference temperature (tref)
+    
+    and a fixed coefficient of temperature (coefficient, e.g. "100 ppm"),.
     computes the actual value of the component at temperature.
 
     The coefficient of temperature is interpreted in accordance with MIL-STD-202G.
@@ -43,6 +43,7 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
     -------
     float
         A unit-less value representing the value of the component at the given temperature.
+    
     """
     # Normalize nominal and coefficient
     nominal = normalize_numeric(nominal) if isinstance(nominal, str) else nominal
@@ -67,8 +68,8 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
 
 
 def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str|float = "100ppm", tolerance: NormalizableArgument = "0 %", tmin: NormalizableArgument = "-40 °C", tmax: NormalizableArgument = "85 °C", tref: NormalizableArgument = "25 °C", significant_digits=4):
-    """
-    Given a component which has a nominal value (e.g. "1 kΩ")
+    """Given a component which has a nominal value (e.g. "1 kΩ")
+    
     at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
 
     Computes the mininimum and maximum possible value of that component
@@ -123,6 +124,7 @@ def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str
         A ValueRange() instance containing strings with the correct unit, if any.
         Example: ValueRange("99.5 Ω", "100.5 Ω")
         Use .min and .max to get the min/max value
+    
     """
     # NOTE: These will be in Kelvin after normalization!
     tmin = normalize_temperature(tmin)

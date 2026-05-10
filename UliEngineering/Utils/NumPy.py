@@ -10,6 +10,7 @@ __all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d",
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
     """Append a value to a 1D numpy array. Resize dynamically if required.
+    
     Returns the new array (which may be the same as the old array).
     No resize is performed if the array is already large enough.
 
@@ -41,6 +42,7 @@ def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max
         An upper bound on the extra array size. Setting this too high increases memory overhead,
         but setting it too low will cause too small allocations to occur, resulting in more
         frequent reallocations and therefore more running speed.
+    
     """
     # Array large enough ? If so, we don't have to bother about insertion.
     if index < arr.size:
@@ -58,10 +60,9 @@ def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max
 
 
 def invert_bijection(arr):
-    """
-    Perreturned by np.argsort().
+    """Perreturned by np.argsort().
 
-    For each value x in the given array at index i,
+    For each value x in the given array at index i,.
     the new array will have the value i at index x.
 
     Preconditions (not checked):
@@ -84,6 +85,7 @@ def invert_bijection(arr):
     array([1,0,2,3])
     >>> invert_bijection([1,0,2,3])
     array([1,0,2,3])
+    
     """
     ret = np.zeros_like(arr)
     for new, old in enumerate(arr):
@@ -92,8 +94,8 @@ def invert_bijection(arr):
 
 
 def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
-    """
-    Given two 1d arrays, generates a 2d matrix.
+    """Given two 1d arrays, generates a 2d matrix.
+    
     conIf valuesB is None, valuesA is used for both arrays.
 
     The input values do not neccessarily have to be numbers and can be
@@ -112,6 +114,7 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
         Applied to input value pairs
     dtype : numpy-supported data type
         The datatype that is passed when generating the result matrix.
+    
     """
     valuesB = valuesA if valuesB is None else valuesB
     # TODO: Possibly there is a better algorithm, e.g. np.apply_along_axis?
@@ -124,9 +127,9 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
 
 
 def ngrams(arr, n, closed=False):
-    """
-    Yield ngrams of subsequent entries from an arbitrarily-shaped array.
-    For example, with arr=[1,2,3,4,5,6]
+    """Yield ngrams of subsequent entries from an arbitrarily-shaped array.
+    
+    For example, with arr=[1,2,3,4,5,6].
     andif closed=False or [[1,2][2,3],[3,4],[4,5],[5,6],[6,1]] if closed=True.
 
     For n=2, this function behaves similarly to
@@ -145,6 +148,7 @@ def ngrams(arr, n, closed=False):
         True if there should be an ngram containing the last
         and the first entries (until the next ngram would be
         the first in the list)
+    
     """
     idxs = np.arange(n)
     for _ in range(arr.shape[0] if closed else arr.shape[0] - n + 1):
@@ -153,8 +157,8 @@ def ngrams(arr, n, closed=False):
 
 
 def split_by_pivot(arr, pivots):
-    """
-    Takes a numpy array and splits it according to pivot points.
+    """Takes a numpy array and splits it according to pivot points.
+    
     Yields each slice.
     Examples:
     splsplit_by_pivot([0,1,2,3,4,5], [2,4]) => [[0,1],[2,3],[4,5]]
@@ -165,6 +169,7 @@ def split_by_pivot(arr, pivots):
         The array to return slice froms
     pivots : iterable of ints
         The pivot points to split at
+    
     """
     # Get all slice endpoints
     # list() required for numpy arrays
@@ -174,9 +179,7 @@ def split_by_pivot(arr, pivots):
         yield arr[start:end]
 
 def datetime64_now():
-    """
-    Return datetime.now() as np.datetime64 object.
-    """
+    """Return datetime.now() as np.datetime64 object."""
     return np.datetime64(datetime.now())
 
 
@@ -185,8 +188,8 @@ _resolution_re = re.compile(r'^[^\[]+\[([^\]]+)\]$')
 
 
 def timedelta64_resolution(tdelta):
-    """
-    Given a timedelta64 object, returns its resolution as a string,
+    """Given a timedelta64 object, returns its resolution as a string,
+    
     e.g. 'us' or 'ms'.
     """
     s = str(tdelta.dtype) # e.g. 'timedelta64[us]'
@@ -195,8 +198,8 @@ def timedelta64_resolution(tdelta):
        return match.group(1)
 
 def datetime64_resolution(dt):
-    """
-    Given a datetime64 object, returns its resolution as a string,
+    """Given a datetime64 object, returns its resolution as a string,
+    
     e.g. 'us' or 'ms'.
     """
     return timedelta64_resolution(dt) # Same algorithm!

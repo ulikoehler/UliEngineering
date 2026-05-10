@@ -21,12 +21,12 @@ class TestNoiseDensity(unittest.TestCase):
         self.assertEqual(auto_format(noise_density, "1.0 mV", "100 Hz"), '100 µV/√Hz')
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(VoltageVolt)
         self.assertIsNotNone(FrequencyHz)
 
     def test_normalize_voltage_various_units(self):
-        """Test normalize_voltage with various unit inputs"""
+        """Test normalize_voltage with various unit inputs."""
         test_cases = [
             ("1 V", 1.0),
             ("1 Volt", 1.0),

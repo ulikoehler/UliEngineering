@@ -15,8 +15,7 @@ def parse_int_or_float(s):
 
 
 def try_parse_int_or_float(s):
-    """
-    Try to parse the given string as int, and if that fail, as float.
+    """Try to parse the given string as int, and if that fail, as float.
 
     If the parsing as float fails, returns the string.
     """

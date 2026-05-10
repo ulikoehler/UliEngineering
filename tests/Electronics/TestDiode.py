@@ -155,11 +155,11 @@ class TestDiode(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(PowerW)
 
     def test_normalize_power_various_units(self):
-        """Test normalize_power with various unit inputs"""
+        """Test normalize_power with various unit inputs."""
         test_cases = [
             ("1 W", 1.0),
             ("1 mW", 1e-3),
@@ -172,7 +172,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_diode_functions_various_units(self):
-        """Test diode functions with various unit inputs"""
+        """Test diode functions with various unit inputs."""
         # Test shockley_diode_current with different units
         i1 = shockley_diode_current("1 V", "1 A")
         i2 = shockley_diode_current("1000 mV", "1000 mA")

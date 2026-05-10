@@ -25,11 +25,11 @@ class TestMassNormalization(unittest.TestCase):
         assert_allclose(normalize_mass_grams(["1 kg", "1000 mg", "500 g"]), [1000.0, 1.0, 500.0])
 
     def test_type_annotation_exists(self):
-        """Test that the new type annotation is available"""
+        """Test that the new type annotation is available."""
         self.assertIsNotNone(MassGrams)
 
     def test_mass_type_various_units(self):
-        """Test MassGrams type with various unit inputs"""
+        """Test MassGrams type with various unit inputs."""
         test_cases = [
             ("1 g", 1.0),
             ("500 g", 500.0),

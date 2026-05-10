@@ -37,12 +37,14 @@ Grams = Annotated[NormalizedComputable, normalize_grams]
 
 @dataclass
 class DNANucleotideWeights:
+    
     """Molecular weights of the four DNA nucleotides in g/mol.
 
     This includes the phosphate group and the deoxyribose sugar.
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
+    
     A: float = 313.2   # Adenine
     T: float = 304.2   # Thymine
     G: float = 329.2   # Guanine
@@ -50,12 +52,14 @@ class DNANucleotideWeights:
 
 @dataclass
 class RNANucleotideWeights:
+    
     """Molecular weights of the four RNA nucleotides in g/mol.
 
     This includes the backbone phosphate group.
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
+    
     A: float = 329.2   # Adenine
     U: float = 306.2   # Uracil
     G: float = 345.2   # Guanine
@@ -64,7 +68,9 @@ class RNANucleotideWeights:
 
 @dataclass
 class NucleotideFractions:
+    
     """Fractions of the five nucleotides (must sum to 1.0)."""
+    
     A: float
     G: float
     C: float
@@ -80,10 +86,12 @@ equal_rna_fractions = NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25)
 
 # DNA/RNA nucleotide fractions for various organisms (from HTML table data)
 class DNARNANucleotideFractionsByOrganism:
+    
+    """Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules.
+    
+    Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11).
     """
-    Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules.
-    Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11)
-    """
+    
     MaiOctopus = NucleotideFractions(A=0.332, T=0.316, G=0.176, C=0.176, U=0.0)
     Chicken = NucleotideFractions(A=0.280, T=0.284, G=0.220, C=0.216, U=0.0)
     Rat = NucleotideFractions(A=0.286, T=0.284, G=0.214, C=0.205, U=0.0)
@@ -99,8 +107,7 @@ class DNARNANucleotideFractionsByOrganism:
 
 @returns_unit("g/mol")
 def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
-    """
-    Compute the molecular weight of a single-stranded DNA molecule (e.g., oligonucleotide).
+    """Compute the molecular weight of a single-stranded DNA molecule (e.g., oligonucleotide).
 
     Formula (for single-stranded DNA):
         M.W. = (An x 313.2) + (Tn x 304.2) + (Cn x 289.2) + (Gn x 329.2) + 79.0.
@@ -118,6 +125,7 @@ def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions =
     -------
     float or numpy.ndarray
         Molecular weight in g/mol.
+    
     """
     length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
@@ -135,8 +143,7 @@ def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions =
 
 @returns_unit("g/mol")
 def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human_RNA, nucleotide_weights: RNANucleotideWeights = RNANucleotideWeights()):
-    """
-    Compute the molecular weight of a single-stranded RNA molecule (e.g., oligonucleotide).
+    """Compute the molecular weight of a single-stranded RNA molecule (e.g., oligonucleotide).
 
     Formula (for single-stranded RNA):
         M.W. = (An x 329.2) + (Un x 306.2) + (Cn x 305.2) + (Gn x 345.2) + 159.
@@ -154,6 +161,7 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
     -------
     float or numpy.ndarray
         Molecular weight in g/mol.
+    
     """
     length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
@@ -171,8 +179,8 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
 
 @returns_unit("g/L")
 def dnarna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
-    """
-    Convert DNA/RNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
+    """Convert DNA/RNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
+    
     Handles scalar, list, or ndarray input.
     """
     molar_conc = normalize_amount_concentration(concentration)  # normalize to mol/L
@@ -181,8 +189,8 @@ def dnarna_weight_concentration_from_concentration(concentration, length_nucleot
 
 @returns_unit("g")
 def dnarna_moles_to_grams(moles: Moles, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
-    """
-    Convert amount of DNA/RNA (in moles) to grams for a given sequence length and nucleotide composition.
+    """Convert amount of DNA/RNA (in moles) to grams for a given sequence length and nucleotide composition.
+    
     Handles scalar, list, or ndarray input.
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
@@ -191,8 +199,8 @@ def dnarna_moles_to_grams(moles: Moles, length_nucleotides, fractions: Nucleotid
 
 @returns_unit("mol")
 def dnarna_grams_to_moles(grams: Grams, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
-    """
-    Convert mass of DNA/RNA (in grams) to moles for a given sequence length and nucleotide composition.
+    """Convert mass of DNA/RNA (in grams) to moles for a given sequence length and nucleotide composition.
+    
     Handles scalar, list, or ndarray input.
     """
     grams = normalize_grams(grams) if isinstance(grams, str) else grams

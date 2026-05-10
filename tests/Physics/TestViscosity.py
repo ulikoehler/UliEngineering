@@ -694,7 +694,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(ShearRate)
 
     def test_normalize_dynamic_viscosity_various_units(self):
-        """Test normalize_dynamic_viscosity with various unit inputs"""
+        """Test normalize_dynamic_viscosity with various unit inputs."""
         test_cases = [
             ("1 Pa·s", 1.0),
             ("1 Pa s", 1.0),
@@ -709,7 +709,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_density_various_units(self):
-        """Test normalize_density with various unit inputs"""
+        """Test normalize_density with various unit inputs."""
         test_cases = [
             ("1 kg/m³", 1.0),
             ("1 kg/m3", 1.0),
@@ -724,7 +724,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_length_various_units(self):
-        """Test normalize_length with various unit inputs"""
+        """Test normalize_length with various unit inputs."""
         test_cases = [
             ("1 m", 1.0),
             ("1 mm", 1e-3),
@@ -739,7 +739,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_pressure_various_units(self):
-        """Test normalize_pressure with various unit inputs"""
+        """Test normalize_pressure with various unit inputs."""
         test_cases = [
             ("1 Pa", 1.0),
             ("1 kPa", 1e3),
@@ -776,7 +776,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_viscosity_functions_various_units(self):
-        """Test viscosity functions with various unit inputs"""
+        """Test viscosity functions with various unit inputs."""
         # Test kinematic_viscosity with different viscosity units
         nu1 = kinematic_viscosity("1 mPa·s", "1000 kg/m³")
         nu2 = kinematic_viscosity("0.001 Pa·s", "1000 kg/m³")

@@ -80,7 +80,7 @@ class TestFFT(unittest.TestCase):
         (10000., 30.0),
     ])
     def testFFTAmplitudeIntegral(self, amplitude, length):
-        """FFT amplitude integral should be equal to ptp value of a sine wave"""
+        """FFT amplitude integral should be equal to ptp value of a sine wave."""
         sine = sine_wave(10.0, 100.0, amplitude, length)
         fft = compute_fft(sine, 100.0)
         # Number of decimals must depend on value, so we need to divide here
@@ -120,7 +120,7 @@ class TestFFT(unittest.TestCase):
         assert_almost_equal(fft.amplitude_integral(low=1., high=2.01), 3 + 4)
 
     def testSpectralPowerFFTReduce(self):
-        """Test if spectral power reduction works correctly (per-FFT power values)"""
+        """Test if spectral power reduction works correctly (per-FFT power values)."""
         # Sine wave with amplitude 1.0 -> expected power ~1.0
         sine = sine_wave(10.0, 100.0, 1.0, 10.0)
         res = simple_serial_spectral_power_fft_reduce(sine, 100.0, 100, window="none")

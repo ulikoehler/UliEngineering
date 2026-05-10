@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utility to calculate idealized reactances.
+"""Utility to calculate idealized reactances.
 
-Originally published at techoverflow.net
+Originally published at techoverflow.net.
 """
 import numpy as np
 
@@ -21,10 +20,9 @@ __all__ = [
 
 @returns_unit("Ω")
 def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
-    """
-    Compute the capacitive reactance for a given capacitance and frequency.
+    """Compute the capacitive reactance for a given capacitance and frequency.
 
-    Parameters
+    Parameters.
     ----------
     c : CapacitanceFarad
         Capacitance in Farads.
@@ -35,6 +33,7 @@ def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
     -------
     float
         Capacitive reactance in Ohms.
+    
     """
     c = normalize_capacitance(c) if isinstance(c, str) else c
     f = normalize_frequency(f) if isinstance(f, str) else f
@@ -43,10 +42,9 @@ def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
 
 @returns_unit("Ω")
 def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
-    """
-    Compute the inductive reactance for a given inductance and frequency.
+    """Compute the inductive reactance for a given inductance and frequency.
 
-    Parameters
+    Parameters.
     ----------
     l : InductanceH
         Inductance in Henrys.
@@ -57,6 +55,7 @@ def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
     -------
     float
         Inductive reactance in Ohms.
+    
     """
     l = normalize_inductance(l) if isinstance(l, str) else l
     f = normalize_frequency(f) if isinstance(f, str) else f
@@ -64,8 +63,7 @@ def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
 
 @returns_unit("H")
 def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
-    """
-    Compute the inductance (H) from an inductive reactance (Ω) at a given frequency f (Hz).
+    """Compute the inductance (H) from an inductive reactance (Ω) at a given frequency f (Hz).
 
     Formula: X_L = 2 * pi * f * L => L = X_L / (2 * pi * f).
 
@@ -80,6 +78,7 @@ def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     -------
     float
         Inductance in Henrys.
+    
     """
     x = normalize_resistance(x) if isinstance(x, str) else x
     f = normalize_frequency(f) if isinstance(f, str) else f
@@ -87,8 +86,8 @@ def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
 
 @returns_unit("F")
 def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
-    """
-    Compute the capacitance (F) from a capacitive reactance (Ω) at a given
+    """Compute the capacitance (F) from a capacitive reactance (Ω) at a given
+    
     frequency f (Hz).
 
     Formula: X_C = 1 / (2 * pi * f * C) => C = 1 / (2 * pi * f * X_C).
@@ -104,6 +103,7 @@ def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     -------
     float
         Capacitance in Farads.
+    
     """
     x = normalize_resistance(x) if isinstance(x, str) else x
     f = normalize_frequency(f) if isinstance(f, str) else f

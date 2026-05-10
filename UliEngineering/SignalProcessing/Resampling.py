@@ -15,9 +15,9 @@ __all__ = ["resample_discard", "resampled_timespace",
            "serial_resample"]
 
 def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
-    """
-    Compute the samplerate of a signal
-    using a quantile-based method to exclude
+    """Compute the samplerate of a signal
+    
+    using a quantile-based method to exclude.
     outliers (in the time delta domain) and
     computes the by 1 / mean
 
@@ -45,6 +45,7 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
         Used to compute the mean after excluding outliers.
         Except for special usecases, arithmetic mean (np.mean)
         is recommended.
+    
     """
     # Special rule for LinRange objects that have a defined samplerate
     if isinstance(t, LinRange):
@@ -61,17 +62,17 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     return 1e9 / mean_sample_period # 1e9 : nanoseconds
 
 def resample_discard(arr, divisor, ofs=0):
-    """
-    Resample with an integral divisor, discarding all other samples.
+    """Resample with an integral divisor, discarding all other samples.
+    
     Returns a view of the data.
     Very fast as this doesn't need to read the data.
     """
     return arr[ofs::divisor]
 
 def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
-    """
-    Compute the new timespace after resampling a input timestamp array
-    (not neccessarily lazy)
+    """Compute the new timespace after resampling a input timestamp array
+    
+    (not neccessarily lazy).
 
     Parameters
     ----------
@@ -99,6 +100,7 @@ def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
     -------
     A LinSpace() (acts like a numpy array but doesn't consume any memory)
     that represents the new timespace
+    
     """
     if len(t) == 0:
         raise ValueError("Empty time array given - can not perform any resampling")
@@ -146,8 +148,8 @@ def serial_resample(t, y, new_samplerate, out=None, prefilter=None,
                       time_factor=1e6,
                       fitkind='linear', chunksize=10000,
                       overprovisioning_factor=0.01):
-    """
-    A resampler that uses scipy.interpolate.interp1d but splits the
+    """A resampler that uses scipy.interpolate.interp1d but splits the
+    
     input into chunks that can be processed.
     The chunksize is applied to the output timebase.
 
@@ -195,9 +197,7 @@ def parallel_resample(t, y, new_samplerate, out=None, prefilter=None,
                       executor=None, time_factor=1e6,
                       fitkind='linear', chunksize=10000,
                       overprovisioning_factor=0.01):
-    """
-    Parallel variant of serial_resample
-    """
+    """Parallel variant of serial_resample."""
     new_t = resampled_timespace(t, new_samplerate, time_factor=time_factor)
     # Lazily compute the new timespan
     if out is None:

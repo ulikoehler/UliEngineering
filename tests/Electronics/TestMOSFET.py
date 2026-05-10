@@ -25,7 +25,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(FrequencyHz)
 
     def test_normalize_charge_various_units(self):
-        """Test normalize_charge with various unit inputs"""
+        """Test normalize_charge with various unit inputs."""
         test_cases = [
             ("1 C", 1.0),
             ("1 mC", 1e-3),

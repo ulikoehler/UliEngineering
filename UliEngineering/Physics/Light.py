@@ -23,9 +23,9 @@ AngleDegrees = Annotated[NormalizedComputable, normalize_angle_degrees]
 
 @returns_unit("cd")
 def lumen_to_candela_by_apex_angle(flux: LuminousFluxLumen, angle: AngleDegrees):
-    """
-    Compute the luminous intensity from the luminous flux,
-    assuming that the flux of <flux> is distributed equally around
+    """Compute the luminous intensity from the luminous flux,
+    
+    assuming that the flux of <flux> is distributed equally around.
     a cone with apex angle <angle>.
 
     Parameters
@@ -44,6 +44,7 @@ def lumen_to_candela_by_apex_angle(flux: LuminousFluxLumen, angle: AngleDegrees)
     --------
     >>> autoFormat(lumen_to_candela_by_apex_angle, "25 lm", "120°")
     '7.96 cd'
+    
     """
     flux = normalize_luminous_flux(flux)
     angle = normalize_angle_degrees(angle)

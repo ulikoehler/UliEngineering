@@ -6,6 +6,7 @@ import numpy as np
 
 
 class NumPyEncoder(json.JSONEncoder):
+    
     """A JSON encoder that is capable of encoding NumPy ndarray objects."""
 
     def default(self, obj):

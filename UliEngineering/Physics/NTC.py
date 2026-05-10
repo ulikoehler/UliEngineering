@@ -26,10 +26,9 @@ ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 @returns_unit("Ω")
 def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
-    """
-    Compute the NTC resistance by temperature and NTC parameters.
+    """Compute the NTC resistance by temperature and NTC parameters.
 
-    Parameters
+    Parameters.
     ----------
     r25 : ResistanceOhm
         The NTC resistance at 25°C, sometimes also called "nominal resistance".
@@ -52,10 +51,9 @@ def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
 
 @returns_unit("Ω")
 def ntc_resistances(r25: ResistanceOhm, b25, t0=-40, t1=85, resolution=0.1):
-    """
-    Compute the resistances over a temperature range with a given resolution.
+    """Compute the resistances over a temperature range with a given resolution.
 
-    Parameters
+    Parameters.
     ----------
     r25 : ResistanceOhm
         The NTC resistance at 25°C, sometimes also called "nominal resistance".
@@ -72,6 +70,7 @@ def ntc_resistances(r25: ResistanceOhm, b25, t0=-40, t1=85, resolution=0.1):
     -------
     tuple
         A (temperatures, values) tuple.
+    
     """
     r25 = normalize_resistance(r25)
     b25 = normalize_numeric(b25)

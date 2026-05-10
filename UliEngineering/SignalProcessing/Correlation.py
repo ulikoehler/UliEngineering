@@ -10,10 +10,9 @@ import scipy.signal
 __all__ = ["autocorrelate"]
 
 def autocorrelate(signal):
-    """
-    Auto-correlate a signal with itself.
+    """Auto-correlate a signal with itself.
 
-    Based on the fast FFT convolution using
+    Based on the fast FFT convolution using.
     scipy.signal.fftconvolve.
     """
     return scipy.signal.fftconvolve(signal, signal[::-1], mode='full')

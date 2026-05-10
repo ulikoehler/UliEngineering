@@ -80,14 +80,14 @@ class TestNoiseDensity(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(CapacitanceFarad)
         self.assertIsNotNone(InductanceH)
         self.assertIsNotNone(FrequencyHz)
         self.assertIsNotNone(ResistanceOhm)
 
     def test_reactance_functions_various_units(self):
-        """Test reactance functions with various unit inputs"""
+        """Test reactance functions with various unit inputs."""
         # Test capacitive reactance with different unit representations
         x1 = capacitive_reactance("100 pF", "3.2 MHz")
         x2 = capacitive_reactance("0.1 nF", "3.2 MHz")

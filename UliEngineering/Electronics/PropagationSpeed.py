@@ -14,8 +14,8 @@ __all__ = ["propagation_speed", "propagation_delay", "velocity_factor"]
 
 @returns_unit("m/s")
 def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
-    """
-    Compute the propagation speed in a homogeneous medium characterized
+    """Compute the propagation speed in a homogeneous medium characterized
+    
     by the relative permittivity (e_r) and relative permeability (mu_r).
 
     The formula used is:
@@ -40,6 +40,7 @@ def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgumen
     299792458.0
     >>> propagation_speed(4.0)
     149896229.0
+    
     """
     e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
     mu_r = normalize_numeric(mu_r) if isinstance(mu_r, str) else mu_r
@@ -49,8 +50,8 @@ def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgumen
 
 @returns_unit("s")
 def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
-    """
-    Compute the propagation delay for a given physical length in a medium
+    """Compute the propagation delay for a given physical length in a medium
+    
     with relative permittivity e_r and relative permeability mu_r.
 
     delay = length / v = length * sqrt(e_r * mu_r) / c.
@@ -75,6 +76,7 @@ def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: Normalizabl
     3.3356409519815204e-09
     >>> propagation_delay('1 m', 4.0)
     6.671281903963041e-09
+    
     """
     length = normalize_length(length) if isinstance(length, str) else length
     e_r = normalize_numeric(e_r) if isinstance(e_r, str) else e_r
@@ -85,8 +87,8 @@ def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: Normalizabl
 
 @returns_unit("")
 def velocity_factor(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
-    """
-    Return the velocity factor (unitless) for the medium, i.e. the ratio of the
+    """Return the velocity factor (unitless) for the medium, i.e. the ratio of the
+    
     propagation speed to the speed of light in vacuum.
 
     velocity_factor = v / c = 1 / sqrt(e_r * mu_r).

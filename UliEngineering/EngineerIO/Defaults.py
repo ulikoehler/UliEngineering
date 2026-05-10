@@ -17,10 +17,9 @@ def default_unit_prefixes() -> List[str]:
     return ["Δ", "±", "°"]
 
 def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float]:
-    """
-    Generate a dictionary mapping SI prefixes to their corresponding exponents (in powers of 10).
+    """Generate a dictionary mapping SI prefixes to their corresponding exponents (in powers of 10).
 
-    Parameters
+    Parameters.
     ----------
     include_length_unit_prefixes : bool, optional
         If True, includes additional prefixes commonly used for length units:
@@ -37,6 +36,7 @@ def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float
     - For the micro prefix, three different symbols are supported: 'µ', 'μ', and 'u'
     - The range of standard prefixes spans from yocto ('y', 10^-24) to yotta ('Y', 10^21)
     - The base unit (exponent 0) is not included in the dictionary
+    
     """
     unit_prefixes = {
         'y': -24.0,
@@ -67,9 +67,7 @@ def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float
     return unit_prefixes
 
 def default_unit_infos() -> List[Union[UnitInfo, UnitAlias]]:
-    """
-    Returns the default list of UnitInfo and UnitAlias objects for standard engineering units.
-    """
+    """Returns the default list of UnitInfo and UnitAlias objects for standard engineering units."""
     return [
         # Electrical units
         UnitInfo('F', aliases=['Farad', 'farads']),  # Capacitance

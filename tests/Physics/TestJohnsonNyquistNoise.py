@@ -22,13 +22,13 @@ class TestJohnsonNyquistNoise(unittest.TestCase):
         assert_approx_equal(v, 56.9025e-6, significant=5)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(TemperatureKelvin)
         self.assertIsNotNone(FrequencyHz)
 
     def test_normalize_resistance_various_units(self):
-        """Test normalize_resistance with various unit inputs"""
+        """Test normalize_resistance with various unit inputs."""
         test_cases = [
             ("1 Ω", 1.0),
             ("1 Ohm", 1.0),
@@ -45,9 +45,7 @@ class TestJohnsonNyquistNoise(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_johnson_nyquist_noise_various_units(self):
-        """
-        Test Johnson Nyquist noise functions with various unit inputs
-        """
+        """Test Johnson Nyquist noise functions with various unit inputs."""
         # Test with different resistance units
         v1 = johnson_nyquist_noise_current("20000000 Ω", "10000 Hz", "20 °C")
         v2 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "20 °C")

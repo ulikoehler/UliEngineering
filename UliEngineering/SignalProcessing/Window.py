@@ -9,8 +9,7 @@ __all__ = ["WindowFunctor", "create_window",
 # Predefined windows
 
 def create_window(size, window_id="blackman", param=None):
-    """
-    Create a new window numpy array.
+    """Create a new window numpy array.
 
     param is only used for some windows.
 
@@ -38,11 +37,9 @@ def create_window(size, window_id="blackman", param=None):
     raise ValueError(f"Unknown window {window_id}")
 
 def create_and_apply_window(data, window_id="blackman", param=None, inplace=False):
-    """
-    Create a window suitable for data, multiply it with
-    data and return the result
+    """Create a window suitable for data, multiply it with data and return the result.
 
-    Parameters
+    Parameters.
     ----------
     data : numpy array-like
         The data to use. Must be 1D.
@@ -63,14 +60,11 @@ def create_and_apply_window(data, window_id="blackman", param=None, inplace=Fals
     return data * window
 
 class WindowFunctor:
-    """
-    Initialize a window functor that initializes.
-    """
     
+    """Initialize a window functor that initializes."""
 
     def __init__(self, size, window_id="blackman", param=None):
-        """
-        Create a new WindowFunctor.
+        """Create a new WindowFunctor.
 
         __init__ initialized the window array.
 
@@ -84,18 +78,19 @@ class WindowFunctor:
         param : number or None
             The parameter used for certain windows.
             See create_window() documentation
+        
         """
         self.size = size
         self.window = create_window(size, window_id, param=param)
 
     def __len__(self):
+        """Return the length of the window."""
         return self.size
 
     def __call__(self, data, inplace=False):
-        """
-        Apply this window to a data array.
+        """Apply this window to a data array.
 
-        Parameters
+        Parameters.
         ----------
         data : numpy array-like
             The data to apply the window to.
@@ -109,6 +104,7 @@ class WindowFunctor:
         -------
         numpy array
             The windowed data.
+        
         """
         if len(data) != self.size:
             raise ValueError(f"Data size {len(data)} does not match WindowFunctor size {self.size}")

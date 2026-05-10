@@ -73,7 +73,7 @@ class TestEngineerTimespanIO(unittest.TestCase):
         assert_approx_equal(self.io.normalize_timespan("-1.25 as"), -1.25e-18)
 
     def test_type_annotation_exists(self):
-        """Test that the new type annotation is available"""
+        """Test that the new type annotation is available."""
         self.assertIsNotNone(TimespanSeconds)
 
     def test_timespan_type_various_units(self):

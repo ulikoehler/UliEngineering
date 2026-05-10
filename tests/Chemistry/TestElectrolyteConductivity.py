@@ -18,31 +18,31 @@ import numpy as np
 
 class TestElectrolyteConductivity(unittest.TestCase):
     def test_electrolyte_conductivity_from_molar_scalar(self):
-        """Test conductivity from molar conductivity with scalar input"""
+        """Test conductivity from molar conductivity with scalar input."""
         kappa = electrolyte_conductivity_from_molar(Lambda_m=100.0, c=0.1)
         self.assertIsInstance(kappa, float)
         self.assertAlmostEqual(kappa, 1.0, places=6)
 
     def test_electrolyte_resistivity_scalar(self):
-        """Test resistivity from conductivity with scalar input"""
+        """Test resistivity from conductivity with scalar input."""
         rho = electrolyte_resistivity(conductivity=10.0)
         self.assertIsInstance(rho, float)
         self.assertAlmostEqual(rho, 0.1, places=6)
 
     def test_conductivity_from_cell_constant_scalar(self):
-        """Test conductivity from cell constant with scalar input"""
+        """Test conductivity from cell constant with scalar input."""
         kappa = conductivity_from_cell_constant(conductance=0.01, cell_constant=100.0)
         self.assertIsInstance(kappa, float)
         self.assertAlmostEqual(kappa, 1.0, places=6)
 
     def test_molar_conductivity_from_conductivity_scalar(self):
-        """Test molar conductivity from conductivity with scalar input"""
+        """Test molar conductivity from conductivity with scalar input."""
         Lambda_m = molar_conductivity_from_conductivity(conductivity=10.0, c=0.1)
         self.assertIsInstance(Lambda_m, float)
         self.assertAlmostEqual(Lambda_m, 1000.0, places=6)
 
     def test_specific_conductance_temperature_correction_scalar(self):
-        """Test temperature correction with scalar input"""
+        """Test temperature correction with scalar input."""
         kappa = specific_conductance_temperature_correction(kappa_ref=1.0, T=308.15, T_ref=298.15, alpha=0.02)
         self.assertIsInstance(kappa, float)
         self.assertAlmostEqual(kappa, 1.2, places=6)
@@ -98,7 +98,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_conductivity_various_units(self):
-        """Test normalize_conductivity with various unit inputs"""
+        """Test normalize_conductivity with various unit inputs."""
         test_cases = [
             ("1 S/m", 1.0),
             ("1 S/cm", 100.0),
@@ -112,7 +112,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_conductance_various_units(self):
-        """Test normalize_conductance with various unit inputs"""
+        """Test normalize_conductance with various unit inputs."""
         test_cases = [
             ("1 S", 1.0),
             ("1 mS", 1e-3),
@@ -124,7 +124,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_cell_constant_various_units(self):
-        """Test normalize_cell_constant with various unit inputs"""
+        """Test normalize_cell_constant with various unit inputs."""
         test_cases = [
             ("1 1/m", 1.0),
             ("1 m⁻¹", 1.0),

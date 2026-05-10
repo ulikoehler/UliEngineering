@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-A high-level API for digital filters:
+"""A high-level API for digital filters:
 
 Features include:
     - Automatic detection of numerical instability
@@ -38,14 +37,17 @@ __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
 
 
 class NotComputedException(Exception):
+    
     """The filter has not been computed yet."""
 
 
 class FilterUnstableError(Exception):
+    
     """The generated filter is numerically unstable and must not be used."""
 
 
 class FilterInvalidError(Exception):
+    
     """The generated filter is numerically unstable and must not be used."""
 
 def _normalize_frequencies(freqs):
@@ -74,6 +76,7 @@ def _check_filter_type(btype, freqs):
 
 
 class SignalFilter:
+    
     """High-level abstraction of a digital signal filter.
 
     """
@@ -103,17 +106,15 @@ class SignalFilter:
         self.filtfreqs = self._filtfreq(freqs)
 
     def _filtfreq(self, f):
-        """
-        Normalize frequencies with respect to the sampling rate.
-        """
+        """Normalize frequencies with respect to the sampling rate."""
         if isinstance(f, numbers.Number):
             return f / (0.5 * self.samplerate)
         return [f[0] / (0.5 * self.samplerate), f[1] / (0.5 * self.samplerate)]
 
     def is_stable(self):
-        """
-        Check if the filter is numerically stable.
-        Based on PMcPherson's answer at
+        """Check if the filter is numerically stable.
+        
+        Based on PMcPherson's answer at.
         https://github.com/scipy/scipy/issues/2980
         """
         if self.a is None:
@@ -121,10 +122,9 @@ class SignalFilter:
         return not np.any(np.abs(np.roots(self.a)) > 1.0)
 
     def iir(self, order, ftype="butter", rp=0.01, rs=100.0):
-        """
-        Generate filter coefficients for an arbitrary IIR filter.
+        """Generate filter coefficients for an arbitrary IIR filter.
 
-        Returns the current instance so it can be chained inline
+        Returns the current instance so it can be chained inline.
         """
         # Save attributes
         self._type = "iir"
@@ -142,8 +142,8 @@ class SignalFilter:
         return self
 
     def as_samplerate(self, samplerate):
-        """
-        Convert this filter to a filter with the same frequency response.
+        """Convert this filter to a filter with the same frequency response.
+        
         Returns a new filter instance.
         """
         if self.a is None:
@@ -156,9 +156,9 @@ class SignalFilter:
         return filt
 
     def frequency_response(self, n=10000):
-        """
-        Generate a filter frequency response from a set of filter taps.
-        Returns plottable (x, y) with respect to an actual sampling rate
+        """Generate a filter frequency response from a set of filter taps.
+        
+        Returns plottable (x, y) with respect to an actual sampling rate.
         """
         w, h = signal.freqz(self.b, self.a, worN=n)
         return (0.5 * self.samplerate * w / np.pi, np.abs(h))
@@ -169,18 +169,17 @@ class SignalFilter:
         return signal.filtfilt(self.b, self.a, d)
 
     def chain(self, repeat=2):
-        """
-        Create a ChainedFilter() instance that chains the current filter multiple times.
+        """Create a ChainedFilter() instance that chains the current filter multiple times.
 
-        For more options, see chain_with()
+        For more options, see chain_with().
 
         :param repeat The total number of self instances in the resulting ChainedFilter
         """
         return self.chain_with(self_repeat=repeat)
 
     def chain_with(self, other=None, self_repeat=1, other_repeat=1):
-        """
-        Create a ChainedFilter() by chaining this filter with another filter,
+        """Create a ChainedFilter() by chaining this filter with another filter,
+        
         optionally repeating this filter and the other filter by different coefficients.
 
         If other is None, only self is repeated self_repeat times.
@@ -193,6 +192,7 @@ class SignalFilter:
         :param self_repeat How many times to repeat self
         :param other_repeat How many times to repeat other (if other is not None)
         :return A ChainedFilter() instance
+        
         """
         # Shortcut if chaining self once. Avoid additional overhead in this case
         if other is None and self_repeat == 1:
@@ -206,10 +206,13 @@ class SignalFilter:
 
 
 class ChainedFilter:
+    
     """Chained filter object that applies a number of filters in series.
+    
     This can be used to deal with numerically unstable filters.
     filtfilt is used to avoid phase issues by repeated application.
     Filters can be added to the end of the chain via +=."""
+    
     def __init__(self, filters, repeat=1):
         "The first filter in the filters list is applied first"
         if isinstance(filters, SignalFilter):
@@ -223,8 +226,8 @@ class ChainedFilter:
 
     @property
     def is_computed(self):
-        """
-        Return True if the filter has been computed (i.e. if the filter has been
+        """Return True if the filter has been computed (i.e. if the filter has been
+        
         applied to some data).
         """
         if not self.filters:
@@ -236,8 +239,8 @@ class ChainedFilter:
 
     @property
     def samplerate(self):
-        """
-        Get the samplerate of the filter set or raise.
+        """Get the samplerate of the filter set or raise.
+        
         This property is required for changing the sampling rate of nested chained filters.
         """
         if not self.filters:
@@ -276,10 +279,13 @@ class ChainedFilter:
 
 
 class SumFilter(ChainedFilter):
+    
     """Chained filter object that applies a number of filters and sums the results.
+    
     This can be used to combine multiple bandpass filters for multiband-bandpass.
     Filters can be added via +=.
     """
+    
     def __init__(self, filters):
         """The first filter in the filters list is applied first."""
         if isinstance(filters, SignalFilter):
@@ -291,13 +297,16 @@ class SumFilter(ChainedFilter):
 
 
 class FilterBank:
+    
     """Represents a set of filters that can be accessed with arbitrary samplerates.
+    
     Utility class that eases the use of filters for multiple sampling rates.
     One FilterBank instance represents a set of filters at a specific samplerate
     that can be easily recomputed with a different samplerate."""
+    
     def __init__(self, samplerate):
-        """
-        Initialize a new FilterBank() with a specified standard sampling rate.
+        """Initialize a new FilterBank() with a specified standard sampling rate.
+        
         Every filter that is added to the filter bank is recomputed with this sample rate.
         """
         self.filters = {}
@@ -314,8 +323,8 @@ class FilterBank:
         return key in self.filters
 
     def as_samplerate(self, samplerate):
-        """
-        Returns a copy of the current filter bank with a different samplerate.
+        """Returns a copy of the current filter bank with a different samplerate.
+        
         All filters are recomputed when calling this function.
         """
         # Fast path if samplerate has not changed

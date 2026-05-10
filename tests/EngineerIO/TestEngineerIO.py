@@ -283,9 +283,7 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.auto_suffix_1d(arr), (1e-24, "Y"))
 
     def test_special_units(self):
-        """
-        Test ppm, ppb and %
-        """
+        """Test ppm, ppb and %."""
         # %
         assert_approx_equal(self.io.normalize_numeric_safe("1%"), 0.01)
         assert_approx_equal(self.io.normalize_numeric_safe("5%"), 0.05)
@@ -304,8 +302,8 @@ class TestEngineerIO(unittest.TestCase):
         assert_approx_equal(self.io.normalize_numeric_safe("12.5ppb"), 1.25e-8)
 
     def test_time_units(self):
-        """
-        Test time units using the normal numeric parser.
+        """Test time units using the normal numeric parser.
+        
         This does not use the timerange parser.
         """
         assert_approx_equal(self.io.normalize_numeric_safe("1.25 s"), 1.25)
@@ -351,7 +349,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "200")
 
     def test_has_any_unit_prefix_no_suffix(self):
-        """Test has_any_unit_prefix() with no unit prefix at the end"""
+        """Test has_any_unit_prefix() with no unit prefix at the end."""
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
@@ -363,7 +361,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "456V")
 
     def test_has_any_unit_prefix_middle_position(self):
-        """Test has_any_unit_prefix() with unit prefix in middle (should not match)"""
+        """Test has_any_unit_prefix() with unit prefix in middle (should not match)."""
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("1k23")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
@@ -375,14 +373,14 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "5M67")
 
     def test_has_any_unit_prefix_empty_string(self):
-        """Test has_any_unit_prefix() with empty string"""
+        """Test has_any_unit_prefix() with empty string."""
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("")
         self.assertFalse(has_prefix)
         self.assertEqual(prefix_char, "")
         self.assertEqual(remainder, "")
 
     def test_has_any_unit_prefix_all_prefixes(self):
-        """Test has_any_unit_prefix() with all supported unit prefixes"""
+        """Test has_any_unit_prefix() with all supported unit prefixes."""
         test_cases = [
             ("100y", "y", "100"),  # yocto
             ("200z", "z", "200"),  # zepto
@@ -409,7 +407,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
                 self.assertEqual(remainder, expected_remainder)
 
     def test_has_any_unit_prefix_length_prefixes(self):
-        """Test has_any_unit_prefix() with length unit prefixes (when using length instance)"""
+        """Test has_any_unit_prefix() with length unit prefixes (when using length instance)."""
         # Test with length instance that includes centimeter and decimeter prefixes
         from UliEngineering.EngineerIO.Length import EngineerLengthIO
         length_io = EngineerLengthIO.instance()
@@ -425,7 +423,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "200")
 
     def test_has_any_unit_prefix_no_regex(self):
-        """Test has_any_unit_prefix() when no unit prefix regex is compiled"""
+        """Test has_any_unit_prefix() when no unit prefix regex is compiled."""
         # Create an instance with no unit prefixes
         config = EngineerIOConfiguration([], [], {})
         io_no_prefixes = EngineerIO(config)
@@ -436,13 +434,13 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "123k")
 
     def test_compile_unit_prefix_suffix_regex_empty(self):
-        """Test _compile_unit_prefix_suffix_regex() with empty unit prefixes"""
+        """Test _compile_unit_prefix_suffix_regex() with empty unit prefixes."""
         config = EngineerIOConfiguration([], [], {})
         io_empty = EngineerIO(config)
         self.assertIsNone(io_empty.unit_prefix_suffix_regex)
 
     def test_compile_unit_prefix_suffix_regex_sorting(self):
-        """Test that unit prefixes are sorted by length (longest first) in regex"""
+        """Test that unit prefixes are sorted by length (longest first) in regex."""
         # Create a custom instance with multi-character prefixes for testing
         custom_prefixes = {'a': -18., 'abc': -15., 'ab': -12.}
         config = EngineerIOConfiguration([], [], custom_prefixes)
@@ -455,7 +453,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "123")
 
     def test_unit_prefix_regex_pattern_generation(self):
-        """Test that the unit prefix regex pattern is generated correctly"""
+        """Test that the unit prefix regex pattern is generated correctly."""
         # Test with known prefixes
         pattern = self.io.unit_prefix_suffix_regex.pattern
         
@@ -471,7 +469,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertTrue(pattern.startswith('('))
 
     def test_unit_prefix_regex_case_sensitivity(self):
-        """Test that unit prefix regex is case-sensitive"""
+        """Test that unit prefix regex is case-sensitive."""
         # 'k' should match but 'K' should not (K is not in default unit prefixes)
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("123k")
         self.assertTrue(has_prefix)
@@ -481,7 +479,7 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertFalse(has_prefix)
 
     def test_unit_prefix_regex_unicode_support(self):
-        """Test that unit prefix regex properly handles unicode characters"""
+        """Test that unit prefix regex properly handles unicode characters."""
         # Test with µ (micro symbol)
         has_prefix, prefix_char, remainder = self.io.has_any_unit_prefix("500µ")
         self.assertTrue(has_prefix)
@@ -495,10 +493,10 @@ class TestUnitPrefixRegex(unittest.TestCase):
         self.assertEqual(remainder, "600")
 
     def test_has_any_unit_prefix_performance_improvement(self):
-        """Test that the new regex-based implementation is functionally equivalent to the old one"""
+        """Test that the new regex-based implementation is functionally equivalent to the old one."""
         # Create a mock of the old implementation for comparison
         def old_has_any_unit_prefix(s):
-            """Old implementation using all_suffixes for comparison"""
+            """Old implementation using all_suffixes for comparison."""
             for suffix in suffix_list(s):
                 if suffix in self.io.all_unit_prefixes:
                     remainder = s[:-len(suffix)] if len(suffix) > 0 else s
@@ -524,7 +522,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.io = EngineerIO()
 
     def test_generate_unit_alias_pattern_method(self):
-        """Test _generate_unit_alias_pattern() method"""
+        """Test _generate_unit_alias_pattern() method."""
         # Test with some aliases
         units = [
             UnitInfo("m²", aliases=["square meter"]),
@@ -542,7 +540,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertTrue(pattern.endswith('$'))
 
     def test_generate_units_pattern_method(self):
-        """Test _generate_units_pattern() method"""
+        """Test _generate_units_pattern() method."""
         units = [
             UnitInfo('V'),
             UnitInfo('A'),
@@ -588,7 +586,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertEqual(io_with_aliases._resolve_unit_alias('A'), 'A')
 
     def test_empty_collections_handling(self):
-        """Test that empty units/aliases are handled gracefully"""
+        """Test that empty units/aliases are handled gracefully."""
         config = EngineerIOConfiguration([], [], {})
         io_empty = EngineerIO(config)
         
@@ -598,7 +596,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIsNone(io_empty.unit_prefix_suffix_regex)
 
     def test_regex_compilation_with_complex_patterns(self):
-        """Test regex compilation with complex unit names and aliases"""
+        """Test regex compilation with complex unit names and aliases."""
         units = [
             UnitInfo('Ω', aliases=['ohm']),
             UnitInfo('°C', aliases=['degrees celsius']),
@@ -624,14 +622,14 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIsNotNone(io_complex.unit_alias_regex.search('50 ohm'))
         
     def test_generate_unit_alias_pattern_empty(self):
-        """Test unit alias pattern generation with empty aliases dict"""
+        """Test unit alias pattern generation with empty aliases dict."""
         config = EngineerIOConfiguration([], [], {})
         io = EngineerIO(config)
         pattern = io._generate_unit_alias_pattern()
         self.assertIsNone(pattern)
         
     def test_generate_unit_alias_pattern_with_spaces(self):
-        """Test unit alias pattern generation with spaces in aliases"""
+        """Test unit alias pattern generation with spaces in aliases."""
         units = [
             UnitInfo('m²', aliases=['square meter']),
             UnitInfo('cm³', aliases=['cubic centimeter']),
@@ -648,7 +646,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIn(re.escape('meters per second'), pattern)
         
     def test_pattern_compilation_with_fake_units(self):
-        """Test that generated patterns compile correctly with fake units"""
+        """Test that generated patterns compile correctly with fake units."""
         units = [
             UnitInfo('m²', aliases=['fake square meter']),
             UnitInfo('µU', aliases=['test µ unit']),
@@ -673,7 +671,7 @@ class TestRegexCompilationMethods(unittest.TestCase):
         self.assertIsNotNone(io.unit_alias_regex.search('50 test µ unit'))
 
     def test_pattern_matching_precedence_with_fake_data(self):
-        """Test that longer patterns are matched first with fake data"""
+        """Test that longer patterns are matched first with fake data."""
         units = [
             UnitInfo('A', aliases=['test']),
             UnitInfo('ABC', aliases=['test unit']),

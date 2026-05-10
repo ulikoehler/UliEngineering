@@ -260,7 +260,7 @@ class TestShrinkRanges(unittest.TestCase):
         self.assertEqual(result.dtype, int)
 
     def testComplex(self):
-        """Test data-aware methods"""
+        """Test data-aware methods."""
         # Test data is tuned to
         ranges = find_true_runs(self.x > 0.5)
         # Min Y selector

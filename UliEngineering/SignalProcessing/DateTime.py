@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for processing and modifying datetime objects
-"""
+"""Utilities for processing and modifying datetime objects."""
 import datetime
 
 __all__ = ["splice_date", "auto_strptime"]
 
 
 def splice_date(datesrc, timesrc, tzinfo=None):
-    """
-    Create a new datetime that takes the date from datesrc and
-    the time from timesrc. The tzinfo is taken from the tzinfo
+    """Create a new datetime that takes the date from datesrc and
+    
+    the time from timesrc. The tzinfo is taken from the tzinfo.
     parameter. If it is None, it is taken from
     timesrc.tzinfo. No timezone conversion is performed.
 
@@ -23,8 +21,8 @@ def splice_date(datesrc, timesrc, tzinfo=None):
 
 
 def auto_strptime(s):
-    """
-    Parses a datetime in a number of formats,
+    """Parses a datetime in a number of formats,
+    
     automatically recognizing which format is correct.
 
     Supported formats:

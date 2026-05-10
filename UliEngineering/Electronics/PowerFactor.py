@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilities to compute the power factor
-"""
+"""Utilities to compute the power factor."""
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument
@@ -11,10 +9,9 @@ __all__ = ["power_factor_by_phase_angle"]
 
 @returns_unit("")
 def power_factor_by_phase_angle(angle: NormalizableArgument = "10°", unit: str = "degrees"):
-    """
-    Compute the power factor given the phase angle between current and voltage.
+    """Compute the power factor given the phase angle between current and voltage.
 
-    This approach only returns the correct power factor if current and voltage
+    This approach only returns the correct power factor if current and voltage.
     are both sinusoidal.
 
     Keyword Arguments
@@ -23,6 +20,7 @@ def power_factor_by_phase_angle(angle: NormalizableArgument = "10°", unit: str 
         The phase angle between current and voltage.
     unit : "degrees", "deg" or "radians", "rad", "radiant"
         The unit to interpret angle as.
+    
     """
     angle = normalize_numeric(angle) if isinstance(angle, str) else angle
     if unit in ["degrees", "deg"]:

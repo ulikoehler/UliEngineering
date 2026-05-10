@@ -22,7 +22,9 @@ __all__ = [
 
 @dataclass
 class ResistorSelection:
+    
     """Result of resistor selection containing the resistor values, error, and total cost."""
+    
     r1: float
     r2: float
     error: float
@@ -30,7 +32,9 @@ class ResistorSelection:
 
 @dataclass
 class ResistorSeriesWeights:
+    
     """Weights for different resistor series."""
+    
     E6: float = 0.95
     E12: float = 1.0
     E24: float = 2.0
@@ -40,16 +44,16 @@ class ResistorSeriesWeights:
     non_series: float = 100.0
 
 class ResistorSeriesCostFunctor(object):
-    """
-    Cost functor that assigns costs to resistors based on their E-series membership.
+    
+    """Cost functor that assigns costs to resistors based on their E-series membership.
+    
     Uses precomputed lookup structures for fast evaluation.
     """
 
     def __init__(self, weights=None, tolerance=0.001):
-        """
-        Initialize the cost functor.
+        """Initialize the cost functor.
 
-        Parameters
+        Parameters.
         ----------
         weights : ResistorSeriesWeights, optional
             Weights for different E-series. If None, uses default weights.
@@ -94,10 +98,9 @@ class ResistorSeriesCostFunctor(object):
         return False
 
     def __call__(self, resistor_value):
-        """
-        Evaluate the cost of a resistor value based on its E-series membership.
+        """Evaluate the cost of a resistor value based on its E-series membership.
 
-        Parameters
+        Parameters.
         ----------
         resistor_value : float or Engineer string
             The resistor value to evaluate
@@ -106,6 +109,7 @@ class ResistorSeriesCostFunctor(object):
         -------
         float
             Cost value based on series membership
+        
         """
         # Check series membership in order of preference (E6 first as most common/cheapest)
         if self._is_in_series(resistor_value, self.e6_values):
@@ -124,10 +128,9 @@ class ResistorSeriesCostFunctor(object):
             return self.weights.non_series
 
 def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
-    """
-    Compute an error matrix for selecting two resistors.
+    """Compute an error matrix for selecting two resistors.
 
-    Parameters
+    Parameters.
     ----------
     error_function : callable
         Function that takes (r1, r2) and returns the percentage deviation
@@ -142,6 +145,7 @@ def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
     numpy.ndarray
         2D array where rows represent r1_sequence and columns represent r2_sequence.
         Each element contains the error percentage for that resistor combination.
+    
     """
     # Normalize resistor values to floats
     r1_values = np.array([normalize_numeric(r) for r in r1_sequence])
@@ -160,6 +164,7 @@ def resistor_selection_error_matrix(error_function, r1_sequence, r2_sequence):
 
 def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: VoltageV, target_voltage: VoltageV, load: ResistanceOhm = None):
     """Calculate the percentage deviation of a feedback network output voltage
+    
     from the target voltage.
 
     In a typical feedback network, r1 is the upper resistor (connected to input)
@@ -183,6 +188,7 @@ def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: 
     -------
     float
         Percentage deviation from target voltage (positive = higher, negative = lower)
+    
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
@@ -201,7 +207,9 @@ def feedback_network_error(r1: ResistanceOhm, r2: ResistanceOhm, input_voltage: 
     return deviation_percent
 
 class ResistorAroundValueCostFunctor(object):
+    
     """Cost functor that evaluates how close a resistor value is to a target value
+    
     using logarithmic criteria with configurable base.
 
     Returns the absolute difference in "orders of magnitude" between the
@@ -209,10 +217,9 @@ class ResistorAroundValueCostFunctor(object):
     """
 
     def __init__(self, target_value, base=10.0):
-        """
-        Initialize the functor.
+        """Initialize the functor.
 
-        Parameters
+        Parameters.
         ----------
         target_value : float or Engineer string
             The target resistor value to compare against
@@ -229,10 +236,9 @@ class ResistorAroundValueCostFunctor(object):
             raise ValueError("Base must be positive and not equal to 1")
 
     def __call__(self, resistor_value):
-        """
-        Evaluate how far a resistor value is from the target value.
+        """Evaluate how far a resistor value is from the target value.
 
-        Parameters
+        Parameters.
         ----------
         resistor_value : float or Engineer string
             The resistor value to evaluate
@@ -243,6 +249,7 @@ class ResistorAroundValueCostFunctor(object):
             Absolute difference in logarithmic units (e.g., orders of magnitude).
             0 means exact match, 1 means 10x different (if base=10),
             2 means 100x different (if base=10), etc.
+        
         """
         value = normalize_numeric(resistor_value)
 
@@ -255,7 +262,9 @@ class ResistorAroundValueCostFunctor(object):
         return log_ratio
 
 class ResistorPowerCostFunctor(object):
+    
     """Cost functor that evaluates resistor combinations based on power dissipation
+    
     when connected in series with a given input voltage.
 
     Returns infinite cost if any resistor exceeds maximum power rating,
@@ -264,10 +273,9 @@ class ResistorPowerCostFunctor(object):
     """
 
     def __init__(self, input_voltage: VoltageV, maximum_power: PowerW, maximum_cost: float = 100.0):
-        """
-        Initialize the power cost functor.
+        """Initialize the power cost functor.
 
-        Parameters
+        Parameters.
         ----------
         input_voltage : float or Engineer string
             Input voltage applied across the series resistor combination
@@ -291,10 +299,9 @@ class ResistorPowerCostFunctor(object):
             raise ValueError("Maximum cost must be non-negative")
 
     def __call__(self, r1, r2):
-        """
-        Evaluate the power-based cost for two resistors in series.
+        """Evaluate the power-based cost for two resistors in series.
 
-        Parameters
+        Parameters.
         ----------
         r1 : float or Engineer string
             First resistor value in Ohms
@@ -306,6 +313,7 @@ class ResistorPowerCostFunctor(object):
         float
             Cost value: infinity if any resistor exceeds max power,
             otherwise 0 to maximum_cost based on highest power dissipation
+        
         """
         r1_val = normalize_numeric(r1)
         r2_val = normalize_numeric(r2)
@@ -339,10 +347,9 @@ def select_resistors(
     cost_functions: List[Callable[[float, float, float], float]],
     cost_cutoff: float = 100.0
 ) -> List[ResistorSelection]:
-    """
-    Select optimal resistor combinations based on error and cost criteria.
+    """Select optimal resistor combinations based on error and cost criteria.
 
-    Parameters
+    Parameters.
     ----------
     error_function : callable
         Function that computes error given (r1, r2).
@@ -361,6 +368,7 @@ def select_resistors(
     -------
     List[ResistorSelection]
         List of ResistorSelection objects sorted by total cost (ascending).
+    
     """
     results = []
 

@@ -38,5 +38,5 @@ class TestSphere(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotation_exists(self):
-        """Test that NormalizableArgument is available"""
+        """Test that NormalizableArgument is available."""
         self.assertIsNotNone(NormalizableArgument)

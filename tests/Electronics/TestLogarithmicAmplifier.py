@@ -22,7 +22,7 @@ class TestLogarithmicAmplifier(unittest.TestCase):
 
 
     def test_logarithmic_amplifier_output_voltage_ad5303(self):
-        """Example from AD5303 datasheet, with amperes rather than watts"""
+        """Example from AD5303 datasheet, with amperes rather than watts."""
         # Test with known values
         ipd = "3mA"
         gain = "200mV" # /decade
@@ -48,7 +48,7 @@ class TestLogarithmicAmplifier(unittest.TestCase):
 
 
     def test_logarithmic_amplifier_input_current_ad5303(self):
-        """Example from AD5303 datasheet, with amperes rather than watts"""
+        """Example from AD5303 datasheet, with amperes rather than watts."""
         # Test with known values
         vout = "1.487 V"
         gain = "200mV" # /decade
@@ -62,12 +62,12 @@ class TestLogarithmicAmplifier(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(VoltageV)
         self.assertIsNotNone(CurrentA)
 
     def test_logarithmic_amplifier_functions_various_units(self):
-        """Test logarithmic amplifier functions with various unit inputs"""
+        """Test logarithmic amplifier functions with various unit inputs."""
         # Test with different unit representations
         v1 = logarithmic_amplifier_output_voltage("1 µA", 0.2, "1 nA")
         v2 = logarithmic_amplifier_output_voltage("0.001 mA", 0.2, "0.001 µA")

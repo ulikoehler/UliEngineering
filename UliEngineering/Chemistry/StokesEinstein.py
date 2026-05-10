@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Stokes-Einstein relation for diffusion of spherical particles.
+"""Stokes-Einstein relation for diffusion of spherical particles.
 
-The Stokes-Einstein equation relates the diffusion coefficient of a
+The Stokes-Einstein equation relates the diffusion coefficient of a.
 spherical particle to its radius, solvent viscosity, and temperature:
 
     D = k_B * T / (6 * π * η * r)
@@ -56,8 +55,8 @@ DiffusionCoefficientM2S = Annotated[NormalizedComputable, normalize_diffusion_co
 
 @returns_unit("m²/s")
 def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
-    """
-    Compute the translational diffusion coefficient using the
+    """Compute the translational diffusion coefficient using the
+    
     Stokes-Einstein equation.
 
     D = k_B * T / (6 * π * η * r)
@@ -75,6 +74,7 @@ def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C,
     -------
     float
         Diffusion coefficient in m²/s.
+    
     """
     r = normalize_radius(r) if isinstance(r, str) else r
     eta = normalize_viscosity(eta) if isinstance(eta, str) else eta
@@ -84,8 +84,8 @@ def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C,
 
 @returns_unit("m")
 def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
-    """
-    Compute the hydrodynamic radius from diffusion coefficient using
+    """Compute the hydrodynamic radius from diffusion coefficient using
+    
     the inverse Stokes-Einstein equation.
 
     r = k_B * T / (6 * π * η * D)
@@ -103,6 +103,7 @@ def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS=WATER_V
     -------
     float
         Hydrodynamic radius in meters.
+    
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     eta = normalize_viscosity(eta) if isinstance(eta, str) else eta
@@ -112,10 +113,9 @@ def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS=WATER_V
 
 @returns_unit("Pa·s")
 def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T=298.15):
-    """
-    Compute solvent viscosity from diffusion coefficient and particle radius.
+    """Compute solvent viscosity from diffusion coefficient and particle radius.
 
-    η = k_B * T / (6 * π * D * r)
+    η = k_B * T / (6 * π * D * r).
 
     Parameters
     ----------
@@ -130,6 +130,7 @@ def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T=298.15):
     -------
     float
         Dynamic viscosity in Pa·s.
+    
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     r = normalize_radius(r) if isinstance(r, str) else r
@@ -139,10 +140,9 @@ def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T=298.15):
 
 @returns_unit("1/s")
 def stokes_einstein_rotational_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
-    """
-    Compute the rotational diffusion coefficient.
+    """Compute the rotational diffusion coefficient.
 
-    D_r = k_B * T / (8 * π * η * r³)
+    D_r = k_B * T / (8 * π * η * r³).
 
     Parameters
     ----------
@@ -157,6 +157,7 @@ def stokes_einstein_rotational_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VIS
     -------
     float
         Rotational diffusion coefficient in 1/s.
+    
     """
     r = normalize_radius(r) if isinstance(r, str) else r
     eta = normalize_viscosity(eta) if isinstance(eta, str) else eta

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Nernst-Planck equation for ionic flux.
+"""Nernst-Planck equation for ionic flux.
 
-The Nernst-Planck equation describes transport of ionic species
+The Nernst-Planck equation describes transport of ionic species.
 under the influence of both concentration gradients and electric fields:
 
     J = -D * (dC/dx + z*F*C/(R*T) * dφ/dx)
@@ -58,10 +57,9 @@ IonicMobilityM2VS = Annotated[NormalizedComputable, normalize_ionic_mobility]
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_flux(D: DiffusionCoefficientM2S, dC_dx, z, C: ConcentrationMolM3, dPhi_dx, T=298.15):
-    """
-    Compute the ionic flux using the Nernst-Planck equation.
+    """Compute the ionic flux using the Nernst-Planck equation.
 
-    J = -D * (dC/dx + z*F*C/(R*T) * dφ/dx)
+    J = -D * (dC/dx + z*F*C/(R*T) * dφ/dx).
 
     Parameters
     ----------
@@ -92,10 +90,9 @@ def nernst_planck_flux(D: DiffusionCoefficientM2S, dC_dx, z, C: ConcentrationMol
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_diffusion_flux(D: DiffusionCoefficientM2S, dC_dx):
-    """
-    Compute the diffusion component of Nernst-Planck flux (Fick's first law).
+    """Compute the diffusion component of Nernst-Planck flux (Fick's first law).
 
-    J_diff = -D * dC/dx
+    J_diff = -D * dC/dx.
 
     Parameters
     ----------
@@ -108,6 +105,7 @@ def nernst_planck_diffusion_flux(D: DiffusionCoefficientM2S, dC_dx):
     -------
     float
         Diffusion flux in mol/(m²·s).
+    
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     return -D * dC_dx
@@ -115,10 +113,9 @@ def nernst_planck_diffusion_flux(D: DiffusionCoefficientM2S, dC_dx):
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_migration_flux(D: DiffusionCoefficientM2S, z, C: ConcentrationMolM3, dPhi_dx, T=298.15):
-    """
-    Compute the migration (electromigration) component of Nernst-Planck flux.
+    """Compute the migration (electromigration) component of Nernst-Planck flux.
 
-    J_mig = -D * z * F * C / (R * T) * dφ/dx
+    J_mig = -D * z * F * C / (R * T) * dφ/dx.
 
     Parameters
     ----------
@@ -137,6 +134,7 @@ def nernst_planck_migration_flux(D: DiffusionCoefficientM2S, z, C: Concentration
     -------
     float
         Migration flux in mol/(m²·s).
+    
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     C = normalize_concentration(C) if isinstance(C, str) else C
@@ -146,10 +144,9 @@ def nernst_planck_migration_flux(D: DiffusionCoefficientM2S, z, C: Concentration
 
 @returns_unit("m²/s")
 def einstein_relation_diffusion_mobility(mobility: IonicMobilityM2VS, T=298.15):
-    """
-    Compute diffusion coefficient from ionic mobility using the Einstein relation.
+    """Compute diffusion coefficient from ionic mobility using the Einstein relation.
 
-    D = μ * k_B * T / e = μ * R * T / F
+    D = μ * k_B * T / e = μ * R * T / F.
 
     (For ions, using molar quantities: D = u * R * T / (|z| * F)
      where u is the electrochemical mobility)
@@ -165,6 +162,7 @@ def einstein_relation_diffusion_mobility(mobility: IonicMobilityM2VS, T=298.15):
     -------
     float
         Diffusion coefficient in m²/s.
+    
     """
     from scipy.constants import k as k_B, e
     mobility = normalize_ionic_mobility(mobility) if isinstance(mobility, str) else mobility
@@ -174,10 +172,9 @@ def einstein_relation_diffusion_mobility(mobility: IonicMobilityM2VS, T=298.15):
 
 @returns_unit("m²/(V·s)")
 def ionic_mobility_from_diffusion(D: DiffusionCoefficientM2S, z, T=298.15):
-    """
-    Compute ionic mobility from diffusion coefficient.
+    """Compute ionic mobility from diffusion coefficient.
 
-    μ = D * |z| * F / (R * T)
+    μ = D * |z| * F / (R * T).
 
     Parameters
     ----------
@@ -192,6 +189,7 @@ def ionic_mobility_from_diffusion(D: DiffusionCoefficientM2S, z, T=298.15):
     -------
     float
         Ionic mobility in m²/(V·s).
+    
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     T = normalize_temperature(T) if isinstance(T, str) else T

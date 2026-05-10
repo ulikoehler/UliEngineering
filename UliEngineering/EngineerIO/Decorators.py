@@ -156,6 +156,7 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
         @normalize_args(exclude=['unit'])
         def calculate(value, unit):
             return value  # value is normalized, unit is left as string
+    
     """
     if exclude is None:
         exclude = []

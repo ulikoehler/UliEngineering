@@ -8,7 +8,7 @@ from UliEngineering.Utils.NaN import none_to_nan
 class TestNoneToNaN(unittest.TestCase):
 
     def test_none_to_nan_simple_none(self):
-        """Test that None is converted to NaN"""
+        """Test that None is converted to NaN."""
         result = none_to_nan(None)
         self.assertTrue(np.isnan(result))
 
@@ -44,7 +44,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(result, "123")
 
     def test_none_to_nan_list_handling(self):
-        """Test list handling with various elements"""
+        """Test list handling with various elements."""
         # List with None values
         input_list = [1, None, 3, None, 5]
         result = none_to_nan(input_list)
@@ -70,7 +70,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(result[5], 3.14)
 
     def test_none_to_nan_tuple_handling(self):
-        """Test tuple handling (should be treated as iterable)"""
+        """Test tuple handling (should be treated as iterable)."""
         input_tuple = (1, None, "hello", "")
         result = none_to_nan(input_tuple)
 
@@ -83,7 +83,7 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertTrue(np.isnan(result[3]))
 
     def test_none_to_nan_nested_iterables(self):
-        """Test nested iterables"""
+        """Test nested iterables."""
         input_nested = [[1, None], [None, "test"], ["", 3]]
         result = none_to_nan(input_nested)
 

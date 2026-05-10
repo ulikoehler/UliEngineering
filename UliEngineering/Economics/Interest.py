@@ -11,6 +11,7 @@ __all__ = [
 
 def yearly_interest_to_equivalent_monthly_interest(interest):
     """Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
+    
     computes the equivalent monthly interest so that the following holds True:
 
     (1+monthly_interest)**12-1 == yearly_interest.
@@ -24,6 +25,7 @@ def yearly_interest_to_equivalent_monthly_interest(interest):
     -------
     float or numpy.ndarray
         Equivalent monthly interest rate.
+    
     """
 
     # 12 months per year
@@ -32,8 +34,8 @@ def yearly_interest_to_equivalent_monthly_interest(interest):
     return np.power(1.+interest, (1/12.))-1.
 
 def yearly_interest_to_equivalent_daily_interest(interest, days_per_year=365.25):
-    """
-    Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
+    """Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
+    
     computes the equivalent daily interest so that the following holds True:
 
     (1+daily_interest)**365.25-1 == yearly_interest.
@@ -53,14 +55,15 @@ def yearly_interest_to_equivalent_daily_interest(interest, days_per_year=365.25)
     -------
     float or numpy.ndarray
         Equivalent daily interest rate.
+    
     """
     # https://techoverflow.net/2022/02/02/numpy-nth-root-how-to/
     return np.power(1.+interest, (1/days_per_year))-1.
 
 def yearly_interest_to_equivalent_arbitrary_interest(interest, seconds=1):
-    """
-    Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
-    computes the equivalent interest rate for a timespan of [seconds] so that the total
+    """Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
+    
+    computes the equivalent interest rate for a timespan of [seconds] so that the total.
     interest of applying the rate for that timespan equals the yearly interest.
 
     This function is using the Julian year (exactly 365.25 days/year) as a reference
@@ -79,16 +82,16 @@ def yearly_interest_to_equivalent_arbitrary_interest(interest, seconds=1):
     -------
     float or numpy.ndarray
         Equivalent interest rate for the given timespan.
+    
     """
     # https://techoverflow.net/2022/02/02/numpy-nth-root-how-to/
     # scipy.constants.Julian_year == 31557600.0
     return np.power(1.+interest, (seconds/31557600.0))-1.
 
 def interest_apply_multiple_times(interest, times):
-    """
-    Given a yearly interest such as 0.022 (= 2.2%), apply it to the given values.
+    """Given a yearly interest such as 0.022 (= 2.2%), apply it to the given values.
 
-    For example, interest_apply_multiple_times(0.022, 5) will return the equivalent
+    For example, interest_apply_multiple_times(0.022, 5) will return the equivalent.
     interest of having an interest of 2.2% 5 years in a row (including compound interest).
 
     times may be a floating point number.
@@ -106,13 +109,14 @@ def interest_apply_multiple_times(interest, times):
     -------
     float or numpy.ndarray
         Total interest after applying the interest multiple times.
+    
     """
     return np.power(1.+interest, times)-1.
 
 def extrapolate_interest_to_timestamps(interest, timestamps):
-    """
-    Given a yearly interest such as 0.022 (= 2.2%), extrapolate the total interest
-    factor up to each time point X in the timestamps array. The first timestamp in the
+    """Given a yearly interest such as 0.022 (= 2.2%), extrapolate the total interest
+    
+    factor up to each time point X in the timestamps array. The first timestamp in the.
     array is assumed to be 1.0.
 
     This works by computing the time difference for each timestamps t_i to the first
@@ -133,6 +137,7 @@ def extrapolate_interest_to_timestamps(interest, timestamps):
     -------
     numpy.ndarray
         Array of interest factors for each timestamp.
+    
     """
     # We compute in microseconds, not nanoseconds!
     timestamps = timestamps.astype('datetime64[us]')

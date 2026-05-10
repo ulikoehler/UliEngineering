@@ -177,7 +177,7 @@ class TestVolume(unittest.TestCase):
         assert_approx_equal(self.volume_io.normalize_volume("1 teaspoon"), 4.92892161458e-06)
 
     def test_type_annotation_exists(self):
-        """Test that the new type annotation is available"""
+        """Test that the new type annotation is available."""
         self.assertIsNotNone(VolumeCubicMeters)
 
     def test_volume_type_various_units(self):

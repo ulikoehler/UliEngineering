@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """A python script to calculate E96 resistor values and do other useful things with resistors,
+
 e.g. connect them in parallel and serial fashions.
 
 Originally published at techoverflow.net."""
@@ -31,7 +32,8 @@ __all__ = [
 # Source: https://en.wikipedia.org/wiki/E_series_of_preferred_numbers
 #
 class ESeries:
-    """Container for standard E-series values as NumPy arrays"""
+    
+    """Container for standard E-series values as NumPy arrays."""
 
     E6 = np.array([1.0, 1.5, 2.2, 3.3, 4.7, 6.8])
 
@@ -90,10 +92,9 @@ e192 = tuple(ESeries.E192)
 
 @returns_unit("A")
 def current_through_resistor(resistor: ResistanceOhm, voltage: VoltageV):
-    """
-    Compute the current that flows through a resistor using ohms law.
+    """Compute the current that flows through a resistor using ohms law.
 
-    Parameters
+    Parameters.
     ----------
     resistor : float or Engineer string
         The resistor in Ohms
@@ -106,10 +107,9 @@ def current_through_resistor(resistor: ResistanceOhm, voltage: VoltageV):
 
 @returns_unit("V")
 def voltage_across_resistor(resistor: ResistanceOhm, current: CurrentA):
-    """
-    Compute the voltage that is dropped across a resistor using ohms law.
+    """Compute the voltage that is dropped across a resistor using ohms law.
 
-    Parameters
+    Parameters.
     ----------
     resistor : float or Engineer string
         The resistor in Ohms
@@ -122,8 +122,8 @@ def voltage_across_resistor(resistor: ResistanceOhm, current: CurrentA):
 
 @returns_unit("W")
 def power_dissipated_in_resistor_by_current(resistor: ResistanceOhm, current: CurrentA):
-    """
-    Compute the power that is dissipated in a resistor using P=I²R given its resistance
+    """Compute the power that is dissipated in a resistor using P=I²R given its resistance
+    
     and the current flowing through it.
 
     Parameters
@@ -132,6 +132,7 @@ def power_dissipated_in_resistor_by_current(resistor: ResistanceOhm, current: Cu
         The resistor in Ohms
     current : float or Engineer string
         The current flowing through the resistor
+    
     """
     resistor = normalize_resistance(resistor) if isinstance(resistor, str) else resistor
     current = normalize_current(current) if isinstance(current, str) else current
@@ -139,8 +140,8 @@ def power_dissipated_in_resistor_by_current(resistor: ResistanceOhm, current: Cu
 
 @returns_unit("W")
 def power_dissipated_in_resistor_by_voltage(resistor: ResistanceOhm, voltage: VoltageV):
-    """
-    Compute the power that is dissipated in a resistor using P=VI given its resistance
+    """Compute the power that is dissipated in a resistor using P=VI given its resistance
+    
     and the current flowing through it.
 
     Parameters
@@ -149,6 +150,7 @@ def power_dissipated_in_resistor_by_voltage(resistor: ResistanceOhm, voltage: Vo
         The resistor in Ohms
     current : float or Engineer string
         The current flowing through the resistor
+    
     """
     resistor = normalize_resistance(resistor) if isinstance(resistor, str) else resistor
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
@@ -157,8 +159,8 @@ def power_dissipated_in_resistor_by_voltage(resistor: ResistanceOhm, voltage: Vo
     return np.abs(current * voltage)
 
 def resistor_range(multiplicator, sequence=e96):
-    """
-    Get a single range of resistors of a given sequence,
+    """Get a single range of resistors of a given sequence,
+    
     e.g. for 1k to <10k use multiplicator = 1000.
     """
     # Multiply ndarrays directly for performance
@@ -168,17 +170,15 @@ def resistor_range(multiplicator, sequence=e96):
     return [r * multiplicator for r in sequence]
 
 def standard_resistors(minExp=-1, maxExp=9, sequence=e96):
-    """
-    Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
+    """Get a list of all standard resistor values from 100mOhm up to 976 MΩ in Ω"""
     exponents = itertools.islice(itertools.count(minExp, 1), 0, maxExp - minExp)
     multiplicators = [10 ** x for x in exponents]
     return itertools.chain(*(resistor_range(r, sequence=sequence) for r in multiplicators))
 
 def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequence=e96):
-    """
-    Get all standard resistor values in Ω between min_resistor and max_resistor
+    """Get all standard resistor values in Ω between min_resistor and max_resistor
 
-    :return: list of resistor values in Ω
+    :return: list of resistor values in Ω.
     """
     min_resistor = normalize_numeric(min_resistor)
     max_resistor = normalize_numeric(max_resistor)
@@ -189,32 +189,26 @@ def standard_resistors_in_range(min_resistor="1Ω", max_resistor="10MΩ", sequen
 
 @returns_unit("Ω")
 def nearest_resistor(value, sequence=e96):
-    """
-    Find the standard reistor value with the minimal difference to the given value
-    """
+    """Find the standard reistor value with the minimal difference to the given value."""
     value = normalize_numeric(value)
     return min(standard_resistors(sequence=sequence), key=lambda r: abs(value - r))
 
 @returns_unit("Ω")
 def next_higher_resistor(value, sequence=e96):
-    """
-    Find the next higher standard resistor value
-    """
+    """Find the next higher standard resistor value."""
     value = normalize_numeric(value)
     return min((r for r in standard_resistors(sequence=sequence) if r > value), default=None)
 
 @returns_unit("Ω")
 def next_lower_resistor(value, sequence=e96):
-    """
-    Find the next lower standard resistor value
-    """
+    """Find the next lower standard resistor value."""
     value = normalize_numeric(value)
     return max((r for r in standard_resistors(sequence=sequence) if r < value), default=None)
 
 @returns_unit("Ω")
 def parallel_resistors(*args: ResistanceOhm):
-    """
-    Compute the total resistance of n parallel resistors and return
+    """Compute the total resistance of n parallel resistors and return
+    
     the value in Ohms.
     """
     # Normalize string inputs
@@ -235,8 +229,8 @@ def parallel_resistors(*args: ResistanceOhm):
 
 @returns_unit("Ω")
 def series_resistors(*args: ResistanceOhm):
-    """
-    Compute the total resistance of n parallel resistors and return
+    """Compute the total resistance of n parallel resistors and return
+    
     the value in Ohms.
     """
     # Normalize string inputs
@@ -251,8 +245,8 @@ def series_resistors(*args: ResistanceOhm):
 
 @returns_unit("Ω")
 def resistor_by_voltage_and_current(voltage: VoltageV, current: CurrentA):
-    """
-    Compute the resistance value in Ohms that draws the given amount of
+    """Compute the resistance value in Ohms that draws the given amount of
+    
     current if the given voltage is across it.
     """
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
@@ -261,8 +255,8 @@ def resistor_by_voltage_and_current(voltage: VoltageV, current: CurrentA):
 
 @returns_unit("A")
 def resistor_current_by_power(resistor: ResistanceOhm, power: PowerW):
-    """
-    Compute the current that flows through a resistor
+    """Compute the current that flows through a resistor
+    
     given its resistance and the power dissipated in it.
     """
     resistor = normalize_resistance(resistor) if isinstance(resistor, str) else resistor
@@ -272,8 +266,8 @@ def resistor_current_by_power(resistor: ResistanceOhm, power: PowerW):
 ResistorTolerance = namedtuple("ResistorTolerance", ["lower", "nominal", "upper"])
 
 def resistor_tolerance(resistance: ResistanceOhm, tolerance="1%") -> ResistorTolerance:
-    """
-    Compute the lower, nominal and upper bound of a resistor value
+    """Compute the lower, nominal and upper bound of a resistor value
+    
     given the nominal value and the tolerance.
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -286,10 +280,9 @@ def resistor_tolerance(resistance: ResistanceOhm, tolerance="1%") -> ResistorTol
 
 @returns_unit("Ω")
 def resistor_value_by_voltage_and_power(voltage: VoltageV, power: PowerW):
-    """
-    Compute resistor value given voltage across it and power dissipated.
+    """Compute resistor value given voltage across it and power dissipated.
 
-    Uses the formula: R = V² / P
+    Uses the formula: R = V² / P.
 
     This function does not perform any validity checks on the inputs,
     hence voltage and/or power can be zero or negative.
@@ -310,6 +303,7 @@ def resistor_value_by_voltage_and_power(voltage: VoltageV, power: PowerW):
     ------
     ValueError
         If power is zero or negative
+    
     """
     voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     power = normalize_power(power) if isinstance(power, str) else power

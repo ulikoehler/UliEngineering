@@ -5,8 +5,7 @@ from collections.abc import Iterable
 import numpy as np
 
 def none_to_nan(value):
-    """
-    Convert None to NaN, otherwise return the value unchanged.
+    """Convert None to NaN, otherwise return the value unchanged.
 
     This is useful for normalizing values in arrays.
     """

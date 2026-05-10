@@ -8,19 +8,21 @@ __all__ = ["BoundingBox"]
 
 
 class BoundingBox(object):
+    
     """A 2D bounding box.
     """
 
     def __init__(self, points):
         """Compute the upright 2D bounding box for a set of 2D coordinates in a (n,2) numpy array.
 
-        You can access the bbox using the
+        You can access the bbox using the.
         (minx, maxx, miny, maxy) members.
 
         Parameters
         ----------
         points : numpy.ndarray
             Array of 2D coordinates with shape (n, 2).
+        
         """
         if len(points.shape) != 2 or points.shape[1] != 2:
             raise ValueError("Points must be a (n,2), array but it has shape {}".format(

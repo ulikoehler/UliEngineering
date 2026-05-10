@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Unsorted signal processing utilities
-"""
+"""Unsorted signal processing utilities."""
 import numpy as np
 from toolz import functoolz
 import numbers
@@ -25,38 +23,34 @@ _unstep_reduction_methods = {
 }
 
 def remove_mean(arr):
-    """
-    Substract the DC signal component, i.e. the arithmetic mean of the array,
+    """Substract the DC signal component, i.e. the arithmetic mean of the array,
+    
     from the array and return the modified array.
     """
     return arr - np.mean(arr)
 
 def rms(arr):
-    """
-    Compute the root-mean-square value of the given array.
-    """
+    """Compute the root-mean-square value of the given array."""
     return np.sqrt(np.mean(np.square(arr)))
 
 def rms_to_peak_to_peak(rms_val):
-    """
-    Given an RMS value, returns the peak to peak value
+    """Given an RMS value, returns the peak to peak value
+    
     of a sinusoid signal with that RMS value.
     """
     rms_val = normalize_numeric(rms_val)
     return rms_val * np.sqrt(2)
 
 def peak_to_peak(arr):
-    """
-    Compute max(arr) - min(arr).
-    """
+    """Compute max(arr) - min(arr)."""
     if arr is None or len(arr) == 0:
         # This causes numpy ValueError since some Numpy version
         return 0.
     return np.max(arr) - np.min(arr)
 
 def unstair(x, y, method="diff", tolerance=1e-9):
-    """
-    Remove stairs (adjacent equal values) from a function with quantized values.
+    """Remove stairs (adjacent equal values) from a function with quantized values.
+    
     The first and the last values are always returned.
 
     Currently available methods:
@@ -95,8 +89,7 @@ def unstair(x, y, method="diff", tolerance=1e-9):
 
 
 def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50, stop_at=1e-10):
-    """
-    Optimize the degree of a polyfit polynomial so that score(y - poly(x)) is minimized.
+    """Optimize the degree of a polyfit polynomial so that score(y - poly(x)) is minimized.
 
     :param max_degree: The maximum degree to try. LinAlgErrors are automatically ignored.
     :param stop_at: If a score lower than this is reached, the function returns early
@@ -127,9 +120,10 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
 
 class LinRange:
 
-    """
-    Combines the properties of numpy.linspace and Python3's range by providing
-    a floating-point capable lazy range generator that does not keep the entire array
+    
+    """Combines the properties of numpy.linspace and Python3's range by providing
+    
+    a floating-point capable lazy range generator that does not keep the entire array.
     in memory (but calculates slices on the fly.
 
     Use [:] or any other slice to obtain a numpy array. dtype is used as a wrapper function.
@@ -137,6 +131,7 @@ class LinRange:
 
     Behaves like np.linspace. Use .view() to obtain a LinRange slice.
     """
+    
     def __init__(self, start, stop, n, endpoint=True, dtype=float):
         """Create a new LinRange object using a numpy.linspace-like constructor."""
         self.start = start
@@ -207,9 +202,11 @@ class LinRange:
         return str(self.dtype)
 
     def __repr__(self):
+        """Return repr(self)."""
         return f"LinRange({self.start}, {self.stop}, {str(self.step) if isinstance(self.step, np.timedelta64) else self.step}{'' if self.dtype == float else f', dtype={self.__dtype_name()}'})"
 
     def __eq__(self, other):
+        """Return True if equal to other."""
         return self.start == other.start and self.stop == other.stop and self.step == other.step
 
     def samplerate(self):
@@ -225,8 +222,8 @@ class LinRange:
         return 1./self.step
 
 def aggregate(gen):
-    """
-    Takes any iterable and aggregates subsequent values
+    """Takes any iterable and aggregates subsequent values
+    
     yielded by the iterable into a single value with a counter.
 
     Yields (value, count) pairs
@@ -248,8 +245,8 @@ def aggregate(gen):
         yield (current, cnt)
 
 def zero_crossings(data):
-    """
-    Compute indexes in the given data array just before a zero crossing occurs.
+    """Compute indexes in the given data array just before a zero crossing occurs.
+    
     A zero crossing at index i is defined as:
         - data[i] is positive
         - data[i + 1] exists and is negative

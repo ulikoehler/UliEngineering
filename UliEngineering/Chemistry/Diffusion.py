@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Fick's laws of diffusion.
+"""Fick's laws of diffusion.
 
 Fick's first law (steady-state):
     J = -D * dC/dx
@@ -61,10 +60,9 @@ EnergyJPerMol = Annotated[NormalizedComputable, normalize_energy]
 
 @returns_unit("mol/(m²·s)")
 def fick_first_law(D: DiffusionCoefficientM2S, dC_dx):
-    """
-    Compute the diffusion flux using Fick's first law.
+    """Compute the diffusion flux using Fick's first law.
 
-    J = -D * dC/dx
+    J = -D * dC/dx.
 
     Parameters
     ----------
@@ -77,6 +75,7 @@ def fick_first_law(D: DiffusionCoefficientM2S, dC_dx):
     -------
     float
         Diffusion flux in mol/(m²·s).
+
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     return -D * dC_dx
@@ -84,10 +83,9 @@ def fick_first_law(D: DiffusionCoefficientM2S, dC_dx):
 
 @returns_unit("m")
 def fick_diffusion_distance(D: DiffusionCoefficientM2S, t: TimeSeconds):
-    """
-    Compute the characteristic (RMS) diffusion distance.
+    """Compute the characteristic (RMS) diffusion distance.
 
-    x_rms = √(2 * D * t)
+    x_rms = √(2 * D * t).
 
     Parameters
     ----------
@@ -100,6 +98,7 @@ def fick_diffusion_distance(D: DiffusionCoefficientM2S, t: TimeSeconds):
     -------
     float
         RMS diffusion distance in meters.
+
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     t = normalize_time_seconds(t) if isinstance(t, str) else t
@@ -108,10 +107,9 @@ def fick_diffusion_distance(D: DiffusionCoefficientM2S, t: TimeSeconds):
 
 @returns_unit("s")
 def fick_diffusion_time(D: DiffusionCoefficientM2S, x: LengthMeter):
-    """
-    Compute the time required for diffusion over a distance x.
+    """Compute the time required for diffusion over a distance x.
 
-    t = x² / (2 * D)
+    t = x² / (2 * D).
 
     Parameters
     ----------
@@ -124,6 +122,7 @@ def fick_diffusion_time(D: DiffusionCoefficientM2S, x: LengthMeter):
     -------
     float
         Time in seconds.
+
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     x = normalize_length(x) if isinstance(x, str) else x
@@ -132,8 +131,8 @@ def fick_diffusion_time(D: DiffusionCoefficientM2S, x: LengthMeter):
 
 @returns_unit("mol/m³")
 def fick_semi_infinite_concentration(C0: ConcentrationMolM3, Cs: ConcentrationMolM3, x: LengthMeter, D: DiffusionCoefficientM2S, t: TimeSeconds):
-    """
-    Compute concentration at distance x and time t using the semi-infinite
+    """Compute concentration at distance x and time t using the semi-infinite
+    
     solid solution of Fick's second law (constant surface concentration).
 
     C(x,t) = Cs - (Cs - C0) * erfc(x / (2*√(D*t)))
@@ -157,6 +156,7 @@ def fick_semi_infinite_concentration(C0: ConcentrationMolM3, Cs: ConcentrationMo
     -------
     float
         Concentration at position x and time t in mol/m³.
+
     """
     C0 = normalize_concentration(C0) if isinstance(C0, str) else C0
     Cs = normalize_concentration(Cs) if isinstance(Cs, str) else Cs
@@ -168,8 +168,8 @@ def fick_semi_infinite_concentration(C0: ConcentrationMolM3, Cs: ConcentrationMo
 
 @returns_unit("mol/m³")
 def fick_thin_film_concentration(M, D: DiffusionCoefficientM2S, t: TimeSeconds, x: LengthMeter):
-    """
-    Concentration profile from a thin-film (impulse) source diffusing
+    """Concentration profile from a thin-film (impulse) source diffusing
+    
     in one dimension (Fick's second law, instantaneous plane source).
 
     C(x,t) = M / √(4πDt) * exp(-x² / (4Dt))
@@ -189,6 +189,7 @@ def fick_thin_film_concentration(M, D: DiffusionCoefficientM2S, t: TimeSeconds, 
     -------
     float
         Concentration in mol/m³.
+
     """
     D = normalize_diffusion_coefficient(D) if isinstance(D, str) else D
     t = normalize_time_seconds(t) if isinstance(t, str) else t
@@ -198,10 +199,9 @@ def fick_thin_film_concentration(M, D: DiffusionCoefficientM2S, t: TimeSeconds, 
 
 @returns_unit("m²/s")
 def diffusion_coefficient_from_temperature(D0: DiffusionCoefficientM2S, Ea: EnergyJPerMol, T):
-    """
-    Arrhenius-type temperature dependence of diffusion coefficient.
+    """Arrhenius-type temperature dependence of diffusion coefficient.
 
-    D(T) = D0 * exp(-Ea / (R * T))
+    D(T) = D0 * exp(-Ea / (R * T)).
 
     Parameters
     ----------
@@ -216,6 +216,7 @@ def diffusion_coefficient_from_temperature(D0: DiffusionCoefficientM2S, Ea: Ener
     -------
     float
         Diffusion coefficient at temperature T in m²/s.
+
     """
     from scipy.constants import R
     D0 = normalize_diffusion_coefficient(D0) if isinstance(D0, str) else D0

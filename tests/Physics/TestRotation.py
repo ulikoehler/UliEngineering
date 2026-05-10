@@ -80,7 +80,7 @@ class TestRotationOther(unittest.TestCase):
         self.assertAlmostEqual(rotating_liquid_pressure("1000 g/L", "60 rpm", "100 cm"), 1000 * (2 * math.pi) ** 2, places=6)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(LengthMeters)
         self.assertIsNotNone(FrequencyHz)
         self.assertIsNotNone(RotationRate)

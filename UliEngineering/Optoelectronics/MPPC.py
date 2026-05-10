@@ -13,10 +13,9 @@ __all__ = [
 
 @returns_unit("F")
 def pixel_capacitance_from_terminal_capacitance(terminal_capacitance: CapacitanceFarad = "900pF", npixels: NormalizableArgument = 14331):
-    """
-    Estimate a MPPC's individual pixel's capacitance from the terminal capacitance.
+    """Estimate a MPPC's individual pixel's capacitance from the terminal capacitance.
 
-    Typically, this overestimates the capacitance because the case & trace capacitance is included
+    Typically, this overestimates the capacitance because the case & trace capacitance is included.
     in the terminal capacitance. The overestimation effect is particularly large for MPPCs with very small
     pixels such as 15μm.
 

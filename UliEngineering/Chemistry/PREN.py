@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-PREN (Pitting Resistance Equivalent Number) for corrosion resistance.
+"""PREN (Pitting Resistance Equivalent Number) for corrosion resistance.
 
-The PREN is an empirical index used to rank stainless steels and
+The PREN is an empirical index used to rank stainless steels and.
 nickel alloys by their resistance to pitting corrosion:
 
     PREN = %Cr + 3.3 * %Mo + 16 * %N
@@ -37,10 +36,9 @@ COMMON_STEEL_COMPOSITIONS = {
 
 @returns_unit("")
 def pren(Cr, Mo, N):
-    """
-    Compute the Pitting Resistance Equivalent Number (PREN).
+    """Compute the Pitting Resistance Equivalent Number (PREN).
 
-    PREN = %Cr + 3.3 * %Mo + 16 * %N
+    PREN = %Cr + 3.3 * %Mo + 16 * %N.
 
     Parameters
     ----------
@@ -63,10 +61,9 @@ def pren(Cr, Mo, N):
 
 @returns_unit("")
 def pren_w(Cr, Mo, N, W):
-    """
-    Compute the Pitting Resistance Equivalent Number including tungsten (PRE_NW).
+    """Compute the Pitting Resistance Equivalent Number including tungsten (PRE_NW).
 
-    PRE_NW = %Cr + 3.3 * (%Mo + 0.5 * %W) + 16 * %N
+    PRE_NW = %Cr + 3.3 * (%Mo + 0.5 * %W) + 16 * %N.
 
     Parameters
     ----------

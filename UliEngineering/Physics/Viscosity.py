@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Comprehensive viscosity module.
+"""Comprehensive viscosity module.
 
 Provides functions and dataclass constants for:
 - Andrade viscosity (Arrhenius-type temperature dependence)
@@ -103,10 +102,10 @@ ShearRate = Annotated[NormalizedComputable, normalize_shear_rate]
 
 @dataclass(frozen=True)
 class AndradeConstants:
-    """
-    Constants for the Andrade (Arrhenius-type) viscosity equation:
+    
+    """Constants for the Andrade (Arrhenius-type) viscosity equation:
 
-        η = A * exp(B / T)
+        η = A * exp(B / T).
 
     Parameters
     ----------
@@ -116,7 +115,9 @@ class AndradeConstants:
         Pre-exponential factor (Pa·s).
     B : float
         Activation-energy-like parameter (K).
+    
     """
+    
     name: str
     A: float
     B: float
@@ -124,10 +125,10 @@ class AndradeConstants:
 
 @dataclass(frozen=True)
 class VFTConstants:
-    """
-    Constants for the Vogel-Fulcher-Tammann (VFT) viscosity equation.
+    
+    """Constants for the Vogel-Fulcher-Tammann (VFT) viscosity equation.
 
-    η = A * exp(B / (T - T0))
+    η = A * exp(B / (T - T0)).
 
     Parameters
     ----------
@@ -139,6 +140,7 @@ class VFTConstants:
         Fragility parameter (K).
     T0 : float
         Vogel temperature (K).  Must be strictly less than the operating T.
+    
     """
 
     name: str
@@ -149,10 +151,10 @@ class VFTConstants:
 
 @dataclass(frozen=True)
 class SutherlandConstants:
-    """
-    Constants for the Sutherland gas-viscosity model.
+    
+    """Constants for the Sutherland gas-viscosity model.
 
-    μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2)
+    μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2).
 
     Parameters
     ----------
@@ -164,6 +166,7 @@ class SutherlandConstants:
         Reference temperature (K).
     C : float
         Sutherland constant (K).
+    
     """
 
     name: str
@@ -174,10 +177,10 @@ class SutherlandConstants:
 
 @dataclass(frozen=True)
 class SwindellsConstants:
-    """
-    Constants for the Swindells empirical viscosity correlation.
+    
+    """Constants for the Swindells empirical viscosity correlation.
 
-    η = η_ref * 10^( -a * (T - T_ref) / (T + b) )
+    η = η_ref * 10^( -a * (T - T_ref) / (T + b) ).
 
     Parameters
     ----------
@@ -191,6 +194,7 @@ class SwindellsConstants:
         Dimensionless slope parameter.
     b : float
         Temperature offset (K).
+    
     """
 
     name: str
@@ -202,10 +206,10 @@ class SwindellsConstants:
 
 @dataclass(frozen=True)
 class KestinConstants:
-    """
-    Constants for the Kestin (three-parameter) viscosity correlation.
+    
+    """Constants for the Kestin (three-parameter) viscosity correlation.
 
-    η = A * exp( B / (T - C) )
+    η = A * exp( B / (T - C) ).
 
     Parameters
     ----------
@@ -217,6 +221,7 @@ class KestinConstants:
         Energy-like parameter (K).
     C : float
         Temperature offset (K).  Must be strictly less than operating T.
+    
     """
 
     name: str
@@ -227,10 +232,10 @@ class KestinConstants:
 
 @dataclass(frozen=True)
 class BinghamConstants:
-    """
-    Constants for a Bingham plastic fluid.
+    
+    """Constants for a Bingham plastic fluid.
 
-    τ = τ0 + μ_p * γ̇
+    τ = τ0 + μ_p * γ̇.
 
     Parameters
     ----------
@@ -240,6 +245,7 @@ class BinghamConstants:
         Yield stress (Pa).
     mu_p : float
         Plastic viscosity (Pa·s).
+    
     """
 
     name: str
@@ -249,10 +255,10 @@ class BinghamConstants:
 
 @dataclass(frozen=True)
 class LiquidViscosityData:
-    """
-    Bundle of viscosity-model constants for a single liquid.
+    
+    """Bundle of viscosity-model constants for a single liquid.
 
-    Parameters
+    Parameters.
     ----------
     name : str
         Liquid name.
@@ -274,10 +280,10 @@ class LiquidViscosityData:
 
 @dataclass(frozen=True)
 class GasViscosityData:
-    """
-    Bundle of viscosity-model constants for a single gas.
+    
+    """Bundle of viscosity-model constants for a single gas.
 
-    Parameters
+    Parameters.
     ----------
     name : str
         Gas name.
@@ -296,6 +302,7 @@ class GasViscosityData:
 # ---------------------------------------------------------------------------
 
 class CommonLiquids:
+    
     """Pre-defined viscosity constants for common liquids."""
 
     Water = LiquidViscosityData(
@@ -360,6 +367,7 @@ class CommonLiquids:
 
 
 class CommonGases:
+    
     """Pre-defined Sutherland constants for common gases."""
 
     Air = GasViscosityData(
@@ -408,10 +416,9 @@ def _to_array(x):
 
 @returns_unit("Pa·s")
 def andrade_viscosity(T: TemperatureKelvin, constants: AndradeConstants = CommonLiquids.Water.andrade):
-    """
-    Compute dynamic viscosity using the Andrade (Arrhenius-type) equation.
+    """Compute dynamic viscosity using the Andrade (Arrhenius-type) equation.
 
-        η = A * exp(B / T)
+        η = A * exp(B / T).
 
     Parameters
     ----------
@@ -429,6 +436,7 @@ def andrade_viscosity(T: TemperatureKelvin, constants: AndradeConstants = Common
     ------
     ValueError
         If T <= 0.
+    
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
@@ -439,10 +447,9 @@ def andrade_viscosity(T: TemperatureKelvin, constants: AndradeConstants = Common
 
 @returns_unit("Pa·s")
 def vft_viscosity(T: TemperatureKelvin, constants: VFTConstants = CommonLiquids.Water.vft):
-    """
-    Compute dynamic viscosity using the Vogel-Fulcher-Tammann (VFT) equation.
+    """Compute dynamic viscosity using the Vogel-Fulcher-Tammann (VFT) equation.
 
-        η = A * exp( B / (T - T0) )
+        η = A * exp( B / (T - T0) ).
 
     Parameters
     ----------
@@ -460,6 +467,7 @@ def vft_viscosity(T: TemperatureKelvin, constants: VFTConstants = CommonLiquids.
     ------
     ValueError
         If T <= T0.
+    
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
@@ -475,10 +483,9 @@ def vft_viscosity(T: TemperatureKelvin, constants: VFTConstants = CommonLiquids.
 def sutherland_gas_viscosity(
     T: TemperatureKelvin, constants: SutherlandConstants = CommonGases.Air.sutherland
 ):
-    """
-    Compute dynamic viscosity of a gas using the Sutherland model.
+    """Compute dynamic viscosity of a gas using the Sutherland model.
 
-        μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2)
+        μ = μ0 * (T0 + C) / (T + C) * (T / T0)^(3/2).
 
     Parameters
     ----------
@@ -496,6 +503,7 @@ def sutherland_gas_viscosity(
     ------
     ValueError
         If T <= 0.
+    
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
@@ -513,10 +521,9 @@ def sutherland_gas_viscosity(
 def swindells_viscosity(
     T: TemperatureKelvin, constants: SwindellsConstants = CommonLiquids.Water.swindells
 ):
-    """
-    Compute dynamic viscosity using the Swindells empirical correlation.
+    """Compute dynamic viscosity using the Swindells empirical correlation.
 
-        η = η_ref * 10^( -a * (T - T_ref) / (T + b) )
+        η = η_ref * 10^( -a * (T - T_ref) / (T + b) ).
 
     Parameters
     ----------
@@ -529,6 +536,7 @@ def swindells_viscosity(
     -------
     float or ndarray
         Dynamic viscosity in Pa·s.
+    
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
@@ -538,10 +546,9 @@ def swindells_viscosity(
 
 @returns_unit("Pa·s")
 def kestin_viscosity(T: TemperatureKelvin, constants: KestinConstants = CommonLiquids.Water.kestin):
-    """
-    Compute dynamic viscosity using the Kestin three-parameter correlation.
+    """Compute dynamic viscosity using the Kestin three-parameter correlation.
 
-        η = A * exp( B / (T - C) )
+        η = A * exp( B / (T - C) ).
 
     Parameters
     ----------
@@ -559,6 +566,7 @@ def kestin_viscosity(T: TemperatureKelvin, constants: KestinConstants = CommonLi
     ------
     ValueError
         If T <= C.
+    
     """
     T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
@@ -572,10 +580,9 @@ def kestin_viscosity(T: TemperatureKelvin, constants: KestinConstants = CommonLi
 
 @returns_unit("Pa")
 def bingham_stress(shear_rate: ShearRate, constants: BinghamConstants = None):
-    """
-    Compute shear stress for a Bingham plastic fluid.
+    """Compute shear stress for a Bingham plastic fluid.
 
-        τ = τ0 + μ_p * γ̇
+        τ = τ0 + μ_p * γ̇.
 
     Parameters
     ----------
@@ -594,6 +601,7 @@ def bingham_stress(shear_rate: ShearRate, constants: BinghamConstants = None):
     ------
     ValueError
         If shear_rate < 0.
+    
     """
     if constants is None:
         constants = BinghamConstants(name="Example Bingham fluid", tau0=10.0, mu_p=0.1)
@@ -606,10 +614,9 @@ def bingham_stress(shear_rate: ShearRate, constants: BinghamConstants = None):
 
 @returns_unit("m³/s")
 def poiseuille_flow_rate(radius: LengthMeter, pressure_drop: PressurePascal, length: LengthMeter, viscosity: DynamicViscosityPas):
-    """
-    Compute volumetric flow rate for laminar flow in a cylindrical pipe using Poiseuille's law.
+    """Compute volumetric flow rate for laminar flow in a cylindrical pipe using Poiseuille's law.
 
-        Q = π * r⁴ * ΔP / (8 * η * L)
+        Q = π * r⁴ * ΔP / (8 * η * L).
 
     Parameters
     ----------
@@ -631,6 +638,7 @@ def poiseuille_flow_rate(radius: LengthMeter, pressure_drop: PressurePascal, len
     ------
     ValueError
         If radius, length, or viscosity is not strictly positive.
+    
     """
     r = normalize_length(radius) if isinstance(radius, str) else radius
     L = normalize_length(length) if isinstance(length, str) else length
@@ -651,10 +659,9 @@ def poiseuille_flow_rate(radius: LengthMeter, pressure_drop: PressurePascal, len
 
 @returns_unit("m²/s")
 def kinematic_viscosity(dynamic_viscosity: DynamicViscosityPas, density: DensityKgM3):
-    """
-    Compute kinematic viscosity from dynamic viscosity and density.
+    """Compute kinematic viscosity from dynamic viscosity and density.
 
-        ν = η / ρ
+        ν = η / ρ.
 
     Parameters
     ----------
@@ -672,6 +679,7 @@ def kinematic_viscosity(dynamic_viscosity: DynamicViscosityPas, density: Density
     ------
     ValueError
         If density is not strictly positive.
+    
     """
     eta = normalize_dynamic_viscosity(dynamic_viscosity) if isinstance(dynamic_viscosity, str) else dynamic_viscosity
     rho = normalize_density(density) if isinstance(density, str) else density
@@ -684,10 +692,9 @@ def kinematic_viscosity(dynamic_viscosity: DynamicViscosityPas, density: Density
 
 @returns_unit("N")
 def stokes_drag(radius: LengthMeter, velocity: VelocityMS, viscosity: DynamicViscosityPas):
-    """
-    Compute drag force on a sphere moving in a viscous fluid (Stokes' law).
+    """Compute drag force on a sphere moving in a viscous fluid (Stokes' law).
 
-        F = 6 * π * η * r * v
+        F = 6 * π * η * r * v.
 
     Parameters
     ----------
@@ -707,6 +714,7 @@ def stokes_drag(radius: LengthMeter, velocity: VelocityMS, viscosity: DynamicVis
     ------
     ValueError
         If radius or viscosity is negative.
+    
     """
     r = normalize_length(radius) if isinstance(radius, str) else radius
     v = normalize_velocity(velocity) if isinstance(velocity, str) else velocity
@@ -723,10 +731,9 @@ def stokes_drag(radius: LengthMeter, velocity: VelocityMS, viscosity: DynamicVis
 
 @returns_unit("")
 def reynolds_number(density: DensityKgM3, velocity: VelocityMS, characteristic_length: LengthMeter, viscosity: DynamicViscosityPas):
-    """
-    Compute the Reynolds number.
+    """Compute the Reynolds number.
 
-        Re = ρ * v * L / η
+        Re = ρ * v * L / η.
 
     Parameters
     ----------
@@ -748,6 +755,7 @@ def reynolds_number(density: DensityKgM3, velocity: VelocityMS, characteristic_l
     ------
     ValueError
         If density, characteristic_length, or viscosity is not strictly positive.
+    
     """
     rho = normalize_density(density) if isinstance(density, str) else density
     v = normalize_velocity(velocity) if isinstance(velocity, str) else velocity
@@ -768,10 +776,9 @@ def reynolds_number(density: DensityKgM3, velocity: VelocityMS, characteristic_l
 
 @returns_unit("Pa·s")
 def arrhenius_mixing_viscosity(mole_fractions, viscosities):
-    """
-    Compute mixture viscosity using the Arrhenius (logarithmic) mixing rule.
+    """Compute mixture viscosity using the Arrhenius (logarithmic) mixing rule.
 
-        ln(η_mix) = Σ xi * ln(ηi)
+        ln(η_mix) = Σ xi * ln(ηi).
 
     Parameters
     ----------
@@ -790,6 +797,7 @@ def arrhenius_mixing_viscosity(mole_fractions, viscosities):
     ValueError
         If mole fractions do not sum to 1.0, or if any viscosity is not positive,
         or if inputs have mismatched lengths.
+    
     """
     xi = np.asarray(mole_fractions, dtype=float)
     eta_i = np.asarray(viscosities, dtype=float)

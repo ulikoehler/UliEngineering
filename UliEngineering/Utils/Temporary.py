@@ -6,8 +6,8 @@ import shutil
 import os
 
 class AutoDeleteTempfileGenerator:
-    """
-    A wrapper for temporary files and directories that are automatically deleted.
+    
+    """A wrapper for temporary files and directories that are automatically deleted.
 
     Once this class is deleted or delete_all() is called, the files are deleted.
 
@@ -36,8 +36,7 @@ class AutoDeleteTempfileGenerator:
         return (handle, fname)
 
     def mkftemp(self, suffix='', prefix='tmp', directory=None, mode='w'):
-        """
-        Wrap self.mkstemp() to open the OS-level file handle.
+        """Wrap self.mkstemp() to open the OS-level file handle.
 
         Open it as a normal Python handle with the given mode.
         """
@@ -52,8 +51,7 @@ class AutoDeleteTempfileGenerator:
         return fname
 
     def delete_all(self):
-        """
-        Force-delete all files and directories created by this instance.
+        """Force-delete all files and directories created by this instance.
 
         The class instance may be used without restriction after this call.
         """

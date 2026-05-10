@@ -52,7 +52,7 @@ class TestGenerateWaves(unittest.TestCase):
         (inverse_sawtooth,),
     ])
     def testByFFT(self, fn):
-        """Test sine_wave by computing FFT dominant frequency"""
+        """Test sine_wave by computing FFT dominant frequency."""
         sw = fn(25., 400.0, 1.0, 10.)
         fft = compute_fft(sw, 400.)
         df = fft.dominant_frequency()

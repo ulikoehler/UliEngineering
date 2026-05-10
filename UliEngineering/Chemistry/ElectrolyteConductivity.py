@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Electrolyte conductivity calculations.
+"""Electrolyte conductivity calculations.
 
-Provides functions for computing the conductivity (κ) and resistivity (ρ)
+Provides functions for computing the conductivity (κ) and resistivity (ρ).
 of electrolyte solutions from molar conductivity and concentration,
 as well as cell-constant-based measurements.
 
@@ -55,10 +54,9 @@ CellConstantPerMeter = Annotated[NormalizedComputable, normalize_cell_constant]
 
 @returns_unit("S/m")
 def electrolyte_conductivity_from_molar(Lambda_m: MolarConductivitySCm2Mol, c: ConcentrationMolar):
-    """
-    Compute electrolyte conductivity from molar conductivity and concentration.
+    """Compute electrolyte conductivity from molar conductivity and concentration.
 
-    κ = Λ_m * c * 0.1
+    κ = Λ_m * c * 0.1.
 
     Parameters
     ----------
@@ -76,6 +74,7 @@ def electrolyte_conductivity_from_molar(Lambda_m: MolarConductivitySCm2Mol, c: C
     -----
     Conversion: S·cm²/mol * mol/L = S·cm²/L = S/(100 cm) = S/m * 0.1
     So κ(S/m) = Λ_m(S·cm²/mol) * c(mol/L) * 0.1
+    
     """
     Lambda_m = normalize_molar_conductivity(Lambda_m) if isinstance(Lambda_m, str) else Lambda_m
     c = normalize_concentration(c) if isinstance(c, str) else c
@@ -84,10 +83,9 @@ def electrolyte_conductivity_from_molar(Lambda_m: MolarConductivitySCm2Mol, c: C
 
 @returns_unit("Ω·m")
 def electrolyte_resistivity(conductivity: ConductivitySM):
-    """
-    Compute electrolyte resistivity from conductivity.
+    """Compute electrolyte resistivity from conductivity.
 
-    ρ = 1 / κ
+    ρ = 1 / κ.
 
     Parameters
     ----------
@@ -98,6 +96,7 @@ def electrolyte_resistivity(conductivity: ConductivitySM):
     -------
     float
         Resistivity in Ω·m.
+    
     """
     conductivity = normalize_conductivity(conductivity) if isinstance(conductivity, str) else conductivity
     return 1.0 / conductivity
@@ -105,10 +104,9 @@ def electrolyte_resistivity(conductivity: ConductivitySM):
 
 @returns_unit("S/m")
 def conductivity_from_cell_constant(conductance: ConductanceS, cell_constant: CellConstantPerMeter):
-    """
-    Compute conductivity from measured conductance and cell constant.
+    """Compute conductivity from measured conductance and cell constant.
 
-    κ = G * K_cell
+    κ = G * K_cell.
 
     Parameters
     ----------
@@ -121,6 +119,7 @@ def conductivity_from_cell_constant(conductance: ConductanceS, cell_constant: Ce
     -------
     float
         Conductivity in S/m.
+    
     """
     conductance = normalize_conductance(conductance) if isinstance(conductance, str) else conductance
     cell_constant = normalize_cell_constant(cell_constant) if isinstance(cell_constant, str) else cell_constant
@@ -129,10 +128,9 @@ def conductivity_from_cell_constant(conductance: ConductanceS, cell_constant: Ce
 
 @returns_unit("S·cm²/mol")
 def molar_conductivity_from_conductivity(conductivity: ConductivitySM, c: ConcentrationMolar):
-    """
-    Compute molar conductivity from specific conductivity and concentration.
+    """Compute molar conductivity from specific conductivity and concentration.
 
-    Λ_m = κ / c * 10
+    Λ_m = κ / c * 10.
 
     Parameters
     ----------
@@ -145,6 +143,7 @@ def molar_conductivity_from_conductivity(conductivity: ConductivitySM, c: Concen
     -------
     float
         Molar conductivity in S·cm²/mol.
+    
     """
     conductivity = normalize_conductivity(conductivity) if isinstance(conductivity, str) else conductivity
     c = normalize_concentration(c) if isinstance(c, str) else c
@@ -153,10 +152,9 @@ def molar_conductivity_from_conductivity(conductivity: ConductivitySM, c: Concen
 
 @returns_unit("S/m")
 def specific_conductance_temperature_correction(kappa_ref: ConductivitySM, T, T_ref=298.15, alpha=0.02):
-    """
-    Temperature-correct specific conductance using a linear model.
+    """Temperature-correct specific conductance using a linear model.
 
-    κ(T) = κ_ref * (1 + α * (T - T_ref))
+    κ(T) = κ_ref * (1 + α * (T - T_ref)).
 
     Parameters
     ----------
@@ -173,6 +171,7 @@ def specific_conductance_temperature_correction(kappa_ref: ConductivitySM, T, T_
     -------
     float
         Temperature-corrected conductivity in S/m.
+    
     """
     kappa_ref = normalize_conductivity(kappa_ref) if isinstance(kappa_ref, str) else kappa_ref
     T = normalize_temperature(T) if isinstance(T, str) else T

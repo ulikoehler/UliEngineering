@@ -27,6 +27,7 @@ def _safe_log10(v):
 
 
 class dBFactor:
+    
     """Pre-set values for factors."""
 
     Power = 10.
@@ -34,8 +35,7 @@ class dBFactor:
 
 @returns_unit("dB")
 def ratio_to_dB(ratio: NormalizableArgument, factor: NormalizableArgument = dBFactor.Field):
-    """
-    Convert a given ratio to a decibel value.
+    """Convert a given ratio to a decibel value.
 
     For power quantities, set factor=dBFactor.Power.
     For field quantities, set factor=dBFactor.Field.
@@ -49,8 +49,7 @@ def ratio_to_dB(ratio: NormalizableArgument, factor: NormalizableArgument = dBFa
     return factor * _safe_log10(ratio)
 
 def dB_to_ratio(dB: NormalizableArgument, factor: NormalizableArgument = dBFactor.Field):
-    """
-    Convert a decibel value to the underlying quantity ratio.
+    """Convert a decibel value to the underlying quantity ratio.
 
     The result is returned as a ratio to the 0 dB value.
 
@@ -63,10 +62,9 @@ def dB_to_ratio(dB: NormalizableArgument, factor: NormalizableArgument = dBFacto
 
 @returns_unit("dB")
 def value_to_dB(v: NormalizableArgument, v0: NormalizableArgument = 1.0, factor: NormalizableArgument = dBFactor.Field):
-    """
-    Convert a given quantity [v] to dB, with 0dB being [v0].
+    """Convert a given quantity [v] to dB, with 0dB being [v0].
 
-    Returns -np.inf for negative values
+    Returns -np.inf for negative values.
     """
     v = normalize_numeric(v) if isinstance(v, str) else v
     v0 = normalize_numeric(v0) if isinstance(v0, str) else v0
@@ -74,10 +72,9 @@ def value_to_dB(v: NormalizableArgument, v0: NormalizableArgument = 1.0, factor:
     return ratio_to_dB(v / v0, factor=factor)
 
 def dB_to_value(dB: NormalizableArgument, v0: NormalizableArgument = 1.0, factor: NormalizableArgument = dBFactor.Field):
-    """
-    Convert a given decibel value [dB] to dB, with 0 dB being [v0].
+    """Convert a given decibel value [dB] to dB, with 0 dB being [v0].
 
-    Returns -np.inf for negative values
+    Returns -np.inf for negative values.
     """
     dB = normalize_numeric(dB) if isinstance(dB, str) else dB
     v0 = normalize_numeric(v0) if isinstance(v0, str) else v0
@@ -87,10 +84,9 @@ def dB_to_value(dB: NormalizableArgument, v0: NormalizableArgument = 1.0, factor
 # Utility functions
 @returns_unit("dBµV")
 def voltage_to_dBuV(v: NormalizableArgument):
-    """
-    Represent a voltage as dB microvolts.
+    """Represent a voltage as dB microvolts.
 
-    Also see the online calculator at
+    Also see the online calculator at.
     https://techoverflow.net/2019/07/29/volts-to-db%c2%b5v-online-calculator-ampamp-python-code/
     """
     v = normalize_numeric(v) if isinstance(v, str) else v
@@ -98,10 +94,9 @@ def voltage_to_dBuV(v: NormalizableArgument):
 
 @returns_unit("V")
 def dBuV_to_voltage(v: NormalizableArgument):
-    """
-    Represent a dB microvolt voltage in volt.
+    """Represent a dB microvolt voltage in volt.
 
-    Also see the online calculator at
+    Also see the online calculator at.
     https://techoverflow.net/2019/07/28/db%c2%b5v-to-volts-online-calculator-python-code/
     """
     v = normalize_numeric(v) if isinstance(v, str) else v
@@ -109,8 +104,6 @@ def dBuV_to_voltage(v: NormalizableArgument):
 
 @returns_unit("dBm")
 def power_to_dBm(v: NormalizableArgument):
-    """
-    Represent a power in Watts as dB milliwatts.
-    """
+    """Represent a power in Watts as dB milliwatts."""
     v = normalize_numeric(v) if isinstance(v, str) else v
     return value_to_dB(v, 1e-3, factor=dBFactor.Power)

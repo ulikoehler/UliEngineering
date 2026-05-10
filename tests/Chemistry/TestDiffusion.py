@@ -18,12 +18,12 @@ from UliEngineering.Chemistry.Diffusion import (
 
 class TestFickLaws(unittest.TestCase):
     def test_fick_first_law_scalar(self):
-        """Test Fick's first law with scalar input"""
+        """Test Fick's first law with scalar input."""
         flux = fick_first_law(D=1e-9, dC_dx=-100.0)
         self.assertIsInstance(flux, float)
 
     def test_fick_diffusion_distance_scalar(self):
-        """Test diffusion distance with scalar input"""
+        """Test diffusion distance with scalar input."""
         distance = fick_diffusion_distance(D=1e-9, t=3600.0)
         self.assertIsInstance(distance, float)
         self.assertGreater(distance, 0)
@@ -45,7 +45,7 @@ class TestFickLaws(unittest.TestCase):
         self.assertIsInstance(conc, float)
 
     def test_diffusion_coefficient_from_temperature_scalar(self):
-        """Test temperature dependence of diffusion coefficient"""
+        """Test temperature dependence of diffusion coefficient."""
         D = diffusion_coefficient_from_temperature(D0=1e-9, Ea=50000.0, T=298.15)
         self.assertIsInstance(D, float)
         self.assertGreater(D, 0)
@@ -61,7 +61,7 @@ class TestFickLaws(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(DiffusionCoefficientM2S)
         self.assertIsNotNone(TimeSeconds)
         self.assertIsNotNone(LengthMeter)
@@ -69,7 +69,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(EnergyJPerMol)
 
     def test_normalize_diffusion_coefficient_various_units(self):
-        """Test normalize_diffusion_coefficient with various unit inputs"""
+        """Test normalize_diffusion_coefficient with various unit inputs."""
         test_cases = [
             ("1 m²/s", 1.0),
             ("1 m2/s", 1.0),
@@ -84,7 +84,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_time_seconds_various_units(self):
-        """Test normalize_time_seconds with various unit inputs"""
+        """Test normalize_time_seconds with various unit inputs."""
         test_cases = [
             ("1 s", 1.0),
             ("1 ms", 1e-3),
@@ -114,7 +114,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/m³", 1.0),
             ("1 mol/m3", 1.0),
@@ -130,7 +130,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_energy_various_units(self):
-        """Test normalize_energy with various unit inputs"""
+        """Test normalize_energy with various unit inputs."""
         test_cases = [
             ("1 J/mol", 1.0),
             ("1 kJ/mol", 1000.0),
@@ -141,7 +141,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_fick_functions_various_units(self):
-        """Test Fick's laws functions with various unit inputs"""
+        """Test Fick's laws functions with various unit inputs."""
         # Test fick_diffusion_distance with different time units
         x1 = fick_diffusion_distance("1e-9 m²/s", "3600 s")
         x2 = fick_diffusion_distance("1e-9 m²/s", "1 h")

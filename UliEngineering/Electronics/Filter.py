@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Electronic filter and time constant utilities.
-"""
+"""Electronic filter and time constant utilities."""
 from typing import Annotated
 
 from UliEngineering.EngineerIO import normalize_numeric
@@ -43,8 +41,8 @@ TimeS = Annotated[NormalizedComputable, normalize_time]
 
 @returns_unit("Hz")
 def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
-    """
-    Compute the resonance frequency of an LC oscillator circuit
+    """Compute the resonance frequency of an LC oscillator circuit
+    
     given the inductance and capacitance.
 
     This function can likewise be used to compute the corner frequency f_p
@@ -56,6 +54,7 @@ def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
         The inductance in Henry
     c : float
         The capacitance in Farad
+    
     """
     l = normalize_inductance(l) if isinstance(l, str) else l
     c = normalize_capacitance(c) if isinstance(c, str) else c
@@ -63,8 +62,8 @@ def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
 
 @returns_unit("Hz")
 def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
-    """
-    Compute the corner frequency of an RC filter given the resistance
+    """Compute the corner frequency of an RC filter given the resistance
+    
     and capacitance.
 
     Parameters
@@ -73,6 +72,7 @@ def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
         The resistance in Ohm
     c : float
         The capacitance in Farad
+    
     """
     r = normalize_resistance(r) if isinstance(r, str) else r
     c = normalize_capacitance(c) if isinstance(c, str) else c
@@ -81,8 +81,8 @@ def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
 PoleAndZero = namedtuple("PoleAndZero", ["pole", "zero"])
 
 def rc_feedforward_pole_and_zero(r1: ResistanceOhm, r2: ResistanceOhm, cff: CapacitanceFarad):
-    """
-    Compute the pole and zero of a resistor divider with a feedforward capacitor.
+    """Compute the pole and zero of a resistor divider with a feedforward capacitor.
+    
     This is useful to compute the compensation capacitor.
 
     Cff is assumed to be in parallel with R1, while R2 goes to ground.
@@ -99,6 +99,7 @@ def rc_feedforward_pole_and_zero(r1: ResistanceOhm, r2: ResistanceOhm, cff: Capa
         The resistance of the feedforward path in Ohm
     cff : float
         The capacitance of the feedforward path in Farad
+    
     """
     r1 = normalize_resistance(r1) if isinstance(r1, str) else r1
     r2 = normalize_resistance(r2) if isinstance(r2, str) else r2
@@ -110,10 +111,9 @@ def rc_feedforward_pole_and_zero(r1: ResistanceOhm, r2: ResistanceOhm, cff: Capa
 
 @returns_unit("s")
 def rc_time_constant(resistance: ResistanceOhm, capacitance: CapacitanceFarad):
-    """
-    Calculate the time constant (τ) of an RC circuit.
+    """Calculate the time constant (τ) of an RC circuit.
 
-    τ = R × C
+    τ = R × C.
 
     The time constant represents the time required for the voltage
     across the capacitor to reach approximately 63.2% of its final value
@@ -130,6 +130,7 @@ def rc_time_constant(resistance: ResistanceOhm, capacitance: CapacitanceFarad):
     -------
     float
         Time constant in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
@@ -137,10 +138,9 @@ def rc_time_constant(resistance: ResistanceOhm, capacitance: CapacitanceFarad):
 
 @returns_unit("s")
 def rl_time_constant(resistance: ResistanceOhm, inductance: InductanceH):
-    """
-    Calculate the time constant (τ) of an RL circuit.
+    """Calculate the time constant (τ) of an RL circuit.
 
-    τ = L / R
+    τ = L / R.
 
     The time constant represents the time required for the current
     through the inductor to reach approximately 63.2% of its final value
@@ -157,6 +157,7 @@ def rl_time_constant(resistance: ResistanceOhm, inductance: InductanceH):
     -------
     float
         Time constant in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -164,10 +165,9 @@ def rl_time_constant(resistance: ResistanceOhm, inductance: InductanceH):
 
 @returns_unit("Hz")
 def rl_cutoff_frequency(resistance: ResistanceOhm, inductance: InductanceH):
-    """
-    Calculate the cutoff frequency (fc) of an RL circuit.
+    """Calculate the cutoff frequency (fc) of an RL circuit.
 
-    fc = R / (2π × L)
+    fc = R / (2π × L).
 
     This is the -3dB frequency where the output is 70.7% of the input
     in a low-pass or high-pass RL filter.
@@ -183,6 +183,7 @@ def rl_cutoff_frequency(resistance: ResistanceOhm, inductance: InductanceH):
     -------
     float
         Cutoff frequency in Hz
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -190,8 +191,8 @@ def rl_cutoff_frequency(resistance: ResistanceOhm, inductance: InductanceH):
 
 @returns_unit("s")
 def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, initial_voltage: VoltageV, final_voltage: VoltageV, target_voltage: VoltageV):
-    """
-    Calculate the time required for a capacitor to charge from initial_voltage
+    """Calculate the time required for a capacitor to charge from initial_voltage
+    
     to target_voltage when charging towards final_voltage through a resistor.
 
     t = -R × C × ln((target_voltage - final_voltage) / (initial_voltage - final_voltage))
@@ -213,6 +214,7 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
     -------
     float
         Time in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
@@ -229,8 +231,8 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
 
 @returns_unit("s")
 def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, initial_voltage: VoltageV, target_voltage: VoltageV):
-    """
-    Calculate the time required for a capacitor to discharge from initial_voltage
+    """Calculate the time required for a capacitor to discharge from initial_voltage
+    
     to target_voltage through a resistor (assuming discharge to 0V).
 
     t = -R × C × ln(target_voltage / initial_voltage)
@@ -250,6 +252,7 @@ def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, 
     -------
     float
         Time in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
@@ -259,8 +262,8 @@ def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, 
 
 @returns_unit("s")
 def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, final_current: CurrentA, target_current: CurrentA):
-    """
-    Calculate the time required for current through an inductor to rise
+    """Calculate the time required for current through an inductor to rise
+    
     from 0 to target_current when approaching final_current.
 
     t = -L/R × ln((final_current - target_current) / final_current)
@@ -280,6 +283,7 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
     -------
     float
         Time in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -295,8 +299,8 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
 
 @returns_unit("s")
 def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, initial_current: CurrentA, target_current: CurrentA):
-    """
-    Calculate the time required for current through an inductor to fall
+    """Calculate the time required for current through an inductor to fall
+    
     from initial_current to target_current (assuming decay to 0A).
 
     t = -L/R × ln(target_current / initial_current)
@@ -316,6 +320,7 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
     -------
     float
         Time in seconds
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -331,10 +336,9 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
 
 @returns_unit("V")
 def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, time: TimeS, initial_voltage: VoltageV=0, final_voltage: VoltageV=1):
-    """
-    Calculate the voltage across a capacitor at a given time after a step input.
+    """Calculate the voltage across a capacitor at a given time after a step input.
 
-    V(t) = final_voltage + (initial_voltage - final_voltage) × exp(-t / (R × C))
+    V(t) = final_voltage + (initial_voltage - final_voltage) × exp(-t / (R × C)).
 
     Parameters
     ----------
@@ -353,6 +357,7 @@ def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, t
     -------
     float
         Voltage across capacitor at time t in Volts
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
@@ -364,10 +369,9 @@ def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, t
 
 @returns_unit("A")
 def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: TimeS, final_current: CurrentA=1):
-    """
-    Calculate the current through an inductor at a given time after a step input.
+    """Calculate the current through an inductor at a given time after a step input.
 
-    I(t) = final_current × (1 - exp(-t × R / L))
+    I(t) = final_current × (1 - exp(-t × R / L)).
 
     Parameters
     ----------
@@ -384,6 +388,7 @@ def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: T
     -------
     float
         Current through inductor at time t in Amperes
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -394,10 +399,9 @@ def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: T
 
 @returns_unit("Hz")
 def rlc_resonant_frequency(inductance: InductanceH, capacitance: CapacitanceFarad):
-    """
-    Calculate the resonant frequency of an RLC circuit.
+    """Calculate the resonant frequency of an RLC circuit.
 
-    f0 = 1 / (2π × sqrt(L × C))
+    f0 = 1 / (2π × sqrt(L × C)).
 
     Parameters
     ----------
@@ -410,16 +414,16 @@ def rlc_resonant_frequency(inductance: InductanceH, capacitance: CapacitanceFara
     -------
     float
         Resonant frequency in Hz
+    
     """
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
     return 1.0 / (2 * np.pi * np.sqrt(inductance * capacitance))
 
 def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capacitance: CapacitanceFarad):
-    """
-    Calculate the quality factor (Q) of an RLC circuit.
+    """Calculate the quality factor (Q) of an RLC circuit.
 
-    Q = (1/R) × sqrt(L/C)
+    Q = (1/R) × sqrt(L/C).
 
     Parameters
     ----------
@@ -434,6 +438,7 @@ def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capac
     -------
     float
         Quality factor (dimensionless)
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -441,10 +446,9 @@ def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capac
     return (1.0 / resistance) * np.sqrt(inductance / capacitance)
 
 def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capacitance: CapacitanceFarad):
-    """
-    Calculate the damping ratio (ζ) of an RLC circuit.
+    """Calculate the damping ratio (ζ) of an RLC circuit.
 
-    ζ = R/2 × sqrt(C/L)
+    ζ = R/2 × sqrt(C/L).
 
     Parameters
     ----------
@@ -462,6 +466,7 @@ def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capaci
         ζ < 1: underdamped
         ζ = 1: critically damped
         ζ > 1: overdamped
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
@@ -470,10 +475,9 @@ def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capaci
 
 @returns_unit("Hz")
 def rlc_bandwidth(resistance: ResistanceOhm, inductance: InductanceH):
-    """
-    Calculate the 3dB bandwidth of an RLC circuit.
+    """Calculate the 3dB bandwidth of an RLC circuit.
 
-    BW = R / (2π × L)
+    BW = R / (2π × L).
 
     Parameters
     ----------
@@ -486,6 +490,7 @@ def rlc_bandwidth(resistance: ResistanceOhm, inductance: InductanceH):
     -------
     float
         Bandwidth in Hz
+    
     """
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance

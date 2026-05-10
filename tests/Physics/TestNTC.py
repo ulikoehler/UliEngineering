@@ -22,12 +22,12 @@ class TestNTC(unittest.TestCase):
         _, values = ntc_resistances("47k", "4050K")
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(TemperatureKelvin)
 
     def test_normalize_resistance_various_units(self):
-        """Test normalize_resistance with various unit inputs"""
+        """Test normalize_resistance with various unit inputs."""
         test_cases = [
             ("1 Ω", 1.0),
             ("1 Ohm", 1.0),
@@ -45,7 +45,7 @@ class TestNTC(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_ntc_resistance_various_units(self):
-        """Test ntc_resistance with various resistance units"""
+        """Test ntc_resistance with various resistance units."""
         # Test with different resistance units
         r1 = ntc_resistance("47k", "4050K", "25°C")
         r2 = ntc_resistance("47000 Ω", "4050K", "25°C")

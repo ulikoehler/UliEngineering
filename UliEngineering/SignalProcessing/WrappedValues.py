@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Utilities to work with wrapped values (e.g. phase angles or encoder counts)
+
 which wrap around at a certain point."""
 import numpy as np
 
@@ -10,16 +11,16 @@ __all__ = [
 ]
 
 class OnlineUnwrapper:
+    
     """An online unwrapper that can process samples one by one or in chunks.
 
     Maintains state between calls.
     """
 
     def __init__(self, wrap_value=2**20, threshold=None):
-        """
-        Initialize the unwrapper.
+        """Initialize the unwrapper.
 
-        Parameters
+        Parameters.
         ----------
         wrap_value : float
             The value at which wrapping occurs.
@@ -32,10 +33,9 @@ class OnlineUnwrapper:
         self.correction = 0.0
 
     def __call__(self, data):
-        """
-        Unwrap the given data.
+        """Unwrap the given data.
 
-        Parameters
+        Parameters.
         ----------
         data : scalar or array-like
             The input value(s) to unwrap.
@@ -43,6 +43,7 @@ class OnlineUnwrapper:
         Returns
         -------
         The unwrapped value(s).
+        
         """
         is_scalar = np.isscalar(data) or (isinstance(data, np.ndarray) and data.ndim == 0)
 
@@ -96,8 +97,7 @@ class OnlineUnwrapper:
         return out
 
 def unwrap(series, wrap_value=2**20, threshold=None):
-    """
-    Unwrap wrapped values  by compensating for numerical wraps.
+    """Unwrap wrapped values  by compensating for numerical wraps.
 
     Args:
         series: list or np.array
@@ -108,6 +108,7 @@ def unwrap(series, wrap_value=2**20, threshold=None):
         threshold: float or None
             The threshold to detect a wrap. If None, it is set to wrap_value / 2.
             A difference larger than this threshold is considered a wrap.
+    
     """
     if threshold is None:
         threshold = wrap_value / 2

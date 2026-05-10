@@ -33,7 +33,7 @@ PressureBar = Annotated[NormalizedComputable, normalize_pressure_bar]
 def pascal_to_bar(pressure: PressurePascal):
     """Convert the pressure in pascal to the pressure in bar.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressurePascal
         Pressure in Pascals.
@@ -51,7 +51,7 @@ def pascal_to_bar(pressure: PressurePascal):
 def bar_to_pascal(pressure: PressureBar):
     """Convert the pressure in bar to the pressure in Pascal.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressureBar
         Pressure in bar.
@@ -59,8 +59,8 @@ def bar_to_pascal(pressure: PressureBar):
     Returns
     -------
     float
-
         Pressure in Pascals.
+
     """
     pressure = normalize_pressure_bar(pressure) if isinstance(pressure, str) else pressure
     return pressure*1e5
@@ -85,6 +85,7 @@ def barlow_tangential(outer_diameter: LengthMeters, inner_diameter: LengthMeters
     -------
     float
         Tangential stress in Pascals.
+    
     """
     outer_diameter = normalize_numeric(outer_diameter) if isinstance(outer_diameter, str) else outer_diameter
     inner_diameter = normalize_numeric(inner_diameter) if isinstance(inner_diameter, str) else inner_diameter
@@ -98,16 +99,16 @@ def barlow_tangential(outer_diameter: LengthMeters, inner_diameter: LengthMeters
 def psi_to_pascal(pressure: PressurePascal):
     """Convert the pressure in psi to the pressure in Pascal.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressurePascal
         Pressure in psi.
 
     Returns
     -------
-
     float
         Pressure in Pascals.
+
     """
     pressure = normalize_pressure_pascal(pressure) if isinstance(pressure, str) else pressure
     return pressure * 6894.76
@@ -117,16 +118,16 @@ def psi_to_pascal(pressure: PressurePascal):
 def psi_to_bar(pressure: PressurePascal):
     """Convert the pressure in psi to the pressure in bar.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressurePascal
         Pressure in psi.
 
     Returns
-
     -------
     float
         Pressure in bar.
+
     """
     pressure = normalize_pressure_pascal(pressure) if isinstance(pressure, str) else pressure
     return pressure * 0.0689476
@@ -136,7 +137,7 @@ def psi_to_bar(pressure: PressurePascal):
 def pascal_to_psi(pressure: PressurePascal):
     """Convert the pressure in Pascal to the pressure in psi.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressurePascal
         Pressure in Pascals.
@@ -145,7 +146,9 @@ def pascal_to_psi(pressure: PressurePascal):
     Returns
     -------
     float
+
         Pressure in psi.
+    
     """
     pressure = normalize_pressure_pascal(pressure) if isinstance(pressure, str) else pressure
     return pressure / 6894.76
@@ -155,7 +158,7 @@ def pascal_to_psi(pressure: PressurePascal):
 def bar_to_psi(pressure: PressureBar):
     """Convert the pressure in bar to the pressure in psi.
 
-    Parameters
+    Parameters.
     ----------
     pressure : PressureBar
         Pressure in bar.
@@ -163,8 +166,10 @@ def bar_to_psi(pressure: PressureBar):
 
     Returns
     -------
+
     float
         Pressure in psi.
+    
     """
     pressure = normalize_pressure_bar(pressure) if isinstance(pressure, str) else pressure
     return pressure / 0.0689476

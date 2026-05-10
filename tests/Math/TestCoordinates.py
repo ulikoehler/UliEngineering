@@ -8,7 +8,7 @@ import unittest
 
 class TestBoundingBox(unittest.TestCase):
     def test_bbox_real(self):
-        """Test bounding box with real data"""
+        """Test bounding box with real data."""
         coords = [(6.74219, -53.57835),
                   (6.74952, -53.57241),
                   (6.75652, -53.56289),

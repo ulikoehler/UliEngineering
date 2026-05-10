@@ -32,8 +32,7 @@ def _csv_nthcol(n):
 _csv_firstcol = _csv_nthcol(0)
 
 def count_lines(flo, isline=__standard_isline):
-    """
-    Count the lines in a file.
+    """Count the lines in a file.
 
     Takes a file-like object. Strings are treated as filenames.
     Returns the number of lines.
@@ -73,10 +72,9 @@ def extract_numeric_column(flo, isline=__standard_isline, postproc=functoolz.ide
 
 def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
                    postproc=functoolz.identity, extractcol=_csv_firstcol):
-    """
-    Extract a column from a file.
+    """Extract a column from a file.
 
-    Lazily extract a column from a file, for example extract a column from a
+    Lazily extract a column from a file, for example extract a column from a.
     CSV file. The values are run through a postprocessing function and placed
     in a list which is returned. Lines which do not pass the isline function
     are ignored.
@@ -99,8 +97,7 @@ def extract_column(flo, isline=__standard_isline, preproc=_strip_newline,
     return columns
 
 def write_textfile(path, text):
-    """
-    Write text to a file, auto-creating the directory tree.
+    """Write text to a file, auto-creating the directory tree.
 
     Does not write a terminating newline.
     """
@@ -114,8 +111,7 @@ def read_textfile(path):
         return infile.read()
 
 def list_recursive(directory, relative=False, files_only=True):
-    """
-    List a directory recursively.
+    """List a directory recursively.
 
     Yield each filename (with the filename being relative to the directory).
     The results are generated in no particular order.
@@ -130,6 +126,7 @@ def list_recursive(directory, relative=False, files_only=True):
         If True, yield only files and ignore directories.
         If False, yield directories (the name ends with a slash).
         The root directory is never yielded.
+    
     """
     for dirname, subdirs, files in os.walk(directory):
         for file in files:
@@ -141,10 +138,9 @@ def list_recursive(directory, relative=False, files_only=True):
                 yield os.path.relpath(path, directory) + "/" if relative else path
 
 def find_datasets_by_extension(namelist, extensions):
-    """
-    Search for datasets with the same name but different extensions.
+    """Search for datasets with the same name but different extensions.
 
-    Search for datasets that are located in the same directory and have the
+    Search for datasets that are located in the same directory and have the.
     same name, but different extensions. Find only datasets where all
     extensions are present within a single directory with a single basename.
 
@@ -166,6 +162,7 @@ def find_datasets_by_extension(namelist, extensions):
     Yields
     ------
     A list of filenames (each in the namelist) for each dataset found.
+    
     """
     if len(extensions) == 0:
         raise ValueError("At least one extension must be given")

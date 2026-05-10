@@ -6,10 +6,9 @@ import numpy as np
 __all__ = ["polygon_lines", "polygon_area"]
 
 def polygon_lines(coords, closed=True):
-    """
-    Create line segments from polygon coordinates.
+    """Create line segments from polygon coordinates.
 
-    Given a (n,2) set of XY coordinates as numpy array, creates an (n,2,2) array of
+    Given a (n,2) set of XY coordinates as numpy array, creates an (n,2,2) array of.
     coordinate pairs. If the given coordinate array represents the points of a polygon,
     the return value represents pairs of coordinates to draw lines between to obtain
     the full polygon image.
@@ -30,6 +29,7 @@ def polygon_lines(coords, closed=True):
     -------
     numpy.ndarray
         Array of coordinate pairs with shape (n, 2, 2).
+    
     """
     if len(coords.shape) != 2 or coords.shape[1] != 2:
         raise ValueError("Wrong shape for polygon lines input (expect (n,2)): {}".format(
@@ -39,8 +39,7 @@ def polygon_lines(coords, closed=True):
     return ret if closed else ret[1:]
 
 def polygon_area(coords):
-    """
-    Compute the area of a polygon using the Shoelace formula.
+    """Compute the area of a polygon using the Shoelace formula.
 
     Numpy hints from http://stackoverflow.com/a/30408825/2597135.
 
@@ -53,6 +52,7 @@ def polygon_area(coords):
     -------
     float
         Area of the polygon.
+    
     """
     if len(coords.shape) != 2 or coords.shape[1] != 2:
         raise ValueError("Wrong shape for polygon area input (expect (n,2)): {}".format(

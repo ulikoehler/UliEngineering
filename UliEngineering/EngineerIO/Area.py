@@ -62,9 +62,7 @@ def area_unit_infos():
     ]
 
 def _create_area_config():
-    """
-    Create a custom EngineerIOConfiguration for area units with extended SI prefixes.
-    """
+    """Create a custom EngineerIOConfiguration for area units with extended SI prefixes."""
     config = EngineerIOConfiguration.default()
     return EngineerIOConfiguration(
         units=area_unit_infos(),
@@ -74,8 +72,8 @@ def _create_area_config():
 
 class EngineerAreaIO(EngineerIO):
 
-    """
-    EngineerIO subclass specialized for area unit parsing and conversion.
+    
+    """EngineerIO subclass specialized for area unit parsing and conversion.
 
     """
 
@@ -88,9 +86,7 @@ class EngineerAreaIO(EngineerIO):
 
     @classmethod
     def instance(cls):
-        """
-        Get the singleton instance of EngineerAreaIO.
-        """
+        """Get the singleton instance of EngineerAreaIO."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -99,7 +95,7 @@ class EngineerAreaIO(EngineerIO):
     def normalize_area(self, s):
         """Normalize an area to square meters.
 
-        Returns the numeric value in m², a list or ndarray of converted values,
+        Returns the numeric value in m², a list or ndarray of converted values,.
         or None if the input is None.
 
         Valid inputs include:
@@ -138,8 +134,8 @@ class EngineerAreaIO(EngineerIO):
 
     @returns_unit("m²")
     def convert_area_to_square_meters(self, value, unit):
-        """
-        Given a number or Engineer string (unit ignored) <value>
+        """Given a number or Engineer string (unit ignored) <value>
+        
         in <unit>, convert it to square meters.
         """
         # Currently a hack, but doing it directly will not parse SI units
@@ -148,8 +144,8 @@ class EngineerAreaIO(EngineerIO):
 
 @returns_unit("m²")
 def convert_area_to_square_meters(value, unit, instance=None):
-    """
-    Given a number or Engineer string (unit ignored) <value>
+    """Given a number or Engineer string (unit ignored) <value>
+    
     in <unit>, convert it to square meters.
     """
     if instance is None:
@@ -158,9 +154,9 @@ def convert_area_to_square_meters(value, unit, instance=None):
 
 @returns_unit("m²")
 def normalize_area(s: NormalizableArgument, instance=None) -> NormalizedComputable:
-    """
-    Normalize an area to square meters.
-    Returns the numeric value in m², a list or ndarray of converted values,
+    """Normalize an area to square meters.
+    
+    Returns the numeric value in m², a list or ndarray of converted values,.
     or None if the input is None.
 
     Valid inputs include:

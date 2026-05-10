@@ -41,14 +41,14 @@ class TestLEDSeriesResistors(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(VoltageV)
         self.assertIsNotNone(CurrentA)
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(PowerW)
 
     def test_led_functions_various_units(self):
-        """Test LED functions with various unit inputs"""
+        """Test LED functions with various unit inputs."""
         # Test led_series_resistor with different unit representations
         r1 = led_series_resistor("12 V", "20 mA", "1.6 V")
         r2 = led_series_resistor("12000 mV", "0.02 A", "1600 mV")

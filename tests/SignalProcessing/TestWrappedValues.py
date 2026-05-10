@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Unit tests for UliEngineering.SignalProcessing.WrappedValues.unwrap
 
-These tests cover normal operation, edge cases, custom thresholds,
+These tests cover normal operation, edge cases, custom thresholds,.
 NaN/Inf handling, and a round-trip property test using wrapped/modulo values.
 """
 import math

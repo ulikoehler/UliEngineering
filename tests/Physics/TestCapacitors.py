@@ -82,7 +82,9 @@ class TestCapacitors(unittest.TestCase):
 
 class TestCapacitorResistorTiming(unittest.TestCase):
     class CustomDiodeModel(DiodeModel):
+        
         """Custom diode model for testing."""
+        
         def minimum_series_voltage(self):
             return 0.2
 
@@ -367,7 +369,7 @@ class TestCapacitorResistorTiming(unittest.TestCase):
 
 class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
     def test_basic_functionality_zero_starting_voltage(self):
-        """Test basic capacitance calculation with zero starting voltage"""
+        """Test basic capacitance calculation with zero starting voltage."""
         energy = 18.75  # J
         voltage = 5.0   # V
         expected_capacitance = 1.5  # F
@@ -385,7 +387,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, capacitance, places=10)
 
     def test_engineering_notation(self):
-        """Test with engineering notation units"""
+        """Test with engineering notation units."""
         # Test with mJ and V
         calculated_capacitance = capacitor_capacitance_by_energy("1.25 mJ", "5.0 V")
         self.assertAlmostEqual(calculated_capacitance, 0.1e-3, places=12)  # 0.1 mF
@@ -395,7 +397,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, 0.1, places=10)  # 100 mF
 
     def test_consistency_with_capacitor_energy(self):
-        """Test mathematical consistency with capacitor_energy function"""
+        """Test mathematical consistency with capacitor_energy function."""
         test_capacitance = 2.2e-6  # 2.2 µF
         test_voltage = 12.0        # V
         test_energy = capacitor_energy(test_capacitance, test_voltage)
@@ -490,7 +492,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(actual_energy_diff, expected_energy_diff, places=12)
 
     def test_numpy_arrays(self):
-        """Test with numpy arrays"""
+        """Test with numpy arrays."""
         energies = np.array([18.75, 1.25])  # J
         voltages = np.array([5.0, 5.0])     # V
         expected_capacitances = np.array([1.5, 0.1])  # F
@@ -502,7 +504,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-10)
 
     def test_edge_cases(self):
-        """Test edge cases with very small and large values"""
+        """Test edge cases with very small and large values."""
         # Very small energy
         small_energy = 1e-12  # pJ
         voltage = 1.0         # V
@@ -516,7 +518,7 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, 0.2, places=10)  # 200 mF
 
     def test_starting_voltage_effects(self):
-        """Test how different starting voltages affect required capacitance"""
+        """Test how different starting voltages affect required capacitance."""
         energy = 10  # J
         final_voltage = 10  # V
 
@@ -558,12 +560,13 @@ class TestCapacitorCapacitanceByEnergy(unittest.TestCase):
         self.assertGreater(calculated_capacitance, 0)
 
 class TestCapacitorChargingEnergy(unittest.TestCase):
+    
     """Comprehensive tests for capacitor_charging_energy function.
 
     """
 
     def test_basic_functionality_zero_starting_voltage(self):
-        """Test basic energy calculation from 0V to target voltage"""
+        """Test basic energy calculation from 0V to target voltage."""
         capacitance = 1.5  # F
         end_voltage = 5.0  # V
         # Energy from 0V to 5V should be same as total stored energy
@@ -575,7 +578,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_energy, 18.75, places=10)  # 0.5 * 1.5 * 25 = 18.75 J
 
     def test_non_zero_starting_voltage(self):
-        """Test energy calculation with non-zero starting voltage"""
+        """Test energy calculation with non-zero starting voltage."""
         capacitance = "1.0 F"  # F
         starting_voltage = "2.0 V"  # V
         end_voltage = "6.0 V"  # V
@@ -587,7 +590,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_energy, 16.0, places=10)
 
     def test_engineering_notation(self):
-        """Test with engineering notation units"""
+        """Test with engineering notation units."""
         # Test with mF and V
         calculated_energy = capacitor_charging_energy("100 mF", "1.2 V")
         expected_energy = 0.5 * 0.1 * (1.2**2)  # 0.072 J = 72 mJ
@@ -599,7 +602,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(calculated_energy, 3.75, places=10)
 
     def test_consistency_with_capacitor_energy(self):
-        """Test mathematical consistency with capacitor_energy function"""
+        """Test mathematical consistency with capacitor_energy function."""
         test_cases = [
             ("100 µF", "12.0 V", "0.0 V"),    # 100 µF, 0V->12V
             ("1 mF", "5.0 V", "2.0 V"),       # 1 mF, 2V->5V
@@ -648,7 +651,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(energy, -37.5, places=10)
 
     def test_numpy_arrays(self):
-        """Test with numpy arrays"""
+        """Test with numpy arrays."""
         capacitances = np.array([1.0, 2.0, 0.5])  # F
         end_voltages = np.array([5.0, 3.0, 4.0])  # V
         start_voltages = np.array([0.0, 1.0, 2.0]) # V
@@ -734,7 +737,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(defib_energy, 400, places=5)  # 400 J
 
     def test_partial_charging_scenarios(self):
-        """Test partial charging from non-zero starting voltages"""
+        """Test partial charging from non-zero starting voltages."""
         capacitance = 470e-6  # 470 µF
 
         # Charging from 50% to 100% of rated voltage
@@ -766,7 +769,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertEqual(result, "37.5 mJ")
 
     def test_mathematical_formulas(self):
-        """Test against known mathematical formulas"""
+        """Test against known mathematical formulas."""
         test_cases = [
             # (capacitance, end_voltage, start_voltage, expected_energy)
             (1e-6, 10, 0, 50e-6),        # 1µF, 0->10V: 50µJ
@@ -781,7 +784,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
                 self.assertAlmostEqual(calculated, expected, places=10)
 
     def test_error_handling_and_boundary_conditions(self):
-        """Test boundary conditions and numerical stability"""
+        """Test boundary conditions and numerical stability."""
         # Very small voltage differences
         capacitance = 1.0
         v1 = 1.000000000
@@ -813,7 +816,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
 
 class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
     def test_basic_functionality(self):
-        """Test basic parallel plate capacitance calculation"""
+        """Test basic parallel plate capacitance calculation."""
         # Basic test with known values
         area = 1e-4  # 1 cm² = 1e-4 m²
         distance = 1e-3  # 1 mm = 1e-3 m
@@ -824,7 +827,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertAlmostEqual(calculated_capacitance, expected_capacitance, places=15)
 
     def test_engineering_notation(self):
-        """Test with engineering notation units"""
+        """Test with engineering notation units."""
         # Test with string units
         area = "1 cm²"  # Will be converted to m²
         distance = "1 mm"  # Will be converted to m
@@ -852,7 +855,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
                 self.assertAlmostEqual(calculated, expected, places=12)
 
     def test_dielectric_materials(self):
-        """Test with different dielectric materials"""
+        """Test with different dielectric materials."""
         area = 1e-4  # 1 cm²
         distance = 1e-3  # 1 mm
         epsilon_0 = 8.854e-12  # F/m
@@ -896,7 +899,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertAlmostEqual(double_epsilon_cap, 2 * base_capacitance, places=12)
 
     def test_numpy_arrays(self):
-        """Test with numpy arrays"""
+        """Test with numpy arrays."""
         areas = np.array([1e-4, 2e-4, 4e-4])  # Different areas
         distances = np.array([1e-3, 1e-3, 1e-3])  # Same distance
         epsilon = 8.854e-12
@@ -912,7 +915,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         assert_allclose(calculated_capacitances, expected_capacitances, rtol=1e-12)
 
     def test_realistic_capacitor_values(self):
-        """Test with realistic capacitor dimensions and values"""
+        """Test with realistic capacitor dimensions and values."""
         epsilon_0 = 8.854e-12
 
         # Ceramic capacitor (high-k dielectric)
@@ -932,7 +935,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertTrue(1e-10 < film_cap < 1e-6)  # 100 pF to 1 µF range
 
     def test_edge_cases(self):
-        """Test edge cases and extreme values"""
+        """Test edge cases and extreme values."""
         epsilon = 8.854e-12
 
         # Very small capacitor
@@ -951,7 +954,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertTrue(np.isfinite(high_k_cap))
 
     def test_auto_format_functionality(self):
-        """Test auto_format integration"""
+        """Test auto_format integration."""
         # Test formatting of typical capacitor values
         result = auto_format(parallel_plate_capacitors_capacitance, "1 m²", "1 mm", "8.854 pF/m")
         # Should format as pF since it's a small value
@@ -964,7 +967,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         self.assertEqual(result, "8.85 mF")
 
     def test_mathematical_consistency(self):
-        """Test mathematical relationships and consistency"""
+        """Test mathematical relationships and consistency."""
         epsilon_0 = 8.854e-12
 
         # Test that C = ε₀ * εᵣ * A / d
@@ -991,7 +994,7 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(CapacitanceFarad)
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(VoltageV)
@@ -1000,7 +1003,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(PermittivityFm)
 
     def test_normalize_capacitance_various_units(self):
-        """Test normalize_capacitance with various unit inputs"""
+        """Test normalize_capacitance with various unit inputs."""
         test_cases = [
             ("1 F", 1.0),
             ("1 µF", 1e-6),
@@ -1014,7 +1017,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_resistance_various_units(self):
-        """Test normalize_resistance with various unit inputs"""
+        """Test normalize_resistance with various unit inputs."""
         test_cases = [
             ("1 Ω", 1.0),
             ("1 ohm", 1.0),
@@ -1028,7 +1031,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_voltage_various_units(self):
-        """Test normalize_voltage with various unit inputs"""
+        """Test normalize_voltage with various unit inputs."""
         test_cases = [
             ("1 V", 1.0),
             ("1 mV", 1e-3),

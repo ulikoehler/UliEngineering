@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Langmuir adsorption isotherm.
+"""Langmuir adsorption isotherm.
 
-The Langmuir isotherm describes adsorption of molecules onto a surface
+The Langmuir isotherm describes adsorption of molecules onto a surface.
 with a finite number of identical sites:
 
     θ = K * C / (1 + K * C)
@@ -58,10 +57,9 @@ RateConstantLMolS = Annotated[NormalizedComputable, normalize_rate_constant]
 
 @returns_unit("")
 def langmuir_coverage(K: LangmuirConstantLMol, C: ConcentrationMolar):
-    """
-    Compute fractional surface coverage using the Langmuir isotherm.
+    """Compute fractional surface coverage using the Langmuir isotherm.
 
-    θ = K * C / (1 + K * C)
+    θ = K * C / (1 + K * C).
 
     Parameters
     ----------
@@ -83,10 +81,9 @@ def langmuir_coverage(K: LangmuirConstantLMol, C: ConcentrationMolar):
 
 @returns_unit("mol/g")
 def langmuir_adsorbed_amount(q_max: AdsorptionCapacityMolG, K: LangmuirConstantLMol, C: ConcentrationMolar):
-    """
-    Compute amount adsorbed using the Langmuir isotherm.
+    """Compute amount adsorbed using the Langmuir isotherm.
 
-    q = q_max * K * C / (1 + K * C)
+    q = q_max * K * C / (1 + K * C).
 
     Parameters
     ----------
@@ -101,6 +98,7 @@ def langmuir_adsorbed_amount(q_max: AdsorptionCapacityMolG, K: LangmuirConstantL
     -------
     float
         Amount adsorbed in mol/g.
+    
     """
     q_max = normalize_adsorption_capacity(q_max) if isinstance(q_max, str) else q_max
     K = normalize_langmuir_constant(K) if isinstance(K, str) else K
@@ -110,10 +108,9 @@ def langmuir_adsorbed_amount(q_max: AdsorptionCapacityMolG, K: LangmuirConstantL
 
 @returns_unit("L/mol")
 def langmuir_constant_from_coverage(theta, C: ConcentrationMolar):
-    """
-    Compute the Langmuir constant K from measured coverage and concentration.
+    """Compute the Langmuir constant K from measured coverage and concentration.
 
-    K = θ / (C * (1 - θ))
+    K = θ / (C * (1 - θ)).
 
     Parameters
     ----------
@@ -126,6 +123,7 @@ def langmuir_constant_from_coverage(theta, C: ConcentrationMolar):
     -------
     float
         Langmuir constant K in L/mol.
+    
     """
     C = normalize_concentration(C) if isinstance(C, str) else C
     return theta / (C * (1.0 - theta))
@@ -133,10 +131,9 @@ def langmuir_constant_from_coverage(theta, C: ConcentrationMolar):
 
 @returns_unit("")
 def langmuir_competitive_coverage(K_i, C_i, K_all, C_all):
-    """
-    Compute fractional coverage of species i in competitive Langmuir adsorption.
+    """Compute fractional coverage of species i in competitive Langmuir adsorption.
 
-    θ_i = K_i * C_i / (1 + Σ(K_j * C_j))
+    θ_i = K_i * C_i / (1 + Σ(K_j * C_j)).
 
     Parameters
     ----------
@@ -153,6 +150,7 @@ def langmuir_competitive_coverage(K_i, C_i, K_all, C_all):
     -------
     float
         Fractional coverage of species i.
+    
     """
     K_arr = np.asarray(K_all, dtype=float)
     C_arr = np.asarray(C_all, dtype=float)
@@ -162,10 +160,9 @@ def langmuir_competitive_coverage(K_i, C_i, K_all, C_all):
 
 @returns_unit("g/mol")
 def langmuir_inverse_linearized(C: ConcentrationMolar, q: AdsorptionCapacityMolG):
-    """
-    Compute 1/q vs 1/C for Langmuir linearized form (double-reciprocal / Lineweaver-Burk).
+    """Compute 1/q vs 1/C for Langmuir linearized form (double-reciprocal / Lineweaver-Burk).
 
-    1/q = 1/q_max + 1/(q_max * K) * 1/C
+    1/q = 1/q_max + 1/(q_max * K) * 1/C.
 
     This returns (1/C, 1/q) which can be used for linear regression
     to find q_max and K.
@@ -181,6 +178,7 @@ def langmuir_inverse_linearized(C: ConcentrationMolar, q: AdsorptionCapacityMolG
     -------
     tuple
         (1/C, 1/q) for plotting and linear regression.
+    
     """
     C = normalize_concentration(C) if isinstance(C, str) else C
     q = normalize_adsorption_capacity(q) if isinstance(q, str) else q
@@ -189,10 +187,9 @@ def langmuir_inverse_linearized(C: ConcentrationMolar, q: AdsorptionCapacityMolG
 
 @returns_unit("1/s")
 def langmuir_dissociation_rate(k_ads: RateConstantLMolS, K: LangmuirConstantLMol):
-    """
-    Compute the dissociation rate constant from adsorption rate constant and equilibrium constant.
+    """Compute the dissociation rate constant from adsorption rate constant and equilibrium constant.
 
-    k_des = k_ads / K
+    k_des = k_ads / K.
 
     Parameters
     ----------
@@ -205,6 +202,7 @@ def langmuir_dissociation_rate(k_ads: RateConstantLMolS, K: LangmuirConstantLMol
     -------
     float
         Dissociation rate constant in 1/s.
+    
     """
     k_ads = normalize_rate_constant(k_ads) if isinstance(k_ads, str) else k_ads
     K = normalize_langmuir_constant(K) if isinstance(K, str) else K

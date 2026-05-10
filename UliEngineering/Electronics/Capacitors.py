@@ -61,10 +61,9 @@ def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltag
 
 @returns_unit("s")
 def capacitor_rc_time_constant(capacitance: CapacitanceFarad, resistance: ResistanceOhm):
-    """
-    Compute the R/C time constant tau = R * C of a resistor-capacitor network.
+    """Compute the R/C time constant tau = R * C of a resistor-capacitor network.
 
-    Parameters
+    Parameters.
     ----------
     capacitance : number or Engineer string
         The capacitance in farads.
@@ -75,6 +74,7 @@ def capacitor_rc_time_constant(capacitance: CapacitanceFarad, resistance: Resist
     -------
     float
         The time constant in seconds.
+    
     """
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -83,6 +83,7 @@ def capacitor_rc_time_constant(capacitance: CapacitanceFarad, resistance: Resist
 @returns_unit("h")
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.):
     """Estimate the lifetime of a capacitor given its working temperature,
+    
     its nominal lifetime at a nominal lifetime temperature, and coefficient A.
 
     Coefficient A is the temperature difference for which to assume a halving of the lifetime.
@@ -100,6 +101,7 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
 @returns_unit("J")
 def capacitor_energy(capacitance: CapacitanceFarad, voltage: VoltageV):
     """Compute the total energy stored in a capacitor given:
+    
     - The capacitance in farads
     - The voltage the capacitor is charged to
     The energy is returned as joules.
@@ -111,6 +113,7 @@ def capacitor_energy(capacitance: CapacitanceFarad, voltage: VoltageV):
 @returns_unit("C")
 def capacitor_charge(capacitance: CapacitanceFarad, voltage: VoltageV):
     """Compute the total charge stored in a capacitor given:
+    
     - The capacitance in farads
     - The voltage the capacitor is charged to
     The charge is returned in coulombs.
@@ -122,6 +125,7 @@ def capacitor_charge(capacitance: CapacitanceFarad, voltage: VoltageV):
 @returns_unit("V")
 def capacitor_voltage_by_energy(capacitance: CapacitanceFarad, energy: EnergyJ, starting_voltage="0V"):
     """Compute the voltage of a capacitor given:
+    
     - The capacitance in farads
     - The energy stored in joules
     The voltage is returned in volts.
@@ -136,6 +140,7 @@ def capacitor_voltage_by_energy(capacitance: CapacitanceFarad, energy: EnergyJ, 
 @returns_unit("s")
 def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, initial_voltage: VoltageV, current: CurrentA, target_voltage="0V"):
     """Compute the time it takes to charge a capacitor to [target_voltage]
+    
     using a constant current.
 
     Keyword Arguments
@@ -153,6 +158,7 @@ def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, ini
     -------
     float
         The time in seconds.
+    
     """
     # Use charge function with "negative current"
     # Since from the view of the charge function, its generating a negative
@@ -162,6 +168,7 @@ def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, ini
 @returns_unit("s")
 def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target_voltage: VoltageV, current: CurrentA, initial_voltage="0V"):
     """Compute the time it takes to charge a capacitor to [target_voltage]
+    
     using a constant current.
 
     Keyword Arguments
@@ -179,6 +186,7 @@ def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target
     -------
     float
         The time in seconds.
+    
     """
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
     target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
@@ -204,6 +212,7 @@ def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: Re
     The time in seconds.
 
     The capacitor asymptotically approaches source_voltage - diode_model.minimum_series_voltage().
+    
     """
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -246,6 +255,7 @@ def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance:
     The time in seconds.
 
     The capacitor asymptotically approaches diode_model.minimum_series_voltage().
+    
     """
     capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
     resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
@@ -272,6 +282,7 @@ def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance:
 @returns_unit("F")
 def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityFm):
     """Compute the capacitance of two parallel plate capacitors in parallel
+    
     given the area, distance, and permittivity of the dielectric.
 
     Parameters:
@@ -281,6 +292,7 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityF
 
     Returns:
     The capacitance of the parallel plate capacitors in farads (F).
+    
     """
     area = normalize_area(area)
     distance = normalize_length(distance)
@@ -290,6 +302,7 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityF
 @returns_unit("F")
 def capacitor_capacitance_by_energy(energy: EnergyJ, voltage: VoltageV, starting_voltage="0V"):
     """Compute the capacitance of a capacitor given:
+    
     - The energy stored in joules
     - The voltage the capacitor is charged to
     - The starting voltage (optional, default 0V)
@@ -320,6 +333,7 @@ def capacitor_charging_energy(capacitance: CapacitanceFarad, end_voltage: Voltag
 
     The energy required is the difference between the final and initial stored energy:
     Energy_required = 0.5 * C * (V_end^2 - V_start^2)
+    
     """
     end_energy = capacitor_energy(capacitance, end_voltage)
     start_energy = capacitor_energy(capacitance, starting_voltage)

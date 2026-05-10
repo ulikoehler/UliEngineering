@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Reliability conversion utilities.
+"""Reliability conversion utilities.
 
 This module provides conversion helpers between common reliability metrics:
 - FIT (failures in 1e9 hours)

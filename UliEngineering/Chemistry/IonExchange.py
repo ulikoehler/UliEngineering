@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Ion exchange equilibrium and selectivity.
+"""Ion exchange equilibrium and selectivity.
 
 Provides functions for:
 - Ion exchange selectivity coefficient
@@ -47,10 +46,9 @@ MassGram = Annotated[NormalizedComputable, normalize_mass]
 
 @returns_unit("")
 def selectivity_coefficient(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: ConcentrationMolar, C_A: ConcentrationMolar, z_A=1, z_B=1):
-    """
-    Compute the selectivity coefficient for ion exchange of A over B.
+    """Compute the selectivity coefficient for ion exchange of A over B.
 
-    For exchange: z_B * A^(z_A) + z_A * B_resin^(z_B) ⇌ z_B * A_resin^(z_A) + z_A * B^(z_B)
+    For exchange: z_B * A^(z_A) + z_A * B_resin^(z_B) ⇌ z_B * A_resin^(z_A) + z_A * B^(z_B).
 
     K_AB = (q_A^z_B * C_B^z_A) / (q_B^z_A * C_A^z_B)
 
@@ -73,6 +71,7 @@ def selectivity_coefficient(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_
     -------
     float
         Selectivity coefficient K_AB.
+    
     """
     q_A = normalize_concentration(q_A) if isinstance(q_A, str) else q_A
     C_B = normalize_concentration(C_B) if isinstance(C_B, str) else C_B
@@ -83,10 +82,9 @@ def selectivity_coefficient(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_
 
 @returns_unit("")
 def separation_factor(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: ConcentrationMolar, C_A: ConcentrationMolar):
-    """
-    Compute the separation factor α for ion exchange.
+    """Compute the separation factor α for ion exchange.
 
-    α_AB = (q_A * C_B) / (q_B * C_A)
+    α_AB = (q_A * C_B) / (q_B * C_A).
 
     Parameters
     ----------
@@ -103,6 +101,7 @@ def separation_factor(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: Con
     -------
     float
         Separation factor α (>1 means A is preferred).
+    
     """
     q_A = normalize_concentration(q_A) if isinstance(q_A, str) else q_A
     C_B = normalize_concentration(C_B) if isinstance(C_B, str) else C_B
@@ -113,10 +112,9 @@ def separation_factor(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: Con
 
 @returns_unit("L/g")
 def distribution_coefficient(q, C: ConcentrationMolar):
-    """
-    Compute the distribution coefficient Kd.
+    """Compute the distribution coefficient Kd.
 
-    Kd = q / C
+    Kd = q / C.
 
     Parameters
     ----------
@@ -129,6 +127,7 @@ def distribution_coefficient(q, C: ConcentrationMolar):
     -------
     float
         Distribution coefficient in L/g.
+    
     """
     C = normalize_concentration(C) if isinstance(C, str) else C
     return q / C
@@ -136,10 +135,9 @@ def distribution_coefficient(q, C: ConcentrationMolar):
 
 @returns_unit("mol/g")
 def ion_exchange_capacity_from_breakthrough(C_feed: ConcentrationMolar, V_breakthrough: VolumeLiter, mass_resin: MassGram):
-    """
-    Compute ion exchange capacity from breakthrough experiment.
+    """Compute ion exchange capacity from breakthrough experiment.
 
-    Q = C_feed * V_breakthrough / m_resin
+    Q = C_feed * V_breakthrough / m_resin.
 
     Parameters
     ----------
@@ -154,6 +152,7 @@ def ion_exchange_capacity_from_breakthrough(C_feed: ConcentrationMolar, V_breakt
     -------
     float
         Ion exchange capacity in mol/g.
+    
     """
     C_feed = normalize_concentration(C_feed) if isinstance(C_feed, str) else C_feed
     V_breakthrough = normalize_volume(V_breakthrough) if isinstance(V_breakthrough, str) else V_breakthrough
@@ -163,10 +162,9 @@ def ion_exchange_capacity_from_breakthrough(C_feed: ConcentrationMolar, V_breakt
 
 @returns_unit("V")
 def donnan_potential(z, C_in: ConcentrationMolar, C_out: ConcentrationMolar, T=298.15):
-    """
-    Compute the Donnan membrane potential.
+    """Compute the Donnan membrane potential.
 
-    E_D = (R*T) / (z*F) * ln(C_out / C_in)
+    E_D = (R*T) / (z*F) * ln(C_out / C_in).
 
     Parameters
     ----------
@@ -183,6 +181,7 @@ def donnan_potential(z, C_in: ConcentrationMolar, C_out: ConcentrationMolar, T=2
     -------
     float
         Donnan potential in Volts.
+    
     """
     from scipy.constants import R, physical_constants
     C_in = normalize_concentration(C_in) if isinstance(C_in, str) else C_in
@@ -194,8 +193,7 @@ def donnan_potential(z, C_in: ConcentrationMolar, C_out: ConcentrationMolar, T=2
 
 @returns_unit("")
 def donnan_ratio(z, C_fixed: ConcentrationMolar, C_solution: ConcentrationMolar):
-    """
-    Compute the Donnan ratio for a membrane with fixed charge.
+    """Compute the Donnan ratio for a membrane with fixed charge.
 
     For a monovalent case with fixed charge concentration C_fixed:
         r = C_in / C_out
@@ -217,6 +215,7 @@ def donnan_ratio(z, C_fixed: ConcentrationMolar, C_solution: ConcentrationMolar)
     -------
     float
         Donnan ratio (C_co-ion_in / C_solution).
+    
     """
     C_fixed = normalize_concentration(C_fixed) if isinstance(C_fixed, str) else C_fixed
     C_solution = normalize_concentration(C_solution) if isinstance(C_solution, str) else C_solution

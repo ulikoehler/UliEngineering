@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Kohlrausch's law of independent migration of ions.
+"""Kohlrausch's law of independent migration of ions.
 
-Kohlrausch's law states that the limiting molar conductivity of an electrolyte
+Kohlrausch's law states that the limiting molar conductivity of an electrolyte.
 is the sum of the individual contributions of the cation and anion:
 
     Λ°_m = ν+ * λ°+ + ν- * λ°-
@@ -78,8 +77,8 @@ LIMITING_MOLAR_CONDUCTIVITIES = {
 
 @returns_unit("S·cm²/mol")
 def kohlrausch_limiting_molar_conductivity(lambda_ions, stoich_coefficients):
-    """
-    Compute the limiting molar conductivity of an electrolyte
+    """Compute the limiting molar conductivity of an electrolyte
+    
     using Kohlrausch's law of independent migration.
 
     Λ°_m = Σ(ν_i * λ°_i)
@@ -95,6 +94,7 @@ def kohlrausch_limiting_molar_conductivity(lambda_ions, stoich_coefficients):
     -------
     float
         Limiting molar conductivity in S·cm²/mol.
+    
     """
     lam = np.asarray(lambda_ions, dtype=float)
     nu = np.asarray(stoich_coefficients, dtype=float)
@@ -103,10 +103,9 @@ def kohlrausch_limiting_molar_conductivity(lambda_ions, stoich_coefficients):
 
 @returns_unit("S·cm²/mol")
 def kohlrausch_molar_conductivity(Lambda_0: MolarConductivitySCm2Mol, K, c: ConcentrationMolar):
-    """
-    Compute molar conductivity at concentration c using Kohlrausch's square root law.
+    """Compute molar conductivity at concentration c using Kohlrausch's square root law.
 
-    Λ_m = Λ°_m - K * √c
+    Λ_m = Λ°_m - K * √c.
 
     Parameters
     ----------
@@ -121,6 +120,7 @@ def kohlrausch_molar_conductivity(Lambda_0: MolarConductivitySCm2Mol, K, c: Conc
     -------
     float
         Molar conductivity in S·cm²/mol.
+    
     """
     Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0
     c = normalize_concentration(c) if isinstance(c, str) else c
@@ -129,10 +129,9 @@ def kohlrausch_molar_conductivity(Lambda_0: MolarConductivitySCm2Mol, K, c: Conc
 
 @returns_unit("S·cm²/(mol^(3/2)·L^(1/2))")
 def kohlrausch_coefficient_from_data(Lambda_0: MolarConductivitySCm2Mol, Lambda_m: MolarConductivitySCm2Mol, c: ConcentrationMolar):
-    """
-    Determine the Kohlrausch coefficient K from experimental data.
+    """Determine the Kohlrausch coefficient K from experimental data.
 
-    K = (Λ°_m - Λ_m) / √c
+    K = (Λ°_m - Λ_m) / √c.
 
     Parameters
     ----------
@@ -147,6 +146,7 @@ def kohlrausch_coefficient_from_data(Lambda_0: MolarConductivitySCm2Mol, Lambda_
     -------
     float
         Kohlrausch coefficient K.
+    
     """
     Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0
     Lambda_m = normalize_molar_conductivity(Lambda_m) if isinstance(Lambda_m, str) else Lambda_m
@@ -156,10 +156,9 @@ def kohlrausch_coefficient_from_data(Lambda_0: MolarConductivitySCm2Mol, Lambda_
 
 @returns_unit("")
 def transference_number(lambda_ion: MolarConductivitySCm2Mol, Lambda_0: MolarConductivitySCm2Mol):
-    """
-    Compute the transference number (transport number) of an ion.
+    """Compute the transference number (transport number) of an ion.
 
-    t_i = λ_i / Λ°_m
+    t_i = λ_i / Λ°_m.
 
     Parameters
     ----------
@@ -172,6 +171,7 @@ def transference_number(lambda_ion: MolarConductivitySCm2Mol, Lambda_0: MolarCon
     -------
     float
         Transference number (dimensionless, between 0 and 1).
+    
     """
     lambda_ion = normalize_molar_conductivity(lambda_ion) if isinstance(lambda_ion, str) else lambda_ion
     Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0

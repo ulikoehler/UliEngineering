@@ -28,10 +28,9 @@ RotationRate = Annotated[NormalizedComputable, normalize_rpm]
 
 @returns_unit("s")
 def frequency_to_period(frequency: NormalizableArgument):
-    """
-    Compute the period associated with a frequency.
+    """Compute the period associated with a frequency.
 
-    Parameters
+    Parameters.
     ----------
     frequency : number or Engineer string or NumPy array-like
         The frequency in Hz
@@ -44,7 +43,7 @@ def frequency_to_period(frequency: NormalizableArgument):
 def period_to_frequency(period: NormalizableArgument):
     """Compute the frequency associated with a period.
 
-    Parameters
+    Parameters.
     ----------
     period : number or Engineer string or NumPy array-like
         The period in seconds

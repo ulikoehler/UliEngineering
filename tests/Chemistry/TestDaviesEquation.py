@@ -39,19 +39,19 @@ class TestDaviesEquation(unittest.TestCase):
         self.assertLess(gamma, 1.0)  # Activity coefficient should be < 1 for ions
 
     def test_davies_activity_coefficient_array(self):
-        """Test Davies equation for activity coefficient with array input"""
+        """Test Davies equation for activity coefficient with array input."""
         I = np.array([0.01, 0.1, 0.5])
         gamma = davies_activity_coefficient(z=1, I=I)
         self.assertEqual(len(gamma), 3)
 
     def test_davies_activity_coefficient_charge(self):
-        """Test that higher charge gives lower activity coefficient"""
+        """Test that higher charge gives lower activity coefficient."""
         gamma_z1 = davies_activity_coefficient(z=1, I=0.1)
         gamma_z2 = davies_activity_coefficient(z=2, I=0.1)
         self.assertLess(gamma_z2, gamma_z1)
 
     def test_davies_activity_coefficient_consistency(self):
-        """Test consistency between log and linear forms"""
+        """Test consistency between log and linear forms."""
         z = 1
         I = 0.1
         log_gamma = davies_log_activity_coefficient(z, I)
@@ -61,11 +61,11 @@ class TestDaviesEquation(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(IonicStrengthMolar)
 
     def test_normalize_ionic_strength_various_units(self):
-        """Test normalize_ionic_strength with various unit inputs"""
+        """Test normalize_ionic_strength with various unit inputs."""
         test_cases = [
             ("1 M", 1.0),
             ("1 mol/L", 1.0),
@@ -79,7 +79,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_davies_functions_various_units(self):
-        """Test Davies functions with various unit inputs"""
+        """Test Davies functions with various unit inputs."""
         # Test davies_log_activity_coefficient with different units
         log1 = davies_log_activity_coefficient(1, "0.1 M")
         log2 = davies_log_activity_coefficient(1, "100 mM")

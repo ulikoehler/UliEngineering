@@ -10,7 +10,7 @@ from UliEngineering.Chemistry.PREN import (
 
 class TestPREN(unittest.TestCase):
     def test_pren_basic(self):
-        """Test basic PREN calculation"""
+        """Test basic PREN calculation."""
         result = pren(Cr=18.0, Mo=2.1, N=0.05)
         expected = 18.0 + 3.3 * 2.1 + 16.0 * 0.05
         self.assertAlmostEqual(result, expected, places=6)
@@ -28,25 +28,25 @@ class TestPREN(unittest.TestCase):
         self.assertAlmostEqual(result, expected, places=6)
 
     def test_pren_w_basic(self):
-        """Test PREN with tungsten"""
+        """Test PREN with tungsten."""
         result = pren_w(Cr=15.5, Mo=16.0, N=0.0, W=3.75)
         expected = 15.5 + 3.3 * (16.0 + 0.5 * 3.75) + 16.0 * 0.0
         self.assertAlmostEqual(result, expected, places=6)
 
     def test_pren_w_zero_tungsten(self):
-        """Test PREN with zero tungsten"""
+        """Test PREN with zero tungsten."""
         result = pren_w(Cr=18.0, Mo=2.1, N=0.05, W=0.0)
         expected = 18.0 + 3.3 * 2.1 + 16.0 * 0.05
         self.assertAlmostEqual(result, expected, places=6)
 
     def test_common_steel_compositions(self):
-        """Test that common steel compositions dictionary exists"""
+        """Test that common steel compositions dictionary exists."""
         self.assertIsInstance(COMMON_STEEL_COMPOSITIONS, dict)
         self.assertIn("304", COMMON_STEEL_COMPOSITIONS)
         self.assertIn("316", COMMON_STEEL_COMPOSITIONS)
 
     def test_pren_from_composition(self):
-        """Test PREN calculation using common steel composition"""
+        """Test PREN calculation using common steel composition."""
         comp = COMMON_STEEL_COMPOSITIONS["316"]
         result = pren(Cr=comp["Cr"], Mo=comp["Mo"], N=comp["N"])
         self.assertIsInstance(result, float)

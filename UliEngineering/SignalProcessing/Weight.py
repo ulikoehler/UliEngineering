@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Functions related to weight of arrays
-"""
+"""Functions related to weight of arrays."""
 import numpy as np
 
 __all__ = ["weigh_halves", "weight_symmetry"]
 
 def weigh_halves(arr, operator=np.sum):
-    """
-    Split a 1D array into two halves (right in the middle)
+    """Split a 1D array into two halves (right in the middle)
+    
     and compute the weight of each half (i.e. sum of all values in that half).
 
     Odd-sized arrays are handled by adding 1/2 of the middle element to each value.
@@ -26,6 +24,7 @@ def weigh_halves(arr, operator=np.sum):
     operator : unary function
         Alternative operator to summarize the array halves.
         Common choices include np.mean, np.sum or rms from UliEngineering.SignalProcessing.Utils.
+    
     """
     if len(arr) % 2 == 0: # Even array size
         # => We can just split in the middle
@@ -37,8 +36,8 @@ def weigh_halves(arr, operator=np.sum):
     return operator(arr[:pivot]) + middle, operator(arr[pivot + 1:]) + middle
 
 def weight_symmetry(a, b):
-    """
-    Given two weights a, b computes a coefficient
+    """Given two weights a, b computes a coefficient
+    
     about how equal they are:
 
     1.0 : Totally equal

@@ -33,7 +33,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("128.291Ω"), 100.0)  # Not in any standard series
 
     def test_custom_weights(self):
-        """Test with custom weight configuration"""
+        """Test with custom weight configuration."""
         custom_weights = ResistorSeriesWeights(
             E6=1.0,
             E12=2.0,
@@ -83,7 +83,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("1000Ω"), 0.95)    # E6
 
     def test_series_precedence(self):
-        """Test that values are assigned to the most common series (E6 before E12, etc.)"""
+        """Test that values are assigned to the most common series (E6 before E12, etc.)."""
         functor = ResistorSeriesCostFunctor()
 
         # Values that appear in multiple series should get the lowest-cost assignment
@@ -113,7 +113,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("10MΩ"), 0.95)    # E6 (10000000Ω)
 
     def test_e48_e96_e192_values(self):
-        """Test specific values from higher-precision series"""
+        """Test specific values from higher-precision series."""
         functor = ResistorSeriesCostFunctor()
 
         # Test some E48 values (not in lower series)
@@ -156,7 +156,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor(-100.0), 100.0)
 
     def test_very_large_and_small_values(self):
-        """Test with extreme resistance values"""
+        """Test with extreme resistance values."""
         functor = ResistorSeriesCostFunctor()
 
         # Very small values
@@ -192,7 +192,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
             assert_approx_equal(result, results[0])
 
     def test_initialization_parameters(self):
-        """Test different initialization parameter combinations"""
+        """Test different initialization parameter combinations."""
         # Test with only custom weights
         custom_weights = ResistorSeriesWeights(E6=0.5, non_series=200.0)
         functor1 = ResistorSeriesCostFunctor(weights=custom_weights)
@@ -208,7 +208,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         self.assertEqual(functor3.tolerance, 0.05)
 
     def test_weights_dataclass_modification(self):
-        """Test modifying weights dataclass"""
+        """Test modifying weights dataclass."""
         weights = ResistorSeriesWeights()
         weights.E6 = 0.1
         weights.non_series = 1000.0
@@ -220,7 +220,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
 class TestResistorAroundValueCostFunctor(unittest.TestCase):
 
     def test_resistor_around_value_basic(self):
-        """Test basic functionality with default base=10"""
+        """Test basic functionality with default base=10."""
         functor = ResistorAroundValueCostFunctor("1kΩ")
 
         # Exact match should return 0
@@ -240,7 +240,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("1Ω"), 3.0)
 
     def test_resistor_around_value_custom_base(self):
-        """Test with custom logarithmic base"""
+        """Test with custom logarithmic base."""
         # Base 2 for powers of 2
         functor = ResistorAroundValueCostFunctor(1000.0, base=2.0)
 
@@ -260,7 +260,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         assert_approx_equal(functor(125.0), 3.0)
 
     def test_resistor_around_value_natural_log(self):
-        """Test with natural logarithm base (e)"""
+        """Test with natural logarithm base (e)."""
         functor = ResistorAroundValueCostFunctor(1000.0, base=np.e)
 
         # Exact match
@@ -271,7 +271,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         assert_approx_equal(functor(1000.0 / np.e), 1.0, significant=4)
 
     def test_resistor_around_value_engineer_strings(self):
-        """Test with engineer notation strings"""
+        """Test with engineer notation strings."""
         functor = ResistorAroundValueCostFunctor("47kΩ")
 
         # Test various engineer string formats
@@ -282,7 +282,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
         assert_approx_equal(functor("470Ω"), 2.0)
 
     def test_resistor_around_value_intermediate_values(self):
-        """Test with non-exact power values"""
+        """Test with non-exact power values."""
         functor = ResistorAroundValueCostFunctor(1000.0)
 
         # Test values between exact powers
@@ -387,7 +387,7 @@ class TestResistorAroundValueCostFunctor(unittest.TestCase):
 class TestResistorPowerCostFunctor(unittest.TestCase):
 
     def test_power_cost_basic_functionality(self):
-        """Test basic power cost calculation functionality"""
+        """Test basic power cost calculation functionality."""
         # 12V input, 0.25W max power per resistor
         functor = ResistorPowerCostFunctor("12V", "0.25W", maximum_cost=100.0)
 
@@ -416,7 +416,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         self.assertEqual(cost2, float('inf'))
 
     def test_power_cost_at_maximum_limit(self):
-        """Test behavior when power is exactly at maximum limit"""
+        """Test behavior when power is exactly at maximum limit."""
         # Design scenario where one resistor hits exactly the limit
         # 10V across series resistors where one dissipates exactly 1W
         functor = ResistorPowerCostFunctor("10V", "1W", maximum_cost=50.0)
@@ -429,7 +429,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         self.assertGreater(cost, 49.0)  # Should be close to maximum
 
     def test_power_cost_zero_power_case(self):
-        """Test edge case with zero input voltage"""
+        """Test edge case with zero input voltage."""
         functor = ResistorPowerCostFunctor("0V", "1W")
 
         # With zero voltage, no current flows, no power dissipated
@@ -437,7 +437,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         assert_approx_equal(cost, 0.0)
 
     def test_power_cost_unequal_resistors(self):
-        """Test with unequal resistor values"""
+        """Test with unequal resistor values."""
         functor = ResistorPowerCostFunctor("24V", "2W", maximum_cost=200.0)
 
         # Test R1 >> R2: most power in R1
@@ -484,7 +484,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         self.assertEqual(functor("100Ω", -100.0), float('inf'))
 
     def test_power_cost_initialization_validation(self):
-        """Test initialization parameter validation"""
+        """Test initialization parameter validation."""
         # Valid initialization
         functor = ResistorPowerCostFunctor("12V", "1W", 50.0)
         self.assertEqual(functor.input_voltage, 12.0)
@@ -533,7 +533,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         self.assertNotEqual(cost_high, float('inf'))
 
     def test_power_cost_maximum_cost_parameter(self):
-        """Test different maximum_cost parameter values"""
+        """Test different maximum_cost parameter values."""
         # Test with different maximum cost values
         functor1 = ResistorPowerCostFunctor("12V", "1W", maximum_cost=50.0)
         functor2 = ResistorPowerCostFunctor("12V", "1W", maximum_cost=200.0)
@@ -550,7 +550,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         assert_approx_equal(cost3, 0.0)
 
     def test_power_cost_extreme_values(self):
-        """Test with extreme resistance and voltage values"""
+        """Test with extreme resistance and voltage values."""
         # Very high voltage, high power limit
         functor_high = ResistorPowerCostFunctor("1000V", "100W")
 
@@ -568,7 +568,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         # cost_low might be infinite due to exceeding power limit
 
     def test_power_cost_symmetry(self):
-        """Test that swapping resistor order gives same result"""
+        """Test that swapping resistor order gives same result."""
         functor = ResistorPowerCostFunctor("15V", "2W")
 
         # Test various resistor combinations
@@ -621,7 +621,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         self.assertGreater(cost_under, 90.0)  # Should be high cost
 
     def test_power_cost_just_over_limit(self):
-        """Test power cost just over the limit"""
+        """Test power cost just over the limit."""
         functor = ResistorPowerCostFunctor("10V", "0.5W", maximum_cost=100.0)
 
         # For power just over limit: 0.51W per resistor, for two resistors -> double the power
@@ -658,7 +658,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(ResistanceOhm)
         self.assertIsNotNone(VoltageV)
         self.assertIsNotNone(PowerW)

@@ -13,9 +13,9 @@ __open_map = {
     ".xz": lzma.open
 }
 
-"""
-Mode map for opening binary files that maps
-normal open() single-char modes to text modes
+"""Mode map for opening binary files that maps
+
+normal open() single-char modes to text modes.
 and everything else to binary modes
 """
 __mode_map = {
@@ -27,7 +27,7 @@ __mode_map = {
 def auto_open(filename, mode="r", **kwargs):
     """Automatically open a potentially compressed file.
 
-    Automatically open a potentially compressed file using the right library
+    Automatically open a potentially compressed file using the right library.
     variant of open(). The correct decompression algorithm is selected by
     filename extension. This function can be used instead of open() and
     automatically selects the right mode (text or binary).

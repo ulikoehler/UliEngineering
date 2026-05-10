@@ -47,6 +47,7 @@ def summing_amplifier_noninv(v1: VoltageV, v2: VoltageV, r1: ResistanceOhm, r2: 
     -------
     float
         Output voltage in Volts.
+    
     """
     v1 = normalize_voltage(v1) if isinstance(v1, str) else v1
     v2 = normalize_voltage(v2) if isinstance(v2, str) else v2

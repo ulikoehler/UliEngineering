@@ -35,8 +35,8 @@ ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 @returns_unit("A")
 def johnson_nyquist_noise_current(r: ResistanceOhm, delta_f: FrequencyHz, T: TemperatureKelvin):
-    """
-    Compute the Johnson Nyquist noise current in amperes
+    """Compute the Johnson Nyquist noise current in amperes
+    
     T must be given in °C whereas r must be given in Ohms.
     The result is given in volts
 
@@ -49,8 +49,8 @@ def johnson_nyquist_noise_current(r: ResistanceOhm, delta_f: FrequencyHz, T: Tem
 
 @returns_unit("V")
 def johnson_nyquist_noise_voltage(r: ResistanceOhm, delta_f: FrequencyHz, T: TemperatureKelvin):
-    """
-    Compute the Johnson Nyquist noise voltage in volts
+    """Compute the Johnson Nyquist noise voltage in volts
+    
     T must be given in °C whereas r must be given in Ohms.
 
     The result is given in volts

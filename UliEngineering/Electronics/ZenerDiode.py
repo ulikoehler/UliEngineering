@@ -9,8 +9,8 @@ from .Diode import normalize_voltage, VoltageV, normalize_current, CurrentA
 
 @returns_unit("W")
 def zener_diode_power_dissipation(zener_voltage: VoltageV, current: CurrentA):
-    """
-    Compute the power dissipated in a zener diode given the zener voltage and
+    """Compute the power dissipated in a zener diode given the zener voltage and
+    
     the current through it.
 
     This is based on an ideal zener diode model and does not take into account

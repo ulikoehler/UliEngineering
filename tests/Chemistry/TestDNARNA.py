@@ -198,12 +198,12 @@ class TestAutoFormat(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(Moles)
         self.assertIsNotNone(Grams)
 
     def test_normalize_moles_various_units(self):
-        """Test normalize_moles with various unit inputs"""
+        """Test normalize_moles with various unit inputs."""
         test_cases = [
             ("1 mol", 1.0),
             ("1 mmol", 1e-3),

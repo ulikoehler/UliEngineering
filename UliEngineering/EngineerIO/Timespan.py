@@ -11,9 +11,7 @@ from .UnitInfo import UnitInfo, UnitAlias, EngineerIOConfiguration
 __all__ = ["normalize_timespan", "TimespanSeconds"]
 
 def _timespan_unit_infos():
-    """
-    Returns a list of UnitInfo and UnitAlias objects for timespan units.
-    """
+    """Returns a list of UnitInfo and UnitAlias objects for timespan units."""
     return [
         # SI-prefixed seconds (using UnitAlias)
         UnitAlias('as', aliases=['attosecond', 'attoseconds', 'asec', 'asecs']),
@@ -44,9 +42,7 @@ def _timespan_unit_infos():
     ]
 
 def _create_timespan_config():
-    """
-    Create a custom EngineerIOConfiguration for timespan units.
-    """
+    """Create a custom EngineerIOConfiguration for timespan units."""
     config = EngineerIOConfiguration.default()
     return EngineerIOConfiguration(
         units=_timespan_unit_infos(),
@@ -55,6 +51,7 @@ def _create_timespan_config():
     )
 
 class EngineerTimespanIO(EngineerIO):
+    
     """Specialized EngineerIO class for timespan operations.
     """
 
@@ -67,8 +64,8 @@ class EngineerTimespanIO(EngineerIO):
 
     @returns_unit("s")
     def normalize_timespan(self, arg: NormalizableArgument) -> NormalizedArgument:
-        """
-        Normalize a given timespan to SI units (seconds).
+        """Normalize a given timespan to SI units (seconds).
+        
         Numeric inputs are assumed to be in seconds.
         """
         return self.normalize_numeric(arg)
@@ -82,8 +79,8 @@ class EngineerTimespanIO(EngineerIO):
         return cls._instance
 
 def normalize_timespan(v: NormalizableArgument) -> NormalizedComputable:
-    """
-    Normalize a given timespan to SI units (seconds).
+    """Normalize a given timespan to SI units (seconds).
+    
     Numeric inputs are assumed to be in seconds.
     """
     return cast(EngineerTimespanIO, EngineerTimespanIO.instance()).normalize_timespan(v)

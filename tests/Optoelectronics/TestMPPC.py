@@ -18,6 +18,6 @@ class TestMPPC(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(NormalizableArgument)
         self.assertIsNotNone(CapacitanceFarad)

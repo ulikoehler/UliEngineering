@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Ionic strength calculations.
+"""Ionic strength calculations.
 
 Ionic strength I is a measure of the total concentration of ions in solution:
 
@@ -32,10 +31,9 @@ ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 @returns_unit("mol/L")
 def ionic_strength(concentrations, charges):
-    """
-    Compute the ionic strength from arrays of concentrations and charges.
+    """Compute the ionic strength from arrays of concentrations and charges.
 
-    I = 0.5 * Σ(c_i * z_i²)
+    I = 0.5 * Σ(c_i * z_i²).
 
     Parameters
     ----------
@@ -48,6 +46,7 @@ def ionic_strength(concentrations, charges):
     -------
     float
         Ionic strength in mol/L.
+    
     """
     c = np.asarray(concentrations, dtype=float)
     z = np.asarray(charges, dtype=float)
@@ -56,10 +55,9 @@ def ionic_strength(concentrations, charges):
 
 @returns_unit("mol/L")
 def ionic_strength_from_pairs(pairs):
-    """
-    Compute ionic strength from a list of (concentration, charge) tuples.
+    """Compute ionic strength from a list of (concentration, charge) tuples.
 
-    Parameters
+    Parameters.
     ----------
     pairs : list of (float, int) tuples
         Each tuple is (concentration_in_mol_per_L, charge_number).
@@ -68,6 +66,7 @@ def ionic_strength_from_pairs(pairs):
     -------
     float
         Ionic strength in mol/L.
+    
     """
     concentrations = [p[0] for p in pairs]
     charges = [p[1] for p in pairs]
@@ -89,6 +88,7 @@ def ionic_strength_monovalent(concentration: ConcentrationMolar):
     -------
     float
         Ionic strength in mol/L (equals the concentration for 1:1 salts).
+    
     """
     concentration = normalize_concentration(concentration) if isinstance(concentration, str) else concentration
     return float(concentration)

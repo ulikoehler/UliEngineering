@@ -14,32 +14,32 @@ from UliEngineering.Chemistry.Kohlrausch import (
 
 class TestKohlrausch(unittest.TestCase):
     def test_kohlrausch_limiting_molar_conductivity_scalar(self):
-        """Test limiting molar conductivity with scalar input"""
+        """Test limiting molar conductivity with scalar input."""
         Lambda_0 = kohlrausch_limiting_molar_conductivity([50.10, 76.35], [1, 1])
         self.assertIsInstance(Lambda_0, float)
         self.assertAlmostEqual(Lambda_0, 126.45, places=2)
 
     def test_kohlrausch_molar_conductivity_scalar(self):
-        """Test molar conductivity with scalar input"""
+        """Test molar conductivity with scalar input."""
         Lambda_m = kohlrausch_molar_conductivity(Lambda_0=126.45, K=10.0, c=0.1)
         self.assertIsInstance(Lambda_m, float)
         self.assertLess(Lambda_m, 126.45)
 
     def test_kohlrausch_coefficient_from_data_scalar(self):
-        """Test Kohlrausch coefficient from data with scalar input"""
+        """Test Kohlrausch coefficient from data with scalar input."""
         K = kohlrausch_coefficient_from_data(Lambda_0=126.45, Lambda_m=120.0, c=0.1)
         self.assertIsInstance(K, float)
         self.assertGreater(K, 0)
 
     def test_transference_number_scalar(self):
-        """Test transference number with scalar input"""
+        """Test transference number with scalar input."""
         t = transference_number(lambda_ion=50.10, Lambda_0=126.45)
         self.assertIsInstance(t, float)
         self.assertGreater(t, 0)
         self.assertLess(t, 1)
 
     def test_limiting_molar_conductivities_dict(self):
-        """Test that the limiting molar conductivities dictionary exists"""
+        """Test that the limiting molar conductivities dictionary exists."""
         self.assertIsInstance(LIMITING_MOLAR_CONDUCTIVITIES, dict)
         self.assertIn("Na+", LIMITING_MOLAR_CONDUCTIVITIES)
         self.assertIn("Cl-", LIMITING_MOLAR_CONDUCTIVITIES)
@@ -61,7 +61,7 @@ class TestNormalizeFunctions(unittest.TestCase):
         self.assertIsNotNone(ConcentrationMolar)
 
     def test_normalize_molar_conductivity_various_units(self):
-        """Test normalize_molar_conductivity with various unit inputs"""
+        """Test normalize_molar_conductivity with various unit inputs."""
         test_cases = [
             ("1 S·cm²/mol", 1.0),
             ("1 S·m²/mol", 10000.0),
@@ -72,7 +72,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),
@@ -86,7 +86,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_kohlrausch_functions_various_units(self):
-        """Test Kohlrausch functions with various unit inputs"""
+        """Test Kohlrausch functions with various unit inputs."""
         # Test with different concentration units
         K1 = kohlrausch_molar_conductivity("126.45 S·cm²/mol", 10.0, "0.1 M")
         K2 = kohlrausch_molar_conductivity("126.45 S·cm²/mol", 10.0, "100 mM")

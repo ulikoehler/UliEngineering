@@ -14,7 +14,7 @@ __all__ = ["sphere_volume_by_radius",
 def sphere_volume_by_radius(radius: NormalizableArgument):
     """Compute the volume of a sphere of a given radius.
 
-    Parameters
+    Parameters.
     ----------
     radius : NormalizableArgument
         Radius of the sphere.
@@ -30,10 +30,9 @@ def sphere_volume_by_radius(radius: NormalizableArgument):
 
 @returns_unit("m³")
 def sphere_volume_by_diameter(diameter: NormalizableArgument):
-    """
-    Compute the volume of a sphere of a given diameter.
+    """Compute the volume of a sphere of a given diameter.
 
-    Parameters
+    Parameters.
     ----------
     diameter : NormalizableArgument
         Diameter of the sphere.
@@ -49,10 +48,9 @@ def sphere_volume_by_diameter(diameter: NormalizableArgument):
 
 @returns_unit("m²")
 def sphere_surface_area_by_radius(radius: NormalizableArgument):
-    """
-    Compute the surface area of a sphere of a given radius.
+    """Compute the surface area of a sphere of a given radius.
 
-    Parameters
+    Parameters.
     ----------
     radius : NormalizableArgument
         Radius of the sphere.
@@ -68,10 +66,9 @@ def sphere_surface_area_by_radius(radius: NormalizableArgument):
 
 @returns_unit("m²")
 def sphere_surface_area_by_diameter(diameter: NormalizableArgument):
-    """
-    Compute the surface area of a sphere of a given diameter.
+    """Compute the surface area of a sphere of a given diameter.
 
-    Parameters
+    Parameters.
     ----------
     diameter : NormalizableArgument
         Diameter of the sphere.

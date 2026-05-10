@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Pitzer equations for activity coefficients.
 
-The Pitzer model is a semi-empirical extension of Debye-Hückel theory
+The Pitzer model is a semi-empirical extension of Debye-Hückel theory.
 for concentrated electrolyte solutions (up to ~6 mol/kg).
 
 For a single-electrolyte solution MX:
@@ -65,10 +65,9 @@ PITZER_PARAMETERS = {
 
 @returns_unit("")
 def pitzer_f_gamma(I: MolalityMolKg, A_phi=PITZER_A_PHI_25C, b=1.2):
-    """
-    Compute the Pitzer f^γ (electrostatic) term.
+    """Compute the Pitzer f^γ (electrostatic) term.
 
-    f^γ = -A_φ * (√I / (1 + b*√I) + (2/b) * ln(1 + b*√I))
+    f^γ = -A_φ * (√I / (1 + b*√I) + (2/b) * ln(1 + b*√I)).
 
     Parameters
     ----------
@@ -83,6 +82,7 @@ def pitzer_f_gamma(I: MolalityMolKg, A_phi=PITZER_A_PHI_25C, b=1.2):
     -------
     float
         f^γ term (dimensionless).
+    
     """
     I = normalize_molality(I) if isinstance(I, str) else I
     sqrt_I = np.sqrt(I)
@@ -91,10 +91,9 @@ def pitzer_f_gamma(I: MolalityMolKg, A_phi=PITZER_A_PHI_25C, b=1.2):
 
 @returns_unit("")
 def pitzer_B_gamma(I: MolalityMolKg, beta0, beta1, alpha=2.0):
-    """
-    Compute the Pitzer B^γ (ion-interaction) term.
+    """Compute the Pitzer B^γ (ion-interaction) term.
 
-    B^γ = 2*β₀ + 2*β₁/(α²*I) * [1 - (1 + α*√I - α²*I/2) * exp(-α*√I)]
+    B^γ = 2*β₀ + 2*β₁/(α²*I) * [1 - (1 + α*√I - α²*I/2) * exp(-α*√I)].
 
     Parameters
     ----------
@@ -111,6 +110,7 @@ def pitzer_B_gamma(I: MolalityMolKg, beta0, beta1, alpha=2.0):
     -------
     float
         B^γ term (dimensionless).
+    
     """
     I = normalize_molality(I) if isinstance(I, str) else I
     sqrt_I = np.sqrt(I)
@@ -120,10 +120,9 @@ def pitzer_B_gamma(I: MolalityMolKg, beta0, beta1, alpha=2.0):
 
 @returns_unit("")
 def pitzer_C_gamma(C_phi):
-    """
-    Compute the Pitzer C^γ term from C^φ.
+    """Compute the Pitzer C^γ term from C^φ.
 
-    C^γ = 1.5 * C^φ
+    C^γ = 1.5 * C^φ.
 
     Parameters
     ----------
@@ -134,6 +133,7 @@ def pitzer_C_gamma(C_phi):
     -------
     float
         C^γ term.
+    
     """
     return 1.5 * C_phi
 
@@ -142,10 +142,9 @@ def pitzer_C_gamma(C_phi):
 def pitzer_activity_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_minus,
                                  beta0, beta1, C_phi,
                                  A_phi=PITZER_A_PHI_25C, b=1.2, alpha=2.0):
-    """
-    Compute the mean activity coefficient using the Pitzer model.
+    """Compute the mean activity coefficient using the Pitzer model.
 
-    ln(γ±) = |z+ * z-| * f^γ + m * (2*ν+*ν-/ν) * B^γ + m² * (2*(ν+*ν-)^(3/2)/ν) * C^γ
+    ln(γ±) = |z+ * z-| * f^γ + m * (2*ν+*ν-/ν) * B^γ + m² * (2*(ν+*ν-)^(3/2)/ν) * C^γ.
 
     Parameters
     ----------
@@ -176,6 +175,7 @@ def pitzer_activity_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_m
     -------
     float
         Mean activity coefficient γ± (dimensionless).
+    
     """
     m = normalize_molality(m) if isinstance(m, str) else m
     nu = nu_plus + nu_minus
@@ -197,10 +197,9 @@ def pitzer_activity_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_m
 def pitzer_osmotic_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_minus,
                                 beta0, beta1, C_phi,
                                 A_phi=PITZER_A_PHI_25C, b=1.2, alpha=2.0):
-    """
-    Compute the osmotic coefficient using the Pitzer model.
+    """Compute the osmotic coefficient using the Pitzer model.
 
-    φ - 1 = |z+*z-| * f^φ + m * (2*ν+*ν-/ν) * B^φ + m² * (2*(ν+*ν-)^(3/2)/ν) * C^φ
+    φ - 1 = |z+*z-| * f^φ + m * (2*ν+*ν-/ν) * B^φ + m² * (2*(ν+*ν-)^(3/2)/ν) * C^φ.
 
     where:
         f^φ = -A_φ * √I / (1 + b*√I)
@@ -229,6 +228,7 @@ def pitzer_osmotic_coefficient(m: MolalityMolKg, z_plus, z_minus, nu_plus, nu_mi
     -------
     float
         Osmotic coefficient φ (dimensionless).
+    
     """
     m = normalize_molality(m) if isinstance(m, str) else m
     nu = nu_plus + nu_minus

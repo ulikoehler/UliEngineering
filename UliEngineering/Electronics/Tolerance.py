@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for computing tolerances
-"""
+"""Utilities for computing tolerances."""
 from UliEngineering.EngineerIO import normalize
 from UliEngineering.EngineerIO.Types import NormalizableArgument
 from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
@@ -10,8 +8,8 @@ from UliEngineering.Utils.Range import normalize_minmax_tuple, ValueRange
 __all__ = ["value_range_over_tolerance"]
 
 def value_range_over_tolerance(nominal: NormalizableArgument, tolerance: NormalizableArgument = "1 %") -> ValueRange:
-    """
-    Compute the minimum and maximum value of a given component,
+    """Compute the minimum and maximum value of a given component,
+    
     given its nominal value and its tolerance.
     """
     normalized = normalize(nominal)

@@ -24,8 +24,7 @@ ChargeC = Annotated[NormalizedComputable, normalize_charge]
 
 @returns_unit("W")
 def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, frequency: FrequencyHz = "100 kHz"):
-    """
-    Compute the gate charge loss of a MOSFET in a switch-mode power-supply application as a total power (integrated per second).
+    """Compute the gate charge loss of a MOSFET in a switch-mode power-supply application as a total power (integrated per second).
 
     Ref:
     http://rohmfs.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/power_loss_appli-e.pdf
@@ -45,6 +44,7 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
     -------
     float
         Gate charge loss in Watts.
+    
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
@@ -54,8 +54,8 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
 
 @returns_unit("J")
 def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: VoltageV):
-    """
-    Compute the gate charge loss of a MOSFET in a switch-mode power-supply
+    """Compute the gate charge loss of a MOSFET in a switch-mode power-supply
+    
     application per switching cycle.
 
     Ref:
@@ -74,6 +74,7 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
     -------
     float
         Gate charge loss per cycle in Joules.
+    
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply
@@ -81,8 +82,8 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
 
 @returns_unit("F")
 def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply: VoltageV):
-    """
-    Compute the gate capacitance of a MOSFET in a switch-mode power-supply
+    """Compute the gate capacitance of a MOSFET in a switch-mode power-supply
+    
     application.
 
     Parameters
@@ -98,6 +99,7 @@ def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply
     -------
     float
         Gate capacitance in Farads.
+    
     """
     total_gate_charge = normalize_charge(total_gate_charge) if isinstance(total_gate_charge, str) else total_gate_charge
     vsupply = normalize_voltage(vsupply) if isinstance(vsupply, str) else vsupply

@@ -14,8 +14,7 @@ __all__ = [
 ]
 
 def hash_file_native(file_path, tool="sha256sum"):
-    """
-    Hash a file using a native tool.
+    """Hash a file using a native tool.
 
     This is generally faster for huge file since the data does not need to be copied into Python.
 
@@ -30,15 +29,15 @@ def hash_file_native(file_path, tool="sha256sum"):
     -------
     str
         The hash of the file.
+    
     """
     output = subprocess.check_output([tool, file_path], shell=False)
     return output.decode("utf-8").partition(" ")[0].strip()
 
 def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=65536):
-    """
-    Compute the hash of a file using the specified hash algorithm using Python's hashlib.
+    """Compute the hash of a file using the specified hash algorithm using Python's hashlib.
 
-    Parameters
+    Parameters.
     ----------
     file_path : str
         The path to the file to hash.
@@ -53,6 +52,7 @@ def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=655
     -------
     str or bytes
         If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
+    
     """
     hash_func = hash_type()
     with open(file_path, "rb") as file:
@@ -64,10 +64,9 @@ def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=655
     return hash_func.digest() if binary else hash_func.hexdigest()
 
 def hash_file_sha256(file_path, binary=False, buffer_size=65536):
-    """
-    Compute the SHA256 hash of a file.
+    """Compute the SHA256 hash of a file.
 
-    Parameters
+    Parameters.
     ----------
     file_path : str
         The path to the file to hash.
@@ -80,14 +79,14 @@ def hash_file_sha256(file_path, binary=False, buffer_size=65536):
     -------
     str or bytes
         If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
+    
     """
     return hash_file(file_path, hash_type=hashlib.sha256, binary=binary, buffer_size=buffer_size)
 
 def hash_file_md5(file_path, binary=False, buffer_size=65536):
-    """
-    Compute the MD5 hash of a file.
+    """Compute the MD5 hash of a file.
 
-    Parameters
+    Parameters.
     ----------
     file_path : str
         The path to the file to hash.
@@ -100,14 +99,14 @@ def hash_file_md5(file_path, binary=False, buffer_size=65536):
     -------
     str or bytes
         If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
+    
     """
     return hash_file(file_path, hash_type=hashlib.md5, binary=binary, buffer_size=buffer_size)
 
 def hash_file_sha1(file_path, binary=False, buffer_size=65536):
-    """
-    Compute the SHA1 hash of a file.
+    """Compute the SHA1 hash of a file.
 
-    Parameters
+    Parameters.
     ----------
     file_path : str
         The path to the file to hash.
@@ -120,12 +119,12 @@ def hash_file_sha1(file_path, binary=False, buffer_size=65536):
     -------
     str or bytes
         If binary, the binary hash, otherwise the hexadecimal digest of the file hash.
+    
     """
     return hash_file(file_path, hash_type=hashlib.sha1, binary=binary, buffer_size=buffer_size)
 
 def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=False, relative_paths=True, buffer_size=65536, concurrency=os.cpu_count()):
-    """
-    List all files in a directory and compute the hash of each file.
+    """List all files in a directory and compute the hash of each file.
 
     The file hashes are computed concurrently using a ThreadPoolExecutor.
 
@@ -151,6 +150,7 @@ def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=F
     list of tuple
         List of (filename, hash) tuples. If relative_paths is True, the filename is
         relative to the directory. If relative_paths is False, the filename is absolute.
+    
     """
     results = [] # List of (filename, sha256sum) tuples
     with ThreadPoolExecutor(concurrency) as executor:

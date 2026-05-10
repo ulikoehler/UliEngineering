@@ -6,18 +6,20 @@ from typing import Dict, List, Union
 
 @dataclass
 class UnitAlias:
+    
     """Represents a mapping of aliases to a canonical unit.
 
-    This is used for units that don't have their own conversion factor
+    This is used for units that don't have their own conversion factor.
     but are alternative names for existing units.
     """ 
+    
     canonical: str
     aliases: List[str] = field(default_factory=list)
 
     def matches_alias(self, alias_string: str) -> bool:
         """Check if the given string is one of the aliases.
 
-        Parameters
+        Parameters.
         ----------
         alias_string : str
             The alias string to check
@@ -26,14 +28,16 @@ class UnitAlias:
         -------
         bool
             True if the string is in the aliases list
+        
         """
         return alias_string in self.aliases
 
 @dataclass
 class UnitInfo:
+    
     """Represents information about a unit including its canonical form, aliases, and conversion factor.
 
-    Attributes
+    Attributes.
     ----------
     canonical : str
         The canonical/standard form of the unit (e.g., 'Ω', 's', 'A')
@@ -43,6 +47,7 @@ class UnitInfo:
         List of alternative representations for this unit
 
     """
+    
     canonical: str
     factor: float = field(default=1.0)
     aliases: List[str] = field(default_factory=list)
@@ -50,7 +55,7 @@ class UnitInfo:
     def matches(self, unit_string: str) -> bool:
         """Check if the given unit string matches this unit (canonical or alias).
 
-        Parameters
+        Parameters.
         ----------
         unit_string : str
             The unit string to check
@@ -59,13 +64,14 @@ class UnitInfo:
         -------
         bool
             True if the unit string matches this unit
+        
         """
         return unit_string == self.canonical or unit_string in self.aliases
 
     def get_all_representations(self) -> List[str]:
         """Get all possible representations of this unit (canonical + aliases).
 
-        Returns
+        Returns.
         -------
         List[str]
             List containing canonical form and all aliases
@@ -83,7 +89,7 @@ class EngineerIOConfiguration:
     def default(cls) -> 'EngineerIOConfiguration':
         """Returns a default configuration with standard units and prefixes.
 
-        Returns
+        Returns.
         -------
         EngineerIOConfiguration
             Default configuration instance

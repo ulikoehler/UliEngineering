@@ -11,8 +11,7 @@ __all__ = ["ideal_inductor_current_change_rate"]
 
 @returns_unit("A/s")
 def ideal_inductor_current_change_rate(inductance: InductanceH, voltage: VoltageV):
-    """
-    Compute the rise or fall rate of current in an ideal inductor.
+    """Compute the rise or fall rate of current in an ideal inductor.
 
     Compute the rate if there's voltage across it.
 

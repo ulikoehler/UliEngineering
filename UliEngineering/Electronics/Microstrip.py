@@ -17,18 +17,21 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
 
 class RelativePermittivity():
-    """
-    Default values for relative permittivity of different materials.
+
+    
+    """Default values for relative permittivity of different materials.
 
     Best to choose a specific value for your material, since these vary widely.
     """
+
     FR4 = 4.8 # Varies widely (approximate range: 3.9..4.8)
 
 @returns_unit("m")
 def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4, max_iter: int = 1000, tol: float = 1e-9):
-    """Compute the width of a single-ended outer-layer microstrip given its impedance,
-    height, thickness, and the relative permittivity of the substrate.
+    """Compute the width of a single-ended outer-layer microstrip.
 
+    Computes the width given its impedance, height, thickness,.
+    and the relative permittivity of the substrate.
     This uses an iterative approach to solve microstrip_impedance()
     for width since there's no closed-form solution.
     (Newton-Raphson method).
@@ -93,10 +96,9 @@ def microstrip_width(target_Z0: ResistanceOhm = "50 Ω", h = "140 μm", t = "35 
 
 @returns_unit("Ω")
 def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittivity.FR4):
-    """Compute the impedance of a single-ended
-    outer-layer microstrip using its width, height and
-    the relative permittivity of the substrate.
+    """Compute the impedance of a single-ended outer-layer microstrip.
 
+    Uses its width, height, and the relative permittivity of the substrate.
     We use a more exact equation involving the strip height.
 
     Ref: https://www.allaboutcircuits.com/tools/microstrip-impedance-calculator/
@@ -144,10 +146,10 @@ DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", 
 
 @returns_unit("Ω")
 def differential_microstrip_impedance(w, d, h = "140μm", t = "35 μm", e_r = RelativePermittivity.FR4):
-    """Compute the impedance of a differential (edge-coupled)
-    outer-layer microstrip using its width, height, the distance
-    between the edges of the microstrips,
-    the height of the substrate beneath the microstrip
+    """Compute the impedance of a differential (edge-coupled) outer-layer microstrip.
+
+    Uses its width, height, the distance between the edges of the microstrips,.
+    the height of the substrate beneath the microstrip,
     and the relative permittivity of the substrate.
 
     NOTE: Due to the available closed-form formulae, the differential impedance

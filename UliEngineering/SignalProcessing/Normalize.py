@@ -9,8 +9,7 @@ __all__ = ["normalize_max", "center_to_zero", "normalize_minmax", "normalize_plu
 NormalizationResult = namedtuple("NormalizationResult", ["data", "factor", "offset"])
 
 def normalize_max(signal):
-    """
-    Normalize signal by dividing by its max value.
+    """Normalize signal by dividing by its max value.
 
     Does not perform any offset adjustment.
 
@@ -39,8 +38,8 @@ def normalize_max(signal):
     return NormalizationResult(signal / mx, mx, 0.)
 
 def normalize_minmax(signal):
-    """
-    Normalize signal by setting its lowest value to 0.0 and its highest value to 1.0,
+    """Normalize signal by setting its lowest value to 0.0 and its highest value to 1.0,
+    
     keeping all other values.
 
     If signal consists of only zeros, no factor
@@ -54,6 +53,7 @@ def normalize_minmax(signal):
         Use .factor to access the factor that signal was divided by.
 
         Use .offset to access the offset that was subtracted from signal.
+    
     """
     if len(signal) == 0:
         return NormalizationResult([], 1., 0.)
@@ -65,8 +65,7 @@ def normalize_minmax(signal):
     return NormalizationResult((signal - mi) / factor, factor, mi)
 
 def center_to_zero(signal):
-    """
-    Normalize signal by subtracting its mean.
+    """Normalize signal by subtracting its mean.
 
     Does not perform any factor normalization.
 
@@ -78,14 +77,15 @@ def center_to_zero(signal):
 
         Use .factor to access the factor that signal was divided by.
         Use .offset to access the offset that was subtracted from signal.
+    
     """
     mn = np.mean(signal)
     return NormalizationResult(signal - mn, 1., mn)
 
 
 def normalize_plusminus_peak(signal):
-    """
-    Center a signal to zero and normalize so that
+    """Center a signal to zero and normalize so that
+    
     - np.max(result) is <= 1.0
     - np.min(result) is <= 1.0
 
@@ -97,6 +97,7 @@ def normalize_plusminus_peak(signal):
         Use .data to access the data.
         Use .factor to access the factor that signal was divided by.
         Use .offset to access the offset that was subtracted from signal.
+    
     """
     norm_res = center_to_zero(signal)
     mi = np.min(norm_res.data)

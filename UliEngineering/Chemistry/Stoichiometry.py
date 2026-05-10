@@ -112,6 +112,7 @@ def parse_formula(formula):
     dict
         Dictionary mapping element symbols to their counts.
         e.g., {"H": 2, "O": 1} for "H2O"
+    
     """
     # Handle hydrates: split on · or middot
     parts = re.split(r'[·.]', formula)
@@ -139,9 +140,7 @@ def parse_formula(formula):
 
 
 def _parse_formula_recursive(formula):
-    """
-    Recursively parse a chemical formula handling parentheses.
-    """
+    """Recursively parse a chemical formula handling parentheses."""
     # Tokenize: element symbols, numbers, parentheses
     tokens = re.findall(r'([A-Z][a-z]?|\d+|[()])', formula)
     stack = [{}]
@@ -175,10 +174,9 @@ def _parse_formula_recursive(formula):
 
 @returns_unit("g/mol")
 def molecular_weight(formula):
-    """
-    Compute the molecular weight of a compound from its formula.
+    """Compute the molecular weight of a compound from its formula.
 
-    Parameters
+    Parameters.
     ----------
     formula : str
         Chemical formula (e.g., "H2O", "NaCl", "Ca(OH)2").
@@ -192,6 +190,7 @@ def molecular_weight(formula):
     ------
     KeyError
         If an element in the formula is not in the ATOMIC_WEIGHTS table.
+    
     """
     elements = parse_formula(formula)
     mw = 0.0
@@ -203,10 +202,9 @@ def molecular_weight(formula):
 
 
 def percent_composition(formula):
-    """
-    Compute the percent composition by mass of each element in a compound.
+    """Compute the percent composition by mass of each element in a compound.
 
-    Parameters
+    Parameters.
     ----------
     formula : str
         Chemical formula.
@@ -215,6 +213,7 @@ def percent_composition(formula):
     -------
     dict
         Dictionary mapping element symbols to their mass percentage.
+    
     """
     elements = parse_formula(formula)
     mw = molecular_weight(formula)
@@ -226,10 +225,9 @@ def percent_composition(formula):
 
 @returns_unit("g")
 def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
-    """
-    Convert moles to grams.
+    """Convert moles to grams.
 
-    m = n * M
+    m = n * M.
 
     Parameters
     ----------
@@ -242,6 +240,7 @@ def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
     -------
     float
         Mass in grams.
+    
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
     molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
@@ -250,10 +249,9 @@ def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
 
 @returns_unit("mol")
 def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
-    """
-    Convert grams to moles.
+    """Convert grams to moles.
 
-    n = m / M
+    n = m / M.
 
     Parameters
     ----------
@@ -266,6 +264,7 @@ def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
     -------
     float
         Amount in moles.
+    
     """
     grams = normalize_grams(grams) if isinstance(grams, str) else grams
     molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
@@ -274,10 +273,9 @@ def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
 
 @returns_unit("")
 def moles_to_particles(moles: Moles):
-    """
-    Convert moles to number of particles.
+    """Convert moles to number of particles.
 
-    N = n * N_A
+    N = n * N_A.
 
     Parameters
     ----------
@@ -288,6 +286,7 @@ def moles_to_particles(moles: Moles):
     -------
     float
         Number of particles.
+    
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
     return moles * AVOGADRO
@@ -295,10 +294,9 @@ def moles_to_particles(moles: Moles):
 
 @returns_unit("mol")
 def particles_to_moles(particles):
-    """
-    Convert number of particles to moles.
+    """Convert number of particles to moles.
 
-    n = N / N_A
+    n = N / N_A.
 
     Parameters
     ----------
@@ -309,16 +307,16 @@ def particles_to_moles(particles):
     -------
     float
         Amount in moles.
+    
     """
     return particles / AVOGADRO
 
 
 @returns_unit("mol/L")
 def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
-    """
-    Compute molarity from moles and volume.
+    """Compute molarity from moles and volume.
 
-    M = n / V
+    M = n / V.
 
     Parameters
     ----------
@@ -331,6 +329,7 @@ def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
     -------
     float
         Molarity in mol/L.
+    
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
     volume_liters = normalize_volume(volume_liters) if isinstance(volume_liters, str) else volume_liters
@@ -339,10 +338,9 @@ def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
 
 @returns_unit("mol")
 def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
-    """
-    Compute moles from molarity and volume.
+    """Compute moles from molarity and volume.
 
-    n = M * V
+    n = M * V.
 
     Parameters
     ----------
@@ -355,6 +353,7 @@ def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
     -------
     float
         Amount in moles.
+    
     """
     volume_liters = normalize_volume(volume_liters) if isinstance(volume_liters, str) else volume_liters
     return molarity * volume_liters
@@ -362,10 +361,9 @@ def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
 
 @returns_unit("L")
 def volume_from_molarity_moles(molarity, moles: Moles):
-    """
-    Compute volume needed for given moles at given molarity.
+    """Compute volume needed for given moles at given molarity.
 
-    V = n / M
+    V = n / M.
 
     Parameters
     ----------
@@ -378,6 +376,7 @@ def volume_from_molarity_moles(molarity, moles: Moles):
     -------
     float
         Volume in liters.
+    
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
     return moles / molarity
@@ -385,10 +384,9 @@ def volume_from_molarity_moles(molarity, moles: Moles):
 
 @returns_unit("mol/kg")
 def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
-    """
-    Compute molality from moles of solute and mass of solvent.
+    """Compute molality from moles of solute and mass of solvent.
 
-    b = n_solute / m_solvent (kg)
+    b = n_solute / m_solvent (kg).
 
     Parameters
     ----------
@@ -401,6 +399,7 @@ def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
     -------
     float
         Molality in mol/kg.
+    
     """
     moles_solute = normalize_moles(moles_solute) if isinstance(moles_solute, str) else moles_solute
     mass_solvent_kg = normalize_grams(mass_solvent_kg) if isinstance(mass_solvent_kg, str) else mass_solvent_kg
@@ -409,10 +408,9 @@ def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
 
 @returns_unit("L")
 def dilution_volume(C1, V1: VolumeLiter, C2):
-    """
-    Compute the final volume after dilution using C₁V₁ = C₂V₂.
+    """Compute the final volume after dilution using C₁V₁ = C₂V₂.
 
-    V₂ = C₁ * V₁ / C₂
+    V₂ = C₁ * V₁ / C₂.
 
     Parameters
     ----------
@@ -427,6 +425,7 @@ def dilution_volume(C1, V1: VolumeLiter, C2):
     -------
     float
         Final volume.
+    
     """
     V1 = normalize_volume(V1) if isinstance(V1, str) else V1
     return C1 * V1 / C2
@@ -434,10 +433,9 @@ def dilution_volume(C1, V1: VolumeLiter, C2):
 
 @returns_unit("mol/L")
 def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar_mass: MolarMassGMol):
-    """
-    Convert mass fraction (w/w) to molarity.
+    """Convert mass fraction (w/w) to molarity.
 
-    M = (w * ρ * 1000) / M_w
+    M = (w * ρ * 1000) / M_w.
 
     Parameters
     ----------
@@ -452,6 +450,7 @@ def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar
     -------
     float
         Molarity in mol/L.
+    
     """
     density_kg_per_L = normalize_density(density_kg_per_L) if isinstance(density_kg_per_L, str) else density_kg_per_L
     molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
@@ -459,8 +458,8 @@ def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar
 
 
 def limiting_reagent(reactant_moles, stoich_coefficients):
-    """
-    Determine the limiting reagent from arrays of available moles
+    """Determine the limiting reagent from arrays of available moles
+    
     and stoichiometric coefficients.
 
     The limiting reagent has the smallest ratio moles/coefficient.
@@ -476,6 +475,7 @@ def limiting_reagent(reactant_moles, stoich_coefficients):
     -------
     int
         Index (0-based) of the limiting reagent.
+    
     """
     moles = np.asarray(reactant_moles, dtype=float)
     coeffs = np.asarray(stoich_coefficients, dtype=float)
@@ -485,10 +485,9 @@ def limiting_reagent(reactant_moles, stoich_coefficients):
 
 @returns_unit("mol")
 def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
-    """
-    Compute theoretical yield (in moles) of a product.
+    """Compute theoretical yield (in moles) of a product.
 
-    n_product = n_limiting * (product_coeff / limiting_coeff)
+    n_product = n_limiting * (product_coeff / limiting_coeff).
 
     Parameters
     ----------
@@ -503,6 +502,7 @@ def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
     -------
     float
         Theoretical yield in moles.
+    
     """
     limiting_moles = normalize_moles(limiting_moles) if isinstance(limiting_moles, str) else limiting_moles
     return limiting_moles * product_coeff / limiting_coeff
@@ -510,10 +510,9 @@ def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
 
 @returns_unit("%")
 def percent_yield(actual, theoretical):
-    """
-    Compute percent yield.
+    """Compute percent yield.
 
-    % yield = (actual / theoretical) * 100
+    % yield = (actual / theoretical) * 100.
 
     Parameters
     ----------
@@ -526,15 +525,15 @@ def percent_yield(actual, theoretical):
     -------
     float
         Percent yield.
+    
     """
     return (actual / theoretical) * 100.0
 
 
 def empirical_formula_from_percent(percentages):
-    """
-    Determine the empirical formula from percent composition data.
+    """Determine the empirical formula from percent composition data.
 
-    Parameters
+    Parameters.
     ----------
     percentages : dict
         Dictionary mapping element symbols to their mass percentage.
@@ -545,6 +544,7 @@ def empirical_formula_from_percent(percentages):
     dict
         Dictionary mapping element symbols to their subscript in the
         empirical formula (integer values).
+    
     """
     # Convert percentages to moles
     moles = {}
@@ -569,10 +569,9 @@ def empirical_formula_from_percent(percentages):
 
 @returns_unit("mol")
 def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
-    """
-    Compute moles of ideal gas from PV = nRT.
+    """Compute moles of ideal gas from PV = nRT.
 
-    n = PV / (RT)
+    n = PV / (RT).
 
     Parameters
     ----------
@@ -587,6 +586,7 @@ def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
     -------
     float
         Amount in moles.
+    
     """
     pressure_Pa = normalize_pressure(pressure_Pa) if isinstance(pressure_Pa, str) else pressure_Pa
     T = normalize_temperature(T) if isinstance(T, str) else T
@@ -595,10 +595,9 @@ def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
 
 @returns_unit("m³")
 def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa=101325.0):
-    """
-    Compute volume of ideal gas from PV = nRT.
+    """Compute volume of ideal gas from PV = nRT.
 
-    V = nRT / P
+    V = nRT / P.
 
     Parameters
     ----------
@@ -613,6 +612,7 @@ def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa=101325.0):
     -------
     float
         Volume in cubic meters.
+    
     """
     moles = normalize_moles(moles) if isinstance(moles, str) else moles
     T = normalize_temperature(T) if isinstance(T, str) else T
