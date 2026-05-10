@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio, top_resistor_by_ratio, feedback_top_resistor, feedback_bottom_resistor, feedback_actual_voltage, voltage_divider_power
+from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from UliEngineering.EngineerIO import auto_format
 import unittest
 
@@ -45,3 +47,10 @@ class TestNoiseDensity(unittest.TestCase):
             "VoltageDividerPower(top=210 mW, bottom=840 µW, total=211 mW)")
         assert_approx_equal(voltage_divider_power("250k", "1k", "230V").total,
             0.2107569721115538)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(NormalizableArgument)
