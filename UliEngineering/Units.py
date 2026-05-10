@@ -20,8 +20,7 @@ m = Unit("m")
 g = Unit("g")
 
 class UnannotatedReturnValueError(Exception):
-    """
-    Raise if the automatic unit finder cannot find the appropriate function.
+    """Raise if the automatic unit finder cannot find the appropriate function.
 
     The annotation tells an auto-formatting function which unit is being used.
 

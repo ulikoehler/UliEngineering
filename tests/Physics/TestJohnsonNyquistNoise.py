@@ -45,7 +45,9 @@ class TestJohnsonNyquistNoise(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_johnson_nyquist_noise_various_units(self):
-        """Test Johnson Nyquist noise functions with various unit inputs"""
+        """
+        Test Johnson Nyquist noise functions with various unit inputs
+        """
         # Test with different resistance units
         v1 = johnson_nyquist_noise_current("20000000 Ω", "10000 Hz", "20 °C")
         v2 = johnson_nyquist_noise_current("20 MΩ", "10000 Hz", "20 °C")

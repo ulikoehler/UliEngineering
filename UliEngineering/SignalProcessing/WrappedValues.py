@@ -14,6 +14,7 @@ class OnlineUnwrapper:
 
     Maintains state between calls.
     """
+
     def __init__(self, wrap_value=2**20, threshold=None):
         """
         Initialize the unwrapper.

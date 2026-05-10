@@ -21,7 +21,8 @@ __all__ = [
 
 @returns_unit("H")
 def buck_regulator_inductance(vin: VoltageV, vout: VoltageV, frequency: FrequencyHz, ioutmax: CurrentA, K=0.3):
-    """Compute the optimal inductance for use in a buck regulator.
+    """
+    Compute the optimal inductance for use in a buck regulator.
 
     This formula is based on the the inductor ripple current fraction [K].
 

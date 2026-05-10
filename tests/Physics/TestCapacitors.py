@@ -753,7 +753,7 @@ class TestCapacitorChargingEnergy(unittest.TestCase):
         self.assertAlmostEqual(partial_energy, expected_partial, places=12)
 
     def test_auto_format_functionality(self):
-        """Test auto_format integration"""
+        """Test auto_format integration."""
         # Test various formats
         result = auto_format(capacitor_charging_energy, "1.5 F", "5.0 V")
         self.assertEqual(result, "18.8 J")

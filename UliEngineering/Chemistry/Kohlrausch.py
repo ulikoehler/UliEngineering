@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Kohlrausch's law of independent migration of ions.
+"""
+Kohlrausch's law of independent migration of ions.
 
 Kohlrausch's law states that the limiting molar conductivity of an electrolyte
 is the sum of the individual contributions of the cation and anion:

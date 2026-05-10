@@ -36,7 +36,7 @@ def noise_density(actual_noise: VoltageVolt, bandwith: FrequencyHz):
     """
     Compute the noise density given:
      - A noise density in x/√Hz where x is any unit
-     - A bandwith in ΔHz
+     - A bandwith in ΔHz.
 
     >>> formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz")
 

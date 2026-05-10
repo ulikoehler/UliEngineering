@@ -93,7 +93,7 @@ def invert_bijection(arr):
 
 def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
     """
-    Given two 1d arrays, generates a 2d matrix
+    Given two 1d arrays, generates a 2d matrix.
     conIf valuesB is None, valuesA is used for both arrays.
 
     The input values do not neccessarily have to be numbers and can be

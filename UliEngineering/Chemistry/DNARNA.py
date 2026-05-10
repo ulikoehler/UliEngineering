@@ -50,8 +50,9 @@ class DNANucleotideWeights:
 
 @dataclass
 class RNANucleotideWeights:
-    """
-    MolThis includes the backbone phosphate group.
+    """Molecular weights of the four RNA nucleotides in g/mol.
+
+    This includes the backbone phosphate group.
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """

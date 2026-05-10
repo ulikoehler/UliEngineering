@@ -8,8 +8,7 @@ __all__ = ["BoundingBox"]
 
 
 class BoundingBox(object):
-    """
-    A 2D bounding box.
+    """A 2D bounding box.
     """
 
     def __init__(self, points):

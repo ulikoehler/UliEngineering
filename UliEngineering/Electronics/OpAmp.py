@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities for operational amplifier calculations.
+"""Utilities for operational amplifier calculations.
 
 Usage example:
 >>> from UliEngineering.Electronics.OpAmp import summing_amplifier_noninv

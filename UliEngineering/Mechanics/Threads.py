@@ -15,6 +15,7 @@ class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter"
         Outside thread diameter in mm (for exterior thread)
     inner_diameter:
         Inside thread diameter in mm (for exterior thread)
+
     """
 
 threads = {
