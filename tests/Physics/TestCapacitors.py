@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
-from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy, parallel_plate_capacitors_capacitance
+from UliEngineering.Electronics.Capacitors import capacitor_energy, capacitor_charge, capacitor_lifetime, capacitor_constant_current_discharge_time, capacitor_voltage_by_energy, capacitor_rc_time_constant, capacitor_resistor_charge_time, capacitor_resistor_discharge_time, capacitor_capacitance_by_energy, capacitor_charging_energy, parallel_plate_capacitors_capacitance, normalize_capacitance, CapacitanceFarad, normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV, normalize_current, CurrentA, normalize_energy, EnergyJ, normalize_permittivity, PermittivityFm
 from UliEngineering.Electronics.Diode import DiodeModel, ShockleyDiodeModel, SimpleDiodeModel
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
@@ -985,3 +985,104 @@ class TestParallelPlateCapacitorsCapacitance(unittest.TestCase):
         # Energy should be positive and finite
         self.assertGreater(energy, 0)
         self.assertTrue(np.isfinite(energy))
+
+class TestNormalizeFunctions(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(CapacitanceFarad)
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(CurrentA)
+        self.assertIsNotNone(EnergyJ)
+        self.assertIsNotNone(PermittivityFm)
+
+    def test_normalize_capacitance_various_units(self):
+        """Test normalize_capacitance with various unit inputs"""
+        test_cases = [
+            ("1 F", 1.0),
+            ("1 µF", 1e-6),
+            ("1 nF", 1e-9),
+            ("1 pF", 1e-12),
+            ("1 mF", 1e-3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_capacitance(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_resistance_various_units(self):
+        """Test normalize_resistance with various unit inputs"""
+        test_cases = [
+            ("1 Ω", 1.0),
+            ("1 ohm", 1.0),
+            ("1 kΩ", 1e3),
+            ("1 MΩ", 1e6),
+            ("1 mΩ", 1e-3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_resistance(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_voltage_various_units(self):
+        """Test normalize_voltage with various unit inputs"""
+        test_cases = [
+            ("1 V", 1.0),
+            ("1 mV", 1e-3),
+            ("1 kV", 1e3),
+            ("1 µV", 1e-6),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_voltage(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_current_various_units(self):
+        """Test normalize_current with various unit inputs"""
+        test_cases = [
+            ("1 A", 1.0),
+            ("1 mA", 1e-3),
+            ("1 µA", 1e-6),
+            ("1 nA", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_current(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_energy_various_units(self):
+        """Test normalize_energy with various unit inputs"""
+        test_cases = [
+            ("1 J", 1.0),
+            ("1 mJ", 1e-3),
+            ("1 µJ", 1e-6),
+            ("1 kJ", 1e3),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_energy(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_permittivity_various_units(self):
+        """Test normalize_permittivity with various unit inputs"""
+        test_cases = [
+            ("1 F/m", 1.0),
+            ("1 F/meter", 1.0),
+            ("1 F/cm", 100.0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_permittivity(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_capacitor_functions_various_units(self):
+        """Test capacitor functions with various unit inputs"""
+        # Test capacitor_energy with different units
+        e1 = capacitor_energy("1 F", "1 V")
+        e2 = capacitor_energy("1000 mF", "1000 mV")
+        self.assertAlmostEqual(e1, e2)
+
+        # Test capacitor_rc_time_constant with different units
+        tau1 = capacitor_rc_time_constant("100 µF", "10 kΩ")
+        tau2 = capacitor_rc_time_constant("0.1 mF", "10000 ohm")
+        self.assertAlmostEqual(tau1, tau2)

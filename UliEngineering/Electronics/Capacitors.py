@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from typing import Annotated
+
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Area import normalize_area
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Length import normalize_length
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics._normalize import normalize_with_known_units
 from UliEngineering.Electronics.Diode import normalize_diode_model
 from UliEngineering.Physics.Temperature import normalize_temperature_celsius
 
@@ -22,7 +26,39 @@ __all__ = [
     "capacitor_voltage_by_energy",
     "capacitor_capacitance_by_energy",
     "capacitor_charging_energy",
+    "normalize_capacitance", "CapacitanceFarad",
+    "normalize_resistance", "ResistanceOhm",
+    "normalize_voltage", "VoltageV",
+    "normalize_current", "CurrentA",
+    "normalize_energy", "EnergyJ",
+    "normalize_permittivity", "PermittivityFm",
 ]
+
+
+def normalize_capacitance(C: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(C, {"F": 1.0, "µF": 1e-6, "nF": 1e-9, "pF": 1e-12, "mF": 1e-3, "uF": 1e-6}, quantity_name="capacitance")
+
+def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "kΩ": 1e3, "MΩ": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
+
+def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
+
+def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(I, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
+
+def normalize_energy(E: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(E, {"J": 1.0, "mJ": 1e-3, "µJ": 1e-6, "kJ": 1e3}, quantity_name="energy")
+
+def normalize_permittivity(epsilon: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(epsilon, {"F/m": 1.0, "F/meter": 1.0, "F/cm": 100.0}, quantity_name="permittivity")
+
+CapacitanceFarad = Annotated[NormalizedComputable, normalize_capacitance]
+ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
+VoltageV = Annotated[NormalizedComputable, normalize_voltage]
+CurrentA = Annotated[NormalizedComputable, normalize_current]
+EnergyJ = Annotated[NormalizedComputable, normalize_energy]
+PermittivityFm = Annotated[NormalizedComputable, normalize_permittivity]
 def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltage, target_drive_voltage, diode_model, initial_voltage, target_voltage):
     initial_integral = diode_model.series_current_integral(initial_drive_voltage, resistance)
     target_integral = diode_model.series_current_integral(target_drive_voltage, resistance)
@@ -34,8 +70,7 @@ def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltag
 
 
 @returns_unit("s")
-@normalize_numeric_args
-def capacitor_rc_time_constant(capacitance, resistance):
+def capacitor_rc_time_constant(capacitance: CapacitanceFarad, resistance: ResistanceOhm):
     """
     Compute the R/C time constant tau = R * C of a resistor-capacitor network.
 
@@ -51,6 +86,8 @@ def capacitor_rc_time_constant(capacitance, resistance):
     float
         The time constant in seconds.
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
     return capacitance * resistance
 
 @returns_unit("h")
@@ -72,44 +109,46 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
     return nominal_lifetime * 2**(-(tdelta/A))
 
 @returns_unit("J")
-@normalize_numeric_args
-def capacitor_energy(capacitance, voltage):
+def capacitor_energy(capacitance: CapacitanceFarad, voltage: VoltageV):
     """
     Compute the total energy stored in a capacitor given:
     - The capacitance in farads
     - The voltage the capacitor is charged to
     The energy is returned as joules.
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     return 0.5 * capacitance * np.square(voltage)
 
 @returns_unit("C")
-@normalize_numeric_args
-def capacitor_charge(capacitance, voltage):
+def capacitor_charge(capacitance: CapacitanceFarad, voltage: VoltageV):
     """
     Compute the total charge stored in a capacitor given:
     - The capacitance in farads
     - The voltage the capacitor is charged to
     The charge is returned in coulombs.
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
     return capacitance * voltage
 
 @returns_unit("V")
-@normalize_numeric_args
-def capacitor_voltage_by_energy(capacitance, energy, starting_voltage="0V"):
+def capacitor_voltage_by_energy(capacitance: CapacitanceFarad, energy: EnergyJ, starting_voltage="0V"):
     """
     Compute the voltage of a capacitor given:
     - The capacitance in farads
     - The energy stored in joules
     The voltage is returned in volts.
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    energy = normalize_energy(energy) if isinstance(energy, str) else energy
     # Compute starting energy
     starting_energy = capacitor_energy(capacitance, starting_voltage)
     # Compute voltage
     return np.sqrt(2 * (energy + starting_energy) / capacitance)
 
 @returns_unit("s")
-@normalize_numeric_args
-def capacitor_constant_current_discharge_time(capacitance, initial_voltage, current, target_voltage="0V"):
+def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, initial_voltage: VoltageV, current: CurrentA, target_voltage="0V"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
@@ -136,8 +175,7 @@ def capacitor_constant_current_discharge_time(capacitance, initial_voltage, curr
     return capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage)
 
 @returns_unit("s")
-@normalize_numeric_args
-def capacitor_constant_current_charge_time(capacitance, target_voltage, current, initial_voltage="0V"):
+def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target_voltage: VoltageV, current: CurrentA, initial_voltage="0V"):
     """
     Compute the time it takes to charge a capacitor to [target_voltage]
     using a constant current.
@@ -158,12 +196,15 @@ def capacitor_constant_current_charge_time(capacitance, target_voltage, current,
     float
         The time in seconds.
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
+    current = normalize_current(current) if isinstance(current, str) else current
+    initial_voltage = normalize_voltage(initial_voltage) if isinstance(initial_voltage, str) else initial_voltage
     return capacitance * (initial_voltage - target_voltage) / current
 
 
 @returns_unit("s")
-@normalize_numeric_args(exclude=["diode_model", "diode_voltage"])
-def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, target_voltage, initial_voltage="0V", diode_model=None, diode_voltage=None):
+def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm, source_voltage: VoltageV, target_voltage: VoltageV, initial_voltage="0V", diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to charge a capacitor through a resistor.
 
@@ -181,6 +222,11 @@ def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, targ
 
     The capacitor asymptotically approaches source_voltage - diode_model.minimum_series_voltage().
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
+    source_voltage = normalize_voltage(source_voltage) if isinstance(source_voltage, str) else source_voltage
+    target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
+    initial_voltage = normalize_voltage(initial_voltage) if isinstance(initial_voltage, str) else initial_voltage
     diode_model = normalize_diode_model(diode_voltage if diode_voltage is not None else diode_model)
     minimum_series_voltage = normalize_numeric(diode_model.minimum_series_voltage())
     final_voltage = source_voltage - minimum_series_voltage
@@ -202,8 +248,7 @@ def capacitor_resistor_charge_time(capacitance, resistance, source_voltage, targ
 
 
 @returns_unit("s")
-@normalize_numeric_args(exclude=["diode_model", "diode_voltage"])
-def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, target_voltage="0V", diode_model=None, diode_voltage=None):
+def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm, initial_voltage: VoltageV, target_voltage="0V", diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to discharge a capacitor through a resistor.
 
@@ -220,6 +265,10 @@ def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, 
 
     The capacitor asymptotically approaches diode_model.minimum_series_voltage().
     """
+    capacitance = normalize_capacitance(capacitance) if isinstance(capacitance, str) else capacitance
+    resistance = normalize_resistance(resistance) if isinstance(resistance, str) else resistance
+    initial_voltage = normalize_voltage(initial_voltage) if isinstance(initial_voltage, str) else initial_voltage
+    target_voltage = normalize_voltage(target_voltage) if isinstance(target_voltage, str) else target_voltage
     diode_model = normalize_diode_model(diode_voltage if diode_voltage is not None else diode_model)
     final_voltage = normalize_numeric(diode_model.minimum_series_voltage())
     if np.any(initial_voltage < final_voltage):
@@ -239,7 +288,7 @@ def capacitor_resistor_discharge_time(capacitance, resistance, initial_voltage, 
     )
 
 @returns_unit("F")
-def parallel_plate_capacitors_capacitance(area, distance, epsilon):
+def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityFm):
     """
     Compute the capacitance of two parallel plate capacitors in parallel
     given the area, distance, and permittivity of the dielectric.
@@ -254,12 +303,11 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon):
     """
     area = normalize_area(area)
     distance = normalize_length(distance)
-    epsilon = normalize_numeric(epsilon)
+    epsilon = normalize_permittivity(epsilon) if isinstance(epsilon, str) else epsilon
     return epsilon * area / distance
 
 @returns_unit("F")
-@normalize_numeric_args
-def capacitor_capacitance_by_energy(energy, voltage, starting_voltage="0V"):
+def capacitor_capacitance_by_energy(energy: EnergyJ, voltage: VoltageV, starting_voltage="0V"):
     """
     Compute the capacitance of a capacitor given:
     - The energy stored in joules
@@ -272,12 +320,14 @@ def capacitor_capacitance_by_energy(energy, voltage, starting_voltage="0V"):
     Energy = 0.5 * C * (V_final^2 - V_starting^2)
     Therefore: C = 2 * Energy / (V_final^2 - V_starting^2)
     """
+    energy = normalize_energy(energy) if isinstance(energy, str) else energy
+    voltage = normalize_voltage(voltage) if isinstance(voltage, str) else voltage
+    starting_voltage = normalize_voltage(starting_voltage) if isinstance(starting_voltage, str) else starting_voltage
     voltage_squared_diff = np.square(voltage) - np.square(starting_voltage)
     return 2 * energy / voltage_squared_diff
 
 @returns_unit("J")
-@normalize_numeric_args
-def capacitor_charging_energy(capacitance, end_voltage, starting_voltage="0V"):
+def capacitor_charging_energy(capacitance: CapacitanceFarad, end_voltage: VoltageV, starting_voltage="0V"):
     """
     Compute the energy required to charge a capacitor from a starting voltage to an end voltage.
 
