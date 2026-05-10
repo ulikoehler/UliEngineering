@@ -17,7 +17,12 @@ where:
     F  = Faraday constant (96485 C/mol)
     Q  = reaction quotient
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
+from UliEngineering.Physics.Temperature import normalize_temperature
 import numpy as np
 from scipy.constants import R as gas_constant, physical_constants
 
@@ -27,12 +32,18 @@ __all__ = [
     "nernst_potential_at_25C",
     "nernst_reaction_quotient_from_potential",
     "FARADAY_CONSTANT",
+    "normalize_concentration", "ConcentrationMolar",
 ]
 
 FARADAY_CONSTANT = physical_constants["Faraday constant"][0]  # 96485.33212 C/mol
 
 
-@normalize_numeric_args
+def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(c, {"mol/L": 1.0, "M": 1.0, "mM": 1e-3, "µM": 1e-6, "mol/m³": 1e-3}, quantity_name="concentration")
+
+ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
+
+
 @returns_unit("V")
 def nernst_cell_potential(E0, n, Q, T=298.15):
     """
@@ -56,12 +67,12 @@ def nernst_cell_potential(E0, n, Q, T=298.15):
     float
         Cell potential in Volts.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     return E0 - (gas_constant * T) / (n * FARADAY_CONSTANT) * np.log(Q)
 
 
-@normalize_numeric_args
 @returns_unit("V")
-def nernst_half_cell_potential(E0, n, oxidized_concentration, reduced_concentration, T=298.15):
+def nernst_half_cell_potential(E0, n, oxidized_concentration: ConcentrationMolar, reduced_concentration: ConcentrationMolar, T=298.15):
     """
     Compute the half-cell reduction potential using the Nernst equation.
 
@@ -85,11 +96,13 @@ def nernst_half_cell_potential(E0, n, oxidized_concentration, reduced_concentrat
     float
         Half-cell potential in Volts.
     """
+    oxidized_concentration = normalize_concentration(oxidized_concentration) if isinstance(oxidized_concentration, str) else oxidized_concentration
+    reduced_concentration = normalize_concentration(reduced_concentration) if isinstance(reduced_concentration, str) else reduced_concentration
+    T = normalize_temperature(T) if isinstance(T, str) else T
     Q = reduced_concentration / oxidized_concentration
     return E0 - (gas_constant * T) / (n * FARADAY_CONSTANT) * np.log(Q)
 
 
-@normalize_numeric_args
 @returns_unit("V")
 def nernst_potential_at_25C(E0, n, Q):
     """
@@ -115,7 +128,6 @@ def nernst_potential_at_25C(E0, n, Q):
     return E0 - (0.025693 / n) * np.log(Q)
 
 
-@normalize_numeric_args
 @returns_unit("")
 def nernst_reaction_quotient_from_potential(E, E0, n, T=298.15):
     """
@@ -140,4 +152,5 @@ def nernst_reaction_quotient_from_potential(E, E0, n, T=298.15):
     float
         Reaction quotient (dimensionless).
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     return np.exp((E0 - E) * n * FARADAY_CONSTANT / (gas_constant * T))
