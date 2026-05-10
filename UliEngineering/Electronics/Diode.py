@@ -30,6 +30,7 @@ __all__ = [
     "normalize_power", "PowerW",
     "normalize_current", "CurrentA",
     "normalize_voltage", "VoltageV",
+    "normalize_resistance", "ResistanceOhm",
 ]
 
 
@@ -42,9 +43,13 @@ def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
 def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
 
+def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "kΩ": 1e3, "MΩ": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
+
 PowerW = Annotated[NormalizedComputable, normalize_power]
 CurrentA = Annotated[NormalizedComputable, normalize_current]
 VoltageV = Annotated[NormalizedComputable, normalize_voltage]
+ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 
 def _validate_positive(name, value):

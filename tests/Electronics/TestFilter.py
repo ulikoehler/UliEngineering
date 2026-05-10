@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.Filter import lc_cutoff_frequency, rc_cutoff_frequency, rc_feedforward_pole_and_zero, rc_time_constant, rl_time_constant, rl_cutoff_frequency, rc_charge_time, rc_discharge_time, rl_current_rise_time, rl_current_fall_time, rc_step_response, rl_step_response, rlc_resonant_frequency, rlc_quality_factor, rlc_damping_ratio, rlc_bandwidth
+from UliEngineering.Electronics.Filter import lc_cutoff_frequency, rc_cutoff_frequency, rc_feedforward_pole_and_zero, rc_time_constant, rl_time_constant, rl_cutoff_frequency, rc_charge_time, rc_discharge_time, rl_current_rise_time, rl_current_fall_time, rc_step_response, rl_step_response, rlc_resonant_frequency, rlc_quality_factor, rlc_damping_ratio, rlc_bandwidth, normalize_inductance, InductanceH, normalize_frequency, FrequencyHz, normalize_time, TimeS
 import unittest
 import numpy as np
 
@@ -196,6 +196,64 @@ class TestFilter(unittest.TestCase):
         # Target current is 0 should return infinity
         result = rl_current_fall_time(R, L, 5, 0)
         self.assertTrue(np.isinf(result))
+
+class TestNormalizeFunctions(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(InductanceH)
+        self.assertIsNotNone(FrequencyHz)
+        self.assertIsNotNone(TimeS)
+
+    def test_normalize_inductance_various_units(self):
+        """Test normalize_inductance with various unit inputs"""
+        test_cases = [
+            ("1 H", 1.0),
+            ("1 mH", 1e-3),
+            ("1 µH", 1e-6),
+            ("1 nH", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_inductance(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_frequency_various_units(self):
+        """Test normalize_frequency with various unit inputs"""
+        test_cases = [
+            ("1 Hz", 1.0),
+            ("1 kHz", 1e3),
+            ("1 MHz", 1e6),
+            ("1 GHz", 1e9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_frequency(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_normalize_time_various_units(self):
+        """Test normalize_time with various unit inputs"""
+        test_cases = [
+            ("1 s", 1.0),
+            ("1 ms", 1e-3),
+            ("1 µs", 1e-6),
+            ("1 ns", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_time(input_val)
+                self.assertAlmostEqual(result, expected)
+
+    def test_filter_functions_various_units(self):
+        """Test filter functions with various unit inputs"""
+        # Test rc_time_constant with different units
+        tau1 = rc_time_constant("1 kΩ", "1 µF")
+        tau2 = rc_time_constant("1000 ohm", "0.001 mF")
+        self.assertAlmostEqual(tau1, tau2)
+
+        # Test lc_cutoff_frequency with different units
+        f1 = lc_cutoff_frequency("1 mH", "1 µF")
+        f2 = lc_cutoff_frequency("1000 µH", "1000 nF")
+        self.assertAlmostEqual(f1, f2)
 
 if __name__ == '__main__':
     unittest.main()
