@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.Filter import lc_cutoff_frequency, rc_cutoff_frequency, rc_feedforward_pole_and_zero, rc_time_constant, rl_time_constant, rl_cutoff_frequency, rc_charge_time, rc_discharge_time, rl_current_rise_time, rl_current_fall_time, rc_step_response, rl_step_response, rlc_resonant_frequency, rlc_quality_factor, rlc_damping_ratio, rlc_bandwidth
 import unittest
 import numpy as np

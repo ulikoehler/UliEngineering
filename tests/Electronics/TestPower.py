@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-import numpy as np
 from numpy.testing import assert_allclose
 
 from UliEngineering.Electronics.Power import current_by_power, power_by_current_and_voltage

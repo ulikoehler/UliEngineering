@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
-from UliEngineering.EngineerIO import auto_format
 from UliEngineering.Utils.Range import ValueRange
-import numpy as np
 import unittest
 
 class TestValueRangeOverTolerance(unittest.TestCase):

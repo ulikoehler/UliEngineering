@@ -16,7 +16,6 @@ Provides functions for:
 """
 import re
 import numpy as np
-from fractions import Fraction
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 __all__ = [

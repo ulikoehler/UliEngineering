@@ -5,7 +5,6 @@ from UliEngineering.SignalProcessing.FFT import compute_fft, FFT, fft_cut_dc_art
 from UliEngineering.SignalProcessing.Simulation import sine_wave
 from UliEngineering.SignalProcessing.Chunks import ChunkGenerator, overlapping_chunks
 from parameterized import parameterized
-import concurrent.futures
 import numpy as np
 import numpy.random
 import unittest

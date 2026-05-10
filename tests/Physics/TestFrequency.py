@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.Frequency import frequency_to_period, period_to_frequency
-from UliEngineering.Exceptions import InvalidUnitException
+from UliEngineering.Physics.Frequency import frequency_to_period
 import unittest
 
 class TestFrequencies(unittest.TestCase):

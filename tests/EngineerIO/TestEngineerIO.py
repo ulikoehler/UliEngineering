@@ -5,7 +5,6 @@ from numpy.testing import assert_allclose, assert_approx_equal
 from UliEngineering.EngineerIO import EngineerIO
 from UliEngineering.EngineerIO import UnitInfo
 from UliEngineering.EngineerIO.Decorators import returns_unit
-from UliEngineering.EngineerIO.Length import EngineerLengthIO
 from UliEngineering.EngineerIO.UnitInfo import EngineerIOConfiguration
 from UliEngineering.Exceptions import EngineerIOException, InvalidUnitInContextException, UnannotatedReturnValueError
 from UliEngineering.Units import Unit

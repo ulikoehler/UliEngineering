@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from UliEngineering.Electronics.PowerFactor import power_factor_by_phase_angle
-from UliEngineering.EngineerIO import auto_format
 import numpy as np
 import unittest
 

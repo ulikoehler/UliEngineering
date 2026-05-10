@@ -11,7 +11,6 @@ as well as cell-constant-based measurements.
     κ = G * K_cell   (S/m, from conductance and cell constant)
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-import numpy as np
 
 __all__ = [
     "electrolyte_conductivity_from_molar",

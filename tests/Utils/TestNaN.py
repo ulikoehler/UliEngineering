@@ -3,7 +3,6 @@
 import unittest
 import numpy as np
 from UliEngineering.Utils.NaN import none_to_nan
-from UliEngineering.EngineerIO.Types import NormalizeResult
 
 
 class TestNoneToNaN(unittest.TestCase):

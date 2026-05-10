@@ -23,10 +23,8 @@ Kinematic viscosities are returned in m²/s.
 
 import numpy as np
 from dataclasses import dataclass
-from typing import Iterable
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
 
 __all__ = [
     # Dataclasses

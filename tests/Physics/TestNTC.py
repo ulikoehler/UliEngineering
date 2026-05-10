@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Physics.NTC import ntc_resistance, ntc_resistances
-from UliEngineering.Exceptions import InvalidUnitException
 import unittest
 
 class TestNTC(unittest.TestCase):

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
-from typing import Optional
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Length import normalize_length

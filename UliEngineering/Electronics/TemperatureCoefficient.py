@@ -5,7 +5,6 @@ Utilities for computing temperature coefficients
 and their effects
 """
 from collections.abc import Iterable
-from typing import Tuple
 
 import numpy as np
 from UliEngineering.EngineerIO import NormalizeResult, normalize, normalize_numeric

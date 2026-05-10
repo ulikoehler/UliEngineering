@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.MOSFET import mosfet_gate_charge_losses, mosfet_gate_capacitance_from_gate_charge
-from UliEngineering.Exceptions import OperationImpossibleException
-from UliEngineering.EngineerIO import auto_format
 import unittest
 
 class TestLEDSeriesResistors(unittest.TestCase):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import unittest
-import numpy as np
 from numpy.testing import assert_approx_equal
 from UliEngineering.Chemistry.IonicStrength import (
     ionic_strength,

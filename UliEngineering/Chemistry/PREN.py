@@ -13,7 +13,6 @@ Variants:
     PRE_NW = %Cr + 3.3 * (%Mo + 0.5 * %W) + 16 * %N  (includes tungsten)
 """
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-import numpy as np
 
 __all__ = [
     "pren",
