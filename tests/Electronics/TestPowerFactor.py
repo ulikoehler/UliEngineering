@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from UliEngineering.Electronics.PowerFactor import power_factor_by_phase_angle
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 import numpy as np
 import unittest
 
@@ -24,4 +25,9 @@ class TestPowerFactor(unittest.TestCase):
     def test_power_factor_by_phase_angle_bad_unit(self):
         with self.assertRaises(ValueError):
             power_factor_by_phase_angle(unit="nosuchunit")
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(NormalizableArgument)
 
