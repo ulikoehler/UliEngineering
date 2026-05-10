@@ -1,14 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Pressure utilities."""
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
-from UliEngineering.Units import Pa, bar, m
+from typing import Annotated
 
-__all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential"]
+from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Length import LengthMeters
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ._normalize import normalize_with_known_units
+
+__all__ = ["pascal_to_bar", "bar_to_pascal", "barlow_tangential",
+           "psi_to_pascal", "psi_to_bar", "pascal_to_psi", "bar_to_psi",
+           "normalize_pressure_pascal", "normalize_pressure_bar",
+           "PressurePascal", "PressureBar"]
+
+
+def normalize_pressure_pascal(pressure: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(pressure, {"Pa": 1.0, "bar": 1e5, "psi": 6894.76}, quantity_name="pressure")
+
+
+def normalize_pressure_bar(pressure: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(pressure, {"bar": 1.0, "Pa": 1e-5, "psi": 0.0689476}, quantity_name="pressure")
+
+
+# Unit type annotations
+PressurePascal = Annotated[NormalizedComputable, normalize_pressure_pascal]
+PressureBar = Annotated[NormalizedComputable, normalize_pressure_bar]
 
 @returns_unit("bar")
 @normalize_numeric_args
-def pascal_to_bar(pressure: Pa):
+def pascal_to_bar(pressure: PressurePascal):
     """
     Convert the pressure in pascal to the pressure in bar
     """
@@ -16,7 +36,7 @@ def pascal_to_bar(pressure: Pa):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def bar_to_pascal(pressure: bar):
+def bar_to_pascal(pressure: PressureBar):
     """
     Convert the pressure in bar to the pressure in Pascal
     """
@@ -24,7 +44,7 @@ def bar_to_pascal(pressure: bar):
 
 @returns_unit("Pa")
 @normalize_numeric_args
-def barlow_tangential(outer_diameter: m, inner_diameter: m, pressure: Pa):
+def barlow_tangential(outer_diameter: LengthMeters, inner_diameter: LengthMeters, pressure: PressurePascal):
     """
     Compute the tangential stress of a pressure vessel at [pressure] using Barlow's formula for thin-walled tubes.
 
@@ -34,3 +54,39 @@ def barlow_tangential(outer_diameter: m, inner_diameter: m, pressure: Pa):
     dm = (outer_diameter + inner_diameter) / 2
     s = (outer_diameter - inner_diameter) / 2
     return pressure * dm / (2 * s)
+
+
+@returns_unit("Pa")
+@normalize_numeric_args
+def psi_to_pascal(pressure: PressurePascal):
+    """
+    Convert the pressure in psi to the pressure in Pascal
+    """
+    return pressure * 6894.76
+
+
+@returns_unit("bar")
+@normalize_numeric_args
+def psi_to_bar(pressure: PressurePascal):
+    """
+    Convert the pressure in psi to the pressure in bar
+    """
+    return pressure * 0.0689476
+
+
+@returns_unit("psi")
+@normalize_numeric_args
+def pascal_to_psi(pressure: PressurePascal):
+    """
+    Convert the pressure in Pascal to the pressure in psi
+    """
+    return pressure / 6894.76
+
+
+@returns_unit("psi")
+@normalize_numeric_args
+def bar_to_psi(pressure: PressureBar):
+    """
+    Convert the pressure in bar to the pressure in psi
+    """
+    return pressure / 0.0689476
