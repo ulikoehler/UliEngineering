@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose, assert_approx_equal
-from UliEngineering.EngineerIO.Timespan import EngineerTimespanIO
+from UliEngineering.EngineerIO.Timespan import EngineerTimespanIO, normalize_timespan, TimespanSeconds
 import numpy as np
 import unittest
 
@@ -71,3 +71,30 @@ class TestEngineerTimespanIO(unittest.TestCase):
         assert_approx_equal(self.io.normalize_timespan("-1.25 ps"), -1.25e-12)
         assert_approx_equal(self.io.normalize_timespan("-1.25 fs"), -1.25e-15)
         assert_approx_equal(self.io.normalize_timespan("-1.25 as"), -1.25e-18)
+
+    def test_type_annotation_exists(self):
+        """Test that the new type annotation is available"""
+        self.assertIsNotNone(TimespanSeconds)
+
+    def test_timespan_type_various_units(self):
+        """Test TimespanSeconds type with various unit inputs"""
+        test_cases = [
+            ("1 s", 1.0),
+            ("1 min", 60.0),
+            ("1 h", 3600.0),
+            ("1 d", 86400.0),
+            ("1 ms", 1e-3),
+            ("1 µs", 1e-6),
+            ("1 ns", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_timespan(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_timespan_function(self):
+        """Test the normalize_timespan function directly"""
+        assert_approx_equal(normalize_timespan("1 s"), 1.0)
+        assert_approx_equal(normalize_timespan("1 min"), 60.0)
+        assert_approx_equal(normalize_timespan("1 h"), 3600.0)
+        assert_approx_equal(normalize_timespan("1 ms"), 1e-3)

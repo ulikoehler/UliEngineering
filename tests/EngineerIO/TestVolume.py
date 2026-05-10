@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.EngineerIO.Volume import normalize_volume, EngineerVolumeIO, convert_volume_to_cubic_meters
+from UliEngineering.EngineerIO.Volume import normalize_volume, EngineerVolumeIO, convert_volume_to_cubic_meters, VolumeCubicMeters
 import unittest
 import numpy as np
 import scipy.constants
@@ -175,3 +175,23 @@ class TestVolume(unittest.TestCase):
         assert_approx_equal(self.volume_io.normalize_volume("1 tablespoon"), 1.47867648437e-05)
         assert_approx_equal(normalize_volume("1 tsp"), 4.92892161458e-06)
         assert_approx_equal(self.volume_io.normalize_volume("1 teaspoon"), 4.92892161458e-06)
+
+    def test_type_annotation_exists(self):
+        """Test that the new type annotation is available"""
+        self.assertIsNotNone(VolumeCubicMeters)
+
+    def test_volume_type_various_units(self):
+        """Test VolumeCubicMeters type with various unit inputs"""
+        test_cases = [
+            ("1 m³", 1.0),
+            ("1 m^3", 1.0),
+            ("1 L", 0.001),
+            ("1000 L", 1.0),
+            ("1 cm³", 1e-6),
+            ("1 ft³", scipy.constants.foot**3),
+            ("1 gal", 0.003785411784),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_volume(input_val)
+                assert_approx_equal(result, expected)

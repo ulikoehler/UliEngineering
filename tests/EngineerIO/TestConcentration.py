@@ -4,7 +4,11 @@ import unittest
 import numpy as np
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Concentration import normalize_mass_concentration, convert_mass_concentration_to_per_liter, EngineerMassConcentrationIO, normalize_amount_concentration, convert_amount_concentration_to_grams_per_liter, EngineerAmountConcentrationIO
+from UliEngineering.EngineerIO.Concentration import (
+    normalize_mass_concentration, convert_mass_concentration_to_per_liter, EngineerMassConcentrationIO,
+    normalize_amount_concentration, convert_amount_concentration_to_grams_per_liter, EngineerAmountConcentrationIO,
+    MassConcentrationPerLiter, AmountConcentrationPerLiter
+)
 
 class TestMassConcentration(unittest.TestCase):
     def setUp(self):
@@ -162,6 +166,39 @@ class TestAmountConcentration(unittest.TestCase):
             normalize_amount_concentration("")
         with self.assertRaises(Exception):
             normalize_amount_concentration("   ")
+
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(MassConcentrationPerLiter)
+        self.assertIsNotNone(AmountConcentrationPerLiter)
+
+    def test_mass_concentration_type_various_units(self):
+        """Test MassConcentrationPerLiter type with various unit inputs"""
+        test_cases = [
+            ("1 g/l", 1.0),
+            ("1 mg/l", 1e-3),
+            ("1 mg/ml", 1.0),
+            ("1 ppm", 1e-6),
+            ("1 %", 1e-2),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_mass_concentration(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_amount_concentration_type_various_units(self):
+        """Test AmountConcentrationPerLiter type with various unit inputs"""
+        test_cases = [
+            ("1 mol/l", 1.0),
+            ("1 M", 1.0),
+            ("1 mmol/l", 1e-3),
+            ("1 µmol/l", 1e-6),
+            ("1 nmol/l", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_amount_concentration(input_val)
+                assert_approx_equal(result, expected)
 
 if __name__ == '__main__':
     unittest.main()

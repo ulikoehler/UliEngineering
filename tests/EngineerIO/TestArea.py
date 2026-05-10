@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from parameterized import parameterized
-from UliEngineering.EngineerIO.Area import normalize_area, convert_area_to_square_meters, EngineerAreaIO
+from UliEngineering.EngineerIO.Area import normalize_area, convert_area_to_square_meters, EngineerAreaIO, AreaSquareMeters
 import unittest
 import numpy as np
 import scipy.constants
@@ -767,6 +767,25 @@ class TestUnitAliases(unittest.TestCase):
         
         self.assertEqual(self.io.split_unit("100"), UnitSplitResult('100', '', ''))
         self.assertEqual(self.io.split_unit("50.5"), UnitSplitResult('50.5', '', ''))
+
+    def test_type_annotation_exists(self):
+        """Test that the new type annotation is available"""
+        self.assertIsNotNone(AreaSquareMeters)
+
+    def test_area_type_various_units(self):
+        """Test AreaSquareMeters type with various unit inputs"""
+        test_cases = [
+            ("1 m²", 1.0),
+            ("1 m^2", 1.0),
+            ("100 cm²", 0.01),
+            ("1 mm²", 1e-6),
+            ("1 ft²", scipy.constants.foot**2),
+            ("1 acre", 4046.8564224),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_area(input_val)
+                assert_approx_equal(result, expected)
 
 if __name__ == '__main__':
     unittest.main()
