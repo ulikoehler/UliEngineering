@@ -3,7 +3,12 @@
 """Comprehensive stoichiometry module."""
 import re
 import numpy as np
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
+from UliEngineering.Physics.Temperature import normalize_temperature
 
 __all__ = [
     "ATOMIC_WEIGHTS",
@@ -28,11 +33,43 @@ __all__ = [
     "ideal_gas_volume",
     "AVOGADRO",
     "MOLAR_GAS_VOLUME_STP",
+    "normalize_moles", "Moles",
+    "normalize_grams", "Grams",
+    "normalize_volume", "VolumeLiter",
+    "normalize_pressure", "PressurePa",
+    "normalize_density", "DensityKgL",
+    "normalize_molar_mass", "MolarMassGMol",
 ]
 
 from scipy.constants import N_A as AVOGADRO, R as GAS_CONSTANT
 
 MOLAR_GAS_VOLUME_STP = 0.022414  # m³/mol at STP (0 °C, 1 atm)
+
+
+def normalize_moles(moles: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(moles, {"mol": 1.0, "mmol": 1e-3, "µmol": 1e-6, "nmol": 1e-9, "kmol": 1e3}, quantity_name="moles")
+
+def normalize_grams(grams: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(grams, {"g": 1.0, "mg": 1e-3, "µg": 1e-6, "ng": 1e-9, "kg": 1e3}, quantity_name="grams")
+
+def normalize_volume(V: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(V, {"L": 1.0, "mL": 1e-3, "µL": 1e-6, "m³": 1000.0, "cm³": 1e-3}, quantity_name="volume")
+
+def normalize_pressure(P: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(P, {"Pa": 1.0, "kPa": 1e3, "MPa": 1e6, "bar": 100000.0, "atm": 101325.0}, quantity_name="pressure")
+
+def normalize_density(rho: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(rho, {"kg/L": 1.0, "g/mL": 1.0, "g/cm³": 1.0, "kg/m³": 0.001}, quantity_name="density")
+
+def normalize_molar_mass(M: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(M, {"g/mol": 1.0, "kg/mol": 1000.0, "kg/kmol": 1.0}, quantity_name="molar mass")
+
+Moles = Annotated[NormalizedComputable, normalize_moles]
+Grams = Annotated[NormalizedComputable, normalize_grams]
+VolumeLiter = Annotated[NormalizedComputable, normalize_volume]
+PressurePa = Annotated[NormalizedComputable, normalize_pressure]
+DensityKgL = Annotated[NormalizedComputable, normalize_density]
+MolarMassGMol = Annotated[NormalizedComputable, normalize_molar_mass]
 
 # Standard atomic weights (IUPAC 2021)
 ATOMIC_WEIGHTS = {
@@ -188,9 +225,8 @@ def percent_composition(formula):
     return result
 
 
-@normalize_numeric_args
 @returns_unit("g")
-def moles_to_grams(moles, molar_mass):
+def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
     """
     Convert moles to grams.
 
@@ -208,12 +244,13 @@ def moles_to_grams(moles, molar_mass):
     float
         Mass in grams.
     """
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
+    molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
     return moles * molar_mass
 
 
-@normalize_numeric_args
 @returns_unit("mol")
-def grams_to_moles(grams, molar_mass):
+def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
     """
     Convert grams to moles.
 
@@ -231,12 +268,13 @@ def grams_to_moles(grams, molar_mass):
     float
         Amount in moles.
     """
+    grams = normalize_grams(grams) if isinstance(grams, str) else grams
+    molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
     return grams / molar_mass
 
 
-@normalize_numeric_args
 @returns_unit("")
-def moles_to_particles(moles):
+def moles_to_particles(moles: Moles):
     """
     Convert moles to number of particles.
 
@@ -252,10 +290,10 @@ def moles_to_particles(moles):
     float
         Number of particles.
     """
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
     return moles * AVOGADRO
 
 
-@normalize_numeric_args
 @returns_unit("mol")
 def particles_to_moles(particles):
     """
@@ -276,9 +314,8 @@ def particles_to_moles(particles):
     return particles / AVOGADRO
 
 
-@normalize_numeric_args
 @returns_unit("mol/L")
-def molarity_from_moles_volume(moles, volume_liters):
+def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
     """
     Compute molarity from moles and volume.
 
@@ -296,12 +333,13 @@ def molarity_from_moles_volume(moles, volume_liters):
     float
         Molarity in mol/L.
     """
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
+    volume_liters = normalize_volume(volume_liters) if isinstance(volume_liters, str) else volume_liters
     return moles / volume_liters
 
 
-@normalize_numeric_args
 @returns_unit("mol")
-def moles_from_molarity_volume(molarity, volume_liters):
+def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
     """
     Compute moles from molarity and volume.
 
@@ -319,12 +357,12 @@ def moles_from_molarity_volume(molarity, volume_liters):
     float
         Amount in moles.
     """
+    volume_liters = normalize_volume(volume_liters) if isinstance(volume_liters, str) else volume_liters
     return molarity * volume_liters
 
 
-@normalize_numeric_args
 @returns_unit("L")
-def volume_from_molarity_moles(molarity, moles):
+def volume_from_molarity_moles(molarity, moles: Moles):
     """
     Compute volume needed for given moles at given molarity.
 
@@ -342,12 +380,12 @@ def volume_from_molarity_moles(molarity, moles):
     float
         Volume in liters.
     """
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
     return moles / molarity
 
 
-@normalize_numeric_args
 @returns_unit("mol/kg")
-def molality_from_moles_mass(moles_solute, mass_solvent_kg):
+def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
     """
     Compute molality from moles of solute and mass of solvent.
 
@@ -365,12 +403,13 @@ def molality_from_moles_mass(moles_solute, mass_solvent_kg):
     float
         Molality in mol/kg.
     """
+    moles_solute = normalize_moles(moles_solute) if isinstance(moles_solute, str) else moles_solute
+    mass_solvent_kg = normalize_grams(mass_solvent_kg) if isinstance(mass_solvent_kg, str) else mass_solvent_kg
     return moles_solute / mass_solvent_kg
 
 
-@normalize_numeric_args
 @returns_unit("L")
-def dilution_volume(C1, V1, C2):
+def dilution_volume(C1, V1: VolumeLiter, C2):
     """
     Compute the final volume after dilution using C₁V₁ = C₂V₂.
 
@@ -390,12 +429,12 @@ def dilution_volume(C1, V1, C2):
     float
         Final volume.
     """
+    V1 = normalize_volume(V1) if isinstance(V1, str) else V1
     return C1 * V1 / C2
 
 
-@normalize_numeric_args
 @returns_unit("mol/L")
-def mass_fraction_to_molarity(mass_fraction, density_kg_per_L, molar_mass):
+def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar_mass: MolarMassGMol):
     """
     Convert mass fraction (w/w) to molarity.
 
@@ -415,6 +454,8 @@ def mass_fraction_to_molarity(mass_fraction, density_kg_per_L, molar_mass):
     float
         Molarity in mol/L.
     """
+    density_kg_per_L = normalize_density(density_kg_per_L) if isinstance(density_kg_per_L, str) else density_kg_per_L
+    molar_mass = normalize_molar_mass(molar_mass) if isinstance(molar_mass, str) else molar_mass
     return mass_fraction * density_kg_per_L * 1000.0 / molar_mass
 
 
@@ -443,9 +484,8 @@ def limiting_reagent(reactant_moles, stoich_coefficients):
     return int(np.argmin(ratios))
 
 
-@normalize_numeric_args
 @returns_unit("mol")
-def theoretical_yield(limiting_moles, limiting_coeff, product_coeff):
+def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
     """
     Compute theoretical yield (in moles) of a product.
 
@@ -465,10 +505,10 @@ def theoretical_yield(limiting_moles, limiting_coeff, product_coeff):
     float
         Theoretical yield in moles.
     """
+    limiting_moles = normalize_moles(limiting_moles) if isinstance(limiting_moles, str) else limiting_moles
     return limiting_moles * product_coeff / limiting_coeff
 
 
-@normalize_numeric_args
 @returns_unit("%")
 def percent_yield(actual, theoretical):
     """
@@ -528,9 +568,8 @@ def empirical_formula_from_percent(percentages):
     return {el: round(r) for el, r in ratios.items()}
 
 
-@normalize_numeric_args
 @returns_unit("mol")
-def ideal_gas_moles(pressure_Pa, volume_m3, T):
+def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
     """
     Compute moles of ideal gas from PV = nRT.
 
@@ -550,12 +589,13 @@ def ideal_gas_moles(pressure_Pa, volume_m3, T):
     float
         Amount in moles.
     """
+    pressure_Pa = normalize_pressure(pressure_Pa) if isinstance(pressure_Pa, str) else pressure_Pa
+    T = normalize_temperature(T) if isinstance(T, str) else T
     return pressure_Pa * volume_m3 / (GAS_CONSTANT * T)
 
 
-@normalize_numeric_args
 @returns_unit("m³")
-def ideal_gas_volume(moles, T, pressure_Pa=101325.0):
+def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa=101325.0):
     """
     Compute volume of ideal gas from PV = nRT.
 
@@ -575,4 +615,7 @@ def ideal_gas_volume(moles, T, pressure_Pa=101325.0):
     float
         Volume in cubic meters.
     """
+    moles = normalize_moles(moles) if isinstance(moles, str) else moles
+    T = normalize_temperature(T) if isinstance(T, str) else T
+    pressure_Pa = normalize_pressure(pressure_Pa) if isinstance(pressure_Pa, str) else pressure_Pa
     return moles * GAS_CONSTANT * T / pressure_Pa
