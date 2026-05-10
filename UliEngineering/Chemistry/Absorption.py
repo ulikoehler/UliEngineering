@@ -36,16 +36,19 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient: Absorp
     """
     Compute the absorption length (in meters) from the extinction coefficient (in 1/m).
     Absorption length is defined as the distance over which the intensity drops to 1/e.
-    Formula: absorption_length = 1 / absorption_coefficient):
+    Formula: absorption_length = 1 / absorption_coefficient.
 
-    NOTE: The absopriotn coefficient must bei in 1/m, not in 1/cm or any other unit.
+    NOTE: The absorption coefficient must be in 1/m, not in 1/cm or any other unit.
 
-    Parameters:
-    - absorption_coefficient):: Extinction coefficient in 1/m (scalar, list, or ndarray).
+    Parameters
+    ----------
+    absorption_coefficient : AbsorptionCoefficientPerMeter
+        Extinction coefficient in 1/m (scalar, list, or ndarray).
 
-    Returns:
-    - Absorption length in meters.
-
+    Returns
+    -------
+    float or numpy.ndarray
+        Absorption length in meters.
     """
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return np.reciprocal(absorption_coefficient)
@@ -54,13 +57,17 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient: Absorp
 def extinction_coefficient_from_absorption_length(absorption_length: LengthMeter):
     """
     Compute the extinction coefficient (in 1/m) from the absorption length (in meters).
-    Formula: extinction_coefficient = 1 / absorption_length
+    Formula: extinction_coefficient = 1 / absorption_length.
 
-    Parameters:
-    - absorption_length: Absorption length in meters (scalar, list, or ndarray).
+    Parameters
+    ----------
+    absorption_length : LengthMeter
+        Absorption length in meters (scalar, list, or ndarray).
 
-    Returns:
-    - Extinction coefficient in 1/m.
+    Returns
+    -------
+    float or numpy.ndarray
+        Extinction coefficient in 1/m.
     """
     absorption_length = normalize_length(absorption_length) if isinstance(absorption_length, str) else absorption_length
     return np.reciprocal(absorption_length)
@@ -68,17 +75,22 @@ def extinction_coefficient_from_absorption_length(absorption_length: LengthMeter
 @returns_unit("")
 def remaining_light_fraction(length: LengthMeter, absorption_coefficient: AbsorptionCoefficientPerMeter):
     """
-    Compute the remaining fraction of light after passing through a medium of given length (in meters).
+    Compute the remaining fraction of light after passing through a medium of given length (in meters)
     with a given extinction coefficient (in 1/m).
 
-    Formula: fraction = exp(-absorption_coefficient * length)
+    Formula: fraction = exp(-absorption_coefficient * length).
 
-    Parameters:
-    - length: Length of the medium (scalar, list, or ndarray, any unit parsable by normalize_length)
-    - absorption_coefficient: Extinction coefficient in 1/m (scalar, list, or ndarray)
+    Parameters
+    ----------
+    length : LengthMeter
+        Length of the medium (scalar, list, or ndarray, any unit parsable by normalize_length).
+    absorption_coefficient : AbsorptionCoefficientPerMeter
+        Extinction coefficient in 1/m (scalar, list, or ndarray).
 
-    Returns:
-    - Remaining fraction of light (unitless)
+    Returns
+    -------
+    float or numpy.ndarray
+        Remaining fraction of light (unitless).
     """
     length = normalize_length(length) if isinstance(length, str) else length
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
@@ -90,14 +102,19 @@ def length_from_remaining_fraction(remaining_fraction, absorption_coefficient: A
     Compute the length of the medium (in meters) given the remaining fraction of light
     and the extinction coefficient (in 1/m).
 
-    Formula: length = -ln(remaining_fraction) / absorption_coefficient
+    Formula: length = -ln(remaining_fraction) / absorption_coefficient.
 
-    Parameters:
-    - remaining_fraction: Remaining fraction of light (scalar, list, or ndarray, unitless)
-    - absorption_coefficient: Extinction coefficient in 1/m (scalar, list, or ndarray)
+    Parameters
+    ----------
+    remaining_fraction : float or numpy.ndarray
+        Remaining fraction of light (scalar, list, or ndarray, unitless).
+    absorption_coefficient : AbsorptionCoefficientPerMeter
+        Extinction coefficient in 1/m (scalar, list, or ndarray).
 
-    Returns:
-    - Length in meters.
+    Returns
+    -------
+    float or numpy.ndarray
+        Length in meters.
     """
     absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return -np.log(remaining_fraction) / absorption_coefficient
@@ -108,11 +125,15 @@ def half_length(absorption_coefficient: AbsorptionCoefficientPerMeter):
     Compute the half-length, i.e., the length of medium where the remaining fraction of light is 0.5,
     for a given extinction coefficient (in 1/m).
 
-    Parameters:
-    - absorption_coefficient: Extinction coefficient in 1/m (scalar, list, or ndarray)
+    Parameters
+    ----------
+    absorption_coefficient : AbsorptionCoefficientPerMeter
+        Extinction coefficient in 1/m (scalar, list, or ndarray).
 
-    Returns:
-    - Half-length in meters.
+    Returns
+    -------
+    float or numpy.ndarray
+        Half-length in meters.
     """
     return length_from_remaining_fraction(0.5, absorption_coefficient)
 
@@ -124,18 +145,23 @@ def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, w
 
     Uses the formula:
         alpha = (2 * omega * kappa) / c
-    where omega = 2 * pi * c / wavelength
+    where omega = 2 * pi * c / wavelength.
 
     Source:
     SOLID STATE PHYSICS, Part II, M. S. Dresselhaus, Formula 5.2
     https://web.mit.edu/course/6/6.732/www/6.732-pt2.pdf
 
-    Parameters:
-    - extinction_coefficient: Extinction coefficient kappa (unitless)
-    - wavelength: Wavelength (meters or any unit parsable by normalize_length)
+    Parameters
+    ----------
+    extinction_coefficient : float or numpy.ndarray
+        Extinction coefficient kappa (unitless).
+    wavelength : LengthMeter
+        Wavelength (meters or any unit parsable by normalize_length).
 
-    Returns:
-    - Absorption coefficient alpha in 1/m
+    Returns
+    -------
+    float or numpy.ndarray
+        Absorption coefficient alpha in 1/m.
     """
     wavelength = normalize_length(wavelength) if isinstance(wavelength, str) else wavelength
     omega = 2 * np.pi * speed_of_light / wavelength

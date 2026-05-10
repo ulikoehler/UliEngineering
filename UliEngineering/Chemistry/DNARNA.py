@@ -107,15 +107,21 @@ def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions =
     Compute the molecular weight of a single-stranded DNA molecule (e.g., oligonucleotide).
 
     Formula (for single-stranded DNA):
-        M.W. = (An x 313.2) + (Tn x 304.2) + (Cn x 289.2) + (Gn x 329.2) + 79.0
+        M.W. = (An x 313.2) + (Tn x 304.2) + (Cn x 289.2) + (Gn x 329.2) + 79.0.
 
-    Parameters:
-    - length_nucleotides: Length of the DNA in nucleotides (not base pairs!).
-    - fractions: NucleotideFractions dataclass instance (A, T, G, C, U fractions, should sum to 1.0, U ignored).
-    - nucleotide_weights: DNANucleotideWeights dataclass instance (optional, default standard values)
+    Parameters
+    ----------
+    length_nucleotides : float or numpy.ndarray
+        Length of the DNA in nucleotides (not base pairs!).
+    fractions : NucleotideFractions
+        NucleotideFractions dataclass instance (A, T, G, C, U fractions, should sum to 1.0, U ignored).
+    nucleotide_weights : DNANucleotideWeights, optional
+        DNANucleotideWeights dataclass instance (optional, default standard values).
 
-    Returns:
-    - Molecular weight in g/mol.
+    Returns
+    -------
+    float or numpy.ndarray
+        Molecular weight in g/mol.
     """
     length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
@@ -137,15 +143,21 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
     Compute the molecular weight of a single-stranded RNA molecule (e.g., oligonucleotide).
 
     Formula (for single-stranded RNA):
-        M.W. = (An x 329.2) + (Un x 306.2) + (Cn x 305.2) + (Gn x 345.2) + 159
+        M.W. = (An x 329.2) + (Un x 306.2) + (Cn x 305.2) + (Gn x 345.2) + 159.
 
-    Parameters:
-    - length_nucleotides: Length of the RNA in nucleotides (not base pairs!).
-    - fractions: NucleotideFractions dataclass instance (A, U, G, C, T fractions, should sum to 1.0, T ignored).
-    - nucleotide_weights: RNANucleotideWeights dataclass instance (optional, default standard values)
+    Parameters
+    ----------
+    length_nucleotides : float or numpy.ndarray
+        Length of the RNA in nucleotides (not base pairs!).
+    fractions : NucleotideFractions
+        NucleotideFractions dataclass instance (A, U, G, C, T fractions, should sum to 1.0, T ignored).
+    nucleotide_weights : RNANucleotideWeights, optional
+        RNANucleotideWeights dataclass instance (optional, default standard values).
 
-    Returns:
-    - Molecular weight in g/mol.
+    Returns
+    -------
+    float or numpy.ndarray
+        Molecular weight in g/mol.
     """
     length_nucleotides = normalize_numeric(length_nucleotides) if isinstance(length_nucleotides, str) else length_nucleotides
     n_A = length_nucleotides * fractions.A
