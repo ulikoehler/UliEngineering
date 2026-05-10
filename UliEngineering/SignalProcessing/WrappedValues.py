@@ -13,17 +13,19 @@ __all__ = [
 
 class OnlineUnwrapper:
     """An online unwrapper that can process samples one by one or in chunks.
+
     Maintains state between calls.
     """
     def __init__(self, wrap_value=2**20, threshold=None):
         """
         Initialize the unwrapper.
 
-        Args:
-            wrap_value: float
-                The value at which wrapping occurs.
-            threshold: float or None
-                The threshold to detect a wrap. If None, it is set to wrap_value / 2.
+        Parameters
+        ----------
+        wrap_value : float
+            The value at which wrapping occurs.
+        threshold : float or None
+            The threshold to detect a wrap. If None, it is set to wrap_value / 2.
         """
         self.wrap_value = wrap_value
         self.threshold = threshold if threshold is not None else wrap_value / 2
@@ -34,12 +36,14 @@ class OnlineUnwrapper:
         """
         Unwrap the given data.
 
-        Args:
-            data: scalar or array-like
-                The input value(s) to unwrap.
+        Parameters
+        ----------
+        data : scalar or array-like
+            The input value(s) to unwrap.
 
-        Returns:
-            The unwrapped value(s).
+        Returns
+        -------
+        The unwrapped value(s).
         """
         is_scalar = np.isscalar(data) or (isinstance(data, np.ndarray) and data.ndim == 0)
 

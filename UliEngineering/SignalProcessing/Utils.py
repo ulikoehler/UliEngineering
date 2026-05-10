@@ -27,13 +27,13 @@ _unstep_reduction_methods = {
 def remove_mean(arr):
     """
     Substract the DC signal component, i.e. the arithmetic mean of the array,
-    from the array and return the modified array
+    from the array and return the modified array.
     """
     return arr - np.mean(arr)
 
 def rms(arr):
     """
-    Compute the root-mean-square value of the given array
+    Compute the root-mean-square value of the given array.
     """
     return np.sqrt(np.mean(np.square(arr)))
 
@@ -47,7 +47,7 @@ def rms_to_peak_to_peak(rms_val):
 
 def peak_to_peak(arr):
     """
-    Compute max(arr) - min(arr)
+    Compute max(arr) - min(arr).
     """
     if arr is None or len(arr) == 0:
         # This causes numpy ValueError since some Numpy version

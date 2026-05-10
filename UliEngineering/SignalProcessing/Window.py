@@ -69,8 +69,13 @@ class WindowFunctor:
     def __init__(self, size, window_id="blackman", param=None):
         """
         Create a new WindowFunctor.
-        __init__ initialized the window array
 
+        __init__ initialized the window array.
+
+        Parameters
+        ----------
+        size : int
+            The size of the window.
         window_id : string or functor
             The name of the window to use.
             See create_window() documentation
@@ -95,8 +100,13 @@ class WindowFunctor:
             The length of data must match self.size.
             This is verified.
         inplace : bool
-            If True, data is modified in-place
+            If True, data is modified in-place.
             If False, data is not modified.
+
+        Returns
+        -------
+        numpy array
+            The windowed data.
         """
         if len(data) != self.size:
             raise ValueError(f"Data size {len(data)} does not match WindowFunctor size {self.size}")

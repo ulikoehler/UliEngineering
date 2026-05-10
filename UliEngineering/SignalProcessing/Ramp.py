@@ -24,25 +24,41 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
 
     The sum of rise_time, high_time, fall_time, and low_time (calculated) must equal 1/frequency.
 
-    :param frequency: The fundamental frequency of the signal in Hz.
-    :param samplerate: The sampling rate in Hz.
-    :param amplitude: The peak-to-peak amplitude. The signal swings from offset to offset + amplitude.
-    :param offset: The low level of the signal.
-    :param rise_time: Duration of the rising edge in seconds. If None, defaults to 10% of period.
-    :param fall_time: Duration of the falling edge in seconds. If None, defaults to rise_time.
-    :param high_time: Duration of the high hold in seconds. If None, defaults to (Period - Rise - Fall) / 2.
-    :param acceleration: The acceleration used for smoothing the corners.
-                         Units are AmplitudeUnits / s^2.
-                         If None, infinite acceleration is assumed (linear ramps, sharp corners).
-                         Must be high enough to achieve the amplitude within the rise/fall times.
-    :param length: Length of the generated signal in seconds.
-    :param phaseshift: Initial phase shift in degrees.
-    :param continuity: The type of continuity to guarantee.
-                       "C0": Linear ramp (infinite acceleration at corners). Ignores acceleration parameter.
-                       "C1": Continuous velocity (constant acceleration profile). Default if acceleration is provided.
-                       "C2": Continuous acceleration (sinusoidal acceleration profile).
+    Parameters
+    ----------
+    frequency : float
+        The fundamental frequency of the signal in Hz.
+    samplerate : float
+        The sampling rate in Hz.
+    amplitude : float, optional
+        The peak-to-peak amplitude. The signal swings from offset to offset + amplitude. Default is 1.0.
+    offset : float, optional
+        The low level of the signal. Default is 0.0.
+    rise_time : float or None, optional
+        Duration of the rising edge in seconds. If None, defaults to 10% of period.
+    fall_time : float or None, optional
+        Duration of the falling edge in seconds. If None, defaults to rise_time.
+    high_time : float or None, optional
+        Duration of the high hold in seconds. If None, defaults to (Period - Rise - Fall) / 2.
+    acceleration : float or None, optional
+        The acceleration used for smoothing the corners.
+        Units are AmplitudeUnits / s^2.
+        If None, infinite acceleration is assumed (linear ramps, sharp corners).
+        Must be high enough to achieve the amplitude within the rise/fall times.
+    length : float, optional
+        Length of the generated signal in seconds. Default is 1.0.
+    phaseshift : float, optional
+        Initial phase shift in degrees. Default is 0.0.
+    continuity : str, optional
+        The type of continuity to guarantee.
+        "C0": Linear ramp (infinite acceleration at corners). Ignores acceleration parameter.
+        "C1": Continuous velocity (constant acceleration profile). Default if acceleration is provided.
+        "C2": Continuous acceleration (sinusoidal acceleration profile).
 
-    :return: A numpy array containing the signal.
+    Returns
+    -------
+    numpy.ndarray
+        A numpy array containing the signal.
     """
     frequency = normalize_numeric(frequency)
     samplerate = normalize_numeric(samplerate)
