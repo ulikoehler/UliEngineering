@@ -58,17 +58,17 @@ class TestIonicStrengthMonovalent(unittest.TestCase):
         assert_approx_equal(ionic_strength_monovalent(1.0), 1.0, significant=5)
 
     def test_string_input(self):
-        """Test ionic_strength_monovalent with string unit input"""
+        """Test ionic_strength_monovalent with string unit input."""
         assert_approx_equal(ionic_strength_monovalent("0.1 M"), 0.1, significant=5)
 
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ConcentrationMolar)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),

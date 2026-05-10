@@ -29,13 +29,13 @@ class TestFickLaws(unittest.TestCase):
         self.assertGreater(distance, 0)
 
     def test_fick_diffusion_time_scalar(self):
-        """Test diffusion time with scalar input"""
+        """Test diffusion time with scalar input."""
         time = fick_diffusion_time(D=1e-9, x=0.001)
         self.assertIsInstance(time, float)
         self.assertGreater(time, 0)
 
     def test_fick_semi_infinite_concentration_scalar(self):
-        """Test semi-infinite concentration with scalar input"""
+        """Test semi-infinite concentration with scalar input."""
         conc = fick_semi_infinite_concentration(C0=0.0, Cs=1.0, x=0.001, D=1e-9, t=3600.0)
         self.assertIsInstance(conc, float)
 
@@ -99,7 +99,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_length_various_units(self):
-        """Test normalize_length with various unit inputs"""
+        """Test normalize_length with various unit inputs."""
         test_cases = [
             ("1 m", 1.0),
             ("1 mm", 1e-3),

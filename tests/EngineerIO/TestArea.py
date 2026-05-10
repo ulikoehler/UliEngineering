@@ -355,7 +355,7 @@ class TestArea(unittest.TestCase):
                               err_msg=f"Inconsistent results for {value} {unit}")
 
     def test_class_instance_vs_function_consistency(self):
-        """Test that class methods and functions produce identical results"""
+        """Test that class methods and functions produce identical results."""
         test_cases = [
             "1.0 m²", "100 cm²", "1 ft²", "1 acre", "2.5 hectares", "1000 barn"
         ]
@@ -368,7 +368,7 @@ class TestArea(unittest.TestCase):
                                   err_msg=f"Results differ for {case}")
 
     def test_class_convert_consistency(self):
-        """Test that class convert method and function produce identical results"""
+        """Test that class convert method and function produce identical results."""
         test_cases = [
             (1.0, "m²"), (100.0, "cm²"), (1.0, "ft²"), (1.0, "acre")
         ]
@@ -381,7 +381,7 @@ class TestArea(unittest.TestCase):
                                   err_msg=f"Results differ for {value} {unit}")
 
     def test_all_area_unit_variations_comprehensive(self):
-        """Test all area unit variations from _area_units() to ensure complete coverage"""
+        """Test all area unit variations from _area_units() to ensure complete coverage."""
         # Test all variations that should be equivalent to 1e-6 m² (square millimeters)
         mm_units = [
             "mm²", "mm^2", "square millimeter", "square millimeters",
@@ -554,7 +554,7 @@ class TestAreaUnits(unittest.TestCase):
                                 f"Alias regex incorrectly matched in middle for case: {case}")
 
     def test_unicode_area_units(self):
-        """Test recognition of Unicode area units (²)"""
+        """Test recognition of Unicode area units (²)."""
         # Note: we only normalize() here, so c in cm => 1/100
         # but normalize doesnt know about the squared-ness of the units
         # This is why e.g. 500 cm² is normalized to 5.0m², not 0.05m²
@@ -578,7 +578,7 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.unit, 'm²')
 
     def test_caret_area_units(self):
-        """Test recognition of caret notation area units (^2)"""
+        """Test recognition of caret notation area units (^2)."""
         # Note: we only normalize() here, so c in cm => 1/100
         # but normalize doesnt know about the squared-ness of the units
         # This is why e.g. 500 cm² is normalized to 5.0m², not 0.05m²
@@ -598,7 +598,7 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.unit, 'm²')
 
     def test_imperial_area_units(self):
-        """Test recognition of imperial area units"""
+        """Test recognition of imperial area units."""
         result = self.io.normalize("100 in²")
         # Verified using Wolfram Alpha "100in² in m²"
         assert_approx_equal(result.value, 0.064516)
@@ -615,7 +615,7 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(result.unit, 'yd²')
 
     def test_other_area_units(self):
-        """Test recognition of other area units"""
+        """Test recognition of other area units."""
         result = self.io.normalize("10 acre")
         self.assertEqual(result.value, 40468.564224)
         self.assertEqual(result.unit, 'acre')
@@ -660,7 +660,7 @@ class TestAreaUnits(unittest.TestCase):
         self.assertEqual(self.io.split_unit("0.7 hectares"), UnitSplitResult('0.7', '', 'ha'))
 
     def test_area_units_no_space(self):
-        """Test area units without spaces between number and unit"""
+        """Test area units without spaces between number and unit."""
         result = self.io.normalize("7000m²")
         assert_approx_equal(result.value, 7000.0)
         self.assertEqual(result.unit, 'm²')
@@ -698,7 +698,7 @@ class TestUnitAliases(unittest.TestCase):
         self.assertEqual(self.io.split_unit("30hectares"), UnitSplitResult('30', '', 'ha'))
 
     def test_split_unit_with_aliases_with_space(self):
-        """Test splitting units with aliases that contain spaces"""
+        """Test splitting units with aliases that contain spaces."""
         from UliEngineering.EngineerIO import UnitSplitResult
 
         # Test full spelled out aliases with spaces
@@ -712,7 +712,7 @@ class TestUnitAliases(unittest.TestCase):
         self.assertEqual(self.io.split_unit("25 sq km"), UnitSplitResult('25 k', '', 'm²'))
 
     def test_split_unit_with_regex_special_characters(self):
-        """Test aliases containing regex special characters"""
+        """Test aliases containing regex special characters."""
         from UliEngineering.EngineerIO import UnitSplitResult
 
         # Test caret (^) character - needs proper escaping in regex
@@ -725,7 +725,7 @@ class TestUnitAliases(unittest.TestCase):
         self.assertEqual(self.io.split_unit("50 µm squared"), UnitSplitResult('50 µ', '', 'm²'))
 
     def test_split_unit_alias_precedence(self):
-        """Test that longer aliases are matched before shorter ones"""
+        """Test that longer aliases are matched before shorter ones."""
         from UliEngineering.EngineerIO import UnitSplitResult
 
         # "square millimeters" should match before "millimeters"
@@ -735,7 +735,7 @@ class TestUnitAliases(unittest.TestCase):
         self.assertEqual(self.io.split_unit("100 square meters"), UnitSplitResult('100', '', 'm²'))
 
     def test_normalize_with_aliases(self):
-        """Test full normalization with unit aliases"""
+        """Test full normalization with unit aliases."""
         # Test with spaces
         result = self.io.normalize("100 square meters")
         self.assertEqual(result.value, 100.0)
@@ -755,21 +755,21 @@ class TestUnitAliases(unittest.TestCase):
             self.io.normalize("2.5k square millimeters")
 
     def test_split_unit_no_alias_fallback(self):
-        """Test that non-aliased units still work correctly"""
+        """Test that non-aliased units still work correctly."""
         from UliEngineering.EngineerIO import UnitSplitResult
 
         # Test regular units that don't have aliases
         self.assertEqual(self.io.split_unit("100m²"), UnitSplitResult('100', '', 'm²'))
 
     def test_split_unit_no_unit(self):
-        """Test that strings without units work correctly with alias regex"""
+        """Test that strings without units work correctly with alias regex."""
         from UliEngineering.EngineerIO import UnitSplitResult
 
         self.assertEqual(self.io.split_unit("100"), UnitSplitResult('100', '', ''))
         self.assertEqual(self.io.split_unit("50.5"), UnitSplitResult('50.5', '', ''))
 
     def test_type_annotation_exists(self):
-        """Test that the new type annotation is available"""
+        """Test that the new type annotation is available."""
         self.assertIsNotNone(AreaSquareMeters)
 
     def test_area_type_various_units(self):

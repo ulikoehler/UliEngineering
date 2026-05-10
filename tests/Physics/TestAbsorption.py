@@ -222,12 +222,12 @@ class TestHaleQuerryAbsorptionModel(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(AbsorptionCoefficientPerMeter)
         self.assertIsNotNone(LengthMeter)
 
     def test_normalize_absorption_coefficient_various_units(self):
-        """Test normalize_absorption_coefficient with various unit inputs"""
+        """Test normalize_absorption_coefficient with various unit inputs."""
         test_cases = [
             ("1 1/m", 1.0),
             ("1 m⁻¹", 1.0),
@@ -240,7 +240,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_length_various_units(self):
-        """Test normalize_length with various unit inputs"""
+        """Test normalize_length with various unit inputs."""
         test_cases = [
             ("1 m", 1.0),
             ("1 mm", 1e-3),
@@ -253,7 +253,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_absorption_functions_various_units(self):
-        """Test absorption functions with various unit inputs"""
+        """Test absorption functions with various unit inputs."""
         # Test absorption_length_from_absorption_coefficient with different units
         l1 = absorption_length_from_absorption_coefficient("1 1/m")
         l2 = absorption_length_from_absorption_coefficient("1 m⁻¹")

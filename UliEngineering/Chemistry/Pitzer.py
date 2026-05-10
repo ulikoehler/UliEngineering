@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Pitzer equations for activity coefficients.
+"""Pitzer equations for activity coefficients.
 
 The Pitzer model is a semi-empirical extension of Debye-Hückel theory
 for concentrated electrolyte solutions (up to ~6 mol/kg).

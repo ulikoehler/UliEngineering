@@ -70,7 +70,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/m³", 1.0),
             ("1 mol/L", 1000.0),

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compression utilities
+Compression utilities.
 """
 import gzip
 import bz2
@@ -33,6 +33,7 @@ def auto_open(filename, mode="r", **kwargs):
     The correct decompression algorithm is selected by filename extension.
     This function can be used instead of open() and automatically selects
     the right mode (text or binary).
+
     """
     extension = os.path.splitext(filename)[1]
     if extension not in __open_map:

@@ -42,6 +42,7 @@ def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
     -------
     float
         NTC resistance in Ohms.
+
     """
     r25 = normalize_resistance(r25)
     b25 = normalize_numeric(b25)

@@ -39,8 +39,7 @@ def normalize_max(signal):
 
 def normalize_minmax(signal):
     """
-    Normalize signal by setting its lowest value
-    to 0.0 and its highest value to 1.0,
+    Normalize signal by setting its lowest value to 0.0 and its highest value to 1.0,
     keeping all other values.
 
     If signal consists of only zeros, no factor

@@ -50,8 +50,9 @@ def find_returned_unit(fn):
     """Given a function that is assumed to return a quantity
     and annotated with the corresponding unit, determines
     which is the unit returned by the function
-    """ if not callable(fn):     raise ValueError("fn must be callable".
-)
+    """
+    if not callable(fn):
+        raise ValueError("fn must be callable")
     # Access innermost function inside possibly nested partials
     annotatedFN = fn
     while isinstance(annotatedFN, functools.partial):

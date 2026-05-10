@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities regarding comparator / opamp hysteresis
+"""Utilities regarding comparator / opamp hysteresis.
 
 For a detailed description please see http://www.ti.com/lit/ug/tidu020a/tidu020a.pdf
 """

@@ -22,7 +22,7 @@ class TestPREN(unittest.TestCase):
         self.assertAlmostEqual(result, expected, places=6)
 
     def test_pren_zero_nitrogen(self):
-        """Test PREN with zero nitrogen"""
+        """Test PREN with zero nitrogen."""
         result = pren(Cr=18.0, Mo=2.1, N=0.0)
         expected = 18.0 + 3.3 * 2.1
         self.assertAlmostEqual(result, expected, places=6)

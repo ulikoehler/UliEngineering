@@ -118,7 +118,7 @@ class TestLength(unittest.TestCase):
         assert_approx_equal(convert_length_to_meters(3.33, "angstrom"), 3.33e-10)
 
     def test_class_instance_vs_function_consistency(self):
-        """Test that class methods and functions produce identical results"""
+        """Test that class methods and functions produce identical results."""
         test_cases = [
             "1.0 m", "100 mm", "1 ft", "1 inch", "1 ly", "1 AU"
         ]
@@ -131,7 +131,7 @@ class TestLength(unittest.TestCase):
                                   err_msg=f"Results differ for {case}")
 
     def test_class_convert_consistency(self):
-        """Test that class convert method and function produce identical results"""
+        """Test that class convert method and function produce identical results."""
         test_cases = [
             (1.0, "m"), (100.0, "mm"), (1.0, "ft"), (1.0, "inch")
         ]

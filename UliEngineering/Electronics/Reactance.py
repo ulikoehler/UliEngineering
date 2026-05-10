@@ -65,8 +65,7 @@ def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
 @returns_unit("H")
 def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     """
-    Compute the inductance (H) from an inductive reactance (Ω) at a given
-    frequency f (Hz).
+    Compute the inductance (H) from an inductive reactance (Ω) at a given frequency f (Hz).
 
     Formula: X_L = 2 * pi * f * L => L = X_L / (2 * pi * f).
 

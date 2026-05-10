@@ -16,12 +16,12 @@ class TestLight(unittest.TestCase):
         self.assertEqual(auto_format(lumen_to_candela_by_apex_angle, "25 lm", "120°"), "7.96 cd")
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(LuminousFluxLumen)
         self.assertIsNotNone(AngleDegrees)
 
     def test_normalize_luminous_flux_various_units(self):
-        """Test normalize_luminous_flux with various unit inputs"""
+        """Test normalize_luminous_flux with various unit inputs."""
         test_cases = [
             ("1 lm", 1.0),
             ("1 lumen", 1.0),
@@ -33,7 +33,7 @@ class TestLight(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_angle_degrees_various_units(self):
-        """Test normalize_angle_degrees with various unit inputs"""
+        """Test normalize_angle_degrees with various unit inputs."""
         test_cases = [
             ("1 °", 1.0),
             ("1 deg", 1.0),
@@ -47,7 +47,7 @@ class TestLight(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_lumen_to_candela_various_units(self):
-        """Test lumen_to_candela_by_apex_angle with various unit inputs"""
+        """Test lumen_to_candela_by_apex_angle with various unit inputs."""
         # Test with different luminous flux units
         v1 = lumen_to_candela_by_apex_angle("25 lumen", "120°")
         v2 = lumen_to_candela_by_apex_angle("25 lm", "120°")

@@ -17,12 +17,12 @@ class TestLarmorFrequency(unittest.TestCase):
         self.assertAlmostEqual(larmor_frequency(0.), 0)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(MagneticFieldTesla)
         self.assertIsNotNone(FrequencyHz)
 
     def test_normalize_magnetic_field_various_units(self):
-        """Test normalize_magnetic_field with various unit inputs"""
+        """Test normalize_magnetic_field with various unit inputs."""
         test_cases = [
             ("1 T", 1.0),
             ("1 Tesla", 1.0),
@@ -39,7 +39,7 @@ class TestLarmorFrequency(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_larmor_frequency_various_units(self):
-        """Test larmor_frequency with various magnetic field units"""
+        """Test larmor_frequency with various magnetic field units."""
         # Test with different magnetic field units
         f1 = larmor_frequency("1 T", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)
         f2 = larmor_frequency("1 Tesla", nucleus_larmor_frequency=NucleusLarmorFrequency.H1)

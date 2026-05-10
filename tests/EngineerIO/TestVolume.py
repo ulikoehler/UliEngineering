@@ -181,7 +181,7 @@ class TestVolume(unittest.TestCase):
         self.assertIsNotNone(VolumeCubicMeters)
 
     def test_volume_type_various_units(self):
-        """Test VolumeCubicMeters type with various unit inputs"""
+        """Test VolumeCubicMeters type with various unit inputs."""
         test_cases = [
             ("1 m³", 1.0),
             ("1 m^3", 1.0),

@@ -67,7 +67,7 @@ class TestRF(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_rf_functions_various_units(self):
-        """Test RF functions with various unit inputs"""
+        """Test RF functions with various unit inputs."""
         # Test quality_factor with different frequency units
         q1 = quality_factor("8 MHz", "1 kHz")
         q2 = quality_factor("8000 kHz", "1000 Hz")

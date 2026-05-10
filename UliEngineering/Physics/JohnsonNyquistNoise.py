@@ -39,6 +39,7 @@ def johnson_nyquist_noise_current(r: ResistanceOhm, delta_f: FrequencyHz, T: Tem
     Compute the Johnson Nyquist noise current in amperes
     T must be given in °C whereas r must be given in Ohms.
     The result is given in volts
+
     """
     r = normalize_resistance(r)
     delta_f = normalize_frequency(delta_f)
@@ -51,6 +52,7 @@ def johnson_nyquist_noise_voltage(r: ResistanceOhm, delta_f: FrequencyHz, T: Tem
     """
     Compute the Johnson Nyquist noise voltage in volts
     T must be given in °C whereas r must be given in Ohms.
+
     The result is given in volts
     """
     r = normalize_resistance(r)

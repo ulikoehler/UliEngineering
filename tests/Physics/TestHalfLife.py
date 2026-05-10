@@ -110,11 +110,11 @@ class TestHalfLife(unittest.TestCase):
         )
 
     def test_type_annotation_exists(self):
-        """Test that the TimespanSeconds type annotation is available"""
+        """Test that the TimespanSeconds type annotation is available."""
         self.assertIsNotNone(TimespanSeconds)
 
     def test_half_life_functions_various_time_units(self):
-        """Test half_life functions with various time unit inputs"""
+        """Test half_life functions with various time unit inputs."""
         # Test half_lifes_passed with various units
         self.assertAlmostEqual(half_lifes_passed("60 min", "1 min"), 60.0)
         self.assertAlmostEqual(half_lifes_passed("3600 s", "60 s"), 60.0)

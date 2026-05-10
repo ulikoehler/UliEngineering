@@ -685,7 +685,7 @@ class TestEdgeCasesAndSpecialValues(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(DynamicViscosityPas)
         self.assertIsNotNone(DensityKgM3)
         self.assertIsNotNone(LengthMeter)

@@ -29,7 +29,7 @@ MagneticFieldTesla = Annotated[NormalizedComputable, normalize_magnetic_field]
 @returns_unit("Hz")
 def larmor_frequency(b0: MagneticFieldTesla, nucleus_larmor_frequency=NucleusLarmorFrequency.H1):
     """
-    Get the magnetic resonance frequency (larmor frequency)
+    Get the magnetic resonance frequency (larmor frequency).
     for a given nucleus in a given magnetic field strength B0.
 
     Note that the frequency is given in Hz, not in MHz!
@@ -45,6 +45,7 @@ def larmor_frequency(b0: MagneticFieldTesla, nucleus_larmor_frequency=NucleusLar
     -------
     float
         Larmor frequency in Hz.
+
     """
     b0 = normalize_magnetic_field(b0)
     return b0 * (nucleus_larmor_frequency * 1e6) # MHz/T -> Hz/T

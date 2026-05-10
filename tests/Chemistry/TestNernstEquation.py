@@ -87,11 +87,11 @@ class TestNernstReactionQuotient(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ConcentrationMolar)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),
@@ -105,7 +105,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_nernst_functions_various_units(self):
-        """Test Nernst functions with various unit inputs"""
+        """Test Nernst functions with various unit inputs."""
         # Test with different concentration units
         E1 = nernst_half_cell_potential(0.34, 2, "0.1 M", "0.1 M")
         E2 = nernst_half_cell_potential(0.34, 2, "100 mM", "100 mM")

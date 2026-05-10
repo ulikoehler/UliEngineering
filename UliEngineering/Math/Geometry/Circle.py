@@ -21,8 +21,6 @@ def circle_area(radius: NormalizableArgument):
 
 @returns_unit("m")
 def circle_circumference(radius: NormalizableArgument):
-    """
-    Compute the circumference of a circle from its radius
-    """
+    """Compute the circumference of a circle from its radius."""
     radius = normalize_numeric(radius) if isinstance(radius, str) else radius
     return 2. * math.pi * radius

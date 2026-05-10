@@ -15,13 +15,13 @@ from UliEngineering.Chemistry.Henderson import (
 
 class TestHendersonHasselbalch(unittest.TestCase):
     def test_henderson_hasselbalch_pH_scalar(self):
-        """Test Henderson-Hasselbalch pH calculation with scalar input"""
+        """Test Henderson-Hasselbalch pH calculation with scalar input."""
         pH = henderson_hasselbalch_pH(pKa=4.75, base_concentration=0.1, acid_concentration=0.1)
         self.assertIsInstance(pH, float)
         self.assertAlmostEqual(pH, 4.75, places=6)
 
     def test_henderson_hasselbalch_ratio_scalar(self):
-        """Test Henderson-Hasselbalch ratio calculation with scalar input"""
+        """Test Henderson-Hasselbalch ratio calculation with scalar input."""
         ratio = henderson_hasselbalch_ratio(pH=4.75, pKa=4.75)
         self.assertIsInstance(ratio, float)
         self.assertAlmostEqual(ratio, 1.0, places=6)
@@ -33,23 +33,23 @@ class TestHendersonHasselbalch(unittest.TestCase):
         self.assertAlmostEqual(pKa, 4.75, places=6)
 
     def test_henderson_junction_potential_scalar(self):
-        """Test Henderson junction potential with scalar input"""
+        """Test Henderson junction potential with scalar input."""
         E = henderson_junction_potential(t_plus=0.49, t_minus=0.51, c1=0.1, c2=1.0)
         self.assertIsInstance(E, float)
 
     def test_henderson_junction_potential_simple_scalar(self):
-        """Test Henderson junction potential simple with scalar input"""
+        """Test Henderson junction potential simple with scalar input."""
         E = henderson_junction_potential_simple(lambda_plus=0.01, lambda_minus=0.01, c1=0.1, c2=1.0)
         self.assertIsInstance(E, float)
 
     def test_buffer_capacity_scalar(self):
-        """Test buffer capacity calculation with scalar input"""
+        """Test buffer capacity calculation with scalar input."""
         beta = buffer_capacity(C_total=0.1, Ka=1e-4, H_concentration=1e-4)
         self.assertIsInstance(beta, float)
         self.assertGreater(beta, 0)
 
     def test_inverse_hh_equation(self):
-        """Test inverse relationship between pH and ratio functions"""
+        """Test inverse relationship between pH and ratio functions."""
         pKa = 4.75
         base_conc = 0.1
         acid_conc = 0.1
@@ -61,12 +61,12 @@ class TestHendersonHasselbalch(unittest.TestCase):
 
 class TestNormalizeFunctions(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(ConcentrationMolar)
         self.assertIsNotNone(MolarConductivitySM2Mol)
 
     def test_normalize_concentration_various_units(self):
-        """Test normalize_concentration with various unit inputs"""
+        """Test normalize_concentration with various unit inputs."""
         test_cases = [
             ("1 mol/L", 1.0),
             ("1 M", 1.0),
@@ -80,7 +80,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_normalize_molar_conductivity_various_units(self):
-        """Test normalize_molar_conductivity with various unit inputs"""
+        """Test normalize_molar_conductivity with various unit inputs."""
         test_cases = [
             ("1 S·m²/mol", 1.0),
             ("1 S·cm²/mol", 1e-4),
@@ -91,7 +91,7 @@ class TestNormalizeFunctions(unittest.TestCase):
                 self.assertAlmostEqual(result, expected)
 
     def test_henderson_functions_various_units(self):
-        """Test Henderson functions with various unit inputs"""
+        """Test Henderson functions with various unit inputs."""
         # Test with different concentration units
         pH1 = henderson_hasselbalch_pH(4.75, "0.1 M", "0.1 M")
         pH2 = henderson_hasselbalch_pH(4.75, "100 mM", "100 mM")

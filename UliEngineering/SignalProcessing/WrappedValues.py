@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Utilities to work with wrapped values (e.g. phase angles or encoder counts)
-which wrap around at a certain point.
-"""
+"""Utilities to work with wrapped values (e.g. phase angles or encoder counts)
+which wrap around at a certain point."""
 import numpy as np
 
 __all__ = [

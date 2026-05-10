@@ -16,7 +16,7 @@ Date = namedtuple("Date", ["year", "month", "day"])
 
 def generate_datetime_filename(label="data", extension="csv", postfix=None, fractional=True, dt=None):
     """
-    Generate a filename such as
+    Generate a datetime-based filename.
 
     mydata-2022-09-02_00-31-50-613015.csv
     where "mydata" is the label and "csv" is the extensions.

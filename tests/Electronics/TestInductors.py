@@ -10,7 +10,7 @@ import unittest
 
 class TestInductors(unittest.TestCase):
     def test_ideal_inductor_current_change_rate_basic(self):
-        """Test basic current change rate calculation"""
+        """Test basic current change rate calculation."""
         # Basic test: V = L * di/dt, so di/dt = V/L
         inductance = 1.0  # H
         voltage = 5.0     # V
@@ -28,7 +28,7 @@ class TestInductors(unittest.TestCase):
         assert_approx_equal(calculated_rate, -2.0)
 
     def test_engineering_notation(self):
-        """Test with engineering notation units"""
+        """Test with engineering notation units."""
         # Test with mH and V
         calculated_rate = ideal_inductor_current_change_rate("10 mH", "1.2 V")
         expected_rate = 1.2 / 0.01  # 120 A/s
@@ -45,7 +45,7 @@ class TestInductors(unittest.TestCase):
         assert_approx_equal(calculated_rate, expected_rate)
 
     def test_auto_format_functionality(self):
-        """Test auto_format integration"""
+        """Test auto_format integration."""
         result = auto_format(ideal_inductor_current_change_rate, "1 H", "5 V")
         self.assertEqual(result, "5.00 A/s")
 
@@ -75,7 +75,7 @@ class TestInductors(unittest.TestCase):
         assert_allclose(calculated_rates, expected_rates, rtol=1e-10)
 
     def test_realistic_inductor_scenarios(self):
-        """Test with realistic inductor applications"""
+        """Test with realistic inductor applications."""
         # Buck converter inductor (typical switching frequency ~100kHz)
         # Typical ripple current calculation
         buck_inductance = 47e-6  # 47 µH
@@ -119,7 +119,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(buck_boost_rate, expected_rate, places=5)
 
     def test_ac_circuit_scenarios(self):
-        """Test scenarios relevant to AC circuits"""
+        """Test scenarios relevant to AC circuits."""
         # Inductor in AC circuit - instantaneous rate
         ac_inductance = 0.01     # H (10 mH)
         peak_voltage = 170       # V (120V RMS * sqrt(2))
@@ -165,7 +165,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(lightning_rate, expected_rate, places=5)
 
     def test_mathematical_relationships(self):
-        """Test mathematical relationships and consistency"""
+        """Test mathematical relationships and consistency."""
         inductance = 0.001  # H
         voltage = 10.0      # V
 
@@ -185,7 +185,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(negative_rate, -positive_rate, places=12)
 
     def test_physical_consistency(self):
-        """Test physical consistency of results"""
+        """Test physical consistency of results."""
         # Verify units and physical meaning
         inductance = 1e-3  # mH
         voltage = 5.0      # V
@@ -225,7 +225,7 @@ class TestInductors(unittest.TestCase):
         self.assertAlmostEqual(trace_rate, expected_rate, places=5)
 
     def test_boundary_conditions(self):
-        """Test boundary conditions and numerical stability"""
+        """Test boundary conditions and numerical stability."""
         # Zero inductance case (should raise division by zero or return inf)
         with np.errstate(divide='ignore', invalid='ignore'):
             result = ideal_inductor_current_change_rate(0, 5.0)
@@ -239,7 +239,7 @@ class TestInductors(unittest.TestCase):
         self.assertGreater(result, 0)
 
     def test_units_consistency(self):
-        """Test that function works correctly with various unit combinations"""
+        """Test that function works correctly with various unit combinations."""
         # All combinations should give same result when properly converted
         base_result = ideal_inductor_current_change_rate(1e-3, 5.0)  # 1mH, 5V
 

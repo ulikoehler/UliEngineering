@@ -30,8 +30,7 @@ CapacitanceFarad = Annotated[NormalizedComputable, normalize_capacitance]
 @returns_unit("")
 def quality_factor(frequency: FrequencyHz, bandwidth: FrequencyHz):
     """
-    Compute the quality factor of a resonant circuit
-    from the frequency and the bandwidth:
+    Compute the quality factor of a resonant circuit from the frequency and the bandwidth:
 
     Q = frequency / bandwidth
 
@@ -65,8 +64,7 @@ def resonant_impedance(L: InductanceHenry, C: CapacitanceFarad, Q=100.):
 @returns_unit("Hz")
 def resonant_frequency(L: InductanceHenry, C: CapacitanceFarad):
     """
-    Compute the resonant frequency of a resonant circuit
-    given the inductance and capacitance.
+    Compute the resonant frequency of a resonant circuit given the inductance and capacitance.
 
     f = 1 / (2 * pi * sqrt(L * C))
 
@@ -84,8 +82,7 @@ def resonant_frequency(L: InductanceHenry, C: CapacitanceFarad):
 @returns_unit("H")
 def resonant_inductance(fres: FrequencyHz, C: CapacitanceFarad):
     """
-    Compute the inductance of a resonant circuit
-    given the resonant frequency and its capacitance.
+    Compute the inductance of a resonant circuit given the resonant frequency and its capacitance.
 
     L = 1 / (4 * pi² * fres² * C)
 

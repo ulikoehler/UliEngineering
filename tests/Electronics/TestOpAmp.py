@@ -34,12 +34,12 @@ class TestOpAmp(unittest.TestCase):
 
 class TestAnnotatedTypes(unittest.TestCase):
     def test_type_annotations_exist(self):
-        """Test that the type annotations are available"""
+        """Test that the type annotations are available."""
         self.assertIsNotNone(VoltageV)
         self.assertIsNotNone(ResistanceOhm)
 
     def test_opamp_functions_various_units(self):
-        """Test opamp functions with various unit inputs"""
+        """Test opamp functions with various unit inputs."""
         # Test summing amplifier with different unit representations
         v1 = summing_amplifier_noninv("2.5 V", "500 mV", "1 kΩ", "1 kΩ", "1 kΩ", "1 kΩ")
         v2 = summing_amplifier_noninv("2500 mV", "0.5 V", "1000 Ω", "1000 ohm", "1000 Ω", "1000 ohm")

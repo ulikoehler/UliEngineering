@@ -43,12 +43,12 @@ class TestCentrifugalAcceleration(unittest.TestCase):
         self.assertAlmostEqual(centrifuge_radius(789.568, 10), 0.2, places=2)
 
     def test_type_annotations_exist(self):
-        """Test that the new type annotations are available"""
+        """Test that the new type annotations are available."""
         self.assertIsNotNone(AccelerationMs2)
         self.assertIsNotNone(AccelerationG)
 
     def test_normalize_acceleration_ms2_various_units(self):
-        """Test normalize_acceleration_ms2 with various unit inputs"""
+        """Test normalize_acceleration_ms2 with various unit inputs."""
         test_cases = [
             ("1 m/s²", 1.0),
             ("1 m/s^2", 1.0),
@@ -61,7 +61,7 @@ class TestCentrifugalAcceleration(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_normalize_acceleration_g_various_units(self):
-        """Test normalize_acceleration_g with various unit inputs"""
+        """Test normalize_acceleration_g with various unit inputs."""
         test_cases = [
             ("1 g", 1.0),
             ("1 m/s²", 1.0/g0),
@@ -74,7 +74,7 @@ class TestCentrifugalAcceleration(unittest.TestCase):
                 assert_approx_equal(result, expected)
 
     def test_acceleration_functions_with_string_units(self):
-        """Test acceleration functions with normalize functions for string units"""
+        """Test acceleration functions with normalize functions for string units."""
         # Test normalize functions with string units
         self.assertAlmostEqual(normalize_acceleration_ms2("1 g"), g0)
         self.assertAlmostEqual(normalize_acceleration_ms2("2 g"), 2 * g0)

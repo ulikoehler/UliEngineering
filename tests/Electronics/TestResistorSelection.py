@@ -147,7 +147,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         assert_approx_equal(functor(98.0), 100.0)      # 2% off, outside tolerance
 
     def test_zero_and_negative_values(self):
-        """Test edge cases with zero and negative values"""
+        """Test edge cases with zero and negative values."""
         functor = ResistorSeriesCostFunctor()
 
         # These should not crash but should return non_series cost
@@ -168,7 +168,7 @@ class TestResistorSeriesCostFunctor(unittest.TestCase):
         self.assertIsInstance(result_large, float)
 
     def test_reproducibility(self):
-        """Test that results are reproducible"""
+        """Test that results are reproducible."""
         functor1 = ResistorSeriesCostFunctor()
         functor2 = ResistorSeriesCostFunctor()
 
@@ -471,7 +471,7 @@ class TestResistorPowerCostFunctor(unittest.TestCase):
         assert_approx_equal(cost1, cost4)
 
     def test_power_cost_invalid_resistor_values(self):
-        """Test with invalid resistor values"""
+        """Test with invalid resistor values."""
         functor = ResistorPowerCostFunctor("12V", "1W")
 
         # Zero resistors

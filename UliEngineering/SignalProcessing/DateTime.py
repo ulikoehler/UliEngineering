@@ -14,6 +14,7 @@ def splice_date(datesrc, timesrc, tzinfo=None):
     the time from timesrc. The tzinfo is taken from the tzinfo
     parameter. If it is None, it is taken from
     timesrc.tzinfo. No timezone conversion is performed.
+
     """
     tzinfo = timesrc.tzinfo if tzinfo is None else tzinfo
     return datetime.datetime(datesrc.year, datesrc.month, datesrc.day,
@@ -33,6 +34,7 @@ def auto_strptime(s):
         %Y-%m-%d %H:%M:%S
         %Y-%m-%d %H:%M:%S.%f
         %H:%M:%S
+
         %H:%M:%S.%f
     """
     s = s.strip()

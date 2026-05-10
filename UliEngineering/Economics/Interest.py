@@ -10,8 +10,7 @@ __all__ = [
 ]
 
 def yearly_interest_to_equivalent_monthly_interest(interest):
-    """
-    Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
+    """Given a yearly interest such as 0.022 (= 2.2%), or a numpy ndarray of interests,
     computes the equivalent monthly interest so that the following holds True:
 
     (1+monthly_interest)**12-1 == yearly_interest.
@@ -26,6 +25,7 @@ def yearly_interest_to_equivalent_monthly_interest(interest):
     float or numpy.ndarray
         Equivalent monthly interest rate.
     """
+
     # 12 months per year
     # monthly interest is 12th root of yearly interest
     # https://techoverflow.net/2022/02/02/numpy-nth-root-how-to/

@@ -27,11 +27,11 @@ class TestDensityNormalization(unittest.TestCase):
         assert_allclose(normalize_density_kg_per_m3(["1 kg/m^3", "2 g/L"]), [1.0, 2.0])
 
     def test_type_annotation_exists(self):
-        """Test that the new type annotation is available"""
+        """Test that the new type annotation is available."""
         self.assertIsNotNone(DensityKgPerM3)
 
     def test_density_type_various_units(self):
-        """Test DensityKgPerM3 type with various unit inputs"""
+        """Test DensityKgPerM3 type with various unit inputs."""
         test_cases = [
             ("1 kg/m^3", 1.0),
             ("1 kg/m3", 1.0),

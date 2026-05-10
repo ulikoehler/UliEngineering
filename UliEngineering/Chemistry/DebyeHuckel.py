@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Debye-Hückel theory for activity coefficients.
+"""Debye-Hückel theory for activity coefficients.
 
 The Debye-Hückel limiting law:
     log10(γ±) = -A * |z+ * z-| * √I
@@ -67,6 +66,7 @@ def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
     -------
     float
         log10 of the mean activity coefficient.
+
     """
     I = normalize_ionic_strength(I) if isinstance(I, str) else I
     return -A * np.abs(z_plus * z_minus) * np.sqrt(I)

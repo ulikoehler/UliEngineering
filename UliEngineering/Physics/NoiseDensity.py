@@ -25,6 +25,7 @@ def actual_noise(density: VoltageVolt, bandwith: FrequencyHz):
 
     >>> autoFormat(actualNoise, "100 µV", "100 Hz")
     '1.00 mV'
+
     """
     density = normalize_voltage(density)
     bandwith = normalize_frequency(bandwith)
@@ -38,6 +39,7 @@ def noise_density(actual_noise: VoltageVolt, bandwith: FrequencyHz):
      - A bandwith in ΔHz
 
     >>> formatValue(noiseDensity("1.0 mV", "100 Hz"), "V/√Hz")
+
     '100 μV/√Hz'
     """
     actual_noise = normalize_voltage(actual_noise)
