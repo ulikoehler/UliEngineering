@@ -7,7 +7,10 @@ Originally published at techoverflow.net
 """
 import numpy as np
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from .Capacitors import normalize_capacitance, CapacitanceFarad
+from .Filter import normalize_inductance, InductanceH, normalize_frequency, FrequencyHz
+from .Diode import normalize_resistance, ResistanceOhm
 
 __all__ = [
     "capacitive_reactance",
@@ -16,41 +19,45 @@ __all__ = [
     "capacitance_from_reactance",
 ]
 
-@normalize_numeric_args
 @returns_unit("Ω")
-def capacitive_reactance(c, f=1000.0):
+def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
     """
     Compute the capacitive reactance for a given capacitance and frequency.
     """
+    c = normalize_capacitance(c) if isinstance(c, str) else c
+    f = normalize_frequency(f) if isinstance(f, str) else f
     return 1.0 / (2 * np.pi * f * c)
 
 
-@normalize_numeric_args
 @returns_unit("Ω")
-def inductive_reactance(l, f=1000.0):
+def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
     """
     Compute the inductive reactance for a given inductance and frequency.
     """
+    l = normalize_inductance(l) if isinstance(l, str) else l
+    f = normalize_frequency(f) if isinstance(f, str) else f
     return 2 * np.pi * f * l
 
-@normalize_numeric_args
 @returns_unit("H")
-def inductance_from_reactance(x, f=1000.0):
+def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     """
     Compute the inductance (H) from an inductive reactance (Ω) at a given
     frequency f (Hz).
 
     Formula: X_L = 2 * pi * f * L  =>  L = X_L / (2 * pi * f)
     """
+    x = normalize_resistance(x) if isinstance(x, str) else x
+    f = normalize_frequency(f) if isinstance(f, str) else f
     return x / (2 * np.pi * f)
 
-@normalize_numeric_args
 @returns_unit("F")
-def capacitance_from_reactance(x, f=1000.0):
+def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     """
     Compute the capacitance (F) from a capacitive reactance (Ω) at a given
     frequency f (Hz).
 
     Formula: X_C = 1 / (2 * pi * f * C)  =>  C = 1 / (2 * pi * f * X_C)
     """
+    x = normalize_resistance(x) if isinstance(x, str) else x
+    f = normalize_frequency(f) if isinstance(f, str) else f
     return 1.0 / (2 * np.pi * f * x)

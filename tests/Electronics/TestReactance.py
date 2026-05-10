@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.Reactance import capacitive_reactance, inductive_reactance, inductance_from_reactance, capacitance_from_reactance
+from UliEngineering.Electronics.Capacitors import CapacitanceFarad
+from UliEngineering.Electronics.Filter import InductanceH, FrequencyHz
+from UliEngineering.Electronics.Diode import ResistanceOhm
 from UliEngineering.EngineerIO import auto_format
 import numpy as np
 import unittest
@@ -74,3 +77,23 @@ class TestNoiseDensity(unittest.TestCase):
         x = capacitive_reactance(c, f)
         c_back = capacitance_from_reactance(x, f)
         assert_allclose(c_back, c)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(CapacitanceFarad)
+        self.assertIsNotNone(InductanceH)
+        self.assertIsNotNone(FrequencyHz)
+        self.assertIsNotNone(ResistanceOhm)
+
+    def test_reactance_functions_various_units(self):
+        """Test reactance functions with various unit inputs"""
+        # Test capacitive reactance with different unit representations
+        x1 = capacitive_reactance("100 pF", "3.2 MHz")
+        x2 = capacitive_reactance("0.1 nF", "3.2 MHz")
+        assert_approx_equal(x1, x2)
+
+        # Test inductive reactance with different units
+        x3 = inductive_reactance("100 µH", "3.2 MHz")
+        x4 = inductive_reactance("0.1 mH", "3.2 MHz")
+        assert_approx_equal(x3, x4)
