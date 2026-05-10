@@ -15,7 +15,12 @@ where:
     a = effective ion diameter (nm)
     I = ionic strength (mol/L)
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
+from UliEngineering.Physics.Temperature import normalize_temperature
 import numpy as np
 
 __all__ = [
@@ -24,12 +29,23 @@ __all__ = [
     "debye_huckel_activity_coefficient",
     "debye_huckel_extended_activity_coefficient",
     "debye_length",
+    "normalize_ionic_strength", "IonicStrengthMolar",
+    "normalize_ion_diameter", "IonDiameterNm",
 ]
 
 
-@normalize_numeric_args
+def normalize_ionic_strength(ionic_strength: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(ionic_strength, {"M": 1.0, "mol/L": 1.0, "mol/l": 1.0, "mM": 1e-3, "µM": 1e-6}, quantity_name="ionic strength")
+
+def normalize_ion_diameter(diameter: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(diameter, {"nm": 1.0, "pm": 1e-3, "Å": 0.1, "m": 1e9}, quantity_name="ion diameter")
+
+IonicStrengthMolar = Annotated[NormalizedComputable, normalize_ionic_strength]
+IonDiameterNm = Annotated[NormalizedComputable, normalize_ion_diameter]
+
+
 @returns_unit("")
-def debye_huckel_limiting_law(z_plus, z_minus, I, A=0.509):
+def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
     """
     Compute log10 of the mean activity coefficient using the
     Debye-Hückel limiting law. Valid for very dilute solutions (I < 0.01 M).
@@ -52,12 +68,12 @@ def debye_huckel_limiting_law(z_plus, z_minus, I, A=0.509):
     float
         log10 of the mean activity coefficient.
     """
+    I = normalize_ionic_strength(I) if isinstance(I, str) else I
     return -A * np.abs(z_plus * z_minus) * np.sqrt(I)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def debye_huckel_extended(z, I, a=0.3, A=0.509, B=3.281):
+def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
     """
     Compute log10 of the activity coefficient using the
     extended Debye-Hückel equation.
@@ -82,13 +98,14 @@ def debye_huckel_extended(z, I, a=0.3, A=0.509, B=3.281):
     float
         log10 of the activity coefficient.
     """
+    I = normalize_ionic_strength(I) if isinstance(I, str) else I
+    a = normalize_ion_diameter(a) if isinstance(a, str) else a
     sqrt_I = np.sqrt(I)
     return -A * z**2 * sqrt_I / (1.0 + B * a * sqrt_I)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def debye_huckel_activity_coefficient(z_plus, z_minus, I, A=0.509):
+def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
     """
     Compute the mean activity coefficient using the Debye-Hückel limiting law.
 
@@ -113,9 +130,8 @@ def debye_huckel_activity_coefficient(z_plus, z_minus, I, A=0.509):
     return 10.0 ** debye_huckel_limiting_law(z_plus, z_minus, I, A)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def debye_huckel_extended_activity_coefficient(z, I, a=0.3, A=0.509, B=3.281):
+def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
     """
     Compute the activity coefficient using the extended Debye-Hückel equation.
 
@@ -142,9 +158,8 @@ def debye_huckel_extended_activity_coefficient(z, I, a=0.3, A=0.509, B=3.281):
     return 10.0 ** debye_huckel_extended(z, I, a, A, B)
 
 
-@normalize_numeric_args
 @returns_unit("m")
-def debye_length(I, T=298.15, epsilon_r=78.4):
+def debye_length(I: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
     """
     Compute the Debye length (screening length) for an electrolyte solution.
 
@@ -167,6 +182,8 @@ def debye_length(I, T=298.15, epsilon_r=78.4):
         Debye length in meters.
     """
     from scipy.constants import epsilon_0, k as k_B, N_A, e
+    I = normalize_ionic_strength(I) if isinstance(I, str) else I
+    T = normalize_temperature(T) if isinstance(T, str) else T
     # Convert I from mol/L to mol/m³
     I_m3 = I * 1000.0
     return np.sqrt(epsilon_0 * epsilon_r * k_B * T / (2.0 * N_A * e**2 * I_m3))
