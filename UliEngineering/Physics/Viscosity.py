@@ -24,8 +24,12 @@ Kinematic viscosities are returned in m²/s.
 
 import numpy as np
 from dataclasses import dataclass
+from typing import Annotated
 
 from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics.Temperature import TemperatureKelvin, normalize_temperature
+from ._normalize import normalize_with_known_units
 
 __all__ = [
     # Dataclasses
@@ -52,7 +56,45 @@ __all__ = [
     # Pre-defined constants
     "CommonLiquids",
     "CommonGases",
+    # Normalize functions and types
+    "normalize_dynamic_viscosity", "DynamicViscosityPas",
+    "normalize_density", "DensityKgM3",
+    "normalize_length", "LengthMeter",
+    "normalize_pressure", "PressurePascal",
+    "normalize_velocity", "VelocityMS",
+    "normalize_shear_rate", "ShearRate",
+    "normalize_temperature", "TemperatureKelvin",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Normalize functions and Annotated types
+# ---------------------------------------------------------------------------
+
+def normalize_dynamic_viscosity(viscosity: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(viscosity, {"Pa·s": 1.0, "Pa s": 1.0, "Pas": 1.0, "mPa·s": 1e-3, "cP": 1e-3, "P": 0.1}, quantity_name="dynamic viscosity")
+
+def normalize_density(density: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(density, {"kg/m³": 1.0, "kg/m3": 1.0, "kg/m^3": 1.0, "g/cm³": 1000.0, "g/cm3": 1000.0, "g/L": 1.0}, quantity_name="density")
+
+def normalize_length(length: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(length, {"m": 1.0, "mm": 1e-3, "cm": 1e-2, "km": 1e3, "µm": 1e-6, "nm": 1e-9}, quantity_name="length")
+
+def normalize_pressure(pressure: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(pressure, {"Pa": 1.0, "kPa": 1e3, "MPa": 1e6, "bar": 1e5, "mbar": 100}, quantity_name="pressure")
+
+def normalize_velocity(velocity: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(velocity, {"m/s": 1.0, "m/s²": 1.0, "km/h": 0.2777777777777778, "mph": 0.44704}, quantity_name="velocity")
+
+def normalize_shear_rate(shear_rate: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(shear_rate, {"s⁻¹": 1.0, "/s": 1.0}, quantity_name="shear rate")
+
+DynamicViscosityPas = Annotated[NormalizedComputable, normalize_dynamic_viscosity]
+DensityKgM3 = Annotated[NormalizedComputable, normalize_density]
+LengthMeter = Annotated[NormalizedComputable, normalize_length]
+PressurePascal = Annotated[NormalizedComputable, normalize_pressure]
+VelocityMS = Annotated[NormalizedComputable, normalize_velocity]
+ShearRate = Annotated[NormalizedComputable, normalize_shear_rate]
 
 
 # ---------------------------------------------------------------------------
@@ -358,7 +400,7 @@ def _to_array(x):
 
 
 @returns_unit("Pa·s")
-def andrade_viscosity(T, constants: AndradeConstants = CommonLiquids.Water.andrade):
+def andrade_viscosity(T: TemperatureKelvin, constants: AndradeConstants = CommonLiquids.Water.andrade):
     """
     Compute dynamic viscosity using the Andrade (Arrhenius-type) equation.
 
@@ -381,6 +423,7 @@ def andrade_viscosity(T, constants: AndradeConstants = CommonLiquids.Water.andra
     ValueError
         If T <= 0.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
     if np.any(T <= 0):
         raise ValueError("Temperature T must be strictly positive for Andrade viscosity.")
@@ -388,7 +431,7 @@ def andrade_viscosity(T, constants: AndradeConstants = CommonLiquids.Water.andra
 
 
 @returns_unit("Pa·s")
-def vft_viscosity(T, constants: VFTConstants = CommonLiquids.Water.vft):
+def vft_viscosity(T: TemperatureKelvin, constants: VFTConstants = CommonLiquids.Water.vft):
     """
     Compute dynamic viscosity using the Vogel-Fulcher-Tammann (VFT) equation.
 
@@ -411,6 +454,7 @@ def vft_viscosity(T, constants: VFTConstants = CommonLiquids.Water.vft):
     ValueError
         If T <= T0.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
     if np.any(T <= constants.T0):
         raise ValueError(
@@ -422,7 +466,7 @@ def vft_viscosity(T, constants: VFTConstants = CommonLiquids.Water.vft):
 
 @returns_unit("Pa·s")
 def sutherland_gas_viscosity(
-    T, constants: SutherlandConstants = CommonGases.Air.sutherland
+    T: TemperatureKelvin, constants: SutherlandConstants = CommonGases.Air.sutherland
 ):
     """
     Compute dynamic viscosity of a gas using the Sutherland model.
@@ -446,6 +490,7 @@ def sutherland_gas_viscosity(
     ValueError
         If T <= 0.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
     if np.any(T <= 0):
         raise ValueError(
@@ -459,7 +504,7 @@ def sutherland_gas_viscosity(
 
 @returns_unit("Pa·s")
 def swindells_viscosity(
-    T, constants: SwindellsConstants = CommonLiquids.Water.swindells
+    T: TemperatureKelvin, constants: SwindellsConstants = CommonLiquids.Water.swindells
 ):
     """
     Compute dynamic viscosity using the Swindells empirical correlation.
@@ -478,13 +523,14 @@ def swindells_viscosity(
     float or ndarray
         Dynamic viscosity in Pa·s.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
     exponent = -constants.a * (T - constants.T_ref) / (T + constants.b)
     return constants.eta_ref * np.power(10.0, exponent)
 
 
 @returns_unit("Pa·s")
-def kestin_viscosity(T, constants: KestinConstants = CommonLiquids.Water.kestin):
+def kestin_viscosity(T: TemperatureKelvin, constants: KestinConstants = CommonLiquids.Water.kestin):
     """
     Compute dynamic viscosity using the Kestin three-parameter correlation.
 
@@ -507,6 +553,7 @@ def kestin_viscosity(T, constants: KestinConstants = CommonLiquids.Water.kestin)
     ValueError
         If T <= C.
     """
+    T = normalize_temperature(T) if isinstance(T, str) else T
     T = _to_array(T)
     if np.any(T <= constants.C):
         raise ValueError(
@@ -517,7 +564,7 @@ def kestin_viscosity(T, constants: KestinConstants = CommonLiquids.Water.kestin)
 
 
 @returns_unit("Pa")
-def bingham_stress(shear_rate, constants: BinghamConstants = None):
+def bingham_stress(shear_rate: ShearRate, constants: BinghamConstants = None):
     """
     Compute shear stress for a Bingham plastic fluid.
 
@@ -543,14 +590,15 @@ def bingham_stress(shear_rate, constants: BinghamConstants = None):
     """
     if constants is None:
         constants = BinghamConstants(name="Example Bingham fluid", tau0=10.0, mu_p=0.1)
-    gamma = _to_array(shear_rate)
+    gamma = normalize_shear_rate(shear_rate) if isinstance(shear_rate, str) else shear_rate
+    gamma = _to_array(gamma)
     if np.any(gamma < 0):
         raise ValueError("Shear rate must be non-negative for Bingham model.")
     return constants.tau0 + constants.mu_p * gamma
 
 
 @returns_unit("m³/s")
-def poiseuille_flow_rate(radius, pressure_drop, length, viscosity):
+def poiseuille_flow_rate(radius: LengthMeter, pressure_drop: PressurePascal, length: LengthMeter, viscosity: DynamicViscosityPas):
     """
     Compute volumetric flow rate for laminar flow in a cylindrical pipe
     using Poiseuille's law.
@@ -578,10 +626,14 @@ def poiseuille_flow_rate(radius, pressure_drop, length, viscosity):
     ValueError
         If radius, length, or viscosity is not strictly positive.
     """
-    r = _to_array(radius)
-    L = _to_array(length)
-    eta = _to_array(viscosity)
-    dP = _to_array(pressure_drop)
+    r = normalize_length(radius) if isinstance(radius, str) else radius
+    L = normalize_length(length) if isinstance(length, str) else length
+    eta = normalize_dynamic_viscosity(viscosity) if isinstance(viscosity, str) else viscosity
+    dP = normalize_pressure(pressure_drop) if isinstance(pressure_drop, str) else pressure_drop
+    r = _to_array(r)
+    L = _to_array(L)
+    eta = _to_array(eta)
+    dP = _to_array(dP)
     if np.any(r <= 0):
         raise ValueError("Pipe radius must be strictly positive.")
     if np.any(L <= 0):
@@ -592,7 +644,7 @@ def poiseuille_flow_rate(radius, pressure_drop, length, viscosity):
 
 
 @returns_unit("m²/s")
-def kinematic_viscosity(dynamic_viscosity, density):
+def kinematic_viscosity(dynamic_viscosity: DynamicViscosityPas, density: DensityKgM3):
     """
     Compute kinematic viscosity from dynamic viscosity and density.
 
@@ -615,15 +667,17 @@ def kinematic_viscosity(dynamic_viscosity, density):
     ValueError
         If density is not strictly positive.
     """
-    eta = _to_array(dynamic_viscosity)
-    rho = _to_array(density)
+    eta = normalize_dynamic_viscosity(dynamic_viscosity) if isinstance(dynamic_viscosity, str) else dynamic_viscosity
+    rho = normalize_density(density) if isinstance(density, str) else density
+    eta = _to_array(eta)
+    rho = _to_array(rho)
     if np.any(rho <= 0):
         raise ValueError("Density must be strictly positive.")
     return eta / rho
 
 
 @returns_unit("N")
-def stokes_drag(radius, velocity, viscosity):
+def stokes_drag(radius: LengthMeter, velocity: VelocityMS, viscosity: DynamicViscosityPas):
     """
     Compute drag force on a sphere moving in a viscous fluid (Stokes' law).
 
@@ -648,9 +702,12 @@ def stokes_drag(radius, velocity, viscosity):
     ValueError
         If radius or viscosity is negative.
     """
-    r = _to_array(radius)
-    v = _to_array(velocity)
-    eta = _to_array(viscosity)
+    r = normalize_length(radius) if isinstance(radius, str) else radius
+    v = normalize_velocity(velocity) if isinstance(velocity, str) else velocity
+    eta = normalize_dynamic_viscosity(viscosity) if isinstance(viscosity, str) else viscosity
+    r = _to_array(r)
+    v = _to_array(v)
+    eta = _to_array(eta)
     if np.any(r < 0):
         raise ValueError("Sphere radius must be non-negative.")
     if np.any(eta < 0):
@@ -659,7 +716,7 @@ def stokes_drag(radius, velocity, viscosity):
 
 
 @returns_unit("")
-def reynolds_number(density, velocity, characteristic_length, viscosity):
+def reynolds_number(density: DensityKgM3, velocity: VelocityMS, characteristic_length: LengthMeter, viscosity: DynamicViscosityPas):
     """
     Compute the Reynolds number.
 
@@ -686,10 +743,14 @@ def reynolds_number(density, velocity, characteristic_length, viscosity):
     ValueError
         If density, characteristic_length, or viscosity is not strictly positive.
     """
-    rho = _to_array(density)
-    v = _to_array(velocity)
-    L = _to_array(characteristic_length)
-    eta = _to_array(viscosity)
+    rho = normalize_density(density) if isinstance(density, str) else density
+    v = normalize_velocity(velocity) if isinstance(velocity, str) else velocity
+    L = normalize_length(characteristic_length) if isinstance(characteristic_length, str) else characteristic_length
+    eta = normalize_dynamic_viscosity(viscosity) if isinstance(viscosity, str) else viscosity
+    rho = _to_array(rho)
+    v = _to_array(v)
+    L = _to_array(L)
+    eta = _to_array(eta)
     if np.any(rho <= 0):
         raise ValueError("Density must be strictly positive for Reynolds number.")
     if np.any(L <= 0):

@@ -28,6 +28,12 @@ from UliEngineering.Physics.Viscosity import (
     stokes_drag,
     reynolds_number,
     arrhenius_mixing_viscosity,
+    normalize_dynamic_viscosity, DynamicViscosityPas,
+    normalize_density, DensityKgM3,
+    normalize_length, LengthMeter,
+    normalize_pressure, PressurePascal,
+    normalize_velocity, VelocityMS,
+    normalize_shear_rate, ShearRate,
 )
 
 
@@ -675,6 +681,111 @@ class TestEdgeCasesAndSpecialValues(unittest.TestCase):
         eta = arrhenius_mixing_viscosity(fractions, viscosities)
         expected = np.exp(np.mean(np.log(viscosities)))
         assert_approx_equal(eta, expected, significant=8)
+
+
+class TestNormalizeFunctions(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(DynamicViscosityPas)
+        self.assertIsNotNone(DensityKgM3)
+        self.assertIsNotNone(LengthMeter)
+        self.assertIsNotNone(PressurePascal)
+        self.assertIsNotNone(VelocityMS)
+        self.assertIsNotNone(ShearRate)
+
+    def test_normalize_dynamic_viscosity_various_units(self):
+        """Test normalize_dynamic_viscosity with various unit inputs"""
+        test_cases = [
+            ("1 Pa·s", 1.0),
+            ("1 Pa s", 1.0),
+            ("1 Pas", 1.0),
+            ("1 mPa·s", 1e-3),
+            ("1 cP", 1e-3),
+            ("1 P", 0.1),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_dynamic_viscosity(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_density_various_units(self):
+        """Test normalize_density with various unit inputs"""
+        test_cases = [
+            ("1 kg/m³", 1.0),
+            ("1 kg/m3", 1.0),
+            ("1 kg/m^3", 1.0),
+            ("1 g/cm³", 1000.0),
+            ("1 g/cm3", 1000.0),
+            ("1 g/L", 1.0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_density(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_length_various_units(self):
+        """Test normalize_length with various unit inputs"""
+        test_cases = [
+            ("1 m", 1.0),
+            ("1 mm", 1e-3),
+            ("1 cm", 1e-2),
+            ("1 km", 1e3),
+            ("1 µm", 1e-6),
+            ("1 nm", 1e-9),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_length(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_pressure_various_units(self):
+        """Test normalize_pressure with various unit inputs"""
+        test_cases = [
+            ("1 Pa", 1.0),
+            ("1 kPa", 1e3),
+            ("1 MPa", 1e6),
+            ("1 bar", 1e5),
+            ("1 mbar", 100),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_pressure(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_velocity_various_units(self):
+        """Test normalize_velocity with various unit inputs"""
+        test_cases = [
+            ("1 m/s", 1.0),
+            ("1 km/h", 0.2777777777777778),
+            ("1 mph", 0.44704),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_velocity(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_normalize_shear_rate_various_units(self):
+        """Test normalize_shear_rate with various unit inputs"""
+        test_cases = [
+            ("1 s⁻¹", 1.0),
+            ("1/s", 1.0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_shear_rate(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_viscosity_functions_various_units(self):
+        """Test viscosity functions with various unit inputs"""
+        # Test kinematic_viscosity with different viscosity units
+        nu1 = kinematic_viscosity("1 mPa·s", "1000 kg/m³")
+        nu2 = kinematic_viscosity("0.001 Pa·s", "1000 kg/m³")
+        assert_approx_equal(nu1, nu2)
+        
+        # Test poiseuille_flow_rate with different length units
+        Q1 = poiseuille_flow_rate("10 mm", "1 kPa", "1 m", "1 Pa·s")
+        Q2 = poiseuille_flow_rate("0.01 m", "1000 Pa", "1 m", "1 Pa·s")
+        assert_approx_equal(Q1, Q2)
 
 
 if __name__ == '__main__':
