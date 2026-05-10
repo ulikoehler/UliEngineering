@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
 from UliEngineering.Electronics.Microstrip import microstrip_width, microstrip_impedance
-from UliEngineering.EngineerIO import auto_format
 import unittest
 import numpy as np
 
@@ -28,16 +27,16 @@ class TestMicrostrip(unittest.TestCase):
                         except ValueError:
                             # Skip impossible impedances
                             continue
-                        
+
                         # Calculate impedance back from width
                         Z0_calc = microstrip_impedance(w, h=h, t=t, e_r=er)
-                        
+
                         # Check if they match
-                        # We use a relatively loose tolerance because the formulas 
+                        # We use a relatively loose tolerance because the formulas
                         # might have some numerical instability or approximation errors
                         # but they should be reasonably close.
                         # The solver tolerance is 1e-9, so we expect good agreement.
-                        assert_allclose(Z0_calc, Z0, rtol=0.01, 
+                        assert_allclose(Z0_calc, Z0, rtol=0.01,
                                         err_msg=f"Failed for Z0={Z0}, h={h}, er={er}, t={t}, w={w}")
 
     def test_microstrip_width_specific_values(self):
@@ -60,4 +59,3 @@ class TestMicrostrip(unittest.TestCase):
         w1 = microstrip_width(50, h="1.6mm", t="35um", e_r=4.8)
         w2 = microstrip_width("50 Ohm", h=1.6e-3, t=35e-6, e_r=4.8)
         assert_allclose(w1, w2)
-
