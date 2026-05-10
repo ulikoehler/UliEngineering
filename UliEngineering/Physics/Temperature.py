@@ -43,7 +43,8 @@ def fahrenheit_to_celsius(f: NormalizableArgument):
 
 @returns_unit("K")
 def normalize_temperature(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
-    """Normalize a temperature to kelvin.
+    """
+    Normalize a temperature to kelvin.
 
     If it is a number or it has no unit, assume it is a default unit. Else,.
     evaluate the unit (K, °C, °F, C, F).
@@ -70,7 +71,8 @@ normalize_temperature_kelvin = normalize_temperature
 
 @returns_unit("°C")
 def normalize_temperature_celsius(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
-    """Normalize a temperature to celsius.
+    """
+    Normalize a temperature to celsius.
 
     Like normalize_temperature(), but returns a value in celsius instead of.
     Kelvin.
@@ -84,7 +86,8 @@ TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsi
 
 @returns_unit("°C")
 def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
-    """Compute the temperature of a component given its thermal resistance,
+    """
+    Compute the temperature of a component given its thermal resistance,
     
     dissipated power, and ambient temperature.
     """

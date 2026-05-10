@@ -21,7 +21,8 @@ g = Unit("g")
 
 class UnannotatedReturnValueError(Exception):
     
-    """Raise if the automatic unit finder cannot find the appropriate function.
+    """
+    Raise if the automatic unit finder cannot find the appropriate function.
 
     The annotation tells an auto-formatting function which unit is being used.
 
@@ -31,12 +32,15 @@ class UnannotatedReturnValueError(Exception):
 
 class InvalidUnitInContextException(ValueError):
     
-    """Raise if the unit can't be used in the given context."""
+    """
+    Raise if the unit can't be used in the given context.
+    """
 
 
 class UnknownUnitInContextException(ValueError):
     
-    """Raise if the unit is not known in this context.
+    """
+    Raise if the unit is not known in this context.
 
 
     The message should contain information on what type of entity (e.g. length).
@@ -45,13 +49,15 @@ class UnknownUnitInContextException(ValueError):
 
 class InvalidUnitCombinationException(ValueError):
     
-    """Raise if the units involved in an operation can't be combined in the way requested.
+    """
+    Raise if the units involved in an operation can't be combined in the way requested.
 
     For example, if the user tries to add a voltage and a current.
     """
 
 def find_returned_unit(fn):
-    """Determine which unit is returned by a function.
+    """
+    Determine which unit is returned by a function.
 
     Given a function that is assumed to return a quantity and annotated with.
     the corresponding unit, determine which is the unit returned by the

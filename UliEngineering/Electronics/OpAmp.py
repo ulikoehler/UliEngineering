@@ -21,7 +21,8 @@ __all__ = [
 
 @returns_unit("V")
 def summing_amplifier_noninv(v1: VoltageV, v2: VoltageV, r1: ResistanceOhm, r2: ResistanceOhm, rfb1: ResistanceOhm, rfb2: ResistanceOhm):
-    """Computes the output voltage of a non-inverting summing amplifier.
+    """
+    Computes the output voltage of a non-inverting summing amplifier.
 
     V1 connected via R1 to IN+.
     V2 connected via R2 to IN+.
@@ -59,7 +60,8 @@ def summing_amplifier_noninv(v1: VoltageV, v2: VoltageV, r1: ResistanceOhm, r2: 
 
 @returns_unit("V/V")
 def noninverting_amplifier_gain(r1: ResistanceOhm, r2: ResistanceOhm):
-    """Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
+    """
+    Computes the gain of a non-inverting amplifier with feedback resistors R1 and R2.
 
     R1 is the resistor connected between the OpAmp output and the OpAmp IN(-).
     R2 is the resistor connected between the OpAmp IN(-) and GND.

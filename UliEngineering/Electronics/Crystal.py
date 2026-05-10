@@ -27,7 +27,8 @@ PPM = Annotated[NormalizedComputable, normalize_ppm]
 
 @returns_unit("F")
 def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
-    """Compute the load capacitors which should be used for a given crystal, given that the load capacitors should be symmetric (i.e. have the same value).
+    """
+    Compute the load capacitors which should be used for a given crystal, given that the load capacitors should be symmetric (i.e. have the same value).
 
     NOTE: You need to use a stray capacitance value that does NOT.
     include the parasitic pin capacitance!
@@ -63,7 +64,8 @@ def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstr
 
 @returns_unit("F")
 def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
-    """Compute the actual load capacitance of a crystal given.
+    """
+    Compute the actual load capacitance of a crystal given.
 
     - The external capacitance value (use "10 pF" if your have a
     10 pF capacitor on each of the crystal pins).
@@ -109,7 +111,8 @@ def _crystal_deviation_seconds_per_x(deviation: PPM, n_secs):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_minute(deviation: PPM):
-    """Compute how many seconds a crystal with given ppm
+    """
+    Compute how many seconds a crystal with given ppm
     
     deviation deviates per minute.
 
@@ -137,7 +140,8 @@ def crystal_deviation_seconds_per_minute(deviation: PPM):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_hour(deviation: PPM):
-    """Compute how many seconds a crystal with given ppm
+    """
+    Compute how many seconds a crystal with given ppm
     
     deviation deviates per hour.
 
@@ -165,7 +169,8 @@ def crystal_deviation_seconds_per_hour(deviation: PPM):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_day(deviation: PPM):
-    """Compute how many seconds a crystal with given ppm
+    """
+    Compute how many seconds a crystal with given ppm
     
     deviation deviates per standard day (24 hours a 3600 seconds).
 
@@ -193,7 +198,8 @@ def crystal_deviation_seconds_per_day(deviation: PPM):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_month(deviation: PPM):
-    """Compute how many seconds a crystal with given ppm
+    """
+    Compute how many seconds a crystal with given ppm
     
     deviation deviates per 31-day month (31 days a 3600*24s).
 
@@ -221,7 +227,8 @@ def crystal_deviation_seconds_per_month(deviation: PPM):
 
 @returns_unit("s")
 def crystal_deviation_seconds_per_year(deviation: PPM):
-    """Compute how many seconds a crystal with given ppm
+    """
+    Compute how many seconds a crystal with given ppm
     
     deviation deviates per 365-day year (365 days a 3600*24s).
 

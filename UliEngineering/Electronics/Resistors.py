@@ -33,7 +33,9 @@ __all__ = [
 #
 class ESeries:
     
-    """Container for standard E-series values as NumPy arrays."""
+    """
+    Container for standard E-series values as NumPy arrays.
+    """
 
     E6 = np.array([1.0, 1.5, 2.2, 3.3, 4.7, 6.8])
 

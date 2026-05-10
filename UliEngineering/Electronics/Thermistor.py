@@ -20,7 +20,8 @@ __all__ = [
 ]
 
 def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArgument = 25.0, t2: NormalizableArgument = 100.0):
-    """Compute the B value of a thermistor given its resistance at two temperatures.
+    """
+    Compute the B value of a thermistor given its resistance at two temperatures.
 
     The formula is B = (T1*T2) / (T2-T1) * ln(R1/R2) with T1 and T2 being.
     the temperatures in Kelvin and R1 and R2 being the resistances.
@@ -43,7 +44,8 @@ def thermistor_b_value(r1: ResistanceOhm, r2: ResistanceOhm, t1: NormalizableArg
 
 @returns_unit("°C")
 def thermistor_temperature(resistance: ResistanceOhm, beta: NormalizableArgument = 3950.0, R0: ResistanceOhm = 100e3, T0: NormalizableArgument = 25.0):
-    """Calculate the temperature of a NTC thermistor using the Beta parameter model.
+    """
+    Calculate the temperature of a NTC thermistor using the Beta parameter model.
 
     Parameters.
     ----------
@@ -73,7 +75,8 @@ def thermistor_temperature(resistance: ResistanceOhm, beta: NormalizableArgument
 
 @returns_unit("Ω")
 def thermistor_resistance(temperature: NormalizableArgument, beta: NormalizableArgument = 3950.0, R0: ResistanceOhm = 100e3, T0: NormalizableArgument = 25.0):
-    """Calculate the resistance of a thermistor given its temperature.
+    """
+    Calculate the resistance of a thermistor given its temperature.
 
     Parameters.
     ----------

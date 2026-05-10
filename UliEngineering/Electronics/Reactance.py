@@ -20,7 +20,8 @@ __all__ = [
 
 @returns_unit("Ω")
 def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
-    """Compute the capacitive reactance for a given capacitance and frequency.
+    """
+    Compute the capacitive reactance for a given capacitance and frequency.
 
     Parameters.
     ----------
@@ -42,7 +43,8 @@ def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
 
 @returns_unit("Ω")
 def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
-    """Compute the inductive reactance for a given inductance and frequency.
+    """
+    Compute the inductive reactance for a given inductance and frequency.
 
     Parameters.
     ----------
@@ -63,7 +65,8 @@ def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
 
 @returns_unit("H")
 def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
-    """Compute the inductance (H) from an inductive reactance (Ω) at a given frequency f (Hz).
+    """
+    Compute the inductance (H) from an inductive reactance (Ω) at a given frequency f (Hz).
 
     Formula: X_L = 2 * pi * f * L => L = X_L / (2 * pi * f).
 
@@ -86,7 +89,8 @@ def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
 
 @returns_unit("F")
 def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
-    """Compute the capacitance (F) from a capacitive reactance (Ω) at a given
+    """
+    Compute the capacitance (F) from a capacitive reactance (Ω) at a given
     
     frequency f (Hz).
 

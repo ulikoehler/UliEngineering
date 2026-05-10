@@ -36,7 +36,8 @@ IonicStrengthMolar = Annotated[NormalizedComputable, normalize_ionic_strength]
 
 
 def debye_huckel_A_parameter(T=298.15, epsilon_r=78.4):
-    """Compute the Debye-Hückel A parameter.
+    """
+    Compute the Debye-Hückel A parameter.
 
     A = 1.8246e6 / (epsilon_r * T)^(3/2).
 
@@ -61,7 +62,8 @@ def debye_huckel_A_parameter(T=298.15, epsilon_r=78.4):
 
 @returns_unit("")
 def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
-    """Compute log10 of the activity coefficient using the Davies equation.
+    """
+    Compute log10 of the activity coefficient using the Davies equation.
 
     log10(γ) = -A * z² * (√I / (1 + √I) - 0.3 * I).
 
@@ -87,7 +89,8 @@ def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
 
 @returns_unit("")
 def davies_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
-    """Compute the activity coefficient using the Davies equation.
+    """
+    Compute the activity coefficient using the Davies equation.
 
     γ = 10^(-A * z² * (√I / (1 + √I) - 0.3 * I)).
 
