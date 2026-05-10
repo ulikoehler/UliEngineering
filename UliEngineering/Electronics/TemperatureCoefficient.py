@@ -5,15 +5,15 @@ from collections.abc import Iterable
 
 import numpy as np
 from UliEngineering.EngineerIO import NormalizeResult, normalize, normalize_numeric
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args
+from UliEngineering.EngineerIO.Types import NormalizableArgument
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.Physics.Temperature import normalize_temperature
 from UliEngineering.Utils.Range import ValueRange
 from UliEngineering.Electronics.Tolerance import value_range_over_tolerance
 
 __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
-@normalize_numeric_args
-def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°C"):
+def value_at_temperature(nominal: NormalizableArgument, temperature: NormalizableArgument, coefficient: NormalizableArgument = "100 ppm", tref: NormalizableArgument = "25°C"):
     """
     Given a component with a nominal value (nominal) at a reference temperature (tref)
     and a fixed coefficient of temperature (coefficient, e.g. "100 ppm"),
@@ -45,17 +45,29 @@ def value_at_temperature(nominal, temperature, coefficient="100 ppm", tref="25°
     float
         A unit-less value representing the value of the component at the given temperature. 
     """
+    # Normalize nominal and coefficient
+    nominal = normalize_numeric(nominal) if isinstance(nominal, str) else nominal
+    coefficient = normalize_numeric(coefficient) if isinstance(coefficient, str) else coefficient
     # Note: MIL-STD-202: R-T characteristic: (R2 - R1)/ (R1 * (t2 - t1))
     # Normalize temperatures separately (they need special handling)
-    temperature = normalize_temperature(temperature)
-    tref = normalize_temperature(tref)
+    # Numeric temperatures are interpreted as °C, strings are automatically converted
+    if isinstance(temperature, str):
+        temperature = normalize_temperature(temperature)
+    else:
+        # Numeric temperature is in °C, convert to Kelvin for calculation
+        temperature = temperature + 273.15
+    if isinstance(tref, str):
+        tref = normalize_temperature(tref)
+    else:
+        # Numeric temperature is in °C, convert to Kelvin for calculation
+        tref = tref + 273.15
     # Compute (t2 - t1). Might be negative.
     tdelta = temperature - tref
     factor = 1. + (tdelta * coefficient)
     return nominal * factor
     
 
-def value_range_over_temperature(nominal, coefficient:str|float="100ppm", tolerance="0 %", tmin="-40 °C", tmax="85 °C", tref="25 °C", significant_digits=4):
+def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str|float = "100ppm", tolerance: NormalizableArgument = "0 %", tmin: NormalizableArgument = "-40 °C", tmax: NormalizableArgument = "85 °C", tref: NormalizableArgument = "25 °C", significant_digits=4):
     """
     Given a component which has a nominal value (e.g. "1 kΩ")
     at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").

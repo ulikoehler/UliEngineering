@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal, assert_allclose
 from UliEngineering.Electronics.TemperatureCoefficient import value_range_over_temperature, value_at_temperature
+from UliEngineering.EngineerIO.Types import NormalizableArgument
 from UliEngineering.Utils.Range import ValueRange
 import unittest
 import numpy as np
@@ -188,3 +189,8 @@ class TestTemperatureCoefficientEdgeCases(unittest.TestCase):
         result = value_range_over_temperature("1 kΩ", "100 ppm", tmin="85 °C", tmax="-40 °C")
         # Should still work correctly (min/max will be computed properly)
         self.assertIsInstance(result, ValueRange)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(NormalizableArgument)
