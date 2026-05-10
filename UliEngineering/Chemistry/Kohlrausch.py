@@ -13,7 +13,11 @@ The concentration dependence:
 
 where K is the Kohlrausch coefficient.
 """
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
 import numpy as np
 
 __all__ = [
@@ -22,7 +26,19 @@ __all__ = [
     "kohlrausch_coefficient_from_data",
     "transference_number",
     "LIMITING_MOLAR_CONDUCTIVITIES",
+    "normalize_molar_conductivity", "MolarConductivitySCm2Mol",
+    "normalize_concentration", "ConcentrationMolar",
 ]
+
+
+def normalize_molar_conductivity(lambda_val: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(lambda_val, {"S·cm²/mol": 1.0, "S cm2/mol": 1.0, "S·m²/mol": 10000.0, "S m2/mol": 10000.0}, quantity_name="molar conductivity")
+
+def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(c, {"mol/L": 1.0, "M": 1.0, "mM": 1e-3, "µM": 1e-6, "mol/m³": 1e-3}, quantity_name="concentration")
+
+MolarConductivitySCm2Mol = Annotated[NormalizedComputable, normalize_molar_conductivity]
+ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 # Limiting molar conductivities at 25 °C in S·cm²/mol
 # Source: CRC Handbook of Chemistry and Physics
@@ -85,9 +101,8 @@ def kohlrausch_limiting_molar_conductivity(lambda_ions, stoich_coefficients):
     return float(np.sum(nu * lam))
 
 
-@normalize_numeric_args
 @returns_unit("S·cm²/mol")
-def kohlrausch_molar_conductivity(Lambda_0, K, c):
+def kohlrausch_molar_conductivity(Lambda_0: MolarConductivitySCm2Mol, K, c: ConcentrationMolar):
     """
     Compute molar conductivity at concentration c using Kohlrausch's square root law.
 
@@ -107,12 +122,13 @@ def kohlrausch_molar_conductivity(Lambda_0, K, c):
     float
         Molar conductivity in S·cm²/mol.
     """
+    Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0
+    c = normalize_concentration(c) if isinstance(c, str) else c
     return Lambda_0 - K * np.sqrt(c)
 
 
-@normalize_numeric_args
 @returns_unit("S·cm²/(mol^(3/2)·L^(1/2))")
-def kohlrausch_coefficient_from_data(Lambda_0, Lambda_m, c):
+def kohlrausch_coefficient_from_data(Lambda_0: MolarConductivitySCm2Mol, Lambda_m: MolarConductivitySCm2Mol, c: ConcentrationMolar):
     """
     Determine the Kohlrausch coefficient K from experimental data.
 
@@ -132,12 +148,14 @@ def kohlrausch_coefficient_from_data(Lambda_0, Lambda_m, c):
     float
         Kohlrausch coefficient K.
     """
+    Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0
+    Lambda_m = normalize_molar_conductivity(Lambda_m) if isinstance(Lambda_m, str) else Lambda_m
+    c = normalize_concentration(c) if isinstance(c, str) else c
     return (Lambda_0 - Lambda_m) / np.sqrt(c)
 
 
-@normalize_numeric_args
 @returns_unit("")
-def transference_number(lambda_ion, Lambda_0):
+def transference_number(lambda_ion: MolarConductivitySCm2Mol, Lambda_0: MolarConductivitySCm2Mol):
     """
     Compute the transference number (transport number) of an ion.
 
@@ -155,4 +173,6 @@ def transference_number(lambda_ion, Lambda_0):
     float
         Transference number (dimensionless, between 0 and 1).
     """
+    lambda_ion = normalize_molar_conductivity(lambda_ion) if isinstance(lambda_ion, str) else lambda_ion
+    Lambda_0 = normalize_molar_conductivity(Lambda_0) if isinstance(Lambda_0, str) else Lambda_0
     return lambda_ion / Lambda_0
