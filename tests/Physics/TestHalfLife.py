@@ -1,5 +1,11 @@
 import unittest
-from UliEngineering.Physics.HalfLife import half_lifes_passed, fraction_remaining, fraction_decayed, remaining_quantity, decayed_quantity, half_life_from_decay_constant, half_life_from_remaining_quantity, half_life_from_decayed_quantity, half_life_from_fraction_remaining, half_life_from_fraction_decayed
+from numpy.testing import assert_approx_equal
+from UliEngineering.Physics.HalfLife import (
+    half_lifes_passed, fraction_remaining, fraction_decayed, remaining_quantity, decayed_quantity,
+    half_life_from_decay_constant, half_life_from_remaining_quantity, half_life_from_decayed_quantity,
+    half_life_from_fraction_remaining, half_life_from_fraction_decayed,
+    normalize_timespan, TimespanSeconds
+)
 
 class TestHalfLife(unittest.TestCase):
     def test_half_lifes_passed(self):
@@ -102,3 +108,46 @@ class TestHalfLife(unittest.TestCase):
             half_life_from_fraction_decayed(7200, 0.75),
             3600.0,
         )
+
+    def test_type_annotation_exists(self):
+        """Test that the TimespanSeconds type annotation is available"""
+        self.assertIsNotNone(TimespanSeconds)
+
+    def test_half_life_functions_various_time_units(self):
+        """Test half_life functions with various time unit inputs"""
+        # Test half_lifes_passed with various units
+        self.assertAlmostEqual(half_lifes_passed("60 min", "1 min"), 60.0)
+        self.assertAlmostEqual(half_lifes_passed("3600 s", "60 s"), 60.0)
+        self.assertAlmostEqual(half_lifes_passed("1 h", "1 h"), 1.0)
+        
+        # Test fraction_remaining with various units
+        self.assertAlmostEqual(fraction_remaining("60 min", "60 min"), 0.5)
+        self.assertAlmostEqual(fraction_remaining("3600 s", "3600 s"), 0.5)
+        
+        # Test fraction_decayed with various units
+        self.assertAlmostEqual(fraction_decayed("60 min", "60 min"), 0.5)
+        self.assertAlmostEqual(fraction_decayed("3600 s", "3600 s"), 0.5)
+        
+        # Test remaining_quantity with various units
+        self.assertAlmostEqual(remaining_quantity("60 min", "60 min", 100), 50.0)
+        self.assertAlmostEqual(remaining_quantity("3600 s", "3600 s", 100), 50.0)
+        
+        # Test decayed_quantity with various units
+        self.assertAlmostEqual(decayed_quantity("60 min", "60 min", 100), 50.0)
+        self.assertAlmostEqual(decayed_quantity("3600 s", "3600 s", 100), 50.0)
+        
+        # Test half_life_from_remaining_quantity with various units
+        self.assertAlmostEqual(half_life_from_remaining_quantity("60 min", 50, 100), 3600.0, places=5)
+        self.assertAlmostEqual(half_life_from_remaining_quantity("3600 s", 50, 100), 3600.0, places=5)
+        
+        # Test half_life_from_decayed_quantity with various units
+        self.assertAlmostEqual(half_life_from_decayed_quantity("60 min", 50, 100), 3600.0, places=5)
+        self.assertAlmostEqual(half_life_from_decayed_quantity("3600 s", 50, 100), 3600.0, places=5)
+        
+        # Test half_life_from_fraction_remaining with various units
+        self.assertAlmostEqual(half_life_from_fraction_remaining("60 min", 0.5), 3600.0, places=5)
+        self.assertAlmostEqual(half_life_from_fraction_remaining("3600 s", 0.5), 3600.0, places=5)
+        
+        # Test half_life_from_fraction_decayed with various units
+        self.assertAlmostEqual(half_life_from_fraction_decayed("60 min", 0.5), 3600.0, places=5)
+        self.assertAlmostEqual(half_life_from_fraction_decayed("3600 s", 0.5), 3600.0, places=5)
