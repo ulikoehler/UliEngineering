@@ -63,7 +63,7 @@ def area_unit_infos():
 
 def _create_area_config():
     """
-    Create a custom EngineerIOConfiguration for area units with extended SI prefixes
+    Create a custom EngineerIOConfiguration for area units with extended SI prefixes.
     """
     config = EngineerIOConfiguration.default()
     return EngineerIOConfiguration(
@@ -88,7 +88,7 @@ class EngineerAreaIO(EngineerIO):
     @classmethod
     def instance(cls):
         """
-        Get the singleton instance of EngineerAreaIO
+        Get the singleton instance of EngineerAreaIO.
         """
         if cls._instance is None:
             cls._instance = cls()

@@ -12,7 +12,7 @@ __all__ = ["normalize_timespan", "TimespanSeconds"]
 
 def _timespan_unit_infos():
     """
-    Returns a list of UnitInfo and UnitAlias objects for timespan units
+    Returns a list of UnitInfo and UnitAlias objects for timespan units.
     """
     return [
         # SI-prefixed seconds (using UnitAlias)
@@ -45,7 +45,7 @@ def _timespan_unit_infos():
 
 def _create_timespan_config():
     """
-    Create a custom EngineerIOConfiguration for timespan units
+    Create a custom EngineerIOConfiguration for timespan units.
     """
     config = EngineerIOConfiguration.default()
     return EngineerIOConfiguration(

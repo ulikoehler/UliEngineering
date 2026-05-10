@@ -50,11 +50,15 @@ class EngineerIO(object):
         """
         Initialize a new EngineerIO instance with configuration object.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         config : EngineerIOConfiguration, optional
             Configuration object containing unit information, prefixes, and SI prefix mappings.
             If None, uses default configuration.
+
+        Returns
+        -------
+        None
         """
         # Use default configuration if none provided
         if config is None:
@@ -105,7 +109,7 @@ class EngineerIO(object):
 
     def _recompute_unit_prefix_maps(self):
         """
-        Recompute the exponent -> unit prefix map from the unit prefix -> exponent map
+        Recompute the exponent -> unit prefix map from the unit prefix -> exponent map.
         """
         # Direct mapping from unit prefix to exponent already exists in self.unit_prefix_map
         # Create the inverse mapping from exponent to unit prefix

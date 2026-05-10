@@ -6,7 +6,9 @@ from typing import Dict, List, Union
 
 @dataclass
 class UnitAlias:
-    """Represents a mapping of aliases to a canonical unit.
+    """
+    Represents a mapping of aliases to a canonical unit.
+
     This is used for units that don't have their own conversion factor
     but are alternative names for existing units.
     """ 
@@ -17,13 +19,13 @@ class UnitAlias:
         """
         Check if the given string is one of the aliases.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         alias_string : str
             The alias string to check
 
-        Returns:
-        --------
+        Returns
+        -------
         bool
             True if the string is in the aliases list
         """
@@ -42,6 +44,7 @@ class UnitInfo:
         The multiplication factor to convert to base SI units
     aliases : List[str]
         List of alternative representations for this unit
+
     """
     canonical: str
     factor: float = field(default=1.0)
@@ -51,13 +54,13 @@ class UnitInfo:
         """
         Check if the given unit string matches this unit (canonical or alias).
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         unit_string : str
             The unit string to check
 
-        Returns:
-        --------
+        Returns
+        -------
         bool
             True if the unit string matches this unit
         """
@@ -67,8 +70,8 @@ class UnitInfo:
         """
         Get all possible representations of this unit (canonical + aliases).
 
-        Returns:
-        --------
+        Returns
+        -------
         List[str]
             List containing canonical form and all aliases
         """
@@ -86,8 +89,8 @@ class EngineerIOConfiguration:
         """
         Returns a default configuration with standard units and prefixes.
 
-        Returns:
-        --------
+        Returns
+        -------
         EngineerIOConfiguration
             Default configuration instance
         """
