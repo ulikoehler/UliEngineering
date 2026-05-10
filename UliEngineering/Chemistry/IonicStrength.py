@@ -9,14 +9,25 @@ Ionic strength I is a measure of the total concentration of ions in solution:
 
 where c_i is the molar concentration and z_i is the charge number of ion i.
 """
+from typing import Annotated
+
 from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
 import numpy as np
 
 __all__ = [
     "ionic_strength",
     "ionic_strength_from_pairs",
     "ionic_strength_monovalent",
+    "normalize_concentration", "ConcentrationMolar",
 ]
+
+
+def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(c, {"mol/L": 1.0, "M": 1.0, "mM": 1e-3, "µM": 1e-6, "mol/m³": 1e-3}, quantity_name="concentration")
+
+ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 
 @returns_unit("mol/L")
@@ -64,7 +75,7 @@ def ionic_strength_from_pairs(pairs):
 
 
 @returns_unit("mol/L")
-def ionic_strength_monovalent(concentration):
+def ionic_strength_monovalent(concentration: ConcentrationMolar):
     """
     Compute ionic strength for a monovalent salt (e.g. NaCl).
     For a 1:1 electrolyte MX at concentration c, I = c.
@@ -79,4 +90,5 @@ def ionic_strength_monovalent(concentration):
     float
         Ionic strength in mol/L (equals the concentration for 1:1 salts).
     """
+    concentration = normalize_concentration(concentration) if isinstance(concentration, str) else concentration
     return float(concentration)
