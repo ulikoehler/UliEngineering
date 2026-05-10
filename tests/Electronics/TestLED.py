@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
 from UliEngineering.Electronics.LED import led_series_resistor, LEDForwardVoltages, led_series_resistor_power, led_series_resistor_maximum_current
+from UliEngineering.Electronics.Diode import VoltageV, CurrentA, ResistanceOhm, PowerW
 from UliEngineering.Exceptions import OperationImpossibleException
 from UliEngineering.EngineerIO import auto_format
 import unittest
@@ -37,3 +38,23 @@ class TestLEDSeriesResistors(unittest.TestCase):
         # Verified using https://www.omnicalculator.com/physics/ohms-law
         assert_approx_equal(led_series_resistor_maximum_current(10, 0.25), 0.1581139)
         assert_approx_equal(led_series_resistor_maximum_current(1, 2.56), 1.6)
+
+class TestAnnotatedTypes(unittest.TestCase):
+    def test_type_annotations_exist(self):
+        """Test that the type annotations are available"""
+        self.assertIsNotNone(VoltageV)
+        self.assertIsNotNone(CurrentA)
+        self.assertIsNotNone(ResistanceOhm)
+        self.assertIsNotNone(PowerW)
+
+    def test_led_functions_various_units(self):
+        """Test LED functions with various unit inputs"""
+        # Test led_series_resistor with different unit representations
+        r1 = led_series_resistor("12 V", "20 mA", "1.6 V")
+        r2 = led_series_resistor("12000 mV", "0.02 A", "1600 mV")
+        self.assertAlmostEqual(r1, r2)
+
+        # Test led_series_resistor_power with different units
+        p1 = led_series_resistor_power("5 V", "20 mA", "2 V")
+        p2 = led_series_resistor_power("5000 mV", "0.02 A", "2000 mV")
+        self.assertAlmostEqual(p1, p2)
