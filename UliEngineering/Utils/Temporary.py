@@ -9,7 +9,7 @@ import os
 
 class AutoDeleteTempfileGenerator:
     """
-    A wrapper for temporary files and directories that are automatically automatically
+    A wrapper for temporary files and directories that are automatically
     deleted once this class is deleted or deleteAll() is called.
 
     This is not comparable to tempfile.TemporaryFile as the TemporaryFile instance
@@ -29,7 +29,7 @@ class AutoDeleteTempfileGenerator:
         self.delete_all()
 
     def mkstemp(self, suffix='', prefix='tmp', directory=None):
-        """Same as tempfile.mktemp(), but creates a file managed by this class instance"""
+        """Same as tempfile.mktemp(), but creates a file managed by this class instance."""
         handle, fname = tempfile.mkstemp(suffix, prefix, directory)
         self.tempfiles.append(fname)
         return (handle, fname)
@@ -37,14 +37,14 @@ class AutoDeleteTempfileGenerator:
     def mkftemp(self, suffix='', prefix='tmp', directory=None, mode='w'):
         """
         Wrapper for self.mkstemp() that opens the OS-level file handle
-        as a normal Python handle with the given mode
+        as a normal Python handle with the given mode.
         """
         handle, fname = self.mkstemp(suffix, prefix, directory)
         handle = os.fdopen(handle, mode)
         return (handle, fname)
 
     def mkdtemp(self, suffix='', prefix='tmp', directory=None):
-        """Same as tempfile.mkdtemp(), but creates a file managed by this class instance"""
+        """Same as tempfile.mkdtemp(), but creates a file managed by this class instance."""
         fname = tempfile.mkdtemp(suffix, prefix, directory)
         self.tempdirs.append(fname)
         return fname
@@ -52,7 +52,7 @@ class AutoDeleteTempfileGenerator:
     def delete_all(self):
         """
         Force-delete all files and directories created by this instance.
-        The class instance may be used without restriction after this call
+        The class instance may be used without restriction after this call.
         """
         #
         for filename in self.tempfiles:

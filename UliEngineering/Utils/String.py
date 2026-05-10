@@ -36,7 +36,7 @@ def suffix_list(s: str) -> List[str]:
     Return all suffixes for a string, including the string itself,
     in order of ascending length.
 
-    Example: "foobar" => ['r', 'ar', 'bar', 'obar', 'oobar', 'foobar']
+    Example: "foobar" => ['r', 'ar', 'bar', 'obar', 'oobar', 'foobar'].
     """
     return [s[-i:] for i in range(1, len(s) + 1)]
 

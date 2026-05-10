@@ -9,20 +9,20 @@ __all__ = ["create_zip_from_directory", "list_zip", "read_from_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
     """
-    Create a ZIP file from a directory that exist
+    Create a ZIP file from a directory that exists
     on the filesystem. Adds all files recursively,
     naming them correctly.
 
     Parameters
     ----------
     zippath : path-like
-        The path of the ZIP file to write
+        The path of the ZIP file to write.
     directory : path-like
-        The directory to compress
+        The directory to compress.
     include_rootdir : bool
-        if True, the basename of the directory is prepended
+        If True, the basename of the directory is prepended
         to each filename in the ZIP (i.e. when running unzip
-        on the ZIP, one directory is extracted)
+        on the ZIP, one directory is extracted).
     """
     basename = os.path.basename(directory)
     with zipfile.ZipFile(zippath, mode="w") as zipout:
@@ -50,18 +50,19 @@ def read_from_zip(zippath, filepaths, binary=True):
     Parameters
     ----------
     zippath : path-like
-        The path of the ZIP file
+        The path of the ZIP file.
     filepath : str or iterable of strings
-        The path of the file inside the ZIP
-        Multiple paths allowed (=> list is returned)
+        The path of the file inside the ZIP.
+        Multiple paths allowed (=> list is returned).
     binary : bool
         If True, returns a io.BytesIO().
-        If False, returns a io.StringIO()
+        If False, returns a io.StringIO().
 
     Returns
     -------
-    If filepath is a string, a single file-like object (in-memory).
-    If filepath is any other iterable, a list of file-like in-memory objs.
+    io.BytesIO or io.StringIO or list
+        If filepath is a string, a single file-like object (in-memory).
+        If filepath is any other iterable, a list of file-like in-memory objs.
     """
     iof = io.BytesIO if binary else io.StringIO
     # Handle single file using the same code as multiple files

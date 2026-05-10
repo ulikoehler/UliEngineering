@@ -12,7 +12,7 @@ def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max
     """
     Append a value to a 1D numpy array. Resize dynamically if required.
     Returns the new array (which may be the same as the old array).
-    No resize is performed if the array is already large enough
+    No resize is performed if the array is already large enough.
 
     Supports non-continous insertion of values (i.e. index must not grow monotonically).
 
@@ -64,7 +64,7 @@ def invert_bijection(arr):
     returned by np.argsort().
 
     For each value x in the given array at index i,
-    the new array will
+    the new array will have the value i at index x.
 
     Preconditions (not checked):
         - All elements must be >= 0 and < arr.size
@@ -97,7 +97,7 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
     """
     Given two 1d arrays, generates a 2d matrix
     containing at any coordinate [x,y] the value of fn(valuesA[x], valuesB[y]).
-    If valu
+    If valuesB is None, valuesA is used for both arrays.
 
     The input values do not neccessarily have to be numbers and can be
     non-uniform throughout the input list data type,
@@ -130,7 +130,7 @@ def ngrams(arr, n, closed=False):
     """
     Yield ngrams of subsequent entries from an arbitrarily-shaped array.
     For example, with arr=[1,2,3,4,5,6]
-    and n=2, yields [[1,2][2,3],[3,4],[4,5],[5,6]]
+    and n=2, yields [[1,2][2,3],[3,4],[4,5],[5,6]].
     if closed=False or [[1,2][2,3],[3,4],[4,5],[5,6],[6,1]] if closed=True.
 
     For n=2, this function behaves similarly to
