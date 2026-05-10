@@ -3,8 +3,11 @@
 """
 Utilities regarding temperatures
 """
+from typing import Annotated
+
 from UliEngineering.EngineerIO import normalize
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Exceptions import InvalidUnitException
 
 try:
@@ -17,7 +20,8 @@ __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "normalize_temperature_celsius",
            "normalize_temperature_kelvin",
            "temperature_with_dissipation",
-           "fahrenheit_to_celsius", "zero_Celsius"]
+           "fahrenheit_to_celsius", "zero_Celsius",
+           "TemperatureKelvin", "TemperatureCelsius"]
 
 @returns_unit("K")
 @normalize_numeric_args
@@ -39,7 +43,7 @@ def fahrenheit_to_celsius(f):
     return kelvin_to_celsius(fahrenheit_to_kelvin(f))
 
 @returns_unit("K")
-def normalize_temperature(t, default_unit="°C"):
+def normalize_temperature(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
     """
     Normalize a temperature to kelvin.
     If it is a number or it has no unit, assume it is a default unit
@@ -66,9 +70,14 @@ def normalize_temperature(t, default_unit="°C"):
 normalize_temperature_kelvin = normalize_temperature
 
 @returns_unit("°C")
-def normalize_temperature_celsius(t, default_unit="°C"):
+def normalize_temperature_celsius(t: NormalizableArgument, default_unit="°C") -> NormalizedComputable:
     """Like normalize_temperature(), but returns a value in celsius instead of Kelvin"""
     return kelvin_to_celsius(normalize_temperature(t, default_unit))
+
+
+# Unit type annotations
+TemperatureKelvin = Annotated[NormalizedComputable, normalize_temperature]
+TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsius]
 
 @returns_unit("°C")
 @normalize_numeric_args

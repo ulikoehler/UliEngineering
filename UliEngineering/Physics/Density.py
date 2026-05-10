@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from typing import Annotated
+
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
 from ._normalize import normalize_with_known_units
 
-__all__ = ["Densities", "density_by_volume_and_weight", "normalize_density_kg_per_m3"]
+__all__ = ["Densities", "density_by_volume_and_weight", "normalize_density_kg_per_m3", "DensityKgPerM3"]
 
 """
 Pre-defined densities for various materials in kg/m³
@@ -69,6 +71,10 @@ def normalize_density_kg_per_m3(density: NormalizableArgument) -> NormalizedComp
         },
         quantity_name="density",
     )
+
+
+# Unit type annotations
+DensityKgPerM3 = Annotated[NormalizedComputable, normalize_density_kg_per_m3]
 
 @normalize_numeric_args
 @returns_unit("kg/m³")
