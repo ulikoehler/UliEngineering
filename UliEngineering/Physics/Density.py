@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
-__all__ = ["Densities", "density_by_volume_and_weight"]
+from ._normalize import normalize_with_known_units
+
+__all__ = ["Densities", "density_by_volume_and_weight", "normalize_density_kg_per_m3"]
 
 """
 Pre-defined densities for various materials in kg/m³
@@ -51,6 +54,21 @@ Densities: dict[str, float] = {
     "PTFE": 2200., # Source: https://en.wikipedia.org/wiki/Polytetrafluoroethylene
     "PEEK": 1320., # Source: https://en.wikipedia.org/wiki/Polyether_ether_ketone
 }
+
+
+def normalize_density_kg_per_m3(density: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(
+        density,
+        {
+            "kg/m^3": 1.0,
+            "kg/m3": 1.0,
+            "g/cm^3": 1000.0,
+            "g/cm3": 1000.0,
+            "g/L": 1.0,
+            "g/l": 1.0,
+        },
+        quantity_name="density",
+    )
 
 @normalize_numeric_args
 @returns_unit("kg/m³")

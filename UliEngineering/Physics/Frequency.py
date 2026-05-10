@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Utilities for frequencies."""
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
 
-__all__ = ["frequency_to_period", "period_to_frequency"]
+from ._normalize import normalize_with_known_units
+
+__all__ = ["frequency_to_period", "period_to_frequency", "normalize_frequency", "normalize_rpm"]
+
+
+def normalize_rpm(speed: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(speed, {"rpm": 1.0}, quantity_name="rotational speed")
+
+
+def normalize_frequency(speed: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(speed, {"rpm": 1.0 / 60.0, "Hz": 1.0}, quantity_name="frequency")
 
 @returns_unit("s")
 @normalize_numeric_args
