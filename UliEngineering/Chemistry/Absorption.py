@@ -2,9 +2,13 @@
 # -*- coding: utf-8 -*-
 """Absorption calculations for optical materials."""
 from dataclasses import dataclass
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Length import normalize_length
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from ..Physics._normalize import normalize_with_known_units
 import numpy as np
 from scipy.interpolate import interp1d
 from scipy.constants import c as speed_of_light
@@ -17,11 +21,19 @@ __all__ = [
     "remaining_light_fraction",
     "length_from_remaining_fraction",
     "half_length",
+    "normalize_absorption_coefficient", "AbsorptionCoefficientPerMeter",
+    "normalize_length", "LengthMeter",
 ]
 
-@normalize_numeric_args
+
+def normalize_absorption_coefficient(absorption_coefficient: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(absorption_coefficient, {"1/m": 1.0, "m⁻¹": 1.0, "1/cm": 100.0, "cm⁻¹": 100.0}, quantity_name="absorption coefficient")
+
+AbsorptionCoefficientPerMeter = Annotated[NormalizedComputable, normalize_absorption_coefficient]
+LengthMeter = Annotated[NormalizedComputable, normalize_length]
+
 @returns_unit("m")
-def absorption_length_from_absorption_coefficient(absorption_coefficient):
+def absorption_length_from_absorption_coefficient(absorption_coefficient: AbsorptionCoefficientPerMeter):
     """
     Compute the absorption length (in meters) from the extinction coefficient (in 1/m).
     Absorption length is defined as the distance over which the intensity drops to 1/e.
@@ -36,11 +48,11 @@ def absorption_length_from_absorption_coefficient(absorption_coefficient):
     - Absorption length in meters.
 
     """
+    absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return np.reciprocal(absorption_coefficient)
 
-@normalize_numeric_args
 @returns_unit("1/m")
-def extinction_coefficient_from_absorption_length(absorption_length):
+def extinction_coefficient_from_absorption_length(absorption_length: LengthMeter):
     """
     Compute the extinction coefficient (in 1/m) from the absorption length (in meters).
     Formula: extinction_coefficient = 1 / absorption_length
@@ -51,10 +63,11 @@ def extinction_coefficient_from_absorption_length(absorption_length):
     Returns:
     - Extinction coefficient in 1/m.
     """
+    absorption_length = normalize_length(absorption_length) if isinstance(absorption_length, str) else absorption_length
     return np.reciprocal(absorption_length)
 
 @returns_unit("")
-def remaining_light_fraction(length, absorption_coefficient):
+def remaining_light_fraction(length: LengthMeter, absorption_coefficient: AbsorptionCoefficientPerMeter):
     """
     Compute the remaining fraction of light after passing through a medium of given length (in meters).
     with a given extinction coefficient (in 1/m).
@@ -68,13 +81,12 @@ def remaining_light_fraction(length, absorption_coefficient):
     Returns:
     - Remaining fraction of light (unitless)
     """
-    length = normalize_length(length)
-    absorption_coefficient = normalize_numeric(absorption_coefficient)
+    length = normalize_length(length) if isinstance(length, str) else length
+    absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return np.exp(-absorption_coefficient * length)
 
-@normalize_numeric_args
 @returns_unit("m")
-def length_from_remaining_fraction(remaining_fraction, absorption_coefficient):
+def length_from_remaining_fraction(remaining_fraction, absorption_coefficient: AbsorptionCoefficientPerMeter):
     """
     Compute the length of the medium (in meters) given the remaining fraction of light
     and the extinction coefficient (in 1/m).
@@ -88,11 +100,11 @@ def length_from_remaining_fraction(remaining_fraction, absorption_coefficient):
     Returns:
     - Length in meters.
     """
+    absorption_coefficient = normalize_absorption_coefficient(absorption_coefficient) if isinstance(absorption_coefficient, str) else absorption_coefficient
     return -np.log(remaining_fraction) / absorption_coefficient
 
-@normalize_numeric_args
 @returns_unit("m")
-def half_length(absorption_coefficient):
+def half_length(absorption_coefficient: AbsorptionCoefficientPerMeter):
     """
     Compute the half-length, i.e., the length of medium where the remaining fraction of light is 0.5,
     for a given extinction coefficient (in 1/m).
@@ -105,9 +117,8 @@ def half_length(absorption_coefficient):
     """
     return length_from_remaining_fraction(0.5, absorption_coefficient)
 
-@normalize_numeric_args
 @returns_unit("1/m")
-def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, wavelength):
+def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, wavelength: LengthMeter):
     """
     Compute the absorption coefficient (alpha, in 1/m) from the extinction coefficient (kappa, unitless)
     and the wavelength (in meters).
@@ -127,7 +138,7 @@ def absorption_coefficient_from_extinction_coefficient(extinction_coefficient, w
     Returns:
     - Absorption coefficient alpha in 1/m
     """
-    wavelength = normalize_length(wavelength)
+    wavelength = normalize_length(wavelength) if isinstance(wavelength, str) else wavelength
     omega = 2 * np.pi * speed_of_light / wavelength
     return 2 * omega * extinction_coefficient / speed_of_light
 
