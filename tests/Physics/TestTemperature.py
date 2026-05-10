@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Physics.Temperature import normalize_temperature, normalize_temperature_celsius, temperature_with_dissipation, fahrenheit_to_celsius, fahrenheit_to_kelvin, kelvin_to_celsius, celsius_to_kelvin
+from UliEngineering.Physics.Temperature import (
+    normalize_temperature, normalize_temperature_celsius, temperature_with_dissipation,
+    fahrenheit_to_celsius, fahrenheit_to_kelvin, kelvin_to_celsius, celsius_to_kelvin,
+    TemperatureKelvin, TemperatureCelsius
+)
 from UliEngineering.Exceptions import InvalidUnitException
 from UliEngineering.EngineerIO import auto_format
 import unittest
@@ -46,6 +50,41 @@ class TestTemperature(unittest.TestCase):
     def testInvalidUnit(self):
         with self.assertRaises(ValueError):
             normalize_temperature("1G50 G")
+
+    def test_type_annotations_exist(self):
+        """Test that the new type annotations are available"""
+        self.assertIsNotNone(TemperatureKelvin)
+        self.assertIsNotNone(TemperatureCelsius)
+
+    def test_temperature_kelvin_various_units(self):
+        """Test TemperatureKelvin type with various unit inputs"""
+        test_cases = [
+            ("0 °C", 273.15),
+            ("1 °C", 274.15),
+            ("1 K", 1.0),
+            ("100 K", 100.0),
+            ("32 °F", 273.15),
+            ("212 °F", 373.15),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_temperature(input_val)
+                assert_approx_equal(result, expected)
+
+    def test_temperature_celsius_various_units(self):
+        """Test TemperatureCelsius type with various unit inputs"""
+        test_cases = [
+            ("0 °C", 0.0),
+            ("100 °C", 100.0),
+            ("273.15 K", 0.0),
+            ("373.15 K", 100.0),
+            ("32 °F", 0.0),
+            ("212 °F", 100.0),
+        ]
+        for input_val, expected in test_cases:
+            with self.subTest(input=input_val):
+                result = normalize_temperature_celsius(input_val)
+                assert_approx_equal(result, expected)
 
 class TestTemperatureConversion(unittest.TestCase):
     def test_fahrenheit_to_celsius(self):
