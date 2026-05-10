@@ -3,6 +3,12 @@
 """
 Crystal oscillator utilities
 """
+from typing import Annotated
+
+from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
+from UliEngineering.Physics._normalize import normalize_with_known_units
+from .Capacitors import normalize_capacitance, CapacitanceFarad
 
 __all__ = [
     "load_capacitors", "actual_load_capacitance",
@@ -10,15 +16,19 @@ __all__ = [
     "crystal_deviation_seconds_per_hour",
     "crystal_deviation_seconds_per_day",
     "crystal_deviation_seconds_per_month",
-    "crystal_deviation_seconds_per_year"
+    "crystal_deviation_seconds_per_year",
+    "normalize_ppm", "PPM",
 ]
 
-from UliEngineering.EngineerIO.Decorators import normalize_numeric_args, returns_unit
+
+def normalize_ppm(ppm: NormalizableArgument) -> NormalizedComputable:
+    return normalize_with_known_units(ppm, {"ppm": 1e-6, "ppb": 1e-9, "ppt": 1e-12}, quantity_name="ppm")
+
+PPM = Annotated[NormalizedComputable, normalize_ppm]
 
 
 @returns_unit("F")
-@normalize_numeric_args
-def load_capacitors(cload, cpin="3 pF", cstray="2 pF"):
+def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
     """
     Compute the load capacitors which should be used for a given crystal,
     given that the load capacitors should be symmetric (i.e. have the same value).
@@ -44,11 +54,13 @@ def load_capacitors(cload, cpin="3 pF", cstray="2 pF"):
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
     # => solve A = ((B+P)*(B+P)) / ((B+P)+(B+P)) + C for B
+    cload = normalize_capacitance(cload) if isinstance(cload, str) else cload
+    cpin = normalize_capacitance(cpin) if isinstance(cpin, str) else cpin
+    cstray = normalize_capacitance(cstray) if isinstance(cstray, str) else cstray
     return (2 * (cload - cstray)) - cpin
 
 @returns_unit("F")
-@normalize_numeric_args
-def actual_load_capacitance(cext, cpin="3 pF", cstray="2 pF"):
+def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
     """
     Compute the actual load capacitance of a crystal given:
 
@@ -78,18 +90,20 @@ def actual_load_capacitance(cext, cpin="3 pF", cstray="2 pF"):
     # cload = (C1 * C2) / (C1 + C2) + Cstray where C1 == C2
     # => solve A = (B*B) / (B+B) + C for B
     # => solve A = ((B+P)*(B+P)) / ((B+P)+(B+P)) + C for B
+    cext = normalize_capacitance(cext) if isinstance(cext, str) else cext
+    cpin = normalize_capacitance(cpin) if isinstance(cpin, str) else cpin
+    cstray = normalize_capacitance(cstray) if isinstance(cstray, str) else cstray
     ctotal = cext + cpin
     return cstray + ((ctotal * ctotal) / (ctotal + ctotal))
 
 @returns_unit("s")
-@normalize_numeric_args
-def _crystal_deviation_seconds_per_x(deviation, n_secs):
+def _crystal_deviation_seconds_per_x(deviation: PPM, n_secs):
     """Internal common function"""
+    deviation = normalize_ppm(deviation) if isinstance(deviation, str) else deviation
     return deviation * n_secs
 
 @returns_unit("s")
-@normalize_numeric_args
-def crystal_deviation_seconds_per_minute(deviation):
+def crystal_deviation_seconds_per_minute(deviation: PPM):
     """
     Compute how many seconds a crystal with given ppm
     deviation deviates per hour.
@@ -106,8 +120,7 @@ def crystal_deviation_seconds_per_minute(deviation):
     return _crystal_deviation_seconds_per_x(deviation, 60)
 
 @returns_unit("s")
-@normalize_numeric_args
-def crystal_deviation_seconds_per_hour(deviation):
+def crystal_deviation_seconds_per_hour(deviation: PPM):
     """
     Compute how many seconds a crystal with given ppm
     deviation deviates per hour.
@@ -124,8 +137,7 @@ def crystal_deviation_seconds_per_hour(deviation):
     return _crystal_deviation_seconds_per_x(deviation, 3600)
 
 @returns_unit("s")
-@normalize_numeric_args
-def crystal_deviation_seconds_per_day(deviation):
+def crystal_deviation_seconds_per_day(deviation: PPM):
     """
     Compute how many seconds a crystal with given ppm
     deviation deviates per standard day (24 hours a 3600 seconds)
@@ -142,8 +154,7 @@ def crystal_deviation_seconds_per_day(deviation):
     return _crystal_deviation_seconds_per_x(deviation, 3600*24)
     
 @returns_unit("s")
-@normalize_numeric_args
-def crystal_deviation_seconds_per_month(deviation):
+def crystal_deviation_seconds_per_month(deviation: PPM):
     """
     Compute how many seconds a crystal with given ppm
     deviation deviates per 31-day month (31 days a 3600*24s)
@@ -160,8 +171,7 @@ def crystal_deviation_seconds_per_month(deviation):
     return _crystal_deviation_seconds_per_x(deviation, 3600*24*31)
 
 @returns_unit("s")
-@normalize_numeric_args
-def crystal_deviation_seconds_per_year(deviation):
+def crystal_deviation_seconds_per_year(deviation: PPM):
     """
     Compute how many seconds a crystal with given ppm
     deviation deviates per 365-day year (365 days a 3600*24s)
