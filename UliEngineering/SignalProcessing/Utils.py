@@ -149,7 +149,7 @@ class LinRange:
 
     @staticmethod
     def range(start, stop, step):
-        """Create a new LinRange object using a range()-like constructor."""
+        """Create a new LinRange object with the given parameters."""
         return LinRange(start, stop, int((stop - start) / step))
 
     def __len__(self):
