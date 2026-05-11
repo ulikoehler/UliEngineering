@@ -33,7 +33,7 @@ def normalize_with_known_units(
             dtype=float,
         )
 
-    if isinstance(value, (int, float, np.generic)):
+    if isinstance(value, (int, float, np.number)):
         return float(value) * default_factor
 
     if isinstance(value, bytes):

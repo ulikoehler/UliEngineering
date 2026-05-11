@@ -28,6 +28,7 @@ from typing import Annotated
 from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Physics.Temperature import TemperatureKelvin, normalize_temperature
+from UliEngineering.Physics.Density import normalize_density_kg_per_m3, DensityKgPerM3
 from ._normalize import normalize_with_known_units
 
 __all__ = [
@@ -73,8 +74,8 @@ __all__ = [
 def normalize_dynamic_viscosity(viscosity: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(viscosity, {"Pa·s": 1.0, "Pa s": 1.0, "Pas": 1.0, "mPa·s": 1e-3, "cP": 1e-3, "P": 0.1}, quantity_name="dynamic viscosity")
 
-def normalize_density(density: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(density, {"kg/m³": 1.0, "kg/m3": 1.0, "kg/m^3": 1.0, "g/cm³": 1000.0, "g/cm3": 1000.0, "g/L": 1.0}, quantity_name="density")
+# Re-export density normalizer from Density.py for backward compatibility
+normalize_density = normalize_density_kg_per_m3
 
 def normalize_length(length: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(length, {"m": 1.0, "mm": 1e-3, "cm": 1e-2, "km": 1e3, "µm": 1e-6, "nm": 1e-9}, quantity_name="length")
@@ -89,7 +90,7 @@ def normalize_shear_rate(shear_rate: NormalizableArgument) -> NormalizedComputab
     return normalize_with_known_units(shear_rate, {"s⁻¹": 1.0, "/s": 1.0}, quantity_name="shear rate")
 
 DynamicViscosityPas = Annotated[NormalizedComputable, normalize_dynamic_viscosity]
-DensityKgM3 = Annotated[NormalizedComputable, normalize_density]
+DensityKgM3 = DensityKgPerM3
 LengthMeter = Annotated[NormalizedComputable, normalize_length]
 PressurePascal = Annotated[NormalizedComputable, normalize_pressure]
 VelocityMS = Annotated[NormalizedComputable, normalize_velocity]

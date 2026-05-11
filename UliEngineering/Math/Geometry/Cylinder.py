@@ -3,9 +3,10 @@
 """Geometry functions for cylinders and hollow cylinders."""
 import math
 from .Circle import circle_area
-from UliEngineering.EngineerIO.Decorators import returns_unit
+from UliEngineering.EngineerIO.Decorators import normalize_args, returns_unit
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Types import NormalizableArgument
+from UliEngineering.Physics.Density import DensityKgPerM3
 import numpy as np
 
 __all__ = [
@@ -44,37 +45,31 @@ def hollow_cylinder_volume(outer_radius: NormalizableArgument, inner_radius: Nor
     height = normalize_numeric(height) if isinstance(height, str) else height
     return cylinder_volume(outer_radius, height) - cylinder_volume(inner_radius, height)
 
-def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
+@normalize_args
+def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
     """Compute the weight of a cylinder by its diameter, length and density.
 
     The density is in kg/m³, the diameter and length must be given in mm.
     The default density is an approximation for steel.
     """
-    diameter = normalize_numeric(diameter) if isinstance(diameter, str) else diameter
-    length = normalize_numeric(length) if isinstance(length, str) else length
-    density = normalize_numeric(density) if isinstance(density, str) else density
     return cylinder_volume(diameter/2., length) * density
 
-def cylinder_weight_by_radius(radius: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
+@normalize_args
+def cylinder_weight_by_radius(radius: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
     """Compute the weight of a cylinder by its radius, length and density.
 
     The density is in kg/m³, the radius and length must be given in mm.
     The default density is an approximation for steel.
     """
-    radius = normalize_numeric(radius) if isinstance(radius, str) else radius
-    length = normalize_numeric(length) if isinstance(length, str) else length
-    density = normalize_numeric(density) if isinstance(density, str) else density
     return cylinder_volume(radius, length) * density
 
-def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: NormalizableArgument, density: NormalizableArgument = 8000):
+@normalize_args
+def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
     """Compute the weight of a cylinder by its cross-sectional area, length and density.
 
     The density is in kg/m³, the area and length must be given in mm² and mm.
     The default density is an approximation for steel.
     """
-    area = normalize_numeric(area) if isinstance(area, str) else area
-    length = normalize_numeric(length) if isinstance(length, str) else length
-    density = normalize_numeric(density) if isinstance(density, str) else density
     return area * length * density
 
 @returns_unit("m")

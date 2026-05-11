@@ -62,12 +62,32 @@ def normalize_density_kg_per_m3(density: NormalizableArgument) -> NormalizedComp
     return normalize_with_known_units(
         density,
         {
+            # SI units
+            "kg/m³": 1.0,
             "kg/m^3": 1.0,
             "kg/m3": 1.0,
+            # Chemistry / common lab units
+            "g/cm³": 1000.0,
             "g/cm^3": 1000.0,
             "g/cm3": 1000.0,
+            "kg/L": 1000.0,
+            "kg/l": 1000.0,
+            "g/mL": 1000.0,
+            "g/ml": 1000.0,
             "g/L": 1.0,
             "g/l": 1.0,
+            # Imperial units
+            "lb/ft³": 16.0184634,
+            "lb/ft3": 16.0184634,
+            "lb/in³": 27679.9047,
+            "lb/in3": 27679.9047,
+            "lb/gal": 119.826427,
+            "oz/in³": 1729.994,
+            "oz/in3": 1729.994,
+            # Tonne / metric ton
+            "t/m³": 1000.0,
+            "t/m^3": 1000.0,
+            "t/m3": 1000.0,
         },
         quantity_name="density",
     )
