@@ -140,7 +140,10 @@ class SignalFilter:
                                           ftype=ftype, rp=rp, rs=rs)
         if not self.is_stable():
             self.a = self.b = None
-            raise FilterUnstableError("The filter is numerically unstable. Use a lower order or a wider frequency range. You can use ChainedFilter to chain multiple filters of lower order to avoid this issue.")
+            raise FilterUnstableError(
+                "The filter is numerically unstable. Use a lower order or a wider "
+                "frequency range. You can use ChainedFilter to chain multiple filters "
+                "of lower order to avoid this issue.")
         return self
 
     def as_samplerate(self, samplerate):

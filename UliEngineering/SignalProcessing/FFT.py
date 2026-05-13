@@ -40,7 +40,9 @@ class FFT(object):
         self.angles = angles
 
     def __getitem__(self, arg):
-        """Select a frequency range: fft[1.0:100.0] selects the 1.0 ... 100.0 Hz frequency range. fft[1.0:] selects everything from 1.0 Hz to the max frequency. fft[:100.0] selects everything from 1.0 Hz to the max frequency. fft[10.0] selects (frequency, value, angle) of."""
+        """Select a frequency range: fft[1.0:100.0] selects the 1.0 ... 100.0 Hz frequency range.
+        fft[1.0:] selects everything from 1.0 Hz to the max frequency. fft[:100.0] selects
+        everything from 1.0 Hz to the max frequency. fft[10.0] selects (frequency, value, angle) of."""
         if isinstance(arg, slice) or isinstance(arg, tuple):
             if isinstance(arg, slice):
                 start, end = arg.start, arg.stop
@@ -56,7 +58,10 @@ class FFT(object):
         elif isinstance(arg, (float, int)):
             return self.closest_value(arg)
         else: # Delegate to tuple impl
-            raise ValueError("FFT [] operator selects a frequency range([start:stop]) or (value, angle) at the closest frequency ([frequency])! {} is an illegal argument".format(arg))
+            raise ValueError(
+                "FFT [] operator selects a frequency range([start:stop]) or "
+                "(value, angle) at the closest frequency ([frequency])! "
+                "{} is an illegal argument".format(arg))
 
     def dominant_frequency(self, low=None, high=None):
         """
@@ -276,7 +281,8 @@ def normalize_fft_reduction(values, fftsize, nchunks=1, power=False):
         factor = 2.0 / (nchunks * fftsize)
     return vals * factor
 
-def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None, window_param=None):
+def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman",
+                        reducer=sum_reducer, normalize=True, executor=None, window_param=None):
     """
     Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     
@@ -322,10 +328,14 @@ def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
     executor = QueuedThreadExecutor(nthreads=1)
-    return parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=removeDC, window=window, reducer=reducer, normalize=normalize, executor=executor, window_param=window_param)
+    return parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=removeDC,
+                               window=window, reducer=reducer, normalize=normalize,
+                               executor=executor, window_param=window_param)
 
 
-def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", normalize=True, start=0.0, end=None, executor=None, window_param=None):
+def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False,
+                                      window="blackman", normalize=True, start=0.0,
+                                      end=None, executor=None, window_param=None):
     """
     Like (parallel|serial)_fft_reduce, but computes a single power value per FFT chunk.
     

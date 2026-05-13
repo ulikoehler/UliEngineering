@@ -119,9 +119,13 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
         min_acc_fall = factor * amplitude / (fall_time ** 2) if fall_time > 0 else 0
 
         if acceleration < min_acc_rise:
-            raise OperationImpossibleException(f"Acceleration {acceleration} is too low for rise time {rise_time} with {continuity} continuity. Min required: {min_acc_rise}")
+            raise OperationImpossibleException(
+                f"Acceleration {acceleration} is too low for rise time {rise_time} "
+                f"with {continuity} continuity. Min required: {min_acc_rise}")
         if acceleration < min_acc_fall:
-            raise OperationImpossibleException(f"Acceleration {acceleration} is too low for fall time {fall_time} with {continuity} continuity. Min required: {min_acc_fall}")
+            raise OperationImpossibleException(
+                f"Acceleration {acceleration} is too low for fall time {fall_time} "
+                f"with {continuity} continuity. Min required: {min_acc_fall}")
 
     # Generate time array
     num_samples = int(length * samplerate)

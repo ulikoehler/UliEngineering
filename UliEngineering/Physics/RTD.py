@@ -47,7 +47,8 @@ ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 PTCoefficientStandard = namedtuple("PTCoefficientStandard", ["a", "b", "c"])
 
-# Source: http://www.code10.info/index.php%3Foption%3Dcom_content%26view%3Darticle%26id%3D82:measuring-temperature-platinum-resistance-thermometers%26catid%3D60:temperature%26Itemid%3D83
+# Source: http://www.code10.info/index.php%3Foption%3Dcom_content%26view%3Darticle%26id%3D82:
+# measuring-temperature-platinum-resistance-thermometers%26catid%3D60:temperature%26Itemid%3D83
 ptx_ipts68 = PTCoefficientStandard(+3.90802e-03, -5.80195e-07, -4.27350e-12)
 ptx_its90 = PTCoefficientStandard(+3.9083E-03, -5.7750E-07, -4.1830E-12)
 

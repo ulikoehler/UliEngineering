@@ -207,7 +207,9 @@ class LinRange:
 
     def __repr__(self):
         """Return repr(self)."""
-        return f"LinRange({self.start}, {self.stop}, {str(self.step) if isinstance(self.step, np.timedelta64) else self.step}{'' if self.dtype == float else f', dtype={self.__dtype_name()}'})"
+        step_str = str(self.step) if isinstance(self.step, np.timedelta64) else self.step
+        dtype_str = '' if self.dtype == float else f', dtype={self.__dtype_name()}'
+        return f"LinRange({self.start}, {self.stop}, {step_str}{dtype_str})"
 
     def __eq__(self, other):
         """Return True if equal to other."""

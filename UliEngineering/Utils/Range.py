@@ -18,7 +18,9 @@ class ValueRange(_ValueRange):
 
     def __repr__(self):
         """Return string representation of the ValueRange."""
-        return f"ValueRange('{format_value(self.min, self.unit, significant_digits=self.significant_digits)}', '{format_value(self.max, self.unit, significant_digits=self.significant_digits)}')"
+        min_str = format_value(self.min, self.unit, significant_digits=self.significant_digits)
+        max_str = format_value(self.max, self.unit, significant_digits=self.significant_digits)
+        return f"ValueRange('{min_str}', '{max_str}')"
 
     @property
     def minmax(self):
