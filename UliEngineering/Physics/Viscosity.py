@@ -73,10 +73,14 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 def normalize_dynamic_viscosity(viscosity: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(viscosity, {"Pa·s": 1.0, "Pa s": 1.0, "Pas": 1.0, "mPa·s": 1e-3, "cP": 1e-3, "P": 0.1}, quantity_name="dynamic viscosity")
+    return normalize_with_known_units(viscosity, {"Pa·s": 1.0, "Pa s": 1.0, "Pas": 1.0,
+                                                   "mPa·s": 1e-3, "cP": 1e-3, "P": 0.1},
+                                      quantity_name="dynamic viscosity")
+
 
 # Re-export density normalizer from Density.py for backward compatibility
 normalize_density = normalize_density_kg_per_m3
+
 
 def normalize_length(length: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(length, {"m": 1.0, "mm": 1e-3, "cm": 1e-2, "km": 1e3, "µm": 1e-6, "nm": 1e-9}, quantity_name="length")
@@ -89,6 +93,7 @@ def normalize_velocity(velocity: NormalizableArgument) -> NormalizedComputable:
 
 def normalize_shear_rate(shear_rate: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(shear_rate, {"s⁻¹": 1.0, "/s": 1.0}, quantity_name="shear rate")
+
 
 DynamicViscosityPas = Annotated[NormalizedComputable, normalize_dynamic_viscosity]
 DensityKgM3 = DensityKgPerM3

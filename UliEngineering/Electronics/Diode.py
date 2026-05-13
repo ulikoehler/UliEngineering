@@ -36,17 +36,24 @@ def normalize_power(P: NormalizableArgument) -> NormalizedComputable:
     """Normalize power to watts."""
     return normalize_with_known_units(P, {"W": 1.0, "mW": 1e-3, "µW": 1e-6, "kW": 1e3}, quantity_name="power")
 
-def normalize_current(I: NormalizableArgument) -> NormalizedComputable:
+
+def normalize_current(current: NormalizableArgument) -> NormalizedComputable:
     """Normalize current to amperes."""
-    return normalize_with_known_units(I, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
+    return normalize_with_known_units(current, {"A": 1.0, "mA": 1e-3, "µA": 1e-6, "nA": 1e-9}, quantity_name="current")
+
 
 def normalize_voltage(V: NormalizableArgument) -> NormalizedComputable:
     """Normalize voltage to volts."""
     return normalize_with_known_units(V, {"V": 1.0, "mV": 1e-3, "kV": 1e3, "µV": 1e-6}, quantity_name="voltage")
 
+
 def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
     """Normalize resistance to ohms."""
-    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "Ohm": 1.0, "kΩ": 1e3, "kohm": 1e3, "KΩ": 1e3, "MΩ": 1e6, "Mohm": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
+    return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "Ohm": 1.0,
+                                           "kΩ": 1e3, "kohm": 1e3, "KΩ": 1e3,
+                                           "MΩ": 1e6, "Mohm": 1e6, "mΩ": 1e-3},
+                                      quantity_name="resistance")
+
 
 PowerW = Annotated[NormalizedComputable, normalize_power]
 CurrentA = Annotated[NormalizedComputable, normalize_current]

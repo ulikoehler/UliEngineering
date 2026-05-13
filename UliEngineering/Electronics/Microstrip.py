@@ -138,6 +138,7 @@ def microstrip_impedance(w, h = "140 μm", t = "35 μm", e_r = RelativePermittiv
                  Y2 * np.square(math.pi))
     return (Z0 / (2 * math.pi * math.sqrt(2) * math.sqrt(e_r + 1))) * np.log(1 + 4 * hdweff * (X1 + X2))
 
+
 DifferentialMicrostripImpedance = namedtuple("DifferentialMicrostripImpedance", [
     "single_ended_impedance",
     "differential_impedance",

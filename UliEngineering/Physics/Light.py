@@ -18,6 +18,7 @@ def normalize_luminous_flux(flux: NormalizableArgument) -> NormalizedComputable:
 def normalize_angle_degrees(angle: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(angle, {"°": 1.0, "deg": 1.0, "degree": 1.0, "degrees": 1.0, "rad": 57.29577951308232}, quantity_name="angle")
 
+
 LuminousFluxLumen = Annotated[NormalizedComputable, normalize_luminous_flux]
 AngleDegrees = Annotated[NormalizedComputable, normalize_angle_degrees]
 

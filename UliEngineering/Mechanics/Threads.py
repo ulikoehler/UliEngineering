@@ -19,6 +19,7 @@ class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter"
 
     """
 
+
 threads = {
     # DIN 13
     # Source: http://www.gewinde-norm.de/metrisches-iso-gewinde-din-13.htm

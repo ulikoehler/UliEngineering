@@ -9,27 +9,27 @@ from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComp
 from UliEngineering.Exceptions import InvalidUnitException
 
 try:
-    from scipy.constants import zero_Celsius
+    from scipy.constants import zero_Celsius as zero_celsius
 except ImportError:
-    zero_Celsius = 273.15 # Defined constant for 0 °C in Kelvin
+    zero_celsius = 273.15  # Defined constant for 0 °C in Kelvin
 
 __all__ = ["celsius_to_kelvin", "kelvin_to_celsius",
            "fahrenheit_to_kelvin", "normalize_temperature",
            "normalize_temperature_celsius",
            "normalize_temperature_kelvin",
            "temperature_with_dissipation",
-           "fahrenheit_to_celsius", "zero_Celsius",
+           "fahrenheit_to_celsius", "zero_celsius",
            "TemperatureKelvin", "TemperatureCelsius"]
 
 @returns_unit("K")
 def celsius_to_kelvin(c: NormalizableArgument):
     c = normalize_numeric(c) if isinstance(c, str) else c
-    return c + zero_Celsius
+    return c + zero_celsius
 
 @returns_unit("°C")
 def kelvin_to_celsius(c: NormalizableArgument):
     c = normalize_numeric(c) if isinstance(c, str) else c
-    return c - zero_Celsius
+    return c - zero_celsius
 
 @returns_unit("K")
 def fahrenheit_to_kelvin(f: NormalizableArgument):
@@ -67,6 +67,7 @@ def normalize_temperature(t: NormalizableArgument, default_unit="°C") -> Normal
     else:
         raise InvalidUnitException("Unknown temperature unit: '{}'".format(unit))
 
+
 normalize_temperature_kelvin = normalize_temperature
 
 @returns_unit("°C")
@@ -85,7 +86,9 @@ TemperatureKelvin = Annotated[NormalizedComputable, normalize_temperature]
 TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsius]
 
 @returns_unit("°C")
-def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
+def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W",
+                                   theta: NormalizableArgument = "50 °C/W",
+                                   t_ambient: NormalizableArgument = "25 °C"):
     """
     Compute the temperature of a component given its thermal resistance.
     

@@ -19,6 +19,7 @@ __all__ = [
     "buck_regulator_output_voltage_ripple",
 ]
 
+
 @returns_unit("H")
 def buck_regulator_inductance(vin: VoltageV, vout: VoltageV, frequency: FrequencyHz, ioutmax: CurrentA, K=0.3):
     """
@@ -54,6 +55,7 @@ def buck_regulator_inductance(vin: VoltageV, vout: VoltageV, frequency: Frequenc
     frequency = normalize_frequency(frequency) if isinstance(frequency, str) else frequency
     ioutmax = normalize_current(ioutmax) if isinstance(ioutmax, str) else ioutmax
     return ((vin - vout) / (frequency * K * ioutmax)) * (vout/vin)
+
 
 InductorCurrent = namedtuple("InductorCurrent", ["peak", "rms", "ripple"])
 RippleVoltage = namedtuple("RippleVoltage", ["pp", "rms", "capacitive_pp", "esr_pp"])
@@ -198,7 +200,9 @@ def buck_regulator_min_capacitance_method1(ripple_current: CurrentA, permissible
     return (2 * ripple_current) / (frequency * permissible_ripple_voltage)
 
 @returns_unit("F")
-def buck_regulator_min_capacitance_method2(inductance: InductanceH, nominal_output_voltage: VoltageV, output_voltage_ripple: VoltageV, max_load_current: CurrentA, light_load_current: CurrentA):
+def buck_regulator_min_capacitance_method2(inductance: InductanceH, nominal_output_voltage: VoltageV,
+                                            output_voltage_ripple: VoltageV, max_load_current: CurrentA,
+                                            light_load_current: CurrentA):
     """
     Compute the minimum capacitance required for a buck regulator.
 
@@ -399,7 +403,9 @@ def buck_regulator_min_output_voltage(vin: VoltageV, t_on_min, switching_frequen
     switching_frequency = normalize_frequency(switching_frequency) if isinstance(switching_frequency, str) else switching_frequency
     return vin * t_on_min * switching_frequency
 
-def buck_regulator_output_voltage_ripple(ripple_current: CurrentA, frequency: FrequencyHz, capacitance: CapacitanceFarad, esr: ResistanceOhm = 0.0) -> RippleVoltage:
+def buck_regulator_output_voltage_ripple(ripple_current: CurrentA, frequency: FrequencyHz,
+                                        capacitance: CapacitanceFarad,
+                                        esr: ResistanceOhm = 0.0) -> RippleVoltage:
     """
     Compute the output voltage ripple breakdown for a buck regulator.
 

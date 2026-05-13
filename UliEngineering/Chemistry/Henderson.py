@@ -39,6 +39,7 @@ def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
 def normalize_molar_conductivity(lambda_val: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(lambda_val, {"S·m²/mol": 1.0, "S m2/mol": 1.0, "S·cm²/mol": 1e-4, "S cm2/mol": 1e-4}, quantity_name="molar conductivity")
 
+
 ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 MolarConductivitySM2Mol = Annotated[NormalizedComputable, normalize_molar_conductivity]
 
@@ -159,7 +160,10 @@ def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: Co
 
 
 @returns_unit("V")
-def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, lambda_minus: MolarConductivitySM2Mol, c1: ConcentrationMolar, c2: ConcentrationMolar, T=298.15):
+def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol,
+                                         lambda_minus: MolarConductivitySM2Mol,
+                                         c1: ConcentrationMolar, c2: ConcentrationMolar,
+                                         T=298.15):
     """
     Compute the liquid junction potential using ionic conductivities.
 

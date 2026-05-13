@@ -47,7 +47,10 @@ def normalize_viscosity(eta: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(eta, {"Pa·s": 1.0, "Pa*s": 1.0, "cP": 1e-3, "mPa·s": 1e-3, "mPa*s": 1e-3, "P": 0.1}, quantity_name="viscosity")
 
 def normalize_diffusion_coefficient(D: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4, "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6}, quantity_name="diffusion coefficient")
+    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4,
+                                           "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6},
+                                      quantity_name="diffusion coefficient")
+
 
 RadiusM = Annotated[NormalizedComputable, normalize_radius]
 ViscosityPaS = Annotated[NormalizedComputable, normalize_viscosity]
@@ -55,7 +58,7 @@ DiffusionCoefficientM2S = Annotated[NormalizedComputable, normalize_diffusion_co
 
 
 @returns_unit("m²/s")
-def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
+def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS = WATER_VISCOSITY_25C, T = 298.15):
     """
     Compute the translational diffusion coefficient using the.
     
@@ -85,7 +88,7 @@ def stokes_einstein_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C,
 
 
 @returns_unit("m")
-def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
+def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS = WATER_VISCOSITY_25C, T = 298.15):
     """
     Compute the hydrodynamic radius from diffusion coefficient using.
     
@@ -115,7 +118,7 @@ def stokes_einstein_radius(D: DiffusionCoefficientM2S, eta: ViscosityPaS=WATER_V
 
 
 @returns_unit("Pa·s")
-def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T=298.15):
+def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T = 298.15):
     """
     Compute solvent viscosity from diffusion coefficient and particle radius.
 
@@ -143,7 +146,7 @@ def stokes_einstein_viscosity(D: DiffusionCoefficientM2S, r: RadiusM, T=298.15):
 
 
 @returns_unit("1/s")
-def stokes_einstein_rotational_diffusion(r: RadiusM, eta: ViscosityPaS=WATER_VISCOSITY_25C, T=298.15):
+def stokes_einstein_rotational_diffusion(r: RadiusM, eta: ViscosityPaS = WATER_VISCOSITY_25C, T = 298.15):
     """
     Compute the rotational diffusion coefficient.
 

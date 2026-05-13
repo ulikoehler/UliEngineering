@@ -17,10 +17,17 @@ __all__ = [
      'normalize_frequency', 'FrequencyHz']
 
 def normalize_inductance(inductance: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(inductance, {"H": 1.0, "Henry": 1.0, "henry": 1.0, "mH": 1e-3, "µH": 1e-6, "nH": 1e-9, "pH": 1e-12, "kH": 1e3}, quantity_name="inductance")
+    return normalize_with_known_units(inductance, {"H": 1.0, "Henry": 1.0, "henry": 1.0,
+                                                   "mH": 1e-3, "µH": 1e-6, "nH": 1e-9,
+                                                   "pH": 1e-12, "kH": 1e3},
+                                      quantity_name="inductance")
 
 def normalize_capacitance(capacitance: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(capacitance, {"F": 1.0, "Farad": 1.0, "farad": 1.0, "mF": 1e-3, "µF": 1e-6, "nF": 1e-9, "pF": 1e-12, "kF": 1e3}, quantity_name="capacitance")
+    return normalize_with_known_units(capacitance, {"F": 1.0, "Farad": 1.0, "farad": 1.0,
+                                                   "mF": 1e-3, "µF": 1e-6, "nF": 1e-9,
+                                                   "pF": 1e-12, "kF": 1e3},
+                                      quantity_name="capacitance")
+
 
 InductanceHenry = Annotated[NormalizedComputable, normalize_inductance]
 CapacitanceFarad = Annotated[NormalizedComputable, normalize_capacitance]

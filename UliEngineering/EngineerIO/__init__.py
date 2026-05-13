@@ -278,7 +278,9 @@ class EngineerIO(object):
             # Check if first character in the string is a unit prefix ("k12.5")
             if is_unit_prefix_list[0]:
                 # "k12" is not a valid engineer string
-                raise FirstCharacterInStringIsUnitPrefixException(f"The first character in '{s}', that is '{s[0]}' is registered as a SI prefix, hence the meaning of that string is not clear")
+                raise FirstCharacterInStringIsUnitPrefixException(
+                    f"The first character in '{s}', that is '{s[0]}' is registered as a SI prefix, "
+                    f"hence the meaning of that string is not clear")
             # Handle various cased depending on number of prefix characters in the string
             unit_prefix_count = sum(is_unit_prefix_list)
             if unit_prefix_count == 1: # Exactly one SI prefix character 8but it's not at the end
@@ -296,7 +298,9 @@ class EngineerIO(object):
                     unit_prefix_char = detected_prefixes[0]
                     # Leave unitPrefixIndex as the first True index
                 else: # Special rule does not apply => fail!
-                    raise MultipleUnitPrefixesException(f"More than one SI unit prefix in the string '{s}'. Orig str: {orig_str}, Detected unit prefixes: '{detected_prefixes}'")
+                    raise MultipleUnitPrefixesException(
+                        f"More than one SI unit prefix in the string '{s}'. "
+                        f"Orig str: {orig_str}, Detected unit prefixes: '{detected_prefixes}'")
             else: # unit_prefix_count == 0
                 unit_prefix_char = ""
                 unit_prefix_index = -1
@@ -319,7 +323,9 @@ class EngineerIO(object):
         s = s.strip(self.strippable)
         # Final check: After applying all rules, the string should be all numbers
         if not all((ch in self._numeric_allowed for ch in s)):
-            raise RemainderOfStringContainsNonNumericCharacters(f"'{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', split result {split_result}")
+            raise RemainderOfStringContainsNonNumericCharacters(
+                f"'{s}'. Orig str: {orig_str}, Detected unit_prefix '{unit_prefix_char}', "
+                f"split result {split_result}")
         return SplitResult(
             prefix=prefix,
             number=s,

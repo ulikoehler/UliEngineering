@@ -32,8 +32,10 @@ def normalize_moles(moles: NormalizableArgument) -> NormalizedComputable:
 def normalize_grams(grams: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(grams, {"g": 1.0, "mg": 1e-3, "µg": 1e-6, "ng": 1e-9, "kg": 1e3}, quantity_name="grams")
 
+
 Moles = Annotated[NormalizedComputable, normalize_moles]
 Grams = Annotated[NormalizedComputable, normalize_grams]
+
 
 @dataclass
 class DNANucleotideWeights:
@@ -76,12 +78,15 @@ class NucleotideFractions:
     T: float = 0.0  # Default to 0 for RNA
     U: float = 0.0  # Default to 0 for DNA
 
+
 # Default nucleotide fractions for equal base composition
 # For DNA: U=0, for RNA: T=0
 # User can override as needed
 
 equal_dna_fractions = NucleotideFractions(A=0.25, T=0.25, G=0.25, C=0.25, U=0.0)
 equal_rna_fractions = NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25)
+
+
 
 # DNA/RNA nucleotide fractions for various organisms (from HTML table data)
 class DNARNANucleotideFractionsByOrganism:
@@ -105,7 +110,9 @@ class DNARNANucleotideFractionsByOrganism:
     Human_RNA = NucleotideFractions(A=0.293, T=0.0, G=0.207, C=0.200, U=0.300)
 
 @returns_unit("g/mol")
-def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_molecular_weight(length_nucleotides,
+                            fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human,
+                            nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Compute the molecular weight of a single-stranded DNA molecule (e.g., oligonucleotide).
 
@@ -142,7 +149,9 @@ def dnarna_molecular_weight(length_nucleotides, fractions: NucleotideFractions =
     return mw
 
 @returns_unit("g/mol")
-def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human_RNA, nucleotide_weights: RNANucleotideWeights = RNANucleotideWeights()):
+def rna_molecular_weight(length_nucleotides,
+                         fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human_RNA,
+                         nucleotide_weights: RNANucleotideWeights = RNANucleotideWeights()):
     """
     Compute the molecular weight of a single-stranded RNA molecule (e.g., oligonucleotide).
 
@@ -179,7 +188,9 @@ def rna_molecular_weight(length_nucleotides, fractions: NucleotideFractions = DN
     return mw
 
 @returns_unit("g/L")
-def dnarna_weight_concentration_from_concentration(concentration, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_weight_concentration_from_concentration(concentration, length_nucleotides,
+                                                     fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human,
+                                                     nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert DNA/RNA concentration (e.g., '5 uM', '2 mmol/l', '0.1 mol/l') to weight concentration (g/L).
     
@@ -190,7 +201,9 @@ def dnarna_weight_concentration_from_concentration(concentration, length_nucleot
     return molar_conc * mw  # g/L
 
 @returns_unit("g")
-def dnarna_moles_to_grams(moles: Moles, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_moles_to_grams(moles: Moles, length_nucleotides,
+                          fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human,
+                          nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert amount of DNA/RNA (in moles) to grams for a given sequence length and nucleotide composition.
     
@@ -201,7 +214,9 @@ def dnarna_moles_to_grams(moles: Moles, length_nucleotides, fractions: Nucleotid
     return moles * mw  # grams
 
 @returns_unit("mol")
-def dnarna_grams_to_moles(grams: Grams, length_nucleotides, fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human, nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
+def dnarna_grams_to_moles(grams: Grams, length_nucleotides,
+                          fractions: NucleotideFractions = DNARNANucleotideFractionsByOrganism.Human,
+                          nucleotide_weights: DNANucleotideWeights = DNANucleotideWeights()):
     """
     Convert mass of DNA/RNA (in grams) to moles for a given sequence length and nucleotide composition.
     

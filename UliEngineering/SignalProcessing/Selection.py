@@ -311,7 +311,7 @@ def __select_y(ranges, y, selector):
     return np.asarray([start + selector(y[start:end + 1]) for start, end in ranges])
 
 
-__shrinkRangeMethodLUT = {
+__shrink_range_method_lut = {
     "min": lambda arr: arr[:, 0],
     "max": lambda arr: arr[:, 1],
     "middle": lambda arr: (arr[:, 0] + arr[:, 1]) // 2,
@@ -337,7 +337,7 @@ def shrink_ranges(ranges, method="middle", **kwargs):
         - miny Requires y=array_like kwarg. Selects the index where y is minimal in the range.
 
     """
-    return __shrinkRangeMethodLUT[method](ranges, **kwargs)
+    return __shrink_range_method_lut[method](ranges, **kwargs)
 
 
 def select_ranges(ranges, arr):

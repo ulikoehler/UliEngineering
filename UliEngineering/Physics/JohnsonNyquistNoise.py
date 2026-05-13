@@ -30,7 +30,11 @@ except ModuleNotFoundError:
     boltzmann_k = 1.380649e-23
 
 def normalize_resistance(resistance: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0, "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9, "mΩ": 1e-3, "µΩ": 1e-6}, quantity_name="resistance")
+    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0,
+                                                   "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9,
+                                                   "mΩ": 1e-3, "µΩ": 1e-6},
+                                      quantity_name="resistance")
+
 
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 

@@ -32,7 +32,9 @@ __all__ = [
 
 
 def normalize_molar_conductivity(Lambda_m: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(Lambda_m, {"S·cm²/mol": 1.0, "S cm2/mol": 1.0, "S·m²/mol": 10000.0, "S m2/mol": 10000.0}, quantity_name="molar conductivity")
+    return normalize_with_known_units(Lambda_m, {"S·cm²/mol": 1.0, "S cm2/mol": 1.0,
+                                                  "S·m²/mol": 10000.0, "S m2/mol": 10000.0},
+                                      quantity_name="molar conductivity")
 
 def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(c, {"mol/L": 1.0, "M": 1.0, "mM": 1e-3, "µM": 1e-6, "mol/m³": 1e-3}, quantity_name="concentration")
@@ -45,6 +47,7 @@ def normalize_conductance(G: NormalizableArgument) -> NormalizedComputable:
 
 def normalize_cell_constant(K_cell: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(K_cell, {"1/m": 1.0, "m⁻¹": 1.0, "1/cm": 100.0, "cm⁻¹": 100.0}, quantity_name="cell constant")
+
 
 MolarConductivitySCm2Mol = Annotated[NormalizedComputable, normalize_molar_conductivity]
 ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]

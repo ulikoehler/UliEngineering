@@ -37,15 +37,17 @@ __all__ = [
 def normalize_ionic_strength(ionic_strength: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(ionic_strength, {"M": 1.0, "mol/L": 1.0, "mol/l": 1.0, "mM": 1e-3, "µM": 1e-6}, quantity_name="ionic strength")
 
+
 def normalize_ion_diameter(diameter: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(diameter, {"nm": 1.0, "pm": 1e-3, "Å": 0.1, "m": 1e9}, quantity_name="ion diameter")
+
 
 IonicStrengthMolar = Annotated[NormalizedComputable, normalize_ionic_strength]
 IonDiameterNm = Annotated[NormalizedComputable, normalize_ion_diameter]
 
 
 @returns_unit("")
-def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
+def debye_huckel_limiting_law(z_plus, z_minus, ionic_strength: IonicStrengthMolar, A=0.509):
     """
     Compute log10 of the mean activity coefficient using the.
     
@@ -59,7 +61,7 @@ def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
         Charge number of the cation.
     z_minus : float
         Charge number of the anion (positive value, e.g. 1 for Cl⁻).
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     A : float
         Debye-Hückel A parameter (default: 0.509).
@@ -70,12 +72,12 @@ def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
         log10 of the mean activity coefficient.
 
     """
-    I = normalize_ionic_strength(I) if isinstance(I, str) else I
-    return -A * np.abs(z_plus * z_minus) * np.sqrt(I)
+    ionic_strength = normalize_ionic_strength(ionic_strength) if isinstance(ionic_strength, str) else ionic_strength
+    return -A * np.abs(z_plus * z_minus) * np.sqrt(ionic_strength)
 
 
 @returns_unit("")
-def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
+def debye_huckel_extended(z, ionic_strength: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
     """
     Compute log10 of the activity coefficient using the.
     
@@ -87,7 +89,7 @@ def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.
     ----------
     z : float
         Charge number of the ion.
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     a : float
         Effective ion diameter in nm (default: 0.3 nm).
@@ -102,14 +104,14 @@ def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.
         log10 of the activity coefficient.
     
     """
-    I = normalize_ionic_strength(I) if isinstance(I, str) else I
+    ionic_strength = normalize_ionic_strength(ionic_strength) if isinstance(ionic_strength, str) else ionic_strength
     a = normalize_ion_diameter(a) if isinstance(a, str) else a
-    sqrt_I = np.sqrt(I)
+    sqrt_I = np.sqrt(ionic_strength)
     return -A * z**2 * sqrt_I / (1.0 + B * a * sqrt_I)
 
 
 @returns_unit("")
-def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
+def debye_huckel_activity_coefficient(z_plus, z_minus, ionic_strength: IonicStrengthMolar, A=0.509):
     """
     Compute the mean activity coefficient using the Debye-Hückel limiting law.
 
@@ -121,7 +123,7 @@ def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=
         Charge number of the cation.
     z_minus : float
         Charge number of the anion (positive value).
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     A : float
         Debye-Hückel A parameter (default: 0.509).
@@ -132,11 +134,11 @@ def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=
         Mean activity coefficient (dimensionless).
     
     """
-    return 10.0 ** debye_huckel_limiting_law(z_plus, z_minus, I, A)
+    return 10.0 ** debye_huckel_limiting_law(z_plus, z_minus, ionic_strength, A)
 
 
 @returns_unit("")
-def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
+def debye_huckel_extended_activity_coefficient(z, ionic_strength: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
     """
     Compute the activity coefficient using the extended Debye-Hückel equation.
 
@@ -146,7 +148,7 @@ def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonD
     ----------
     z : float
         Charge number of the ion.
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     a : float
         Effective ion diameter in nm.
@@ -161,11 +163,11 @@ def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonD
         Activity coefficient (dimensionless).
     
     """
-    return 10.0 ** debye_huckel_extended(z, I, a, A, B)
+    return 10.0 ** debye_huckel_extended(z, ionic_strength, a, A, B)
 
 
 @returns_unit("m")
-def debye_length(I: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
+def debye_length(ionic_strength: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
     """
     Compute the Debye length (screening length) for an electrolyte solution.
 
@@ -175,7 +177,7 @@ def debye_length(I: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
 
     Parameters
     ----------
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     T : float
         Temperature in Kelvin (default: 298.15).
@@ -189,8 +191,8 @@ def debye_length(I: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
     
     """
     from scipy.constants import epsilon_0, k as k_B, N_A, e
-    I = normalize_ionic_strength(I) if isinstance(I, str) else I
+    ionic_strength = normalize_ionic_strength(ionic_strength) if isinstance(ionic_strength, str) else ionic_strength
     T = normalize_temperature(T) if isinstance(T, str) else T
-    # Convert I from mol/L to mol/m³
-    I_m3 = I * 1000.0
+    # Convert ionic_strength from mol/L to mol/m³
+    I_m3 = ionic_strength * 1000.0
     return np.sqrt(epsilon_0 * epsilon_r * k_B * T / (2.0 * N_A * e**2 * I_m3))

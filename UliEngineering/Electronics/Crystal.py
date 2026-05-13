@@ -22,11 +22,12 @@ __all__ = [
 def normalize_ppm(ppm: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(ppm, {"ppm": 1e-6, "ppb": 1e-9, "ppt": 1e-12}, quantity_name="ppm")
 
+
 PPM = Annotated[NormalizedComputable, normalize_ppm]
 
 
 @returns_unit("F")
-def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
+def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad = "3 pF", cstray: CapacitanceFarad = "2 pF"):
     """
     Compute the load capacitors which should be used for a given crystal, given that the load capacitors should be symmetric (i.e. have the same value).
 
@@ -63,7 +64,7 @@ def load_capacitors(cload: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstr
     return (2 * (cload - cstray)) - cpin
 
 @returns_unit("F")
-def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad="3 pF", cstray: CapacitanceFarad="2 pF"):
+def actual_load_capacitance(cext: CapacitanceFarad, cpin: CapacitanceFarad = "3 pF", cstray: CapacitanceFarad = "2 pF"):
     """
     Compute the actual load capacitance of a crystal given.
 

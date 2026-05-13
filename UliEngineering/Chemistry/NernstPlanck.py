@@ -43,13 +43,18 @@ FARADAY_CONSTANT = physical_constants["Faraday constant"][0]
 
 
 def normalize_diffusion_coefficient(D: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4, "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6}, quantity_name="diffusion coefficient")
+    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4,
+                                           "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6},
+                                      quantity_name="diffusion coefficient")
 
 def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(c, {"mol/m³": 1.0, "mol/m3": 1.0, "mol/m^3": 1.0, "mol/L": 1000.0, "M": 1000.0, "mM": 1.0, "µM": 1e-3}, quantity_name="concentration")
+    return normalize_with_known_units(c, {"mol/m³": 1.0, "mol/m3": 1.0, "mol/m^3": 1.0,
+                                          "mol/L": 1000.0, "M": 1000.0, "mM": 1.0, "µM": 1e-3},
+                                      quantity_name="concentration")
 
 def normalize_ionic_mobility(mobility: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(mobility, {"m²/(V·s)": 1.0, "m2/(V·s)": 1.0, "cm²/(V·s)": 1e-4, "cm2/(V·s)": 1e-4}, quantity_name="ionic mobility")
+
 
 DiffusionCoefficientM2S = Annotated[NormalizedComputable, normalize_diffusion_coefficient]
 ConcentrationMolM3 = Annotated[NormalizedComputable, normalize_concentration]

@@ -29,18 +29,22 @@ __all__ = [
 def normalize_inductance(L: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(L, {"H": 1.0, "mH": 1e-3, "µH": 1e-6, "nH": 1e-9}, quantity_name="inductance")
 
+
 def normalize_frequency(f: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(f, {"Hz": 1.0, "kHz": 1e3, "MHz": 1e6, "GHz": 1e9}, quantity_name="frequency")
 
+
 def normalize_time(t: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(t, {"s": 1.0, "ms": 1e-3, "µs": 1e-6, "ns": 1e-9}, quantity_name="time")
+
 
 InductanceH = Annotated[NormalizedComputable, normalize_inductance]
 FrequencyHz = Annotated[NormalizedComputable, normalize_frequency]
 TimeS = Annotated[NormalizedComputable, normalize_time]
 
+
 @returns_unit("Hz")
-def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
+def lc_cutoff_frequency(inductance: InductanceH, c: CapacitanceFarad):
     """
     Compute the resonance frequency of an LC oscillator circuit.
     
@@ -51,15 +55,15 @@ def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
 
     Parameters
     ----------
-    l : float
+    inductance : float
         The inductance in Henry
     c : float
         The capacitance in Farad
     
     """
-    l = normalize_inductance(l) if isinstance(l, str) else l
+    inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     c = normalize_capacitance(c) if isinstance(c, str) else c
-    return 1. / (2 * np.pi * np.sqrt(l * c))
+    return 1. / (2 * np.pi * np.sqrt(inductance * c))
 
 @returns_unit("Hz")
 def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
@@ -79,6 +83,7 @@ def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
     r = normalize_resistance(r) if isinstance(r, str) else r
     c = normalize_capacitance(c) if isinstance(c, str) else c
     return 1. / (2 * np.pi * r * c)
+
 
 PoleAndZero = namedtuple("PoleAndZero", ["pole", "zero"])
 
@@ -345,7 +350,7 @@ def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, ini
     return -(inductance / resistance) * np.log(target_current / initial_current)
 
 @returns_unit("V")
-def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, time: TimeS, initial_voltage: VoltageV=0, final_voltage: VoltageV=1):
+def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, time: TimeS, initial_voltage: VoltageV = 0, final_voltage: VoltageV = 1):
     """
     Calculate the voltage across a capacitor at a given time after a step input.
 
@@ -379,7 +384,7 @@ def rc_step_response(resistance: ResistanceOhm, capacitance: CapacitanceFarad, t
     return final_voltage + (initial_voltage - final_voltage) * np.exp(-time / tau)
 
 @returns_unit("A")
-def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: TimeS, final_current: CurrentA=1):
+def rl_step_response(resistance: ResistanceOhm, inductance: InductanceH, time: TimeS, final_current: CurrentA = 1):
     """
     Calculate the current through an inductor at a given time after a step input.
 

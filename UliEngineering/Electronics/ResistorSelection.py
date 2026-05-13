@@ -6,7 +6,9 @@ import itertools
 from UliEngineering.EngineerIO import normalize_numeric
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from UliEngineering.Electronics.VoltageDivider import voltage_divider_voltage
-from UliEngineering.Electronics.Resistors import ESeries, standard_resistors, power_dissipated_in_resistor_by_current, series_resistors, current_through_resistor
+from UliEngineering.Electronics.Resistors import (
+    ESeries, standard_resistors, power_dissipated_in_resistor_by_current,
+    series_resistors, current_through_resistor)
 from .Diode import normalize_resistance, ResistanceOhm, normalize_voltage, VoltageV, normalize_power, PowerW
 
 __all__ = [
@@ -40,6 +42,7 @@ class ResistorSeriesWeights:
     E96: float = 8.0
     E192: float = 16.0
     non_series: float = 100.0
+
 
 class ResistorSeriesCostFunctor(object):
     """

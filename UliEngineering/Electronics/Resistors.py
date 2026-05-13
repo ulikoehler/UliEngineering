@@ -83,6 +83,7 @@ class ESeries:
                      8.66, 8.76, 8.87, 8.98, 9.09, 9.20, 9.31, 9.42, 9.53, 9.65,
                      9.76, 9.88])
 
+
 # Global series exposed for backward compatibility
 e6 = tuple(ESeries.E6)
 e12 = tuple(ESeries.E12)
@@ -90,6 +91,8 @@ e24 = tuple(ESeries.E24)
 e48 = tuple(ESeries.E48)
 e96 = tuple(ESeries.E96)
 e192 = tuple(ESeries.E192)
+
+
 
 @returns_unit("A")
 def current_through_resistor(resistor: ResistanceOhm, voltage: VoltageV):
@@ -273,6 +276,7 @@ def resistor_current_by_power(resistor: ResistanceOhm, power: PowerW):
     resistor = normalize_resistance(resistor) if isinstance(resistor, str) else resistor
     power = normalize_power(power) if isinstance(power, str) else power
     return np.sqrt(power / resistor)
+
 
 ResistorTolerance = namedtuple("ResistorTolerance", ["lower", "nominal", "upper"])
 

@@ -36,19 +36,25 @@ __all__ = [
 def normalize_capacitance(C: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(C, {"F": 1.0, "µF": 1e-6, "nF": 1e-9, "pF": 1e-12, "mF": 1e-3, "uF": 1e-6}, quantity_name="capacitance")
 
+
 def normalize_resistance(R: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(R, {"Ω": 1.0, "ohm": 1.0, "kΩ": 1e3, "MΩ": 1e6, "mΩ": 1e-3}, quantity_name="resistance")
+
 
 def normalize_energy(E: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(E, {"J": 1.0, "mJ": 1e-3, "µJ": 1e-6, "kJ": 1e3}, quantity_name="energy")
 
+
 def normalize_permittivity(epsilon: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(epsilon, {"F/m": 1.0, "F/meter": 1.0, "F/cm": 100.0}, quantity_name="permittivity")
+
 
 CapacitanceFarad = Annotated[NormalizedComputable, normalize_capacitance]
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 EnergyJ = Annotated[NormalizedComputable, normalize_energy]
 PermittivityFm = Annotated[NormalizedComputable, normalize_permittivity]
+
+
 def _capacitor_resistor_model_time(capacitance, resistance, initial_drive_voltage, target_drive_voltage, diode_model, initial_voltage, target_voltage):
     initial_integral = diode_model.series_current_integral(initial_drive_voltage, resistance)
     target_integral = diode_model.series_current_integral(target_drive_voltage, resistance)
@@ -203,7 +209,9 @@ def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target
 
 
 @returns_unit("s")
-def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm, source_voltage: VoltageV, target_voltage: VoltageV, initial_voltage="0V", diode_model=None, diode_voltage=None):
+def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm,
+                                    source_voltage: VoltageV, target_voltage: VoltageV,
+                                    initial_voltage="0V", diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to charge a capacitor through a resistor.
 
@@ -258,7 +266,9 @@ def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: Re
 
 
 @returns_unit("s")
-def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm, initial_voltage: VoltageV, target_voltage="0V", diode_model=None, diode_voltage=None):
+def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance: ResistanceOhm,
+                                      initial_voltage: VoltageV, target_voltage="0V",
+                                      diode_model=None, diode_voltage=None):
     """
     Compute the time it takes to discharge a capacitor through a resistor.
 

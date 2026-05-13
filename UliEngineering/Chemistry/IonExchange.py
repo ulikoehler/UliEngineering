@@ -40,6 +40,7 @@ def normalize_volume(V: NormalizableArgument) -> NormalizedComputable:
 def normalize_mass(m: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(m, {"g": 1.0, "mg": 1e-3, "µg": 1e-6, "kg": 1000.0}, quantity_name="mass")
 
+
 ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 VolumeLiter = Annotated[NormalizedComputable, normalize_volume]
 MassGram = Annotated[NormalizedComputable, normalize_mass]

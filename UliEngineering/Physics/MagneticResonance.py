@@ -23,7 +23,11 @@ class NucleusLarmorFrequency:
     He3 = scipy.constants.physical_constants['shielded helion gyromag. ratio in MHz/T'][0]
 
 def normalize_magnetic_field(field: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(field, {"T": 1.0, "Tesla": 1.0, "tesla": 1.0, "mT": 1e-3, "µT": 1e-6, "G": 1e-4, "Gauss": 1e-4, "gauss": 1e-4}, quantity_name="magnetic field")
+    return normalize_with_known_units(field, {"T": 1.0, "Tesla": 1.0, "tesla": 1.0,
+                                               "mT": 1e-3, "µT": 1e-6, "G": 1e-4,
+                                               "Gauss": 1e-4, "gauss": 1e-4},
+                                      quantity_name="magnetic field")
+
 
 MagneticFieldTesla = Annotated[NormalizedComputable, normalize_magnetic_field]
 

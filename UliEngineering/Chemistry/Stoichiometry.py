@@ -64,6 +64,7 @@ def normalize_density(rho: NormalizableArgument) -> NormalizedComputable:
 def normalize_molar_mass(M: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(M, {"g/mol": 1.0, "kg/mol": 1000.0, "kg/kmol": 1.0}, quantity_name="molar mass")
 
+
 Moles = Annotated[NormalizedComputable, normalize_moles]
 Grams = Annotated[NormalizedComputable, normalize_grams]
 VolumeLiter = Annotated[NormalizedComputable, normalize_volume]
@@ -612,7 +613,7 @@ def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
 
 
 @returns_unit("m³")
-def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa=101325.0):
+def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa = 101325.0):
     """
     Compute volume of ideal gas from PV = nRT.
 

@@ -50,6 +50,7 @@ def normalize_langmuir_constant(K: NormalizableArgument) -> NormalizedComputable
 def normalize_rate_constant(k: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(k, {"L/(mol·s)": 1.0, "m³/(mol·s)": 1000.0, "1/s": 1.0}, quantity_name="rate constant")
 
+
 ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 AdsorptionCapacityMolG = Annotated[NormalizedComputable, normalize_adsorption_capacity]
 LangmuirConstantLMol = Annotated[NormalizedComputable, normalize_langmuir_constant]

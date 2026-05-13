@@ -38,7 +38,9 @@ __all__ = [
 
 
 def normalize_diffusion_coefficient(D: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4, "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6}, quantity_name="diffusion coefficient")
+    return normalize_with_known_units(D, {"m²/s": 1.0, "m2/s": 1.0, "cm²/s": 1e-4,
+                                           "cm2/s": 1e-4, "mm²/s": 1e-6, "mm2/s": 1e-6},
+                                      quantity_name="diffusion coefficient")
 
 def normalize_time_seconds(t: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(t, {"s": 1.0, "ms": 1e-3, "µs": 1e-6, "ns": 1e-9, "min": 60.0, "h": 3600.0}, quantity_name="time")
@@ -47,10 +49,13 @@ def normalize_length(length: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(length, {"m": 1.0, "mm": 1e-3, "cm": 1e-2, "km": 1e3, "µm": 1e-6, "nm": 1e-9}, quantity_name="length")
 
 def normalize_concentration(conc: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(conc, {"mol/m³": 1.0, "mol/m3": 1.0, "mol/m^3": 1.0, "mol/L": 1000.0, "M": 1000.0, "mM": 1.0, "µM": 1e-3}, quantity_name="concentration")
+    return normalize_with_known_units(conc, {"mol/m³": 1.0, "mol/m3": 1.0, "mol/m^3": 1.0,
+                                             "mol/L": 1000.0, "M": 1000.0, "mM": 1.0, "µM": 1e-3},
+                                      quantity_name="concentration")
 
 def normalize_energy(energy: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(energy, {"J/mol": 1.0, "kJ/mol": 1000.0, "eV/mol": 1.602e-19, "cal/mol": 4.184}, quantity_name="energy")
+
 
 DiffusionCoefficientM2S = Annotated[NormalizedComputable, normalize_diffusion_coefficient]
 TimeSeconds = Annotated[NormalizedComputable, normalize_time_seconds]

@@ -484,6 +484,7 @@ def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, 
     chunkgen = overlapping_chunks(arr, fftsize, shiftsize)
     return fn(chunkgen, samplerate, fftsize, **kwargs)
 
+
 simple_serial_fft_reduce = functools.partial(simple_fft_reduce, serial_fft_reduce)
 simple_parallel_fft_reduce = functools.partial(simple_fft_reduce, parallel_fft_reduce)
 simple_serial_spectral_power_fft_reduce = functools.partial(simple_fft_reduce, serial_spectral_power_fft_reduce)

@@ -14,7 +14,11 @@ __all__ = ["actual_noise", "noise_density",
            "normalize_frequency", "FrequencyHz"]
 
 def normalize_voltage(voltage: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(voltage, {"V": 1.0, "Volt": 1.0, "volt": 1.0, "mV": 1e-3, "µV": 1e-6, "nV": 1e-9, "pV": 1e-12, "kV": 1e3, "MV": 1e6}, quantity_name="voltage")
+    return normalize_with_known_units(voltage, {"V": 1.0, "Volt": 1.0, "volt": 1.0,
+                                               "mV": 1e-3, "µV": 1e-6, "nV": 1e-9,
+                                               "pV": 1e-12, "kV": 1e3, "MV": 1e6},
+                                      quantity_name="voltage")
+
 
 VoltageVolt = Annotated[NormalizedComputable, normalize_voltage]
 
@@ -32,7 +36,7 @@ def actual_noise(density: VoltageVolt, bandwith: FrequencyHz):
     return np.sqrt(bandwith) * density
 
 @returns_unit("V/√Hz")
-def noise_density(actual_noise: VoltageVolt, bandwith: FrequencyHz):
+def noise_density(total_noise: VoltageVolt, bandwith: FrequencyHz):
     """
     Compute the noise density given.
     
@@ -43,6 +47,6 @@ def noise_density(actual_noise: VoltageVolt, bandwith: FrequencyHz):
 
     '100 μV/√Hz'
     """
-    actual_noise = normalize_voltage(actual_noise)
+    total_noise = normalize_voltage(total_noise)
     bandwith = normalize_frequency(bandwith)
-    return actual_noise / np.sqrt(bandwith)
+    return total_noise / np.sqrt(bandwith)

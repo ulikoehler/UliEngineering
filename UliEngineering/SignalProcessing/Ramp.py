@@ -184,8 +184,8 @@ def _compute_edge(t, duration, amplitude, acceleration, continuity, rising=True)
             term = duration**2 - 4 * amplitude / acceleration
 
         if term < 0:
-             # Should have been caught by validation, but handle float issues
-             t1 = duration / 2.0
+            # Should have been caught by validation, but handle float issues
+            t1 = duration / 2.0
         else:
             t1 = (duration - np.sqrt(term)) / 2.0
 

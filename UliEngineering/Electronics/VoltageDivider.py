@@ -16,6 +16,7 @@ __all__ = ["voltage_divider_ratio", "top_resistor_by_ratio",
            "feedback_bottom_resistor", "feedback_actual_voltage",
            "voltage_divider_power"]
 
+
 @returns_unit("")
 def voltage_divider_ratio(rtop: ResistanceOhm, rbot: ResistanceOhm, rload: ResistanceOhm = np.inf):
     """
@@ -114,7 +115,10 @@ class VoltageDividerPower(namedtuple("VoltageDividerPower", [
 
     def __repr__(self):
         """Better formatting."""
-        return f"VoltageDividerPower(top={format_value(self.top, 'W')}, bottom={format_value(self.bottom, 'W')}, {'load=' + format_value(self.load, 'W') if self.load != 0 else ''}total={format_value(self.total, 'W')})"
+        load_str = f"load={format_value(self.load, 'W')}, " if self.load != 0 else ""
+        return (f"VoltageDividerPower(top={format_value(self.top, 'W')}, "
+                f"bottom={format_value(self.bottom, 'W')}, {load_str}"
+                f"total={format_value(self.total, 'W')})")
 
 @returns_unit("W")
 def voltage_divider_power(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: VoltageV, rload: ResistanceOhm = np.inf):

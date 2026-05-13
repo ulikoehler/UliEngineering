@@ -43,13 +43,13 @@ def capacitive_reactance(c: CapacitanceFarad, f: FrequencyHz = 1000.0):
 
 
 @returns_unit("Ω")
-def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
+def inductive_reactance(inductance: InductanceH, f: FrequencyHz = 1000.0):
     """
     Compute the inductive reactance for a given inductance and frequency.
 
     Parameters.
     ----------
-    l : InductanceH
+    inductance : InductanceH
         Inductance in Henrys.
     f : FrequencyHz, optional
         Frequency in Hz. Default is 1000.0.
@@ -60,9 +60,10 @@ def inductive_reactance(l: InductanceH, f: FrequencyHz = 1000.0):
         Inductive reactance in Ohms.
     
     """
-    l = normalize_inductance(l) if isinstance(l, str) else l
+    inductance = normalize_inductance(inductance) if isinstance(inductance, str) else inductance
     f = normalize_frequency(f) if isinstance(f, str) else f
-    return 2 * np.pi * f * l
+    return 2 * np.pi * f * inductance
+
 
 @returns_unit("H")
 def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
@@ -87,6 +88,7 @@ def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     x = normalize_resistance(x) if isinstance(x, str) else x
     f = normalize_frequency(f) if isinstance(f, str) else f
     return x / (2 * np.pi * f)
+
 
 @returns_unit("F")
 def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):

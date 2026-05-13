@@ -33,6 +33,7 @@ __all__ = [
 def normalize_ionic_strength(ionic_strength: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(ionic_strength, {"M": 1.0, "mol/L": 1.0, "mol/l": 1.0, "mM": 1e-3, "µM": 1e-6}, quantity_name="ionic strength")
 
+
 IonicStrengthMolar = Annotated[NormalizedComputable, normalize_ionic_strength]
 
 
@@ -62,7 +63,7 @@ def debye_huckel_A_parameter(T=298.15, epsilon_r=78.4):
 
 
 @returns_unit("")
-def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
+def davies_log_activity_coefficient(z, ionic_strength: IonicStrengthMolar, A=0.509):
     """
     Compute log10 of the activity coefficient using the Davies equation.
 
@@ -72,7 +73,7 @@ def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
     ----------
     z : float
         Charge number of the ion.
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     A : float
         Debye-Hückel A parameter (default: 0.509 for water at 25 °C).
@@ -83,13 +84,13 @@ def davies_log_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
         log10 of the activity coefficient (dimensionless).
     
     """
-    I = normalize_ionic_strength(I) if isinstance(I, str) else I
-    sqrt_I = np.sqrt(I)
-    return -A * z**2 * (sqrt_I / (1.0 + sqrt_I) - 0.3 * I)
+    ionic_strength = normalize_ionic_strength(ionic_strength) if isinstance(ionic_strength, str) else ionic_strength
+    sqrt_I = np.sqrt(ionic_strength)
+    return -A * z**2 * (sqrt_I / (1.0 + sqrt_I) - 0.3 * ionic_strength)
 
 
 @returns_unit("")
-def davies_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
+def davies_activity_coefficient(z, ionic_strength: IonicStrengthMolar, A=0.509):
     """
     Compute the activity coefficient using the Davies equation.
 
@@ -99,7 +100,7 @@ def davies_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
     ----------
     z : float
         Charge number of the ion.
-    I : float
+    ionic_strength : float
         Ionic strength in mol/L.
     A : float
         Debye-Hückel A parameter (default: 0.509 for water at 25 °C).
@@ -110,4 +111,4 @@ def davies_activity_coefficient(z, I: IonicStrengthMolar, A=0.509):
         Activity coefficient (dimensionless).
     
     """
-    return 10.0 ** davies_log_activity_coefficient(z, I, A)
+    return 10.0 ** davies_log_activity_coefficient(z, ionic_strength, A)

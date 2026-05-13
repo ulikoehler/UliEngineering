@@ -28,8 +28,10 @@ __all__ = [
 def normalize_absorption_coefficient(absorption_coefficient: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(absorption_coefficient, {"1/m": 1.0, "m⁻¹": 1.0, "1/cm": 100.0, "cm⁻¹": 100.0}, quantity_name="absorption coefficient")
 
+
 AbsorptionCoefficientPerMeter = Annotated[NormalizedComputable, normalize_absorption_coefficient]
 LengthMeter = Annotated[NormalizedComputable, normalize_length]
+
 
 @returns_unit("m")
 def absorption_length_from_absorption_coefficient(absorption_coefficient: AbsorptionCoefficientPerMeter):

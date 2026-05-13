@@ -36,25 +36,30 @@ __all__ = [
 ]
 
 def normalize_resistance(resistance: NormalizableArgument) -> NormalizedComputable:
-    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0, "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9, "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0, "M": 1e6, "G": 1e9}, quantity_name="resistance")
+    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0,
+                                                   "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9,
+                                                   "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0,
+                                                   "M": 1e6, "G": 1e9},
+                                      quantity_name="resistance")
+
 
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 PTCoefficientStandard = namedtuple("PTCoefficientStandard", ["a", "b", "c"])
 
 # Source: http://www.code10.info/index.php%3Foption%3Dcom_content%26view%3Darticle%26id%3D82:measuring-temperature-platinum-resistance-thermometers%26catid%3D60:temperature%26Itemid%3D83
-ptxIPTS68 = PTCoefficientStandard(+3.90802e-03, -5.80195e-07, -4.27350e-12)
-ptxITS90 = PTCoefficientStandard(+3.9083E-03, -5.7750E-07, -4.1830E-12)
+ptx_ipts68 = PTCoefficientStandard(+3.90802e-03, -5.80195e-07, -4.27350e-12)
+ptx_its90 = PTCoefficientStandard(+3.9083E-03, -5.7750E-07, -4.1830E-12)
 
-noCorrection = np.poly1d([])
-pt1000Correction = np.poly1d([1.51892983e-15, -2.85842067e-12, -5.34227299e-09,
+no_correction = np.poly1d([])
+pt1000_correction = np.poly1d([1.51892983e-15, -2.85842067e-12, -5.34227299e-09,
                               1.80282972e-05, -1.61875985e-02, 4.84112370e+00])
-pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
+pt100_correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
                              1.80282972e-03, -1.61875985e-01, 4.84112370e+00])
 
 
 @returns_unit("Ω")
-def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptxITS90):
+def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptx_its90):
     """
     Compute the PTx resistance at a given temperature.
     
@@ -74,13 +79,13 @@ def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptxITS90):
 
 
 @returns_unit("°C")
-def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptxITS90, poly=None):
+def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptx_its90, poly=None):
     """
     Compute the PTx temperature at a given temperature.
 
     Accepts an additive correction polynomial that is applied to the resistance.
     If the poly kwarg is None, the polynom is automatically selected.
-    noCorrection is used for other r0 values. In this case, use a
+    no_correction is used for other r0 values. In this case, use a
     custom polynomial (numpy poly1d object) as the poly kwarg.
 
     See http://www.thermometricscorp.com/pt1000 for reference
@@ -90,9 +95,9 @@ def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptxITS90, poly
     A, B = standard.a, standard.b
     # Select
     if poly is None:
-        if abs(r0 - 1000.0) < 1e-3: poly = pt1000Correction
-        elif abs(r0 - 100.0) < 1e-3: poly = pt100Correction
-        else: poly = noCorrection
+        if abs(r0 - 1000.0) < 1e-3: poly = pt1000_correction
+        elif abs(r0 - 100.0) < 1e-3: poly = pt100_correction
+        else: poly = no_correction
 
     t = ((-r0 * A + np.sqrt(r0 * r0 * A * A - 4 * r0 * B * (r0 - r))) /
          (2.0 * r0 * B))
@@ -127,17 +132,18 @@ def compute_correction_polynomial(r0, order=5, n=1000000) -> np.poly1d:
     can't be easily solved.
 
     This module contains several precomputed polynomials:
-        - noCorrection
-        - pt1000Correction
-        - pt100Correction
+        - no_correction
+        - pt1000_correction
+        - pt100_correction
 
     It is recommended to use order=5 for this problem.
     """
     # Compute values with no correct
     reftemp = np.linspace(-200.0, 0.0, n)
-    resistances, tempdiff, _ = check_correction_polynomial_quality(r0, reftemp, poly=noCorrection)
+    resistances, tempdiff, _ = check_correction_polynomial_quality(r0, reftemp, poly=no_correction)
     # Compute best polynomial
     return np.poly1d(np.polyfit(resistances, tempdiff, order))
+
 
 # Short definitions for commonly used functions.
 pt100_resistance = functools.partial(ptx_resistance, 100.0)

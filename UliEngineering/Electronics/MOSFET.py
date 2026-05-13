@@ -20,7 +20,9 @@ def normalize_charge(Q: NormalizableArgument) -> NormalizedComputable:
     """Normalize charge to coulombs."""
     return normalize_with_known_units(Q, {"C": 1.0, "mC": 1e-3, "µC": 1e-6, "nC": 1e-9}, quantity_name="charge")
 
+
 ChargeC = Annotated[NormalizedComputable, normalize_charge]
+
 
 @returns_unit("W")
 def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, frequency: FrequencyHz = "100 kHz"):

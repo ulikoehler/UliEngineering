@@ -13,7 +13,7 @@ from UliEngineering.EngineerIO.Decorators import returns_unit
 from UliEngineering.EngineerIO.Types import NormalizableArgument, NormalizedComputable
 from ._normalize import normalize_with_known_units
 import numpy as np
-from .Temperature import normalize_temperature_celsius, zero_Celsius
+from .Temperature import normalize_temperature_celsius, zero_celsius
 
 __all__ = ["ntc_resistance", "ntc_resistances",
            "normalize_resistance", "ResistanceOhm",
@@ -21,7 +21,12 @@ __all__ = ["ntc_resistance", "ntc_resistances",
 
 def normalize_resistance(resistance: NormalizableArgument) -> NormalizedComputable:
     """Normalize resistance to Ohms."""
-    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0, "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9, "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0, "M": 1e6, "G": 1e9}, quantity_name="resistance")
+    return normalize_with_known_units(resistance, {"Ω": 1.0, "Ohm": 1.0, "ohm": 1.0, "R": 1.0,
+                                                   "kΩ": 1000.0, "MΩ": 1e6, "GΩ": 1e9,
+                                                   "mΩ": 1e-3, "µΩ": 1e-6, "k": 1000.0,
+                                                   "M": 1e6, "G": 1e9},
+                                      quantity_name="resistance")
+
 
 ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
@@ -49,7 +54,7 @@ def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
     b25 = normalize_numeric(b25)
     t = normalize_temperature(t)  # t is now in Kelvins
     # Compute resistance
-    return r25 * np.exp(b25 * (1.0 / t - 1.0 / (25.0 + zero_Celsius)))
+    return r25 * np.exp(b25 * (1.0 / t - 1.0 / (25.0 + zero_celsius)))
 
 @returns_unit("Ω")
 def ntc_resistances(r25: ResistanceOhm, b25, t0=-40, t1=85, resolution=0.1):

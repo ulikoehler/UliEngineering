@@ -41,6 +41,7 @@ FARADAY_CONSTANT = physical_constants["Faraday constant"][0]  # 96485.33212 C/mo
 def normalize_concentration(c: NormalizableArgument) -> NormalizedComputable:
     return normalize_with_known_units(c, {"mol/L": 1.0, "M": 1.0, "mM": 1e-3, "µM": 1e-6, "mol/m³": 1e-3}, quantity_name="concentration")
 
+
 ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 

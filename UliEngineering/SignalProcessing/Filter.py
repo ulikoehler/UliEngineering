@@ -29,9 +29,9 @@ from toolz.dicttoolz import valmap
 
 # Some compatibility with Python before 3.3
 try:
-    collectionsAbc = collections.abc
+    collections_abc = collections.abc
 except AttributeError:
-    collectionsAbc = collections
+    collections_abc = collections
 
 __all__ = ["NotComputedException", "FilterUnstableError", "FilterInvalidError",
            "SignalFilter", "ChainedFilter", "SumFilter", "FilterBank"]

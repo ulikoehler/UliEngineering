@@ -50,6 +50,7 @@ def hz_to_rpm(speed: FrequencyHz) -> NormalizedComputable:
     """
     return speed * 60.
 
+
 rpm_to_rps = rpm_to_Hz
 
 @returns_unit("1/s")
