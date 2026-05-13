@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 import io
 from numpy.testing import assert_allclose
-from UliEngineering.Utils.Files import count_lines, extract_column, extract_numeric_column, write_textfile, read_textfile, list_recursive, find_datasets_by_extension
+from UliEngineering.Utils.Files import (
+    count_lines, extract_column, extract_numeric_column, write_textfile,
+    read_textfile, list_recursive, find_datasets_by_extension)
 from UliEngineering.Utils.Temporary import AutoDeleteTempfileGenerator
 import unittest
 import os.path

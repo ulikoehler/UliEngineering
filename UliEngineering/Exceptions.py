@@ -7,12 +7,9 @@ __all__ = ["ConversionException", "InvalidUnitException",
 class ConversionException(Exception):
     """Exception raised for conversion errors."""
 
-    pass
 
 class InvalidUnitException(ConversionException):
     """Exception raised for invalid unit specifications."""
-
-    pass
 
 class OperationImpossibleException(Exception):
     """
@@ -22,12 +19,8 @@ class OperationImpossibleException(Exception):
     can't work with this specific set of values.
     """
 
-    pass
-
 class EngineerIOException(ValueError):
     """Base class for more specific EngineerIO exceptions."""
-
-    pass
 
 
 class FirstCharacterInStringIsUnitPrefixException(EngineerIOException):
@@ -37,7 +30,6 @@ class FirstCharacterInStringIsUnitPrefixException(EngineerIOException):
     For example, in pfJ (pico-femto-Joules?!?).
     """
 
-    pass
 
 class MultipleUnitPrefixesException(EngineerIOException):
     """
@@ -45,8 +37,6 @@ class MultipleUnitPrefixesException(EngineerIOException):
 
     For example, in pfJ (pico-femto-Joules?!?).
     """
-
-    pass
 
 
 class RemainderOfStringContainsNonNumericCharacters(EngineerIOException):
@@ -57,7 +47,6 @@ class RemainderOfStringContainsNonNumericCharacters(EngineerIOException):
     still non-numeric characters left in the string.
     """
 
-    pass
 
 class UnknownUnitInContextException(EngineerIOException):
     """
@@ -65,5 +54,3 @@ class UnknownUnitInContextException(EngineerIOException):
 
     This occurs when only certain units are expected.
     """
-
-    pass

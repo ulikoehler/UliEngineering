@@ -28,7 +28,7 @@ class LEDForwardVoltages:
     Take that into account when operating a LED near its maximum allowed current.
 
     """
-    
+
     Infrared = 1.5
     Red = 1.6
     Yellow = 2.2

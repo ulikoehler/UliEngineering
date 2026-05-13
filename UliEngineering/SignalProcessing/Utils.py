@@ -134,7 +134,7 @@ class LinRange:
 
     Behaves like np.linspace. Use .view() to obtain a LinRange slice.
     """
-    
+
     def __init__(self, start, stop, n, endpoint=True, dtype=float):
         """Create a new LinRange object using a numpy.linspace-like constructor."""
         self.start = start

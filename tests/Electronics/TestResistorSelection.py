@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.ResistorSelection import ResistorSeriesCostFunctor, ResistorSeriesWeights, ResistorAroundValueCostFunctor, ResistorPowerCostFunctor
+from UliEngineering.Electronics.ResistorSelection import (
+    ResistorSeriesCostFunctor, ResistorSeriesWeights,
+    ResistorAroundValueCostFunctor, ResistorPowerCostFunctor)
 from UliEngineering.Electronics.Resistors import resistor_value_by_voltage_and_power
 from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV, PowerW
 import unittest

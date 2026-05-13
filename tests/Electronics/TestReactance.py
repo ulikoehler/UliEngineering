@@ -22,16 +22,16 @@ class TestNoiseDensity(unittest.TestCase):
         self.assertEqual(auto_format(inductive_reactance, "100 µH", "3.2 MHz"), "2.01 kΩ")
 
     def test_numpy_arrays(self):
-        l = np.asarray([100e-6, 200e-6])
-        assert_allclose(inductive_reactance(l, 3.2e6), [2010.6193, 4021.23859659])
+        inductance = np.asarray([100e-6, 200e-6])
+        assert_allclose(inductive_reactance(inductance, 3.2e6), [2010.6193, 4021.23859659])
 
     def test_inverse_inductive(self):
         # float inputs
-        l = 100e-6
+        inductance = 100e-6
         f = 3.2e6
-        x = inductive_reactance(l, f)
+        x = inductive_reactance(inductance, f)
         l2 = inductance_from_reactance(x, f)
-        assert_approx_equal(l2, l)
+        assert_approx_equal(l2, inductance)
 
         # string inputs and formatting
         l_str = "100 µH"
@@ -66,11 +66,11 @@ class TestNoiseDensity(unittest.TestCase):
 
     def test_inverse_numpy_arrays(self):
         # Inductive: arrays
-        l = np.asarray([10e-6, 100e-6])
+        inductance = np.asarray([10e-6, 100e-6])
         f = 1e6
-        x = inductive_reactance(l, f)
+        x = inductive_reactance(inductance, f)
         l_back = inductance_from_reactance(x, f)
-        assert_allclose(l_back, l)
+        assert_allclose(l_back, inductance)
 
         # Capacitive: arrays
         c = np.asarray([10e-12, 100e-12])

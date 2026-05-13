@@ -21,8 +21,8 @@ class TestCapacitors(unittest.TestCase):
         self.assertEqual(auto_format(capacitor_charge, "1.5 F", "5.0 V"), "7.50 C")
 
     def test_numpy_arrays(self):
-        l = np.asarray([1.5, 0.1])
-        assert_allclose(capacitor_energy(l, 5.0), [18.75, 1.25])
+        cap = np.asarray([1.5, 0.1])
+        assert_allclose(capacitor_energy(cap, 5.0), [18.75, 1.25])
 
     def test_capacitor_lifetime(self):
         self.assertAlmostEqual(capacitor_lifetime(105, "2000 h", "105 °C", A=10), 2000)
@@ -82,9 +82,9 @@ class TestCapacitors(unittest.TestCase):
 
 class TestCapacitorResistorTiming(unittest.TestCase):
     class CustomDiodeModel(DiodeModel):
-        
+
         """Custom diode model for testing."""
-        
+
         def minimum_series_voltage(self):
             return 0.2
 

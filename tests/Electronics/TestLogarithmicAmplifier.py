@@ -78,5 +78,6 @@ class TestAnnotatedTypes(unittest.TestCase):
         i2 = logarithmic_amplifier_input_current("600 mV", 0.2, "0.001 µA")
         self.assertAlmostEqual(i1, i2)
 
+
 if __name__ == '__main__':
     unittest.main()

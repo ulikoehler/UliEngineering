@@ -145,8 +145,7 @@ class TestEngineerIO(unittest.TestCase):
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 4), '-2.346 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 5), '-2.3457 µ°C')
         self.assertEqual(self.io.format(-2.3456789e-6, "°C", 2), '-2.3 µ°C')
-        
-        
+
     def test_format_negative(self):
         self.assertEqual(self.io.format(-1.0e-15, "V"), '-1.00 fV')
         self.assertEqual(self.io.format(-234.6789e-3, "V"), '-235 mV')
@@ -245,7 +244,8 @@ class TestEngineerIO(unittest.TestCase):
 
     def testAutoFormatValid(self):
         @returns_unit("V")
-        def testfn(n=1.0): return n
+        def testfn(n=1.0):
+            return n
         self.assertEqual(self.io.auto_format(testfn), "1.00 V")
         # Test functools.partial() behaviour
         testfn2 = functools.partial(testfn, n=2.0)
@@ -502,18 +502,18 @@ class TestUnitPrefixRegex(unittest.TestCase):
                     remainder = s[:-len(suffix)] if len(suffix) > 0 else s
                     return True, suffix, remainder
             return False, "", s
-        
+
         # Test cases that should produce identical results
         test_cases = [
             "123k", "456M", "789µ", "100", "abc", "1k23", "test", 
             "", "1.5m", "2.3G", "4.7p", "9.9n", "0f", "xyz123"
         ]
-        
+
         for test_case in test_cases:
             with self.subTest(test_case=test_case):
                 new_result = self.io.has_any_unit_prefix(test_case)
                 old_result = old_has_any_unit_prefix(test_case)
-                self.assertEqual(new_result, old_result, 
+                self.assertEqual(new_result, old_result,
                                f"Results differ for '{test_case}': new={new_result}, old={old_result}")
 
 

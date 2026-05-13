@@ -5,7 +5,12 @@ from datetime import datetime
 import re
 import numpy as np
 from numpy.testing import (assert_array_equal)
-from UliEngineering.Utils.Date import number_of_days_in_month, all_dates_in_year, generate_days, generate_months, generate_years, extract_months, extract_years, extract_day_of_month, extract_day_of_week, is_first_day_of_month, is_first_day_of_week, is_month_change, is_year_change, yield_hours_on_day, yield_minutes_on_day, yield_seconds_on_day, generate_datetime_filename
+from UliEngineering.Utils.Date import (
+    number_of_days_in_month, all_dates_in_year, generate_days, generate_months,
+    generate_years, extract_months, extract_years, extract_day_of_month,
+    extract_day_of_week, is_first_day_of_month, is_first_day_of_week,
+    is_month_change, is_year_change, yield_hours_on_day, yield_minutes_on_day,
+    yield_seconds_on_day, generate_datetime_filename)
 
 
 class TestDate(unittest.TestCase):

@@ -71,15 +71,15 @@ class TestAbsorptionFunctions(unittest.TestCase):
     def test_inverse_absorption_length_and_extinction_coefficient_scalar(self):
         # Should be inverse of each other
         for val in [0.1, 1.0, 10.0, 1e-6]:
-            l = absorption_length_from_absorption_coefficient(val)
-            self.assertAlmostEqual(extinction_coefficient_from_absorption_length(l), val)
+            length = absorption_length_from_absorption_coefficient(val)
+            self.assertAlmostEqual(extinction_coefficient_from_absorption_length(length), val)
             e = extinction_coefficient_from_absorption_length(val)
             self.assertAlmostEqual(absorption_length_from_absorption_coefficient(e), val)
 
     def test_inverse_absorption_length_and_extinction_coefficient_array(self):
         vals = np.array([0.1, 1.0, 10.0, 1e-6])
-        l = absorption_length_from_absorption_coefficient(vals)
-        np.testing.assert_allclose(extinction_coefficient_from_absorption_length(l), vals)
+        length = absorption_length_from_absorption_coefficient(vals)
+        np.testing.assert_allclose(extinction_coefficient_from_absorption_length(length), vals)
         e = extinction_coefficient_from_absorption_length(vals)
         np.testing.assert_allclose(absorption_length_from_absorption_coefficient(e), vals)
 
@@ -99,10 +99,10 @@ class TestAbsorptionFunctions(unittest.TestCase):
         length = np.array([0.0, 0.5, 1.0])
         # Test all combinations
         for e in ext:
-            for l in length:
-                frac = remaining_light_fraction(l, e)
+            for length_val in length:
+                frac = remaining_light_fraction(length_val, e)
                 l2 = length_from_remaining_fraction(frac, e)
-                self.assertAlmostEqual(l, l2, places=10)
+                self.assertAlmostEqual(length_val, l2, places=10)
 
     def test_remaining_fraction_and_length_vectorized(self):
         ext = np.array([0.1, 1.0, 10.0])

@@ -150,5 +150,6 @@ class TestNoneToNaN(unittest.TestCase):
         self.assertEqual(none_to_nan(0), 0)
         self.assertEqual(none_to_nan(0.0), 0.0)
 
+
 if __name__ == '__main__':
     unittest.main()

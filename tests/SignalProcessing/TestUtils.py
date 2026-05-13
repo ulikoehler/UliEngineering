@@ -158,10 +158,10 @@ class TestLinSpace(unittest.TestCase):
         self.assertFalse(l3 == l2)
 
     def test_repr(self):
-        l = LinRange(0., 100., 100, endpoint=False)
-        self.assertEqual("LinRange(0.0, 100.0, 1.0)", str(l))
-        l = LinRange(0., 100., 100, endpoint=False, dtype=int)
-        self.assertEqual("LinRange(0.0, 100.0, 1.0, dtype=int)", str(l))
+        linrange = LinRange(0., 100., 100, endpoint=False)
+        self.assertEqual("LinRange(0.0, 100.0, 1.0)", str(linrange))
+        linrange = LinRange(0., 100., 100, endpoint=False, dtype=int)
+        self.assertEqual("LinRange(0.0, 100.0, 1.0, dtype=int)", str(linrange))
 
     def testDtype(self):
         lin1 = LinRange(0.0, 100.0, 101)

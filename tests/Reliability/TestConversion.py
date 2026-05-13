@@ -4,7 +4,10 @@ import unittest
 
 from numpy.testing import assert_allclose
 
-from UliEngineering.Reliability.Conversion import FIT_to_MTTF, FIT_to_MTTFd, MTTF_to_FIT, MTTFd_to_FIT, B10d_to_MTTFd, MTTFd_to_B10d, PFH_to_MTTF, MTTF_to_PFH, FIT_to_PFH, PFH_to_FIT, PFHd_to_MTTFd, MTTFd_to_PFHd
+from UliEngineering.Reliability.Conversion import (
+    FIT_to_MTTF, FIT_to_MTTFd, MTTF_to_FIT, MTTFd_to_FIT, B10d_to_MTTFd,
+    MTTFd_to_B10d, PFH_to_MTTF, MTTF_to_PFH, FIT_to_PFH, PFH_to_FIT,
+    PFHd_to_MTTFd, MTTFd_to_PFHd)
 
 
 class TestConversion(unittest.TestCase):

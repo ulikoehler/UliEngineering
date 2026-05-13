@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.VoltageDivider import voltage_divider_ratio, bottom_resistor_by_ratio, top_resistor_by_ratio, feedback_top_resistor, feedback_bottom_resistor, feedback_actual_voltage, voltage_divider_power
+from UliEngineering.Electronics.VoltageDivider import (
+    voltage_divider_ratio, bottom_resistor_by_ratio, top_resistor_by_ratio,
+    feedback_top_resistor, feedback_bottom_resistor, feedback_actual_voltage,
+    voltage_divider_power)
 from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV
 from UliEngineering.EngineerIO.Types import NormalizableArgument
 from UliEngineering.EngineerIO import auto_format

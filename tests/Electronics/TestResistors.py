@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_approx_equal
-from UliEngineering.Electronics.Resistors import parallel_resistors, series_resistors, standard_resistors, standard_resistors_in_range, nearest_resistor, current_through_resistor, resistor_by_voltage_and_current, resistor_value_by_voltage_and_power, e96, e48
+from UliEngineering.Electronics.Resistors import (
+    parallel_resistors, series_resistors, standard_resistors,
+    standard_resistors_in_range, nearest_resistor, current_through_resistor,
+    resistor_by_voltage_and_current, resistor_value_by_voltage_and_power, e96, e48)
 from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV, CurrentA, PowerW
 from UliEngineering.EngineerIO import auto_format
 import unittest

@@ -313,5 +313,6 @@ class TestAnnotatedTypes(unittest.TestCase):
         self.assertAlmostEqual(base_result, result2, places=10)
         self.assertAlmostEqual(base_result, result3, places=10)
 
+
 if __name__ == '__main__':
     unittest.main()

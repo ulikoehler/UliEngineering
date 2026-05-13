@@ -16,35 +16,35 @@ import numpy as np
 class TestDebyeHuckel(unittest.TestCase):
     def test_debye_huckel_limiting_law_scalar(self):
         """Test Debye-Hückel limiting law with scalar input."""
-        log_gamma = debye_huckel_limiting_law(z_plus=1, z_minus=1, I=0.01)
+        log_gamma = debye_huckel_limiting_law(z_plus=1, z_minus=1, ionic_strength=0.01)
         self.assertIsInstance(log_gamma, float)
 
     def test_debye_huckel_limiting_law_array(self):
         """Test Debye-Hückel limiting law with array input."""
-        I = np.array([0.001, 0.01, 0.1])
-        log_gamma = debye_huckel_limiting_law(z_plus=1, z_minus=1, I=I)
+        ionic_strength = np.array([0.001, 0.01, 0.1])
+        log_gamma = debye_huckel_limiting_law(z_plus=1, z_minus=1, ionic_strength=ionic_strength)
         self.assertEqual(len(log_gamma), 3)
 
     def test_debye_huckel_extended_scalar(self):
         """Test extended Debye-Hückel equation with scalar input."""
-        log_gamma = debye_huckel_extended(z=1, I=0.1, a=0.3)
+        log_gamma = debye_huckel_extended(z=1, ionic_strength=0.1, a=0.3)
         self.assertIsInstance(log_gamma, float)
 
     def test_debye_huckel_extended_array(self):
         """Test extended Debye-Hückel equation with array input."""
-        I = np.array([0.01, 0.1, 0.5])
-        log_gamma = debye_huckel_extended(z=1, I=I, a=0.3)
+        ionic_strength = np.array([0.01, 0.1, 0.5])
+        log_gamma = debye_huckel_extended(z=1, ionic_strength=ionic_strength, a=0.3)
         self.assertEqual(len(log_gamma), 3)
 
     def test_debye_huckel_activity_coefficient_scalar(self):
         """Test activity coefficient with scalar input."""
-        gamma = debye_huckel_activity_coefficient(z_plus=1, z_minus=1, I=0.01)
+        gamma = debye_huckel_activity_coefficient(z_plus=1, z_minus=1, ionic_strength=0.01)
         self.assertIsInstance(gamma, float)
         self.assertLess(gamma, 1.0)
 
     def test_debye_huckel_extended_activity_coefficient_scalar(self):
         """Test extended activity coefficient with scalar input."""
-        gamma = debye_huckel_extended_activity_coefficient(z=1, I=0.1, a=0.3)
+        gamma = debye_huckel_extended_activity_coefficient(z=1, ionic_strength=0.1, a=0.3)
         self.assertIsInstance(gamma, float)
         self.assertLess(gamma, 1.0)
 
@@ -52,30 +52,30 @@ class TestDebyeHuckel(unittest.TestCase):
         """Test consistency between log and linear forms for limiting law."""
         z_plus = 1
         z_minus = 1
-        I = 0.01
-        log_gamma = debye_huckel_limiting_law(z_plus, z_minus, I)
-        gamma = debye_huckel_activity_coefficient(z_plus, z_minus, I)
+        ionic_strength = 0.01
+        log_gamma = debye_huckel_limiting_law(z_plus, z_minus, ionic_strength)
+        gamma = debye_huckel_activity_coefficient(z_plus, z_minus, ionic_strength)
         self.assertAlmostEqual(gamma, 10.0 ** log_gamma, places=10)
 
     def test_consistency_extended(self):
         """Test consistency between log and linear forms for extended equation."""
         z = 1
-        I = 0.1
+        ionic_strength = 0.1
         a = 0.3
-        log_gamma = debye_huckel_extended(z, I, a)
-        gamma = debye_huckel_extended_activity_coefficient(z, I, a)
+        log_gamma = debye_huckel_extended(z, ionic_strength, a)
+        gamma = debye_huckel_extended_activity_coefficient(z, ionic_strength, a)
         self.assertAlmostEqual(gamma, 10.0 ** log_gamma, places=10)
 
     def test_debye_length_scalar(self):
         """Test Debye length with scalar input."""
-        length = debye_length(I=0.1)
+        length = debye_length(ionic_strength=0.1)
         self.assertIsInstance(length, float)
         self.assertGreater(length, 0)
 
     def test_debye_length_array(self):
         """Test Debye length with array input."""
-        I = np.array([0.01, 0.1, 1.0])
-        length = debye_length(I=I)
+        ionic_strength = np.array([0.01, 0.1, 1.0])
+        length = debye_length(ionic_strength=ionic_strength)
         self.assertEqual(len(length), 3)
 
 

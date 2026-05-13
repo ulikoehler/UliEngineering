@@ -23,39 +23,39 @@ class TestDaviesEquation(unittest.TestCase):
 
     def test_davies_log_activity_coefficient_scalar(self):
         """Test Davies equation for log activity coefficient with scalar input."""
-        log_gamma = davies_log_activity_coefficient(z=1, I=0.1)
+        log_gamma = davies_log_activity_coefficient(z=1, ionic_strength=0.1)
         self.assertIsInstance(log_gamma, float)
 
     def test_davies_log_activity_coefficient_array(self):
         """Test Davies equation for log activity coefficient with array input."""
-        I = np.array([0.01, 0.1, 0.5])
-        log_gamma = davies_log_activity_coefficient(z=1, I=I)
+        ionic_strength = np.array([0.01, 0.1, 0.5])
+        log_gamma = davies_log_activity_coefficient(z=1, ionic_strength=ionic_strength)
         self.assertEqual(len(log_gamma), 3)
 
     def test_davies_activity_coefficient_scalar(self):
         """Test Davies equation for activity coefficient with scalar input."""
-        gamma = davies_activity_coefficient(z=1, I=0.1)
+        gamma = davies_activity_coefficient(z=1, ionic_strength=0.1)
         self.assertIsInstance(gamma, float)
         self.assertLess(gamma, 1.0)  # Activity coefficient should be < 1 for ions
 
     def test_davies_activity_coefficient_array(self):
         """Test Davies equation for activity coefficient with array input."""
-        I = np.array([0.01, 0.1, 0.5])
-        gamma = davies_activity_coefficient(z=1, I=I)
+        ionic_strength = np.array([0.01, 0.1, 0.5])
+        gamma = davies_activity_coefficient(z=1, ionic_strength=ionic_strength)
         self.assertEqual(len(gamma), 3)
 
     def test_davies_activity_coefficient_charge(self):
         """Test that higher charge gives lower activity coefficient."""
-        gamma_z1 = davies_activity_coefficient(z=1, I=0.1)
-        gamma_z2 = davies_activity_coefficient(z=2, I=0.1)
+        gamma_z1 = davies_activity_coefficient(z=1, ionic_strength=0.1)
+        gamma_z2 = davies_activity_coefficient(z=2, ionic_strength=0.1)
         self.assertLess(gamma_z2, gamma_z1)
 
     def test_davies_activity_coefficient_consistency(self):
         """Test consistency between log and linear forms."""
         z = 1
-        I = 0.1
-        log_gamma = davies_log_activity_coefficient(z, I)
-        gamma = davies_activity_coefficient(z, I)
+        ionic_strength = 0.1
+        log_gamma = davies_log_activity_coefficient(z, ionic_strength)
+        gamma = davies_activity_coefficient(z, ionic_strength)
         self.assertAlmostEqual(gamma, 10.0 ** log_gamma, places=10)
 
 

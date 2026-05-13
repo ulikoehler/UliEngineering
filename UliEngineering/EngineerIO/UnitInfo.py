@@ -11,8 +11,8 @@ class UnitAlias:
 
     This is used for units that don't have their own conversion factor.
     but are alternative names for existing units.
-    """ 
-    
+    """
+
     canonical: str
     aliases: List[str] = field(default_factory=list)
 

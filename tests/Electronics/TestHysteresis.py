@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from numpy.testing import assert_allclose
-from UliEngineering.Electronics.Hysteresis import hysteresis_threshold_ratios, hysteresis_threshold_voltages, hysteresis_threshold_factors, hysteresis_threshold_factors_opendrain, hysteresis_threshold_voltages_opendrain, hysteresis_threshold_ratios_opendrain, hysteresis_resistor
+from UliEngineering.Electronics.Hysteresis import (
+    hysteresis_threshold_ratios, hysteresis_threshold_voltages,
+    hysteresis_threshold_factors, hysteresis_threshold_factors_opendrain,
+    hysteresis_threshold_voltages_opendrain, hysteresis_threshold_ratios_opendrain,
+    hysteresis_resistor)
 from UliEngineering.Electronics.Diode import ResistanceOhm, VoltageV
 import unittest
 

@@ -251,5 +251,6 @@ class TestNormalizeFunctions(unittest.TestCase):
         f2 = lc_cutoff_frequency("1000 µH", "1000 nF")
         self.assertAlmostEqual(f1, f2)
 
+
 if __name__ == '__main__':
     unittest.main()
