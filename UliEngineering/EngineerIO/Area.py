@@ -71,12 +71,7 @@ def _create_area_config():
     )
 
 class EngineerAreaIO(EngineerIO):
-
-    
-    """
-    EngineerIO subclass specialized for area unit parsing and conversion.
-
-    """
+    """EngineerIO subclass specialized for area unit parsing and conversion."""
 
     _instance = None
 
@@ -137,7 +132,7 @@ class EngineerAreaIO(EngineerIO):
     @returns_unit("m²")
     def convert_area_to_square_meters(self, value, unit):
         """
-        Given a number or Engineer string (unit ignored) <value>
+        Given a number or Engineer string (unit ignored) <value>.
         
         in <unit>, convert it to square meters.
         """
@@ -148,7 +143,7 @@ class EngineerAreaIO(EngineerIO):
 @returns_unit("m²")
 def convert_area_to_square_meters(value, unit, instance=None):
     """
-    Given a number or Engineer string (unit ignored) <value>
+    Given a number or Engineer string (unit ignored) <value>.
     
     in <unit>, convert it to square meters.
     """

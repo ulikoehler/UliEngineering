@@ -5,8 +5,8 @@ from collections import namedtuple
 __all__ = ["ThreadParameters", "threads"]
 
 class ThreadParameters(namedtuple("ThreadParameters", ["pitch", "outer_diameter", "core_diameter"])):
-    
-    """Thread parameters.
+    """
+    Thread parameters.
 
     Parameters.
     ==========

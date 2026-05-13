@@ -15,7 +15,7 @@ __all__ = ["propagation_speed", "propagation_delay", "velocity_factor"]
 @returns_unit("m/s")
 def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
-    Compute the propagation speed in a homogeneous medium characterized
+    Compute the propagation speed in a homogeneous medium characterized.
     
     by the relative permittivity (e_r) and relative permeability (mu_r).
 
@@ -52,7 +52,7 @@ def propagation_speed(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgumen
 @returns_unit("s")
 def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
-    Compute the propagation delay for a given physical length in a medium
+    Compute the propagation delay for a given physical length in a medium.
     
     with relative permittivity e_r and relative permeability mu_r.
 
@@ -90,7 +90,7 @@ def propagation_delay(length, e_r: NormalizableArgument = 1.0, mu_r: Normalizabl
 @returns_unit("")
 def velocity_factor(e_r: NormalizableArgument = 1.0, mu_r: NormalizableArgument = 1.0):
     """
-    Return the velocity factor (unitless) for the medium, i.e. the ratio of the
+    Return the velocity factor (unitless) for the medium, i.e. the ratio of the.
     
     propagation speed to the speed of light in vacuum.
 

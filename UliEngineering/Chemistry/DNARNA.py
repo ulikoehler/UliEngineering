@@ -37,7 +37,6 @@ Grams = Annotated[NormalizedComputable, normalize_grams]
 
 @dataclass
 class DNANucleotideWeights:
-    
     """
     Molecular weights of the four DNA nucleotides in g/mol.
 
@@ -45,7 +44,7 @@ class DNANucleotideWeights:
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
-    
+
     A: float = 313.2   # Adenine
     T: float = 304.2   # Thymine
     G: float = 329.2   # Guanine
@@ -53,7 +52,6 @@ class DNANucleotideWeights:
 
 @dataclass
 class RNANucleotideWeights:
-    
     """
     Molecular weights of the four RNA nucleotides in g/mol.
 
@@ -61,7 +59,7 @@ class RNANucleotideWeights:
 
     Source: https://www.thermofisher.com/de/de/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
     """
-    
+
     A: float = 329.2   # Adenine
     U: float = 306.2   # Uracil
     G: float = 345.2   # Guanine
@@ -70,9 +68,8 @@ class RNANucleotideWeights:
 
 @dataclass
 class NucleotideFractions:
-    """
-    Fractions of the five nucleotides (must sum to 1.0).
-    """
+    """Fractions of the five nucleotides (must sum to 1.0)."""
+
     A: float
     G: float
     C: float
@@ -88,13 +85,12 @@ equal_rna_fractions = NucleotideFractions(A=0.25, T=0.0, G=0.25, C=0.25, U=0.25)
 
 # DNA/RNA nucleotide fractions for various organisms (from HTML table data)
 class DNARNANucleotideFractionsByOrganism:
-    
     """
     Extracted from https://en.wikipedia.org/wiki/Chargaff%27s_rules.
-    
+
     Source:  Bansal M (2003). "DNA structure: Revisiting the Watson-Crick double helix" (PDF). Current Science. 85 (11).
     """
-    
+
     MaiOctopus = NucleotideFractions(A=0.332, T=0.316, G=0.176, C=0.176, U=0.0)
     Chicken = NucleotideFractions(A=0.280, T=0.284, G=0.220, C=0.216, U=0.0)
     Rat = NucleotideFractions(A=0.286, T=0.284, G=0.214, C=0.205, U=0.0)

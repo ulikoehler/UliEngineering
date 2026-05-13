@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Utilities to work with wrapped values (e.g. phase angles or encoder counts)
+"""
+Utilities to work with wrapped values (e.g. phase angles or encoder counts).
 
-which wrap around at a certain point."""
+which wrap around at a certain point.
+"""
 import numpy as np
 
 __all__ = [
     "unwrap",
     "OnlineUnwrapper"
 ]
-
 class OnlineUnwrapper:
-    
-    """An online unwrapper that can process samples one by one or in chunks.
+    """
+    An online unwrapper that can process samples one by one or in chunks.
 
     Maintains state between calls.
     """
 
     def __init__(self, wrap_value=2**20, threshold=None):
-        """Initialize the unwrapper.
+        """
+        Initialize the unwrapper.
 
         Parameters.
         ----------
@@ -33,7 +35,8 @@ class OnlineUnwrapper:
         self.correction = 0.0
 
     def __call__(self, data):
-        """Unwrap the given data.
+        """
+        Unwrap the given data.
 
         Parameters.
         ----------
@@ -97,17 +100,19 @@ class OnlineUnwrapper:
         return out
 
 def unwrap(series, wrap_value=2**20, threshold=None):
-    """Unwrap wrapped values  by compensating for numerical wraps.
+    """
+    Unwrap wrapped values  by compensating for numerical wraps.
 
-    Args:
-        series: list or np.array
-            The input series of wrapped values.
-        wrap_value: float
-            The value at which wrapping occurs (e.g. 2*pi for angles,
-            2**20 for 20-bit counters, etc.)
-        threshold: float or None
-            The threshold to detect a wrap. If None, it is set to wrap_value / 2.
-            A difference larger than this threshold is considered a wrap.
+    Parameters
+    ----------
+    series : list or np.array
+        The input series of wrapped values.
+    wrap_value : float, optional
+        The value at which wrapping occurs (e.g. 2*pi for angles,
+        2**20 for 20-bit counters, etc.)
+    threshold : float or None, optional
+        The threshold to detect a wrap. If None, it is set to wrap_value / 2.
+        A difference larger than this threshold is considered a wrap.
     
     """
     if threshold is None:

@@ -15,13 +15,13 @@ def power_factor_by_phase_angle(angle: NormalizableArgument = "10°", unit: str 
     This approach only returns the correct power factor if current and voltage.
     are both sinusoidal.
 
-    Keyword Arguments
+    Other Parameters
     ----------------
     angle : number or Engineer string
         The phase angle between current and voltage.
     unit : "degrees", "deg" or "radians", "rad", "radiant"
         The unit to interpret angle as.
-    
+
     """
     angle = normalize_numeric(angle) if isinstance(angle, str) else angle
     if unit in ["degrees", "deg"]:

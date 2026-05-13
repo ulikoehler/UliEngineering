@@ -14,7 +14,8 @@ __all__ = [
 ]
 
 def hash_file_native(file_path, tool="sha256sum"):
-    """Hash a file using a native tool.
+    """
+    Hash a file using a native tool.
 
     This is generally faster for huge file since the data does not need to be copied into Python.
 
@@ -35,7 +36,8 @@ def hash_file_native(file_path, tool="sha256sum"):
     return output.decode("utf-8").partition(" ")[0].strip()
 
 def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=65536):
-    """Compute the hash of a file using the specified hash algorithm using Python's hashlib.
+    """
+    Compute the hash of a file using the specified hash algorithm using Python's hashlib.
 
     Parameters.
     ----------
@@ -64,7 +66,8 @@ def hash_file(file_path, hash_type=hashlib.sha256, binary=False, buffer_size=655
     return hash_func.digest() if binary else hash_func.hexdigest()
 
 def hash_file_sha256(file_path, binary=False, buffer_size=65536):
-    """Compute the SHA256 hash of a file.
+    """
+    Compute the SHA256 hash of a file.
 
     Parameters.
     ----------
@@ -84,7 +87,8 @@ def hash_file_sha256(file_path, binary=False, buffer_size=65536):
     return hash_file(file_path, hash_type=hashlib.sha256, binary=binary, buffer_size=buffer_size)
 
 def hash_file_md5(file_path, binary=False, buffer_size=65536):
-    """Compute the MD5 hash of a file.
+    """
+    Compute the MD5 hash of a file.
 
     Parameters.
     ----------
@@ -104,7 +108,8 @@ def hash_file_md5(file_path, binary=False, buffer_size=65536):
     return hash_file(file_path, hash_type=hashlib.md5, binary=binary, buffer_size=buffer_size)
 
 def hash_file_sha1(file_path, binary=False, buffer_size=65536):
-    """Compute the SHA1 hash of a file.
+    """
+    Compute the SHA1 hash of a file.
 
     Parameters.
     ----------
@@ -124,7 +129,8 @@ def hash_file_sha1(file_path, binary=False, buffer_size=65536):
     return hash_file(file_path, hash_type=hashlib.sha1, binary=binary, buffer_size=buffer_size)
 
 def hash_directory(directory, recursive=True, hash_type=hashlib.sha256, binary=False, relative_paths=True, buffer_size=65536, concurrency=os.cpu_count()):
-    """List all files in a directory and compute the hash of each file.
+    """
+    List all files in a directory and compute the hash of each file.
 
     The file hashes are computed concurrently using a ThreadPoolExecutor.
 

@@ -23,7 +23,8 @@ _unstep_reduction_methods = {
 }
 
 def remove_mean(arr):
-    """Substract the DC signal component, i.e. the arithmetic mean of the array,
+    """
+    Substract the DC signal component, i.e. the arithmetic mean of the array.
     
     from the array and return the modified array.
     """
@@ -34,7 +35,8 @@ def rms(arr):
     return np.sqrt(np.mean(np.square(arr)))
 
 def rms_to_peak_to_peak(rms_val):
-    """Given an RMS value, returns the peak to peak value
+    """
+    Given an RMS value, returns the peak to peak value.
     
     of a sinusoid signal with that RMS value.
     """
@@ -49,7 +51,8 @@ def peak_to_peak(arr):
     return np.max(arr) - np.min(arr)
 
 def unstair(x, y, method="diff", tolerance=1e-9):
-    """Remove stairs (adjacent equal values) from a function with quantized values.
+    """
+    Remove stairs (adjacent equal values) from a function with quantized values.
     
     The first and the last values are always returned.
 
@@ -89,7 +92,8 @@ def unstair(x, y, method="diff", tolerance=1e-9):
 
 
 def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50, stop_at=1e-10):
-    """Optimize the degree of a polyfit polynomial so that score(y - poly(x)) is minimized.
+    """
+    Optimize the degree of a polyfit polynomial so that score(y - poly(x)) is minimized.
 
     :param max_degree: The maximum degree to try. LinAlgErrors are automatically ignored.
     :param stop_at: If a score lower than this is reached, the function returns early
@@ -119,9 +123,8 @@ def optimum_polyfit(x, y, score=functoolz.compose(np.max, np.abs), max_degree=50
 
 
 class LinRange:
-
-    
-    """Combines the properties of numpy.linspace and Python3's range by providing
+    """
+    Combines the properties of numpy.linspace and Python3's range by providing.
     
     a floating-point capable lazy range generator that does not keep the entire array.
     in memory (but calculates slices on the fly.
@@ -166,7 +169,8 @@ class LinRange:
         return LinRange(self.start, self.stop, self.size, dtype=typearg)
 
     def copy(self):
-        """Return self as a numpy array.
+        """
+        Return self as a numpy array.
 
         Designed to be compatible with numpy objects.
         """
@@ -210,7 +214,8 @@ class LinRange:
         return self.start == other.start and self.stop == other.stop and self.step == other.step
 
     def samplerate(self):
-        """Return the samplerate as float (unit: Hz).
+        """
+        Return the samplerate as float (unit: Hz).
 
         This works especially if step is a np.timedelta64 object.
         Else "step" is assumed to be a <seconds> value.
@@ -222,7 +227,8 @@ class LinRange:
         return 1./self.step
 
 def aggregate(gen):
-    """Takes any iterable and aggregates subsequent values
+    """
+    Takes any iterable and aggregates subsequent values.
     
     yielded by the iterable into a single value with a counter.
 
@@ -245,7 +251,8 @@ def aggregate(gen):
         yield (current, cnt)
 
 def zero_crossings(data):
-    """Compute indexes in the given data array just before a zero crossing occurs.
+    """
+    Compute indexes in the given data array just before a zero crossing occurs.
     
     A zero crossing at index i is defined as:
         - data[i] is positive

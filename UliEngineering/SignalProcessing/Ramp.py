@@ -11,7 +11,8 @@ def periodic_ramp(frequency, samplerate, amplitude=1.0, offset=0.0,
                   rise_time=None, fall_time=None, high_time=None,
                   acceleration=None, length=1.0, phaseshift=0.0,
                   continuity="C1"):
-    """Generate a periodic ramp (trapezoidal) signal with smoothed corners (knees) defined by acceleration.
+    """
+    Generate a periodic ramp (trapezoidal) signal with smoothed corners (knees) defined by acceleration.
 
     The signal consists of 4 segments per period:
     1. Rise (Low -> High)

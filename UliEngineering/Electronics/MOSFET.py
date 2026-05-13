@@ -56,7 +56,7 @@ def mosfet_gate_charge_losses(total_gate_charge: ChargeC, vsupply: VoltageV, fre
 @returns_unit("J")
 def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
-    Compute the gate charge loss of a MOSFET in a switch-mode power-supply
+    Compute the gate charge loss of a MOSFET in a switch-mode power-supply.
     
     application per switching cycle.
 
@@ -85,7 +85,7 @@ def mosfet_gate_charge_loss_per_cycle(total_gate_charge: ChargeC, vsupply: Volta
 @returns_unit("F")
 def mosfet_gate_capacitance_from_gate_charge(total_gate_charge: ChargeC, vsupply: VoltageV):
     """
-    Compute the gate capacitance of a MOSFET in a switch-mode power-supply
+    Compute the gate capacitance of a MOSFET in a switch-mode power-supply.
     
     application.
 

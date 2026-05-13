@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Thermistor computations.
+"""
+Thermistor computations.
 
 For reference see e.g. https://www.electronics-tutorials.ws/io/thermistors.html.
 """

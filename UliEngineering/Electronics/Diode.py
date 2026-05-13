@@ -60,11 +60,7 @@ def _validate_positive(name, value):
 
 
 class DiodeModel:
-
-    
-    """
-    Base class for diode models that support analytic RC timing calculations.
-    """
+    """Base class for diode models that support analytic RC timing calculations."""
 
     def minimum_series_voltage(self):
         """Return the minimum series voltage required."""
@@ -84,11 +80,7 @@ class DiodeModel:
 
 
 class SimpleDiodeModel(DiodeModel):
-
-    
-    """
-    Constant forward-voltage diode model.
-    """
+    """Constant forward-voltage diode model."""
 
     def __init__(self, forward_voltage="0V"):
         """Initialize the SimpleDiodeModel with a forward voltage drop."""
@@ -120,10 +112,7 @@ class SimpleDiodeModel(DiodeModel):
 
 
 class ShockleyDiodeModel(DiodeModel):
-    
-    """
-    Shockley diode model with analytic series resistor solutions.
-    """
+    """Shockley diode model with analytic series resistor solutions."""
 
     def __init__(self, saturation_current, ideality_factor=1.0, temperature="25°C"):
         """Initialize the ShockleyDiodeModel with parameters."""
@@ -190,7 +179,8 @@ def _shockley_voltage_scale(ideality_factor, temperature):
 
 @returns_unit("V")
 def diode_thermal_voltage(temperature="25°C"):
-    """Compute the thermal voltage $V_T = kT/q$ of a diode.
+    """
+    Compute the thermal voltage $V_T = kT/q$ of a diode.
 
     Parameters.
     ----------
@@ -209,7 +199,8 @@ def diode_thermal_voltage(temperature="25°C"):
 
 @returns_unit("A")
 def shockley_diode_current(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """Compute the diode current using the Shockley diode equation.
+    """
+    Compute the diode current using the Shockley diode equation.
 
     Parameters.
     ----------
@@ -237,7 +228,8 @@ def shockley_diode_current(voltage: VoltageV, saturation_current: CurrentA, idea
 
 @returns_unit("V")
 def shockley_diode_voltage(current: CurrentA, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """Compute the diode voltage from the Shockley diode equation.
+    """
+    Compute the diode voltage from the Shockley diode equation.
 
     Parameters.
     ----------
@@ -267,7 +259,8 @@ def shockley_diode_voltage(current: CurrentA, saturation_current: CurrentA, idea
 
 @returns_unit("A")
 def shockley_diode_saturation_current(voltage: VoltageV, current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """Compute the saturation current from one operating point.
+    """
+    Compute the saturation current from one operating point.
 
     Parameters.
     ----------
@@ -296,7 +289,8 @@ def shockley_diode_saturation_current(voltage: VoltageV, current: CurrentA, idea
 
 @returns_unit("Ω")
 def shockley_diode_small_signal_resistance(current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """Compute the small-signal resistance $r_d = nV_T/I$ of a diode.
+    """
+    Compute the small-signal resistance $r_d = nV_T/I$ of a diode.
 
     Parameters.
     ----------
@@ -321,7 +315,8 @@ def shockley_diode_small_signal_resistance(current: CurrentA, ideality_factor=1.
 
 @returns_unit("W")
 def shockley_diode_power(voltage: VoltageV, saturation_current: CurrentA, ideality_factor=1.0, temperature="25°C"):
-    """Compute the power dissipated by a diode from the Shockley equation.
+    """
+    Compute the power dissipated by a diode from the Shockley equation.
 
     Parameters.
     ----------

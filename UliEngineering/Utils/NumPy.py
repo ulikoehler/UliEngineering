@@ -9,7 +9,8 @@ __all__ = ["numpy_resize_insert", "invert_bijection", "apply_pairwise_1d",
            "timedelta64_resolution", "datetime64_resolution"]
 
 def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max_growth=1000000):
-    """Append a value to a 1D numpy array. Resize dynamically if required.
+    """
+    Append a value to a 1D numpy array. Resize dynamically if required.
     
     Returns the new array (which may be the same as the old array).
     No resize is performed if the array is already large enough.
@@ -60,7 +61,8 @@ def numpy_resize_insert(arr, val, index, growth_factor=1.5, min_growth=1000, max
 
 
 def invert_bijection(arr):
-    """Perreturned by np.argsort().
+    """
+    Perreturned by np.argsort().
 
     For each value x in the given array at index i,.
     the new array will have the value i at index x.
@@ -94,7 +96,8 @@ def invert_bijection(arr):
 
 
 def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
-    """Given two 1d arrays, generates a 2d matrix.
+    """
+    Given two 1d arrays, generates a 2d matrix.
     
     conIf valuesB is None, valuesA is used for both arrays.
 
@@ -127,7 +130,8 @@ def apply_pairwise_1d(valuesA, valuesB, fn, dtype=float):
 
 
 def ngrams(arr, n, closed=False):
-    """Yield ngrams of subsequent entries from an arbitrarily-shaped array.
+    """
+    Yield ngrams of subsequent entries from an arbitrarily-shaped array.
     
     For example, with arr=[1,2,3,4,5,6].
     andif closed=False or [[1,2][2,3],[3,4],[4,5],[5,6],[6,1]] if closed=True.
@@ -157,10 +161,13 @@ def ngrams(arr, n, closed=False):
 
 
 def split_by_pivot(arr, pivots):
-    """Takes a numpy array and splits it according to pivot points.
+    """
+    Takes a numpy array and splits it according to pivot points.
     
     Yields each slice.
-    Examples:
+
+    Examples
+    --------
     splsplit_by_pivot([0,1,2,3,4,5], [2,4]) => [[0,1],[2,3],[4,5]]
 
     Parameters
@@ -188,7 +195,8 @@ _resolution_re = re.compile(r'^[^\[]+\[([^\]]+)\]$')
 
 
 def timedelta64_resolution(tdelta):
-    """Given a timedelta64 object, returns its resolution as a string,
+    """
+    Given a timedelta64 object, returns its resolution as a string.
     
     e.g. 'us' or 'ms'.
     """
@@ -198,7 +206,8 @@ def timedelta64_resolution(tdelta):
        return match.group(1)
 
 def datetime64_resolution(dt):
-    """Given a datetime64 object, returns its resolution as a string,
+    """
+    Given a datetime64 object, returns its resolution as a string.
     
     e.g. 'us' or 'ms'.
     """

@@ -112,7 +112,7 @@ def _crystal_deviation_seconds_per_x(deviation: PPM, n_secs):
 @returns_unit("s")
 def crystal_deviation_seconds_per_minute(deviation: PPM):
     """
-    Compute how many seconds a crystal with given ppm
+    Compute how many seconds a crystal with given ppm.
     
     deviation deviates per minute.
 
@@ -141,7 +141,7 @@ def crystal_deviation_seconds_per_minute(deviation: PPM):
 @returns_unit("s")
 def crystal_deviation_seconds_per_hour(deviation: PPM):
     """
-    Compute how many seconds a crystal with given ppm
+    Compute how many seconds a crystal with given ppm.
     
     deviation deviates per hour.
 
@@ -170,7 +170,7 @@ def crystal_deviation_seconds_per_hour(deviation: PPM):
 @returns_unit("s")
 def crystal_deviation_seconds_per_day(deviation: PPM):
     """
-    Compute how many seconds a crystal with given ppm
+    Compute how many seconds a crystal with given ppm.
     
     deviation deviates per standard day (24 hours a 3600 seconds).
 
@@ -199,7 +199,7 @@ def crystal_deviation_seconds_per_day(deviation: PPM):
 @returns_unit("s")
 def crystal_deviation_seconds_per_month(deviation: PPM):
     """
-    Compute how many seconds a crystal with given ppm
+    Compute how many seconds a crystal with given ppm.
     
     deviation deviates per 31-day month (31 days a 3600*24s).
 
@@ -228,7 +228,7 @@ def crystal_deviation_seconds_per_month(deviation: PPM):
 @returns_unit("s")
 def crystal_deviation_seconds_per_year(deviation: PPM):
     """
-    Compute how many seconds a crystal with given ppm
+    Compute how many seconds a crystal with given ppm.
     
     deviation deviates per 365-day year (365 days a 3600*24s).
 

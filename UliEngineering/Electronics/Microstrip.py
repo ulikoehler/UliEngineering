@@ -17,8 +17,6 @@ Z0 = scipy.constants.physical_constants['characteristic impedance of vacuum'][0]
 
 
 class RelativePermittivity():
-
-    
     """
     Default values for relative permittivity of different materials.
 

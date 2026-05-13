@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Utilities regarding NTC thermistors.
+"""
+Utilities regarding NTC thermistors.
 
 See http://www.vishay.com/docs/29053/ntcintro.pdf for details.
 """
@@ -26,7 +27,8 @@ ResistanceOhm = Annotated[NormalizedComputable, normalize_resistance]
 
 @returns_unit("Ω")
 def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
-    """Compute the NTC resistance by temperature and NTC parameters.
+    """
+    Compute the NTC resistance by temperature and NTC parameters.
 
     Parameters.
     ----------
@@ -51,7 +53,8 @@ def ntc_resistance(r25: ResistanceOhm, b25, t: TemperatureKelvin):
 
 @returns_unit("Ω")
 def ntc_resistances(r25: ResistanceOhm, b25, t0=-40, t1=85, resolution=0.1):
-    """Compute the resistances over a temperature range with a given resolution.
+    """
+    Compute the resistances over a temperature range with a given resolution.
 
     Parameters.
     ----------

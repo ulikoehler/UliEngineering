@@ -31,10 +31,10 @@ except ModuleNotFoundError:
 FFTPoint = namedtuple("FFTPoint", ["frequency", "amplitude", "angle"])
 
 class FFT(object):
-    
     """FFT result wrapper that allows convenient access to various functions."""
     
     def __init__(self, frequencies, amplitudes, angles=None):
+        """Initialize the FFT result wrapper."""
         self.frequencies = frequencies
         self.amplitudes = amplitudes
         self.angles = angles
@@ -59,7 +59,8 @@ class FFT(object):
             raise ValueError("FFT [] operator selects a frequency range([start:stop]) or (value, angle) at the closest frequency ([frequency])! {} is an illegal argument".format(arg))
 
     def dominant_frequency(self, low=None, high=None):
-        """Return the frequency with the largest amplitude in a FFT spectrum
+        """
+        Return the frequency with the largest amplitude in a FFT spectrum.
         
         Optionally, a frequency range (low, high) may be given, in which case.
         the dominant frequency is only selected from that range.
@@ -70,7 +71,8 @@ class FFT(object):
         return self.frequencies[np.argmax(self.amplitudes)]
 
     def dominant_value(self, low=None, high=None):
-        """Return the value with the largest amplitude in a FFT spectrum.
+        """
+        Return the value with the largest amplitude in a FFT spectrum.
         
         The value is returned as a FFTPoint object.
         Use .frequency, .amplitude and .angle to access
@@ -81,7 +83,8 @@ class FFT(object):
         return self.closest_value(domfreq)
 
     def amplitude_integral(self, low=None, high=None):
-        """Return the amplitude integral of a frequency-domain signal.
+        """
+        Return the amplitude integral of a frequency-domain signal.
         
         Optionally, the signal can be filtered directly.
         Call this on a FFT() object as returned by compute_fft.
@@ -97,14 +100,16 @@ class FFT(object):
         return np.sum(filtered.amplitudes) / dHz
 
     def closest_frequency(self, frequency):
-        """Find the closest frequency bin and value in an array of frequencies
+        """
+        Find the closest frequency bin and value in an array of frequencies.
         
         Return (frequency of closest frequency bin, value, angle).
         """
         return self.frequencies[find_closest_index(self.frequencies, frequency)]
 
     def closest_value(self, frequency):
-        """Find the closest frequency, value and angle
+        """
+        Find the closest frequency, value and angle.
         
         Return (frequency of closest frequency bin, value, angle).
         as a FFTPoint object.
@@ -119,7 +124,8 @@ class FFT(object):
         )
 
     def cut_dc_artifacts(self, return_idx=False):
-        """If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
+        """
+        If an FFT contains DC artifacts, i.e. a large value in the first FFT samples.
         
         this function can be used to remove this area from the FFT value set.
         This function cuts every value up to (but not including the) first local minimum.
@@ -130,8 +136,8 @@ class FFT(object):
         return fft_cut_dc_artifacts(self, return_idx=return_idx)
 
 class FFTReductionOverTime(object):
-    
-    """Container for per-FFT reduction values over time.
+    """
+    Container for per-FFT reduction values over time.
 
     Attributes.
     ----------
@@ -154,6 +160,7 @@ class FFTReductionOverTime(object):
     """
 
     def __init__(self, powers, start_indices, end_indices, fftsize, samplerate=None, start_freq=None, end_freq=None):
+        """Initialize the FFT band."""
         import numpy as _np
         self.powers = _np.asarray(powers)
         self.start_indices = _np.asarray(start_indices, dtype=float)
@@ -196,7 +203,8 @@ def fft_frequencies(fftsize, samplerate):
     return np.fft.fftfreq(fftsize)[:fftsize // 2] * samplerate
 
 def compute_fft(y, samplerate, window="blackman", window_param=None):
-    """Compute the real FFT of a dataset and return an FFT object which can directly be visualized using matplotlib etc:
+    """
+    Compute the real FFT of a dataset and return an FFT object which can directly be visualized using matplotlib etc.
     
     result = compute_fft(...).
     plt.plot(result.frequencies, result.amplitudes)
@@ -231,16 +239,17 @@ def __fft_reduce_worker(chunkgen, i, window, fftsize, removeDC):
 
 
 def sum_reducer(fx, gen):
-    "The standard FFT reducer. Sums up all FFT y values."
+    """The standard FFT reducer. Sums up all FFT y values."""
     return sum(y for _, y in gen)
 
 def spectral_power_reducer(fx, gen):
-    "FFT reducer that computes the sum of squares of the FFT y values."
+    """FFT reducer that computes the sum of squares of the FFT y values."""
     return sum(y**2 for _, y in gen)
 
 
 def normalize_fft_reduction(values, fftsize, nchunks=1, power=False):
-    """Normalize FFT reduction results.
+    """
+    Normalize FFT reduction results.
 
     Parameters.
     ----------
@@ -268,7 +277,8 @@ def normalize_fft_reduction(values, fftsize, nchunks=1, power=False):
     return vals * factor
 
 def parallel_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", reducer=sum_reducer, normalize=True, executor=None, window_param=None):
-    """Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
+    """
+    Perform multiple FFTs on a single dataset, returning the reduction of all FFTs.
     
     The default reduction method is sum, however any reduction method may be given that.
     returns a numeric type that may be normalized (or normalize is set to False).
@@ -316,7 +326,8 @@ def serial_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="bla
 
 
 def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", normalize=True, start=0.0, end=None, executor=None, window_param=None):
-    """Like (parallel|serial)_fft_reduce, but computes a single power value per FFT chunk
+    """
+    Like (parallel|serial)_fft_reduce, but computes a single power value per FFT chunk.
     
     representing the total power inside the requested frequency band.
 
@@ -325,11 +336,27 @@ def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=F
 
     Parameters
     ----------
-    start : float or None
+    chunkgen : iterable
+        Generator yielding chunks of data to process.
+    samplerate : float
+        The sampling rate of the input data.
+    fftsize : int
+        The size of the FFT to compute.
+    removeDC : bool, optional
+        Whether to remove the DC component before FFT. Defaults to False.
+    window : str, optional
+        The window function to apply. Defaults to "blackman".
+    normalize : bool, optional
+        Whether to normalize the FFT result. Defaults to True.
+    start : float or None, optional
         Start frequency (inclusive). Defaults to 0.0.
-    end : float or None
+    end : float or None, optional
         End frequency (exclusive). Defaults to the maximum frequency.
-    
+    executor : Executor or None, optional
+        Executor for parallel processing. If None, a default is used.
+    window_param : any, optional
+        Additional parameter for the window function.
+
     """
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
@@ -380,17 +407,32 @@ def parallel_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=F
 
 
 def serial_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=False, window="blackman", normalize=True, start=0.0, end=None, window_param=None):
-    """Like serial_fft_reduce, but computes the average spectral power (amplitude squared) only in
+    """
+    Like serial_fft_reduce, but computes the average spectral power (amplitude squared) only in.
     
     the requested frequency band. The selection is applied while computing the spectrum.
 
     Parameters
     ----------
-    start : float or None
+    chunkgen : iterable
+        Generator yielding chunks of data to process.
+    samplerate : float
+        The sampling rate of the input data.
+    fftsize : int
+        The size of the FFT to compute.
+    removeDC : bool, optional
+        Whether to remove the DC component before FFT. Defaults to False.
+    window : str, optional
+        The window function to apply. Defaults to "blackman".
+    normalize : bool, optional
+        Whether to normalize the FFT result. Defaults to True.
+    start : float or None, optional
         Start frequency (inclusive). Defaults to 0.0.
-    end : float or None
+    end : float or None, optional
         End frequency (exclusive). Defaults to the maximum frequency.
-    
+    window_param : any, optional
+        Additional parameter for the window function.
+
     """
     if len(chunkgen) == 0:
         raise ValueError("Can't perform FFT on empty chunk generator")
@@ -430,7 +472,8 @@ def serial_spectral_power_fft_reduce(chunkgen, samplerate, fftsize, removeDC=Fal
 
 
 def simple_fft_reduce(fn, arr, samplerate, fftsize, shiftsize=None, nthreads=4, **kwargs):
-    """Easier interface to (parallel|serial)_fft_reduce that automatically initializes a fixed size chunk generator
+    """
+    Easier interface to (parallel|serial)_fft_reduce that automatically initializes a fixed size chunk generator.
     
     and automatically initializes the executor if no executor is given.
 
@@ -448,7 +491,8 @@ simple_parallel_spectral_power_fft_reduce = functools.partial(simple_fft_reduce,
 
 
 def fft_cut_dc_artifacts(fft, return_idx=False):
-    """If an FFT contains DC artifacts, i.e. a large value in the first FFT samples,
+    """
+    If an FFT contains DC artifacts, i.e. a large value in the first FFT samples.
     
     this function can be used to remove this area from the FFT value set.
     This function cuts every value up to (but not including the) first local minimum.

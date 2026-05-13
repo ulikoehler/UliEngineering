@@ -84,7 +84,7 @@ def capacitor_rc_time_constant(capacitance: CapacitanceFarad, resistance: Resist
 @returns_unit("h")
 def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_temperature="105 °C", A=10.):
     """
-    Estimate the lifetime of a capacitor given its working temperature,
+    Estimate the lifetime of a capacitor given its working temperature.
     
     its nominal lifetime at a nominal lifetime temperature, and coefficient A.
 
@@ -103,7 +103,7 @@ def capacitor_lifetime(temp, nominal_lifetime="2000 h", nominal_lifetime_tempera
 @returns_unit("J")
 def capacitor_energy(capacitance: CapacitanceFarad, voltage: VoltageV):
     """
-    Compute the total energy stored in a capacitor given:
+    Compute the total energy stored in a capacitor given.
     
     - The capacitance in farads
     - The voltage the capacitor is charged to
@@ -116,7 +116,7 @@ def capacitor_energy(capacitance: CapacitanceFarad, voltage: VoltageV):
 @returns_unit("C")
 def capacitor_charge(capacitance: CapacitanceFarad, voltage: VoltageV):
     """
-    Compute the total charge stored in a capacitor given:
+    Compute the total charge stored in a capacitor given.
     
     - The capacitance in farads
     - The voltage the capacitor is charged to
@@ -129,7 +129,7 @@ def capacitor_charge(capacitance: CapacitanceFarad, voltage: VoltageV):
 @returns_unit("V")
 def capacitor_voltage_by_energy(capacitance: CapacitanceFarad, energy: EnergyJ, starting_voltage="0V"):
     """
-    Compute the voltage of a capacitor given:
+    Compute the voltage of a capacitor given.
     
     - The capacitance in farads
     - The energy stored in joules
@@ -145,7 +145,7 @@ def capacitor_voltage_by_energy(capacitance: CapacitanceFarad, energy: EnergyJ, 
 @returns_unit("s")
 def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, initial_voltage: VoltageV, current: CurrentA, target_voltage="0V"):
     """
-    Compute the time it takes to charge a capacitor to [target_voltage]
+    Compute the time it takes to charge a capacitor to [target_voltage].
     
     using a constant current.
 
@@ -174,7 +174,7 @@ def capacitor_constant_current_discharge_time(capacitance: CapacitanceFarad, ini
 @returns_unit("s")
 def capacitor_constant_current_charge_time(capacitance: CapacitanceFarad, target_voltage: VoltageV, current: CurrentA, initial_voltage="0V"):
     """
-    Compute the time it takes to charge a capacitor to [target_voltage]
+    Compute the time it takes to charge a capacitor to [target_voltage].
     
     using a constant current.
 
@@ -207,17 +207,27 @@ def capacitor_resistor_charge_time(capacitance: CapacitanceFarad, resistance: Re
     """
     Compute the time it takes to charge a capacitor through a resistor.
 
-    Parameters:
-    - capacitance: The capacitance in farads.
-    - resistance: The charging resistance in ohms.
-    - source_voltage: The source voltage in volts.
-    - target_voltage: The target capacitor voltage in volts.
-    - initial_voltage: The initial capacitor voltage in volts.
-    - diode_model: Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
-    - diode_voltage: Backward-compatible alias for diode_model.
+    Parameters
+    ----------
+    capacitance : CapacitanceFarad
+        The capacitance in farads.
+    resistance : ResistanceOhm
+        The charging resistance in ohms.
+    source_voltage : VoltageV
+        The source voltage in volts.
+    target_voltage : VoltageV
+        The target capacitor voltage in volts.
+    initial_voltage : str, optional
+        The initial capacitor voltage in volts.
+    diode_model : DiodeModel or str, optional
+        Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
+    diode_voltage : str, optional
+        Backward-compatible alias for diode_model.
 
-    Returns:
-    The time in seconds.
+    Returns
+    -------
+    float
+        The time in seconds.
 
     The capacitor asymptotically approaches source_voltage - diode_model.minimum_series_voltage().
     
@@ -252,16 +262,25 @@ def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance:
     """
     Compute the time it takes to discharge a capacitor through a resistor.
 
-    Parameters:
-    - capacitance: The capacitance in farads.
-    - resistance: The discharge resistance in ohms.
-    - initial_voltage: The initial capacitor voltage in volts.
-    - target_voltage: The target capacitor voltage in volts.
-    - diode_model: Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
-    - diode_voltage: Backward-compatible alias for diode_model.
+    Parameters
+    ----------
+    capacitance : CapacitanceFarad
+        The capacitance in farads.
+    resistance : ResistanceOhm
+        The discharge resistance in ohms.
+    initial_voltage : VoltageV
+        The initial capacitor voltage in volts.
+    target_voltage : str, optional
+        The target capacitor voltage in volts.
+    diode_model : DiodeModel or str, optional
+        Optional diode model, or a scalar/string forward voltage for SimpleDiodeModel.
+    diode_voltage : str, optional
+        Backward-compatible alias for diode_model.
 
-    Returns:
-    The time in seconds.
+    Returns
+    -------
+    float
+        The time in seconds.
 
     The capacitor asymptotically approaches diode_model.minimum_series_voltage().
     
@@ -291,17 +310,23 @@ def capacitor_resistor_discharge_time(capacitance: CapacitanceFarad, resistance:
 @returns_unit("F")
 def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityFm):
     """
-    Compute the capacitance of two parallel plate capacitors in parallel
+    Compute the capacitance of two parallel plate capacitors in parallel.
     
     given the area, distance, and permittivity of the dielectric.
 
-    Parameters:
-    - area: The area of the capacitor plates in square meters.
-    - distance: The distance between the capacitor plates in meters.
-    - epsilon: The permittivity of the dielectric material between the capacitor plates.
+    Parameters
+    ----------
+    area : float
+        The area of the capacitor plates in square meters.
+    distance : float
+        The distance between the capacitor plates in meters.
+    epsilon : PermittivityFm
+        The permittivity of the dielectric material between the capacitor plates.
 
-    Returns:
-    The capacitance of the parallel plate capacitors in farads (F).
+    Returns
+    -------
+    float
+        The capacitance of the parallel plate capacitors in farads (F).
     
     """
     area = normalize_area(area)
@@ -312,7 +337,7 @@ def parallel_plate_capacitors_capacitance(area, distance, epsilon: PermittivityF
 @returns_unit("F")
 def capacitor_capacitance_by_energy(energy: EnergyJ, voltage: VoltageV, starting_voltage="0V"):
     """
-    Compute the capacitance of a capacitor given:
+    Compute the capacitance of a capacitor given.
     
     - The energy stored in joules
     - The voltage the capacitor is charged to
@@ -335,12 +360,17 @@ def capacitor_charging_energy(capacitance: CapacitanceFarad, end_voltage: Voltag
     """
     Compute the energy required to charge a capacitor from a starting voltage to an end voltage.
 
-    Parameters:
-    - capacitance: The capacitance of the capacitor in farads.
-    - end_voltage: The target voltage to charge the capacitor to in volts.
-    - starting_voltage: The initial voltage of the capacitor in volts (default "0V").
+    Parameters
+    ----------
+    capacitance : CapacitanceFarad
+        The capacitance of the capacitor in farads.
+    end_voltage : VoltageV
+        The target voltage to charge the capacitor to in volts.
+    starting_voltage : str, optional
+        The initial voltage of the capacitor in volts (default "0V").
 
-    Returns:
+    Returns
+    -------
     The energy required in joules.
 
     The energy required is the difference between the final and initial stored energy:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Utility to calculate idealized reactances.
+"""
+Utility to calculate idealized reactances.
 
 Originally published at techoverflow.net.
 """
@@ -90,7 +91,7 @@ def inductance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
 @returns_unit("F")
 def capacitance_from_reactance(x: ResistanceOhm, f: FrequencyHz = 1000.0):
     """
-    Compute the capacitance (F) from a capacitive reactance (Ω) at a given
+    Compute the capacitance (F) from a capacitive reactance (Ω) at a given.
     
     frequency f (Hz).
 

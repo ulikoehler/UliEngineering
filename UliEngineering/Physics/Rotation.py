@@ -15,7 +15,8 @@ __all__ = ["rpm_to_Hz", "rpm_to_rps", "hz_to_rpm", "angular_speed",
 @returns_unit("Hz")
 @normalize_args
 def rpm_to_Hz(rpm_value: RotationRate) -> NormalizedComputable:
-    """Compute the rotational speed in Hz given the rotational speed in rpm.
+    """
+    Compute the rotational speed in Hz given the rotational speed in rpm.
 
     Parameters.
     ----------
@@ -33,7 +34,8 @@ def rpm_to_Hz(rpm_value: RotationRate) -> NormalizedComputable:
 @returns_unit("rpm")
 @normalize_args
 def hz_to_rpm(speed: FrequencyHz) -> NormalizedComputable:
-    """Compute the rotational speed in rpm given the rotational speed in Hz.
+    """
+    Compute the rotational speed in rpm given the rotational speed in Hz.
 
     Parameters.
     ----------
@@ -53,7 +55,8 @@ rpm_to_rps = rpm_to_Hz
 @returns_unit("1/s")
 @normalize_args
 def angular_speed(speed: RotationFrequency) -> NormalizedComputable:
-    """Compute Ω, the angular speed of a centrifugal system.
+    """
+    Compute Ω, the angular speed of a centrifugal system.
 
     Parameters.
     ----------
@@ -71,7 +74,8 @@ def angular_speed(speed: RotationFrequency) -> NormalizedComputable:
 @returns_unit("m/s")
 @normalize_args
 def rotation_linear_speed(radius: LengthMeters, speed: RotationFrequency) -> NormalizedComputable:
-    """Compute the linear speed at a given radius for a centrifugal system rotating at speed.
+    """
+    Compute the linear speed at a given radius for a centrifugal system rotating at speed.
 
     Parameters.
     ----------
@@ -91,7 +95,8 @@ def rotation_linear_speed(radius: LengthMeters, speed: RotationFrequency) -> Nor
 @returns_unit("N")
 @normalize_args
 def centrifugal_force(radius: LengthMeters, speed: RotationFrequency, mass: MassGrams) -> NormalizedComputable:
-    """Compute the centrifugal force of a mass rotating at speed at radius.
+    """
+    Compute the centrifugal force of a mass rotating at speed at radius.
 
     Parameters.
     ----------
@@ -114,7 +119,8 @@ def centrifugal_force(radius: LengthMeters, speed: RotationFrequency, mass: Mass
 @returns_unit("Pa")
 @normalize_args
 def rotating_liquid_pressure(density: DensityKgPerM3, speed: RotationFrequency, radius: LengthMeters) -> NormalizedComputable:
-    """Compute the pressure in a body of liquid (relative to the steady-state pressure).
+    """
+    Compute the pressure in a body of liquid (relative to the steady-state pressure).
     
     The calculation does not include gravity.
 

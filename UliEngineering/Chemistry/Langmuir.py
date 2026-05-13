@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Langmuir adsorption isotherm.
+"""
+Langmuir adsorption isotherm.
 
 The Langmuir isotherm describes adsorption of molecules onto a surface.
 with a finite number of identical sites:
@@ -57,7 +58,8 @@ RateConstantLMolS = Annotated[NormalizedComputable, normalize_rate_constant]
 
 @returns_unit("")
 def langmuir_coverage(K: LangmuirConstantLMol, C: ConcentrationMolar):
-    """Compute fractional surface coverage using the Langmuir isotherm.
+    """
+    Compute fractional surface coverage using the Langmuir isotherm.
 
     θ = K * C / (1 + K * C).
 
@@ -81,7 +83,8 @@ def langmuir_coverage(K: LangmuirConstantLMol, C: ConcentrationMolar):
 
 @returns_unit("mol/g")
 def langmuir_adsorbed_amount(q_max: AdsorptionCapacityMolG, K: LangmuirConstantLMol, C: ConcentrationMolar):
-    """Compute amount adsorbed using the Langmuir isotherm.
+    """
+    Compute amount adsorbed using the Langmuir isotherm.
 
     q = q_max * K * C / (1 + K * C).
 
@@ -108,7 +111,8 @@ def langmuir_adsorbed_amount(q_max: AdsorptionCapacityMolG, K: LangmuirConstantL
 
 @returns_unit("L/mol")
 def langmuir_constant_from_coverage(theta, C: ConcentrationMolar):
-    """Compute the Langmuir constant K from measured coverage and concentration.
+    """
+    Compute the Langmuir constant K from measured coverage and concentration.
 
     K = θ / (C * (1 - θ)).
 
@@ -131,7 +135,8 @@ def langmuir_constant_from_coverage(theta, C: ConcentrationMolar):
 
 @returns_unit("")
 def langmuir_competitive_coverage(K_i, C_i, K_all, C_all):
-    """Compute fractional coverage of species i in competitive Langmuir adsorption.
+    """
+    Compute fractional coverage of species i in competitive Langmuir adsorption.
 
     θ_i = K_i * C_i / (1 + Σ(K_j * C_j)).
 
@@ -160,7 +165,8 @@ def langmuir_competitive_coverage(K_i, C_i, K_all, C_all):
 
 @returns_unit("g/mol")
 def langmuir_inverse_linearized(C: ConcentrationMolar, q: AdsorptionCapacityMolG):
-    """Compute 1/q vs 1/C for Langmuir linearized form (double-reciprocal / Lineweaver-Burk).
+    """
+    Compute 1/q vs 1/C for Langmuir linearized form (double-reciprocal / Lineweaver-Burk).
 
     1/q = 1/q_max + 1/(q_max * K) * 1/C.
 
@@ -187,7 +193,8 @@ def langmuir_inverse_linearized(C: ConcentrationMolar, q: AdsorptionCapacityMolG
 
 @returns_unit("1/s")
 def langmuir_dissociation_rate(k_ads: RateConstantLMolS, K: LangmuirConstantLMol):
-    """Compute the dissociation rate constant from adsorption rate constant and equilibrium constant.
+    """
+    Compute the dissociation rate constant from adsorption rate constant and equilibrium constant.
 
     k_des = k_ads / K.
 

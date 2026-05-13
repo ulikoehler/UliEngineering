@@ -20,7 +20,6 @@ m = Unit("m")
 g = Unit("g")
 
 class UnannotatedReturnValueError(Exception):
-    
     """
     Raise if the automatic unit finder cannot find the appropriate function.
 
@@ -31,24 +30,18 @@ class UnannotatedReturnValueError(Exception):
 
 
 class InvalidUnitInContextException(ValueError):
-    
-    """
-    Raise if the unit can't be used in the given context.
-    """
+    """Raise if the unit can't be used in the given context."""
 
 
 class UnknownUnitInContextException(ValueError):
-    
     """
     Raise if the unit is not known in this context.
-
 
     The message should contain information on what type of entity (e.g. length).
     is accepted.
     """
 
 class InvalidUnitCombinationException(ValueError):
-    
     """
     Raise if the units involved in an operation can't be combined in the way requested.
 

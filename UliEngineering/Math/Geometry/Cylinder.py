@@ -47,7 +47,8 @@ def hollow_cylinder_volume(outer_radius: NormalizableArgument, inner_radius: Nor
 
 @normalize_args
 def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
-    """Compute the weight of a cylinder by its diameter, length and density.
+    """
+    Compute the weight of a cylinder by its diameter, length and density.
 
     The density is in kg/m³, the diameter and length must be given in mm.
     The default density is an approximation for steel.
@@ -56,7 +57,8 @@ def cylinder_weight_by_diameter(diameter: NormalizableArgument, length: Normaliz
 
 @normalize_args
 def cylinder_weight_by_radius(radius: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
-    """Compute the weight of a cylinder by its radius, length and density.
+    """
+    Compute the weight of a cylinder by its radius, length and density.
 
     The density is in kg/m³, the radius and length must be given in mm.
     The default density is an approximation for steel.
@@ -65,7 +67,8 @@ def cylinder_weight_by_radius(radius: NormalizableArgument, length: Normalizable
 
 @normalize_args
 def cylinder_weight_by_cross_sectional_area(area: NormalizableArgument, length: NormalizableArgument, density: DensityKgPerM3 = 8000):
-    """Compute the weight of a cylinder by its cross-sectional area, length and density.
+    """
+    Compute the weight of a cylinder by its cross-sectional area, length and density.
 
     The density is in kg/m³, the area and length must be given in mm² and mm.
     The default density is an approximation for steel.

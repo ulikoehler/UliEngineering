@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Debye-Hückel theory for activity coefficients.
+"""
+Debye-Hückel theory for activity coefficients.
 
 The Debye-Hückel limiting law:
     log10(γ±) = -A * |z+ * z-| * √I
@@ -45,7 +46,8 @@ IonDiameterNm = Annotated[NormalizedComputable, normalize_ion_diameter]
 
 @returns_unit("")
 def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
-    """Compute log10 of the mean activity coefficient using the
+    """
+    Compute log10 of the mean activity coefficient using the.
     
     Debye-Hückel limiting law. Valid for very dilute solutions (I < 0.01 M).
 
@@ -74,7 +76,8 @@ def debye_huckel_limiting_law(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
 
 @returns_unit("")
 def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
-    """Compute log10 of the activity coefficient using the
+    """
+    Compute log10 of the activity coefficient using the.
     
     extended Debye-Hückel equation.
 
@@ -107,7 +110,8 @@ def debye_huckel_extended(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.
 
 @returns_unit("")
 def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=0.509):
-    """Compute the mean activity coefficient using the Debye-Hückel limiting law.
+    """
+    Compute the mean activity coefficient using the Debye-Hückel limiting law.
 
     γ± = 10^(-A * |z+ * z-| * √I).
 
@@ -133,7 +137,8 @@ def debye_huckel_activity_coefficient(z_plus, z_minus, I: IonicStrengthMolar, A=
 
 @returns_unit("")
 def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonDiameterNm = 0.3, A=0.509, B=3.281):
-    """Compute the activity coefficient using the extended Debye-Hückel equation.
+    """
+    Compute the activity coefficient using the extended Debye-Hückel equation.
 
     γ = 10^(log10_γ_extended).
 
@@ -161,7 +166,8 @@ def debye_huckel_extended_activity_coefficient(z, I: IonicStrengthMolar, a: IonD
 
 @returns_unit("m")
 def debye_length(I: IonicStrengthMolar, T=298.15, epsilon_r=78.4):
-    """Compute the Debye length (screening length) for an electrolyte solution.
+    """
+    Compute the Debye length (screening length) for an electrolyte solution.
 
     λ_D = sqrt(ε₀ * εᵣ * k_B * T / (2 * N_A * e² * I)).
 

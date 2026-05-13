@@ -58,8 +58,6 @@ def _create_length_config():
     )
 
 class EngineerLengthIO(EngineerIO):
-
-    
     """EngineerIO subclass specialized for length unit parsing and conversion."""
     
     _instance = None
@@ -78,7 +76,8 @@ class EngineerLengthIO(EngineerIO):
 
     @returns_unit("m")
     def normalize_length(self, s):
-        """Normalize a length to meters.
+        """
+        Normalize a length to meters.
         
         Returns the numeric value in m or None.
 
@@ -96,7 +95,8 @@ class EngineerLengthIO(EngineerIO):
 
     @returns_unit("m")
     def convert_length_to_meters(self, value, unit):
-        """Given a number or Engineer string (unit ignored) <value>
+        """
+        Given a number or Engineer string (unit ignored) <value>.
         
         in <unit>, convert it to meters.
         """
@@ -104,7 +104,8 @@ class EngineerLengthIO(EngineerIO):
         return self.normalize_length(f"{value} {unit}")
 
     def convert_length_to_unit(self, value, from_unit, to_unit):
-        """Convert a value expressed in `from_unit` to `to_unit`.
+        """
+        Convert a value expressed in `from_unit` to `to_unit`.
 
         `value` may be a number or an engineer-formatted string (in which case.
         `from_unit` is ignored and the unit inside `value` is used).
@@ -123,7 +124,8 @@ class EngineerLengthIO(EngineerIO):
 # Backward compatibility functions
 @returns_unit("m")
 def normalize_length(s: NormalizableArgument, instance=None) -> NormalizedComputable:
-    """Normalize a length to meters.
+    """
+    Normalize a length to meters.
     
     Returns the numeric value in m or None.
 
@@ -147,7 +149,8 @@ LengthMeters = Annotated[NormalizedComputable, normalize_length]
 
 @returns_unit("m")
 def convert_length_to_meters(value, unit, instance=None):
-    """Given a number or Engineer string (unit ignored) <value>
+    """
+    Given a number or Engineer string (unit ignored) <value>.
     
     in <unit>, convert it to meters.
     """
@@ -156,7 +159,8 @@ def convert_length_to_meters(value, unit, instance=None):
     return instance.convert_length_to_meters(value, unit)
 
 def convert_length_to_unit(value, from_unit, to_unit, instance=None):
-    """Convert a value expressed in `from_unit` to `to_unit`.
+    """
+    Convert a value expressed in `from_unit` to `to_unit`.
 
     `value` may be a number or an engineer-formatted string (in which case.
     `from_unit` is ignored and the unit inside `value` is used).

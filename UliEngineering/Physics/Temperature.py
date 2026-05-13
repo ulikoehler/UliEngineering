@@ -87,7 +87,7 @@ TemperatureCelsius = Annotated[NormalizedComputable, normalize_temperature_celsi
 @returns_unit("°C")
 def temperature_with_dissipation(power_dissipated: NormalizableArgument = "1 W", theta: NormalizableArgument = "50 °C/W", t_ambient: NormalizableArgument = "25 °C"):
     """
-    Compute the temperature of a component given its thermal resistance,
+    Compute the temperature of a component given its thermal resistance.
     
     dissipated power, and ambient temperature.
     """

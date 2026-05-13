@@ -20,7 +20,8 @@ VoltageVolt = Annotated[NormalizedComputable, normalize_voltage]
 
 @returns_unit("V")
 def actual_noise(density: VoltageVolt, bandwith: FrequencyHz):
-    """Compute the actual noise given a noise density in x/√Hz and a bandwith in ΔHz.
+    """
+    Compute the actual noise given a noise density in x/√Hz and a bandwith in ΔHz.
 
     >>> autoFormat(actualNoise, "100 µV", "100 Hz").
     '1.00 mV'
@@ -32,7 +33,8 @@ def actual_noise(density: VoltageVolt, bandwith: FrequencyHz):
 
 @returns_unit("V/√Hz")
 def noise_density(actual_noise: VoltageVolt, bandwith: FrequencyHz):
-    """Compute the noise density given:
+    """
+    Compute the noise density given.
     
      - A noise density in x/√Hz where x is any unit
      - A bandwith in ΔHz.

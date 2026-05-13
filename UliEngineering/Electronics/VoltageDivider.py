@@ -110,14 +110,10 @@ def voltage_divider_current(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Volta
 class VoltageDividerPower(namedtuple("VoltageDividerPower", [
     "top", "bottom", "load", "total"
 ])):
-    """
-    Represents the power dissipated in different parts of a voltage divider.
-    """
+    """Represents the power dissipated in different parts of a voltage divider."""
 
     def __repr__(self):
-        """
-        Better formatting.
-        """
+        """Better formatting."""
         return f"VoltageDividerPower(top={format_value(self.top, 'W')}, bottom={format_value(self.bottom, 'W')}, {'load=' + format_value(self.load, 'W') if self.load != 0 else ''}total={format_value(self.total, 'W')})"
 
 @returns_unit("W")
@@ -168,7 +164,7 @@ def voltage_divider_power(rtop: ResistanceOhm, rbot: ResistanceOhm, vin: Voltage
 @returns_unit("Ω")
 def top_resistor_by_ratio(rbottom: ResistanceOhm, ratio: NormalizableArgument):
     """
-    Compute the top resistor of a voltage divider given the bottom resistor value
+    Compute the top resistor of a voltage divider given the bottom resistor value.
     
     and the division ratio.
 
@@ -192,7 +188,7 @@ def top_resistor_by_ratio(rbottom: ResistanceOhm, ratio: NormalizableArgument):
 @returns_unit("Ω")
 def bottom_resistor_by_ratio(rtop: ResistanceOhm, ratio: NormalizableArgument):
     """
-    Compute the bottom resistor of a voltage divider given the top resistor value
+    Compute the bottom resistor of a voltage divider given the top resistor value.
     
     and the division ratio.
 
@@ -216,7 +212,7 @@ def bottom_resistor_by_ratio(rtop: ResistanceOhm, ratio: NormalizableArgument):
 @returns_unit("Ω")
 def feedback_top_resistor(vexp: VoltageV, rbot: ResistanceOhm, vfb: VoltageV, rload: ResistanceOhm = np.inf):
     """
-    Utility to compute the top feedback resistor
+    Utility to compute the top feedback resistor.
     
     in a voltage feedback network (e.g. for a DC/DC converter).
 
@@ -248,7 +244,7 @@ def feedback_top_resistor(vexp: VoltageV, rbot: ResistanceOhm, vfb: VoltageV, rl
 @returns_unit("Ω")
 def feedback_bottom_resistor(vexp: VoltageV, rtop: ResistanceOhm, vfb: VoltageV):
     """
-    Utility to compute the bottom feedback resistor
+    Utility to compute the bottom feedback resistor.
     
     in a voltage feedback network (e.g. for a DC/DC converter).
 
@@ -277,7 +273,7 @@ def feedback_bottom_resistor(vexp: VoltageV, rtop: ResistanceOhm, vfb: VoltageV)
 @returns_unit("V")
 def feedback_actual_voltage(rtop: ResistanceOhm, rbot: ResistanceOhm, vfb: VoltageV, rload: ResistanceOhm = np.inf):
     """
-    Compute the actual voltage regulator output in a feedback
+    Compute the actual voltage regulator output in a feedback.
     
     servo setup. Returns the Vout voltage.
 

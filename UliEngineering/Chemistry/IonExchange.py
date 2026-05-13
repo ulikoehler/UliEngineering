@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Ion exchange equilibrium and selectivity.
+"""
+Ion exchange equilibrium and selectivity.
 
 Provides functions for:
 - Ion exchange selectivity coefficient
@@ -46,7 +47,8 @@ MassGram = Annotated[NormalizedComputable, normalize_mass]
 
 @returns_unit("")
 def selectivity_coefficient(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: ConcentrationMolar, C_A: ConcentrationMolar, z_A=1, z_B=1):
-    """Compute the selectivity coefficient for ion exchange of A over B.
+    """
+    Compute the selectivity coefficient for ion exchange of A over B.
 
     For exchange: z_B * A^(z_A) + z_A * B_resin^(z_B) ⇌ z_B * A_resin^(z_A) + z_A * B^(z_B).
 
@@ -82,7 +84,8 @@ def selectivity_coefficient(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_
 
 @returns_unit("")
 def separation_factor(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: ConcentrationMolar, C_A: ConcentrationMolar):
-    """Compute the separation factor α for ion exchange.
+    """
+    Compute the separation factor α for ion exchange.
 
     α_AB = (q_A * C_B) / (q_B * C_A).
 
@@ -112,7 +115,8 @@ def separation_factor(q_A: ConcentrationMolar, C_B: ConcentrationMolar, q_B: Con
 
 @returns_unit("L/g")
 def distribution_coefficient(q, C: ConcentrationMolar):
-    """Compute the distribution coefficient Kd.
+    """
+    Compute the distribution coefficient Kd.
 
     Kd = q / C.
 
@@ -135,7 +139,8 @@ def distribution_coefficient(q, C: ConcentrationMolar):
 
 @returns_unit("mol/g")
 def ion_exchange_capacity_from_breakthrough(C_feed: ConcentrationMolar, V_breakthrough: VolumeLiter, mass_resin: MassGram):
-    """Compute ion exchange capacity from breakthrough experiment.
+    """
+    Compute ion exchange capacity from breakthrough experiment.
 
     Q = C_feed * V_breakthrough / m_resin.
 
@@ -162,7 +167,8 @@ def ion_exchange_capacity_from_breakthrough(C_feed: ConcentrationMolar, V_breakt
 
 @returns_unit("V")
 def donnan_potential(z, C_in: ConcentrationMolar, C_out: ConcentrationMolar, T=298.15):
-    """Compute the Donnan membrane potential.
+    """
+    Compute the Donnan membrane potential.
 
     E_D = (R*T) / (z*F) * ln(C_out / C_in).
 
@@ -193,7 +199,8 @@ def donnan_potential(z, C_in: ConcentrationMolar, C_out: ConcentrationMolar, T=2
 
 @returns_unit("")
 def donnan_ratio(z, C_fixed: ConcentrationMolar, C_solution: ConcentrationMolar):
-    """Compute the Donnan ratio for a membrane with fixed charge.
+    """
+    Compute the Donnan ratio for a membrane with fixed charge.
 
     For a monovalent case with fixed charge concentration C_fixed:
         r = C_in / C_out

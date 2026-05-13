@@ -17,7 +17,8 @@ def default_unit_prefixes() -> List[str]:
     return ["Δ", "±", "°"]
 
 def default_si_prefix_map(include_length_unit_prefixes=False) -> Dict[str, float]:
-    """Generate a dictionary mapping SI prefixes to their corresponding exponents (in powers of 10).
+    """
+    Generate a dictionary mapping SI prefixes to their corresponding exponents (in powers of 10).
 
     Parameters.
     ----------

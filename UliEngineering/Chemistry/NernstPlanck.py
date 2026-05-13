@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Nernst-Planck equation for ionic flux.
+"""
+Nernst-Planck equation for ionic flux.
 
 The Nernst-Planck equation describes transport of ionic species.
 under the influence of both concentration gradients and electric fields:
@@ -57,7 +58,8 @@ IonicMobilityM2VS = Annotated[NormalizedComputable, normalize_ionic_mobility]
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_flux(D: DiffusionCoefficientM2S, dC_dx, z, C: ConcentrationMolM3, dPhi_dx, T=298.15):
-    """Compute the ionic flux using the Nernst-Planck equation.
+    """
+    Compute the ionic flux using the Nernst-Planck equation.
 
     J = -D * (dC/dx + z*F*C/(R*T) * dφ/dx).
 
@@ -90,7 +92,8 @@ def nernst_planck_flux(D: DiffusionCoefficientM2S, dC_dx, z, C: ConcentrationMol
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_diffusion_flux(D: DiffusionCoefficientM2S, dC_dx):
-    """Compute the diffusion component of Nernst-Planck flux (Fick's first law).
+    """
+    Compute the diffusion component of Nernst-Planck flux (Fick's first law).
 
     J_diff = -D * dC/dx.
 
@@ -113,7 +116,8 @@ def nernst_planck_diffusion_flux(D: DiffusionCoefficientM2S, dC_dx):
 
 @returns_unit("mol/(m²·s)")
 def nernst_planck_migration_flux(D: DiffusionCoefficientM2S, z, C: ConcentrationMolM3, dPhi_dx, T=298.15):
-    """Compute the migration (electromigration) component of Nernst-Planck flux.
+    """
+    Compute the migration (electromigration) component of Nernst-Planck flux.
 
     J_mig = -D * z * F * C / (R * T) * dφ/dx.
 
@@ -144,7 +148,8 @@ def nernst_planck_migration_flux(D: DiffusionCoefficientM2S, z, C: Concentration
 
 @returns_unit("m²/s")
 def einstein_relation_diffusion_mobility(mobility: IonicMobilityM2VS, T=298.15):
-    """Compute diffusion coefficient from ionic mobility using the Einstein relation.
+    """
+    Compute diffusion coefficient from ionic mobility using the Einstein relation.
 
     D = μ * k_B * T / e = μ * R * T / F.
 
@@ -172,7 +177,8 @@ def einstein_relation_diffusion_mobility(mobility: IonicMobilityM2VS, T=298.15):
 
 @returns_unit("m²/(V·s)")
 def ionic_mobility_from_diffusion(D: DiffusionCoefficientM2S, z, T=298.15):
-    """Compute ionic mobility from diffusion coefficient.
+    """
+    Compute ionic mobility from diffusion coefficient.
 
     μ = D * |z| * F / (R * T).
 

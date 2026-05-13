@@ -72,7 +72,6 @@ def _create_volume_config():
     )
 
 class EngineerVolumeIO(EngineerIO):
-    
     """EngineerIO subclass specialized for volume unit parsing and conversion."""
 
     _instance = None
@@ -91,7 +90,8 @@ class EngineerVolumeIO(EngineerIO):
 
     @returns_unit("m³")
     def normalize_volume(self, s):
-        """Normalize a volume to cubic meters.
+        """
+        Normalize a volume to cubic meters.
         
         Returns the numeric value in m³, a list or ndarray of converted values,.
         or None if the input is None.
@@ -131,7 +131,8 @@ class EngineerVolumeIO(EngineerIO):
 
     @returns_unit("m³")
     def convert_volume_to_cubic_meters(self, value, unit):
-        """Given a number or Engineer string (unit ignored) <value>
+        """
+        Given a number or Engineer string (unit ignored) <value>.
         
         in <unit>, convert it to cubic meters.
         """
@@ -141,7 +142,8 @@ class EngineerVolumeIO(EngineerIO):
 
 @returns_unit("m³")
 def convert_volume_to_cubic_meters(value, unit, instance=None):
-    """Given a number or Engineer string (unit ignored) <value>
+    """
+    Given a number or Engineer string (unit ignored) <value>.
     
     in <unit>, convert it to cubic meters.
     """
@@ -151,7 +153,8 @@ def convert_volume_to_cubic_meters(value, unit, instance=None):
 
 @returns_unit("m³")
 def normalize_volume(s: NormalizableArgument, instance=None) -> NormalizedComputable:
-    """Normalize a volume to cubic meters.
+    """
+    Normalize a volume to cubic meters.
     
     Returns the numeric value in m³, a list or ndarray of converted values,.
     or None if the input is None.

@@ -16,7 +16,8 @@ __all__ = ["Date", "all_dates_in_year", "number_of_days_in_month",
 Date = namedtuple("Date", ["year", "month", "day"])
 
 def generate_datetime_filename(label="data", extension="csv", postfix=None, fractional=True, dt=None):
-    """Generate a datetime-based filename.
+    """
+    Generate a datetime-based filename.
 
     mydata-2022-09-02_00-31-50-613015.csv.
     where "mydata" is the label and "csv" is the extensions.
@@ -46,14 +47,16 @@ def generate_datetime_filename(label="data", extension="csv", postfix=None, frac
     return filename
 
 def number_of_days_in_month(year=2019, month=1):
-    """Return the number of days in a month, e.g. 31 in January (month=1).
+    """
+    Return the number of days in a month, e.g. 31 in January (month=1).
 
     Takes into account leap days.
     """
     return monthrange(year, month)[1]
 
 def all_dates_in_year(year=2019):
-    """Iterate all dates in a specific year, taking into account leap days.
+    """
+    Iterate all dates in a specific year, taking into account leap days.
 
     Yields Date() objects (tuple of year/month/day).
     """
@@ -62,7 +65,8 @@ def all_dates_in_year(year=2019):
             yield Date(year, month, day)
 
 def extract_months(timestamps):
-    """Extract the month from timestamps.
+    """
+    Extract the month from timestamps.
 
     Given a 1D array of np.datetime64 timestamps, extract the month of each.
     timestamps and return a numpy array of the same size, containing the month
@@ -71,7 +75,8 @@ def extract_months(timestamps):
     return np.asarray([dt.month for dt in timestamps.astype(datetime)])
 
 def extract_years(timestamps):
-    """Extract the year from timestamps.
+    """
+    Extract the year from timestamps.
 
     Given a 1D array of np.datetime64 timestamps, extract the year of each.
     timestamps and return a numpy array of the same size, containing the year
@@ -80,7 +85,8 @@ def extract_years(timestamps):
     return np.asarray([dt.year for dt in timestamps.astype(datetime)])
 
 def extract_day_of_month(timestamps):
-    """Extract the day of month from timestamps.
+    """
+    Extract the day of month from timestamps.
 
     Given a 1D array of np.datetime64 timestamps, extract the day of month of.
     each timestamps and return a numpy array of the same size, containing the
@@ -89,7 +95,8 @@ def extract_day_of_month(timestamps):
     return np.asarray([dt.day for dt in timestamps.astype(datetime)])
 
 def extract_day_of_week(timestamps):
-    """Extract the day of week from timestamps.
+    """
+    Extract the day of week from timestamps.
 
     Given a 1D array of np.datetime64 timestamps, extract the day of week of.
     each timestamps and return a numpy array of the same size, containing the
@@ -98,7 +105,8 @@ def extract_day_of_week(timestamps):
     return np.asarray([dt.isoweekday() for dt in timestamps.astype(datetime)])
 
 def is_first_day_of_month(timestamps):
-    """Take a Numpy array of np.datetime64.
+    """
+    Take a Numpy array of np.datetime64.
 
     Return a boolean array of the same length which is true if the given.
     date is on the first day of any month.
@@ -109,7 +117,8 @@ def is_first_day_of_month(timestamps):
     return extract_day_of_month(timestamps) == 1
 
 def is_first_day_of_week(timestamps):
-    """Take a Numpy array of np.datetime64.
+    """
+    Take a Numpy array of np.datetime64.
 
     Return a boolean array of the same length which is true if the given.
     date is on the first day of any week.
@@ -117,7 +126,8 @@ def is_first_day_of_week(timestamps):
     return extract_day_of_week(timestamps) == 1
 
 def is_month_change(timestamps, first_value_is_change=False):
-    """Take a Numpy array of np.datetime64.
+    """
+    Take a Numpy array of np.datetime64.
 
     Return a boolean array of the same length which is true if the given.
     date is the first date in the given array in that particular month.
@@ -136,7 +146,8 @@ def is_month_change(timestamps, first_value_is_change=False):
         np.diff(extract_months(timestamps)).astype(bool))
 
 def is_year_change(timestamps, first_value_is_change=False):
-    """Take a Numpy array of np.datetime64.
+    """
+    Take a Numpy array of np.datetime64.
 
     If first_value_is_change is True, the first element of the array will be.
     True, else it will be False.
@@ -150,7 +161,8 @@ def is_year_change(timestamps, first_value_is_change=False):
         np.diff(extract_years(timestamps)).astype(bool))
 
 def generate_days(ndays, year=2022, month=1, day=1):
-    """Generate a 1d array of timestamps.
+    """
+    Generate a 1d array of timestamps.
 
     Generate a 1d array of [ndays] timestamps, starting at the given day, each.
     timestamp being exactly one day from the previous one.
@@ -178,7 +190,8 @@ def generate_days(ndays, year=2022, month=1, day=1):
     return usec_offsets + startdate
 
 def generate_months(nmonths, year=2022, month=1, day=1):
-    """Generate a 1d array of monthly timestamps.
+    """
+    Generate a 1d array of monthly timestamps.
 
     Generate a 1d array of [nmonths] timestamps, starting at the given day,.
     each timestamp being exactly one month from the previous one.
@@ -200,7 +213,8 @@ def generate_months(nmonths, year=2022, month=1, day=1):
     ], dtype='datetime64[us]')
 
 def generate_years(nyears, year=2022, month=1, day=1):
-    """Generate a 1d array of yearly timestamps.
+    """
+    Generate a 1d array of yearly timestamps.
 
     Generate a 1d array of [nyears] timestamps, starting at the given day,.
     each timestamp being exactly one year from the previous one.
@@ -222,7 +236,8 @@ def generate_years(nyears, year=2022, month=1, day=1):
     ], dtype='datetime64[us]')
 
 def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
-    """Yield a Python datetime for each hour on the given day.
+    """
+    Yield a Python datetime for each hour on the given day.
 
     For each hour on the given day in the given timezone, yield a Python datetime.
     object representing this timestamp.
@@ -249,7 +264,8 @@ def yield_hours_on_day(year=2022, month=6, day=15, tz=None):
                         tzinfo=tz)
 
 def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
-    """Yield a Python datetime for each minute on the given day.
+    """
+    Yield a Python datetime for each minute on the given day.
 
     For each minute on the given day in the given timezone, yield a Python datetime.
     object representing this timestamp.
@@ -277,7 +293,8 @@ def yield_minutes_on_day(year=2022, month=6, day=15, tz=None):
                          tzinfo=tz)
 
 def yield_seconds_on_day(year=2022, month=6, day=15, tz=None):
-    """Yield a Python datetime for each second on the given day.
+    """
+    Yield a Python datetime for each second on the given day.
 
     For each second on the given day in the given timezone, yield a Python datetime.
     object representing this timestamp.

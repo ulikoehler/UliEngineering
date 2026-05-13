@@ -96,7 +96,6 @@ def _create_mass_concentration_config():
 
 
 class EngineerAmountConcentrationIO(EngineerIO):
-    
     """EngineerIO subclass specialized for amount concentration unit parsing and conversion."""
     
     _instance = None
@@ -126,7 +125,6 @@ class EngineerAmountConcentrationIO(EngineerIO):
         return self.normalize_amount_concentration(f"{value} {unit}")
 
 class EngineerMassConcentrationIO(EngineerIO):
-    
     """EngineerIO subclass specialized for mass concentration unit parsing and conversion."""
     
     _instance = None

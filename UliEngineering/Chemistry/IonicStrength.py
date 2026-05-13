@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Ionic strength calculations.
+"""
+Ionic strength calculations.
 
 Ionic strength I is a measure of the total concentration of ions in solution:
 
@@ -31,7 +32,8 @@ ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 @returns_unit("mol/L")
 def ionic_strength(concentrations, charges):
-    """Compute the ionic strength from arrays of concentrations and charges.
+    """
+    Compute the ionic strength from arrays of concentrations and charges.
 
     I = 0.5 * Σ(c_i * z_i²).
 
@@ -55,7 +57,8 @@ def ionic_strength(concentrations, charges):
 
 @returns_unit("mol/L")
 def ionic_strength_from_pairs(pairs):
-    """Compute ionic strength from a list of (concentration, charge) tuples.
+    """
+    Compute ionic strength from a list of (concentration, charge) tuples.
 
     Parameters.
     ----------
@@ -75,7 +78,8 @@ def ionic_strength_from_pairs(pairs):
 
 @returns_unit("mol/L")
 def ionic_strength_monovalent(concentration: ConcentrationMolar):
-    """Compute ionic strength for a monovalent salt (e.g. NaCl).
+    """
+    Compute ionic strength for a monovalent salt (e.g. NaCl).
 
     For a 1:1 electrolyte MX at concentration c, I = c.
 

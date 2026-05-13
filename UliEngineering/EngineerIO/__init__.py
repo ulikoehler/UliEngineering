@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""A python script to normalize a wide variety of value notations.
+"""
+A python script to normalize a wide variety of value notations.
 
 Examples of valid notations include:
     1,234.56kΩ
@@ -46,7 +47,8 @@ class EngineerIO(object):
 
     """
     def __init__(self, config: Optional[EngineerIOConfiguration] = None):
-        """Initialize a new EngineerIO instance with configuration object.
+        """
+        Initialize a new EngineerIO instance with configuration object.
 
         Parameters.
         ----------
@@ -134,11 +136,11 @@ class EngineerIO(object):
             self.exp_map_max = 0
 
     def _generate_unit_alias_pattern(self):
-        """Generate a regex pattern to match unit aliases at the end of strings.
+        """
+        Generate a regex pattern to match unit aliases at the end of strings.
         
         Returns pattern string in format: "(alias1|alias2|...)$".
         """
-
         if not self.unit_aliases:
             return None
 
@@ -162,7 +164,8 @@ class EngineerIO(object):
         self.unit_alias_regex = re.compile(pattern, flags=re.UNICODE)
 
     def _generate_units_pattern(self):
-        """Generate a regex pattern to match units at the end of strings.
+        """
+        Generate a regex pattern to match units at the end of strings.
         
         Returns pattern string in format: "(unit1|unit2|...)$".
         """
@@ -208,7 +211,8 @@ class EngineerIO(object):
         return self.unit_aliases.get(unit, unit)
 
     def has_any_unit_prefix(self, s):
-        """Check if any suffix of the string is a unit prefix.
+        """
+        Check if any suffix of the string is a unit prefix.
         
         Returns a tuple (has_prefix, unit_prefix_char, remainder) where:
         - has_prefix: True if a unit prefix suffix was found
@@ -227,7 +231,8 @@ class EngineerIO(object):
         return False, "", s
 
     def split_input(self, s):
-        """Separate a string into a number, suffix and unit plus prefixes.
+        """
+        Separate a string into a number, suffix and unit plus prefixes.
         
         Does not try to parse the numbers.
         returns None if the string could not be parsed.
@@ -324,7 +329,8 @@ class EngineerIO(object):
         )
 
     def split_unit(self, s):
-        """Split a string into (remainder, unit).
+        """
+        Split a string into (remainder, unit).
         
         Only units in the units set are recognized.
         unit may be '' if no unit is recognized
@@ -387,7 +393,8 @@ class EngineerIO(object):
         return UnitSplitResult(value_str, unit_prefix, unit)
 
     def normalize(self, s, encoding="utf8", prefix_exponent=1.0):
-        """Converts an engineer's input of a wide variety of formats to a numeric
+        """
+        Converts an engineer's input of a wide variety of formats to a numeric.
         
         value.
 
@@ -435,7 +442,8 @@ class EngineerIO(object):
         )
 
     def safe_normalize(self, s, encoding="utf8"):
-        """Same as normalize(), but returns None instead of raising
+        """
+        Same as normalize(), but returns None instead of raising.
         
         on error.
         """
@@ -445,7 +453,8 @@ class EngineerIO(object):
             return None
 
     def format(self, v, unit="", significant_digits=3):
-        """Format v using SI unit_prefixes with optional units.
+        """
+        Format v using SI unit_prefixes with optional units.
         
         Produces a string with 3 visible digits.
         """
@@ -481,7 +490,8 @@ class EngineerIO(object):
 
 
     def auto_suffix_1d(self, arr):
-        """Takes an array of arbitrary values and determines
+        """
+        Takes an array of arbitrary values and determines.
         
         what is the best suffix (e.g. M, m, n, f) to represent.
         as many values as possible with as few powers of 10 as possible.
@@ -513,7 +523,8 @@ class EngineerIO(object):
         return unit
 
     def auto_format(self, fn, *args, significant_digits=3, **kwargs):
-        """Auto-format a value by leveraging a custom @returns_unit annotation.
+        """
+        Auto-format a value by leveraging a custom @returns_unit annotation.
         
         The function's return value is expected to be annotated with @returns_unit("unit").
         """
@@ -532,7 +543,8 @@ class EngineerIO(object):
         return vectorized_func(arg)
 
     def normalize_numeric_safe(self, arg):
-        """Normalize each element of an iterable and retrieve only the numeric value
+        """
+        Normalize each element of an iterable and retrieve only the numeric value.
         
         (the unit is ignored). Works on iterables and string-likes.
 
@@ -558,7 +570,8 @@ class EngineerIO(object):
         return self.normalize_iterable(arg, func=lambda v: none_to_nan(self.normalize_numeric_safe(v)))
 
     def normalize_numeric(self, arg):
-        """Normalize each element of an iterable and retrieve only the numeric value
+        """
+        Normalize each element of an iterable and retrieve only the numeric value.
         
         (the unit is ignored). Works on iterables and string-likes.
 
@@ -580,7 +593,8 @@ class EngineerIO(object):
         return self.normalize_iterable(arg, func=self.normalize_numeric)
 
     def normalize_numeric_verify_unit(self, arg, unit):
-        """Normalize a value. If it is a string
+        """
+        Normalize a value. If it is a string.
         
         verify if its unit matches the reference unit.
         """
@@ -609,7 +623,8 @@ class EngineerIO(object):
         return cls._instance
 
     def normalize_interpunctation(self, s):
-        """Normalize comma to point for float conversion.
+        """
+        Normalize comma to point for float conversion.
         
         Correctly handles thousands separators.
 
@@ -633,17 +648,19 @@ class EngineerIO(object):
         return self._interpunct_transform_map[(foundComma, foundPoint, commaFirst)](s)
 
     def _format_with_suffix(self, v, suffix="", significant_digits=3):
-        """Format a given value with a given suffix.
+        """
+        Format a given value with a given suffix.
         
         This helper function formats the value to 3 visible digits.
         v must be pre-multiplied by the factor implied by the suffix.
 
-        Keyword Arguments:
-        ------------------
+        Other Parameters
+        ----------------
         suffix : string
             The suffix to append
         significant_digits : integer
             The number of overall significant digits to show
+
         """
         abs_v = abs(v)
         if np.isnan(v):

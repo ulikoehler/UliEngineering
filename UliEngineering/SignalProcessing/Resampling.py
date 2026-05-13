@@ -15,7 +15,8 @@ __all__ = ["resample_discard", "resampled_timespace",
            "serial_resample"]
 
 def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
-    """Compute the samplerate of a signal
+    """
+    Compute the samplerate of a signal.
     
     using a quantile-based method to exclude.
     outliers (in the time delta domain) and
@@ -62,7 +63,8 @@ def signal_samplerate(t, ignore_percentile=10, mean_method=np.mean):
     return 1e9 / mean_sample_period # 1e9 : nanoseconds
 
 def resample_discard(arr, divisor, ofs=0):
-    """Resample with an integral divisor, discarding all other samples.
+    """
+    Resample with an integral divisor, discarding all other samples.
     
     Returns a view of the data.
     Very fast as this doesn't need to read the data.
@@ -70,7 +72,8 @@ def resample_discard(arr, divisor, ofs=0):
     return arr[ofs::divisor]
 
 def resampled_timespace(t, new_samplerate, assume_sorted=True, time_factor=1e6):
-    """Compute the new timespace after resampling a input timestamp array
+    """
+    Compute the new timespace after resampling a input timestamp array.
     
     (not neccessarily lazy).
 
@@ -148,7 +151,8 @@ def serial_resample(t, y, new_samplerate, out=None, prefilter=None,
                       time_factor=1e6,
                       fitkind='linear', chunksize=10000,
                       overprovisioning_factor=0.01):
-    """A resampler that uses scipy.interpolate.interp1d but splits the
+    """
+    A resampler that uses scipy.interpolate.interp1d but splits the.
     
     input into chunks that can be processed.
     The chunksize is applied to the output timebase.

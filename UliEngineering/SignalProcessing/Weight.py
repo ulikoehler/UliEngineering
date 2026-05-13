@@ -6,7 +6,8 @@ import numpy as np
 __all__ = ["weigh_halves", "weight_symmetry"]
 
 def weigh_halves(arr, operator=np.sum):
-    """Split a 1D array into two halves (right in the middle)
+    """
+    Split a 1D array into two halves (right in the middle).
     
     and compute the weight of each half (i.e. sum of all values in that half).
 
@@ -17,8 +18,8 @@ def weigh_halves(arr, operator=np.sum):
 
     Returns (weightLeft, weightReight)
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     arr : 1D NumPy array
         The array to process.
     operator : unary function
@@ -36,7 +37,8 @@ def weigh_halves(arr, operator=np.sum):
     return operator(arr[:pivot]) + middle, operator(arr[pivot + 1:]) + middle
 
 def weight_symmetry(a, b):
-    """Given two weights a, b computes a coefficient
+    """
+    Given two weights a, b computes a coefficient.
     
     about how equal they are:
 

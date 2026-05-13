@@ -94,7 +94,8 @@ ATOMIC_WEIGHTS = {
 
 
 def parse_formula(formula):
-    """Parse a chemical formula string into a dictionary of element counts.
+    """
+    Parse a chemical formula string into a dictionary of element counts.
 
     Supports:
     - Simple formulas: "H2O", "NaCl", "C6H12O6"
@@ -174,7 +175,8 @@ def _parse_formula_recursive(formula):
 
 @returns_unit("g/mol")
 def molecular_weight(formula):
-    """Compute the molecular weight of a compound from its formula.
+    """
+    Compute the molecular weight of a compound from its formula.
 
     Parameters.
     ----------
@@ -202,7 +204,8 @@ def molecular_weight(formula):
 
 
 def percent_composition(formula):
-    """Compute the percent composition by mass of each element in a compound.
+    """
+    Compute the percent composition by mass of each element in a compound.
 
     Parameters.
     ----------
@@ -225,7 +228,8 @@ def percent_composition(formula):
 
 @returns_unit("g")
 def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
-    """Convert moles to grams.
+    """
+    Convert moles to grams.
 
     m = n * M.
 
@@ -249,7 +253,8 @@ def moles_to_grams(moles: Moles, molar_mass: MolarMassGMol):
 
 @returns_unit("mol")
 def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
-    """Convert grams to moles.
+    """
+    Convert grams to moles.
 
     n = m / M.
 
@@ -273,7 +278,8 @@ def grams_to_moles(grams: Grams, molar_mass: MolarMassGMol):
 
 @returns_unit("")
 def moles_to_particles(moles: Moles):
-    """Convert moles to number of particles.
+    """
+    Convert moles to number of particles.
 
     N = n * N_A.
 
@@ -294,7 +300,8 @@ def moles_to_particles(moles: Moles):
 
 @returns_unit("mol")
 def particles_to_moles(particles):
-    """Convert number of particles to moles.
+    """
+    Convert number of particles to moles.
 
     n = N / N_A.
 
@@ -314,7 +321,8 @@ def particles_to_moles(particles):
 
 @returns_unit("mol/L")
 def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
-    """Compute molarity from moles and volume.
+    """
+    Compute molarity from moles and volume.
 
     M = n / V.
 
@@ -338,7 +346,8 @@ def molarity_from_moles_volume(moles: Moles, volume_liters: VolumeLiter):
 
 @returns_unit("mol")
 def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
-    """Compute moles from molarity and volume.
+    """
+    Compute moles from molarity and volume.
 
     n = M * V.
 
@@ -361,7 +370,8 @@ def moles_from_molarity_volume(molarity, volume_liters: VolumeLiter):
 
 @returns_unit("L")
 def volume_from_molarity_moles(molarity, moles: Moles):
-    """Compute volume needed for given moles at given molarity.
+    """
+    Compute volume needed for given moles at given molarity.
 
     V = n / M.
 
@@ -384,7 +394,8 @@ def volume_from_molarity_moles(molarity, moles: Moles):
 
 @returns_unit("mol/kg")
 def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
-    """Compute molality from moles of solute and mass of solvent.
+    """
+    Compute molality from moles of solute and mass of solvent.
 
     b = n_solute / m_solvent (kg).
 
@@ -408,7 +419,8 @@ def molality_from_moles_mass(moles_solute: Moles, mass_solvent_kg: Grams):
 
 @returns_unit("L")
 def dilution_volume(C1, V1: VolumeLiter, C2):
-    """Compute the final volume after dilution using C₁V₁ = C₂V₂.
+    """
+    Compute the final volume after dilution using C₁V₁ = C₂V₂.
 
     V₂ = C₁ * V₁ / C₂.
 
@@ -433,7 +445,8 @@ def dilution_volume(C1, V1: VolumeLiter, C2):
 
 @returns_unit("mol/L")
 def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar_mass: MolarMassGMol):
-    """Convert mass fraction (w/w) to molarity.
+    """
+    Convert mass fraction (w/w) to molarity.
 
     M = (w * ρ * 1000) / M_w.
 
@@ -458,7 +471,8 @@ def mass_fraction_to_molarity(mass_fraction, density_kg_per_L: DensityKgL, molar
 
 
 def limiting_reagent(reactant_moles, stoich_coefficients):
-    """Determine the limiting reagent from arrays of available moles
+    """
+    Determine the limiting reagent from arrays of available moles.
     
     and stoichiometric coefficients.
 
@@ -485,7 +499,8 @@ def limiting_reagent(reactant_moles, stoich_coefficients):
 
 @returns_unit("mol")
 def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
-    """Compute theoretical yield (in moles) of a product.
+    """
+    Compute theoretical yield (in moles) of a product.
 
     n_product = n_limiting * (product_coeff / limiting_coeff).
 
@@ -510,7 +525,8 @@ def theoretical_yield(limiting_moles: Moles, limiting_coeff, product_coeff):
 
 @returns_unit("%")
 def percent_yield(actual, theoretical):
-    """Compute percent yield.
+    """
+    Compute percent yield.
 
     % yield = (actual / theoretical) * 100.
 
@@ -531,7 +547,8 @@ def percent_yield(actual, theoretical):
 
 
 def empirical_formula_from_percent(percentages):
-    """Determine the empirical formula from percent composition data.
+    """
+    Determine the empirical formula from percent composition data.
 
     Parameters.
     ----------
@@ -569,7 +586,8 @@ def empirical_formula_from_percent(percentages):
 
 @returns_unit("mol")
 def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
-    """Compute moles of ideal gas from PV = nRT.
+    """
+    Compute moles of ideal gas from PV = nRT.
 
     n = PV / (RT).
 
@@ -595,7 +613,8 @@ def ideal_gas_moles(pressure_Pa: PressurePa, volume_m3, T):
 
 @returns_unit("m³")
 def ideal_gas_volume(moles: Moles, T, pressure_Pa: PressurePa=101325.0):
-    """Compute volume of ideal gas from PV = nRT.
+    """
+    Compute volume of ideal gas from PV = nRT.
 
     V = nRT / P.
 

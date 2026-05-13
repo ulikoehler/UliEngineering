@@ -51,9 +51,7 @@ def _create_timespan_config():
     )
 
 class EngineerTimespanIO(EngineerIO):
-    
-    """Specialized EngineerIO class for timespan operations.
-    """
+    """Specialized EngineerIO class for timespan operations."""
 
     _instance = None
 
@@ -64,7 +62,8 @@ class EngineerTimespanIO(EngineerIO):
 
     @returns_unit("s")
     def normalize_timespan(self, arg: NormalizableArgument) -> NormalizedArgument:
-        """Normalize a given timespan to SI units (seconds).
+        """
+        Normalize a given timespan to SI units (seconds).
         
         Numeric inputs are assumed to be in seconds.
         """
@@ -72,14 +71,14 @@ class EngineerTimespanIO(EngineerIO):
 
     @classmethod
     def instance(cls):
-        """Get the singleton instance of EngineerTimespanIO.
-        """
+        """Get the singleton instance of EngineerTimespanIO."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
 
 def normalize_timespan(v: NormalizableArgument) -> NormalizedComputable:
-    """Normalize a given timespan to SI units (seconds).
+    """
+    Normalize a given timespan to SI units (seconds).
     
     Numeric inputs are assumed to be in seconds.
     """

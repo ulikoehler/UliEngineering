@@ -10,7 +10,7 @@ __all__ = [
 
 def logarithmic_amplifier_output_voltage(ipd: CurrentA, gain: VoltageV, intercept: CurrentA):
     """
-    Compute the logarithmic output voltage of a ADL5303 (probably its more general than that)
+    Compute the logarithmic output voltage of a ADL5303 (probably its more general than that).
 
     According to Formula (1) in the [ADL5303 datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/adl5303.pdf).
 
@@ -33,7 +33,7 @@ def logarithmic_amplifier_output_voltage(ipd: CurrentA, gain: VoltageV, intercep
 
 def logarithmic_amplifier_input_current(vout: VoltageV, gain: VoltageV, intercept: CurrentA):
     """
-    Compute the input current based on the output voltage of a logarithmic amplifier
+    Compute the input current based on the output voltage of a logarithmic amplifier.
 
     The formula for this is Ipd = intercept * 10^(vout / Gain).
     https://techoverflow.net/2024/09/23/how-to-compute-the-input-current-of-a-logarithmic-amplifier/

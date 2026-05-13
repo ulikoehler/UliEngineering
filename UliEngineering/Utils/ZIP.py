@@ -8,7 +8,8 @@ from .Files import list_recursive
 __all__ = ["create_zip_from_directory", "list_zip", "read_from_zip"]
 
 def create_zip_from_directory(zippath, directory, include_rootdir=True):
-    """Create a ZIP file from a directory that exists on the filesystem.
+    """
+    Create a ZIP file from a directory that exists on the filesystem.
 
     Add all files recursively, naming them correctly.
 
@@ -35,7 +36,8 @@ def create_zip_from_directory(zippath, directory, include_rootdir=True):
                          if include_rootdir else filename)
 
 def list_zip(zippath):
-    """Get a list of entries in the ZIP.
+    """
+    Get a list of entries in the ZIP.
 
     Equivalent to calling .namelist() on the opened ZIP file.
     """
@@ -43,7 +45,8 @@ def list_zip(zippath):
         return zipin.namelist()
 
 def read_from_zip(zippath, filepaths, binary=True):
-    """Read one or multiple files from a ZIP, copying their contents to memory.
+    """
+    Read one or multiple files from a ZIP, copying their contents to memory.
 
     Parameters.
     ----------

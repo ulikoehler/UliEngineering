@@ -14,7 +14,7 @@ __all__ = ["value_range_over_temperature", "value_at_temperature"]
 
 def value_at_temperature(nominal: NormalizableArgument, temperature: NormalizableArgument, coefficient: NormalizableArgument = "100 ppm", tref: NormalizableArgument = "25°C"):
     """
-    Given a component with a nominal value (nominal) at a reference temperature (tref)
+    Given a component with a nominal value (nominal) at a reference temperature (tref).
     
     and a fixed coefficient of temperature (coefficient, e.g. "100 ppm"),.
     computes the actual value of the component at temperature.
@@ -70,7 +70,7 @@ def value_at_temperature(nominal: NormalizableArgument, temperature: Normalizabl
 
 def value_range_over_temperature(nominal: NormalizableArgument, coefficient: str|float = "100ppm", tolerance: NormalizableArgument = "0 %", tmin: NormalizableArgument = "-40 °C", tmax: NormalizableArgument = "85 °C", tref: NormalizableArgument = "25 °C", significant_digits=4):
     """
-    Given a component which has a nominal value (e.g. "1 kΩ")
+    Given a component which has a nominal value (e.g. "1 kΩ").
     
     at tref (typically "25 °C") and a coefficient of temperature (e.g. "100ppm").
 

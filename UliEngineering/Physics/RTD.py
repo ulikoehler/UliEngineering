@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Utilities regarding RTDs, e.g. PT100 or PT1000.
+"""
+Utilities regarding RTDs, e.g. PT100 or PT1000.
 
 =====
 PT1000 Rationale
@@ -54,7 +55,8 @@ pt100Correction = np.poly1d([1.51892983e-10, -2.85842067e-08, -5.34227299e-06,
 
 @returns_unit("Ω")
 def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptxITS90):
-    """Compute the PTx resistance at a given temperature.
+    """
+    Compute the PTx resistance at a given temperature.
     
     The reference for the test code is a DIN PT1000.
 
@@ -73,7 +75,8 @@ def ptx_resistance(r0: ResistanceOhm, t: TemperatureKelvin, standard=ptxITS90):
 
 @returns_unit("°C")
 def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptxITS90, poly=None):
-    """Compute the PTx temperature at a given temperature.
+    """
+    Compute the PTx temperature at a given temperature.
 
     Accepts an additive correction polynomial that is applied to the resistance.
     If the poly kwarg is None, the polynom is automatically selected.
@@ -103,7 +106,8 @@ def ptx_temperature(r0: ResistanceOhm, r: ResistanceOhm, standard=ptxITS90, poly
 
 
 def check_correction_polynomial_quality(r0, reftemp, poly):
-    """Get a difference array for a given correction polynomial.
+    """
+    Get a difference array for a given correction polynomial.
     
     Return (resistances, diffarray, peak-to-peak scalar).
     """
@@ -115,7 +119,8 @@ def check_correction_polynomial_quality(r0, reftemp, poly):
     return (resistances, tempdiff, quality)
 
 def compute_correction_polynomial(r0, order=5, n=1000000) -> np.poly1d:
-    """Compute a correction polynomial that can be applied to the resistance
+    """
+    Compute a correction polynomial that can be applied to the resistance.
     
     to get an additive correction coefficient that approximately corrects.
     for errors induced by the C * (t - 100) * t³ term in the formula which

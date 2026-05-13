@@ -42,7 +42,7 @@ TimeS = Annotated[NormalizedComputable, normalize_time]
 @returns_unit("Hz")
 def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
     """
-    Compute the resonance frequency of an LC oscillator circuit
+    Compute the resonance frequency of an LC oscillator circuit.
     
     given the inductance and capacitance.
 
@@ -64,7 +64,7 @@ def lc_cutoff_frequency(l: InductanceH, c: CapacitanceFarad):
 @returns_unit("Hz")
 def rc_cutoff_frequency(r: ResistanceOhm, c: CapacitanceFarad):
     """
-    Compute the corner frequency of an RC filter given the resistance
+    Compute the corner frequency of an RC filter given the resistance.
     
     and capacitance.
 
@@ -198,7 +198,7 @@ def rl_cutoff_frequency(resistance: ResistanceOhm, inductance: InductanceH):
 @returns_unit("s")
 def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, initial_voltage: VoltageV, final_voltage: VoltageV, target_voltage: VoltageV):
     """
-    Calculate the time required for a capacitor to charge from initial_voltage
+    Calculate the time required for a capacitor to charge from initial_voltage.
     
     to target_voltage when charging towards final_voltage through a resistor.
 
@@ -239,7 +239,7 @@ def rc_charge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, ini
 @returns_unit("s")
 def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, initial_voltage: VoltageV, target_voltage: VoltageV):
     """
-    Calculate the time required for a capacitor to discharge from initial_voltage
+    Calculate the time required for a capacitor to discharge from initial_voltage.
     
     to target_voltage through a resistor (assuming discharge to 0V).
 
@@ -271,7 +271,7 @@ def rc_discharge_time(resistance: ResistanceOhm, capacitance: CapacitanceFarad, 
 @returns_unit("s")
 def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, final_current: CurrentA, target_current: CurrentA):
     """
-    Calculate the time required for current through an inductor to rise
+    Calculate the time required for current through an inductor to rise.
     
     from 0 to target_current when approaching final_current.
 
@@ -309,7 +309,7 @@ def rl_current_rise_time(resistance: ResistanceOhm, inductance: InductanceH, fin
 @returns_unit("s")
 def rl_current_fall_time(resistance: ResistanceOhm, inductance: InductanceH, initial_current: CurrentA, target_current: CurrentA):
     """
-    Calculate the time required for current through an inductor to fall
+    Calculate the time required for current through an inductor to fall.
     
     from initial_current to target_current (assuming decay to 0A).
 
@@ -460,7 +460,8 @@ def rlc_quality_factor(resistance: ResistanceOhm, inductance: InductanceH, capac
     return (1.0 / resistance) * np.sqrt(inductance / capacitance)
 
 def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capacitance: CapacitanceFarad):
-    """Calculate the damping ratio (ζ) of an RLC circuit.
+    """
+    Calculate the damping ratio (ζ) of an RLC circuit.
 
     ζ = R/2 × sqrt(C/L).
 
@@ -489,7 +490,8 @@ def rlc_damping_ratio(resistance: ResistanceOhm, inductance: InductanceH, capaci
 
 @returns_unit("Hz")
 def rlc_bandwidth(resistance: ResistanceOhm, inductance: InductanceH):
-    """Calculate the 3dB bandwidth of an RLC circuit.
+    """
+    Calculate the 3dB bandwidth of an RLC circuit.
 
     BW = R / (2π × L).
 

@@ -41,10 +41,7 @@ _UNIT_NORMALIZER_MAP = {
 
 
 def returns_unit(unit):
-    """Decorator to annotate a function with a custom return unit string.
-
-    Usage: @returns_unit("A").
-    """
+    """Attach a metadata string describing the expected output unit (e.g. "A" for amperes)."""
     def decorator(fn):
         cast(Any, fn)._returns_unit = unit
         return fn
@@ -122,7 +119,8 @@ def normalize_args(func: None = None, *, exclude=None, instance:Optional[Enginee
 
 
 def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
-    """Decorator that normalizes arguments before calling the wrapped function.
+    """
+    Coerce call-time values so they match the wrapped function's annotations.
 
     Parameters can declare how they should be normalized using type annotations.
     The most pythonic form is ``typing.Annotated`` metadata:
@@ -139,8 +137,12 @@ def normalize_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = N
 
     Parameters
     ----------
+    func : callable, optional
+        The function to decorate. If None, returns a decorator.
     exclude : list of str, optional
-        List of parameter names that should not be normalized
+        List of parameter names that should not be normalized.
+    instance : EngineerIO, optional
+        The EngineerIO instance to use for normalization.
 
     Example:
         @normalize_args
@@ -232,8 +234,7 @@ def normalize_numeric_args(func: None = None, *, exclude=None, instance:Optional
 
 
 def normalize_numeric_args(func=None, *, exclude=None, instance:Optional[EngineerIO] = None):
-    """Decorator that applies normalize_numeric to all arguments (args & kwargs) of the decorated function before calling it.
-    """
+    """Ensure all arguments passed to the decorated function are numeric values."""
     if exclude is None:
         exclude = []
     exclude_set = set(exclude)

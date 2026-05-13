@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Electrolyte conductivity calculations.
+"""
+Electrolyte conductivity calculations.
 
 Provides functions for computing the conductivity (κ) and resistivity (ρ).
 of electrolyte solutions from molar conductivity and concentration,
@@ -54,7 +55,8 @@ CellConstantPerMeter = Annotated[NormalizedComputable, normalize_cell_constant]
 
 @returns_unit("S/m")
 def electrolyte_conductivity_from_molar(Lambda_m: MolarConductivitySCm2Mol, c: ConcentrationMolar):
-    """Compute electrolyte conductivity from molar conductivity and concentration.
+    """
+    Compute electrolyte conductivity from molar conductivity and concentration.
 
     κ = Λ_m * c * 0.1.
 
@@ -83,7 +85,8 @@ def electrolyte_conductivity_from_molar(Lambda_m: MolarConductivitySCm2Mol, c: C
 
 @returns_unit("Ω·m")
 def electrolyte_resistivity(conductivity: ConductivitySM):
-    """Compute electrolyte resistivity from conductivity.
+    """
+    Compute electrolyte resistivity from conductivity.
 
     ρ = 1 / κ.
 
@@ -104,7 +107,8 @@ def electrolyte_resistivity(conductivity: ConductivitySM):
 
 @returns_unit("S/m")
 def conductivity_from_cell_constant(conductance: ConductanceS, cell_constant: CellConstantPerMeter):
-    """Compute conductivity from measured conductance and cell constant.
+    """
+    Compute conductivity from measured conductance and cell constant.
 
     κ = G * K_cell.
 
@@ -128,7 +132,8 @@ def conductivity_from_cell_constant(conductance: ConductanceS, cell_constant: Ce
 
 @returns_unit("S·cm²/mol")
 def molar_conductivity_from_conductivity(conductivity: ConductivitySM, c: ConcentrationMolar):
-    """Compute molar conductivity from specific conductivity and concentration.
+    """
+    Compute molar conductivity from specific conductivity and concentration.
 
     Λ_m = κ / c * 10.
 
@@ -152,7 +157,8 @@ def molar_conductivity_from_conductivity(conductivity: ConductivitySM, c: Concen
 
 @returns_unit("S/m")
 def specific_conductance_temperature_correction(kappa_ref: ConductivitySM, T, T_ref=298.15, alpha=0.02):
-    """Temperature-correct specific conductance using a linear model.
+    """
+    Temperature-correct specific conductance using a linear model.
 
     κ(T) = κ_ref * (1 + α * (T - T_ref)).
 

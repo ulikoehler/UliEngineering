@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Henderson-Hasselbalch equation for pH/buffer calculations.
+"""
+Henderson-Hasselbalch equation for pH/buffer calculations.
 
 The Henderson-Hasselbalch equation relates pH, pKa, and the ratio.
 of conjugate base to weak acid concentrations:
@@ -46,7 +47,8 @@ FARADAY_CONSTANT = physical_constants["Faraday constant"][0]
 
 @returns_unit("")
 def henderson_hasselbalch_pH(pKa, base_concentration: ConcentrationMolar, acid_concentration: ConcentrationMolar):
-    """Compute pH using the Henderson-Hasselbalch equation.
+    """
+    Compute pH using the Henderson-Hasselbalch equation.
 
     pH = pKa + log10([A⁻] / [HA]).
 
@@ -72,7 +74,8 @@ def henderson_hasselbalch_pH(pKa, base_concentration: ConcentrationMolar, acid_c
 
 @returns_unit("")
 def henderson_hasselbalch_ratio(pH, pKa):
-    """Compute the [A⁻]/[HA] ratio from pH and pKa.
+    """
+    Compute the [A⁻]/[HA] ratio from pH and pKa.
 
     [A⁻] / [HA] = 10^(pH - pKa).
 
@@ -94,7 +97,8 @@ def henderson_hasselbalch_ratio(pH, pKa):
 
 @returns_unit("")
 def henderson_hasselbalch_pKa(pH, base_concentration: ConcentrationMolar, acid_concentration: ConcentrationMolar):
-    """Compute pKa from pH and concentrations using the Henderson-Hasselbalch equation.
+    """
+    Compute pKa from pH and concentrations using the Henderson-Hasselbalch equation.
 
     pKa = pH - log10([A⁻] / [HA]).
 
@@ -120,7 +124,8 @@ def henderson_hasselbalch_pKa(pH, base_concentration: ConcentrationMolar, acid_c
 
 @returns_unit("V")
 def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: ConcentrationMolar, T=298.15):
-    """Compute the liquid junction potential using the Henderson equation
+    """
+    Compute the liquid junction potential using the Henderson equation.
     
     for a simple 1:1 electrolyte (e.g. KCl).
 
@@ -155,7 +160,8 @@ def henderson_junction_potential(t_plus, t_minus, c1: ConcentrationMolar, c2: Co
 
 @returns_unit("V")
 def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, lambda_minus: MolarConductivitySM2Mol, c1: ConcentrationMolar, c2: ConcentrationMolar, T=298.15):
-    """Compute the liquid junction potential using ionic conductivities.
+    """
+    Compute the liquid junction potential using ionic conductivities.
 
     E_j = (R*T/F) * (λ+ - λ-)/(λ+ + λ-) * ln(c₁/c₂).
 
@@ -189,7 +195,8 @@ def henderson_junction_potential_simple(lambda_plus: MolarConductivitySM2Mol, la
 
 @returns_unit("mol/L")
 def buffer_capacity(C_total: ConcentrationMolar, Ka, H_concentration: ConcentrationMolar):
-    """Compute the buffer capacity β of a buffer solution.
+    """
+    Compute the buffer capacity β of a buffer solution.
 
     β = 2.303 * C_total * Ka * [H⁺] / (Ka + [H⁺])².
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Davies equation for activity coefficient estimation.
+"""
+Davies equation for activity coefficient estimation.
 
 The Davies equation is an empirical extension of Debye-Hückel theory.
 for estimating activity coefficients at higher ionic strengths (up to ~0.5 M):

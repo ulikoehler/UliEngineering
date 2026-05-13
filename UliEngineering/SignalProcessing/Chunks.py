@@ -13,8 +13,8 @@ __all__ = ["ChunkGenerator", "overlapping_chunks", "reshaped_chunks",
 
 
 class ChunkGenerator(object):
-    
-    """Chunk generator objects can lazily generate arbitrary chunks
+    """
+    Chunk generator objects can lazily generate arbitrary chunks.
     
     from arbitary data.
     They are based around an unary generator function that takes a chunk index
@@ -28,7 +28,8 @@ class ChunkGenerator(object):
         self.func = func if func is not None else functoolz.identity
 
     def unprocessed_chunk(self, i):
-        """Get the data for the ith chunk.
+        """
+        Get the data for the ith chunk.
         
         In contrast to __getitem__() this slice is not processed using self.func().
         """
@@ -57,7 +58,8 @@ class ChunkGenerator(object):
         return self.num_chunks
 
     def apply(self, fn):
-        """Add a function to the current list of functions. The given function
+        """
+        Add a function to the current list of functions. The given function.
         
         will be executed last in the list of functions.
 
@@ -84,7 +86,8 @@ class ChunkGenerator(object):
         return (i, self[i])
 
     def evaluate_1d_parallel(self, executor=None):
-        """Parallel evaluation of the chunks.
+        """
+        Parallel evaluation of the chunks.
 
         The prerequisite for calling this function is that the.
         functions applied to the chunk generator result in a scalar
@@ -115,20 +118,21 @@ class ChunkGenerator(object):
         return arr
 
 class IndexChunkGenerator(ChunkGenerator):
-    
-    """A chunk generator that operates on a data array-like object.
+    """
+    A chunk generator that operates on a data array-like object.
     
     In contrast to the generic chunk generator, this allows.
     the user to retrieve the indexes used to generate a certain chunk.
     """
     
     def __init__(self, data, index_generator, num_chunks, func=None, copy=False):
-        """Initialize an index chunk generator for a given array.
+        """
+        Initialize an index chunk generator for a given array.
         
         The index_generator(i) function must return a slice() object.
 
-        Keyword Arguments
-        ------------------
+        Other Parameters
+        ----------------
         func : function-like or None
             The chunk postprocessor function. Applied to every chunk.
         
@@ -150,7 +154,8 @@ class IndexChunkGenerator(ChunkGenerator):
         return self.data[self.index_generator(i)].copy()
 
     def original_indexes(self, i):
-        """Get the indexes used to construct a chunk from self.data.
+        """
+        Get the indexes used to construct a chunk from self.data.
         
         Returns a slice() object.
         """
@@ -160,7 +165,8 @@ def _overlapping_chunks_worker(offsets, chunksize, i):
     return slice(offsets[i], offsets[i] + chunksize)
 
 def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
-    """A chunk-generating function that can be used for parallelFFTReduce().
+    """
+    A chunk-generating function that can be used for parallelFFTReduce().
     
     Generates only full chunks with variable chunk / shift size.
 
@@ -184,7 +190,8 @@ def overlapping_chunks(arr, chunksize, shiftsize, func=None, copy=False):
     return IndexChunkGenerator(arr, gen, offsets.size, func=func, copy=copy)
 
 def sliding_window(data, window_size, shift_size=1, window_func=None, copy=False):
-    """Create a chunk generator that generates left-to-right sliding window chunks.
+    """
+    Create a chunk generator that generates left-to-right sliding window chunks.
 
     This is a convenience wrapper of overlapping_chunks() that clearly.
     states the intent of the operation ("sliding window")
@@ -193,7 +200,8 @@ def sliding_window(data, window_size, shift_size=1, window_func=None, copy=False
 
 
 def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False):
-    """A chunk-generating function that randomly selects num_samples non-overlapping chunks.
+    """
+    A chunk-generating function that randomly selects num_samples non-overlapping chunks.
 
     The random indexes are generated on initialization,.
     so subsequent calls using the same index return the same sample.
@@ -210,7 +218,8 @@ def random_sample_chunks_nonoverlapping(arr, chunksize, num_samples, copy=False)
 
 
 def random_sample_chunks(arr, chunksize, num_samples):
-    """Generate num_samples completely random sample chunks of size chunksize.
+    """
+    Generate num_samples completely random sample chunks of size chunksize.
 
     The random indexes are generated on initialization,.
     so subsequent calls using the same index return the same sample.
@@ -224,7 +233,8 @@ def random_sample_chunks(arr, chunksize, num_samples):
 
 
 def reshaped_chunks(arr, chunksize):
-    """Generates virtual chunks of a numpy array by reshaping a view of the original array.
+    """
+    Generates virtual chunks of a numpy array by reshaping a view of the original array.
     
     Works really well with huge, mmapped arrays as no part of the array is copied.
 
@@ -242,7 +252,8 @@ def reshaped_chunks(arr, chunksize):
 
 
 def array_to_chunkgen(arr):
-    """Convert a potentially multidimensional NumPy array-like
+    """
+    Convert a potentially multidimensional NumPy array-like.
     
     to a ChunkGenerator(), using the values along the first axis.
     """

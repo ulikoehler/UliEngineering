@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Nernst equation for electrochemical cell potential.
+"""
+Nernst equation for electrochemical cell potential.
 
 The Nernst equation relates the reduction potential of an electrochemical.
 reaction to the standard electrode potential, temperature, and activities
@@ -45,7 +46,8 @@ ConcentrationMolar = Annotated[NormalizedComputable, normalize_concentration]
 
 @returns_unit("V")
 def nernst_cell_potential(E0, n, Q, T=298.15):
-    """Compute the cell potential using the Nernst equation.
+    """
+    Compute the cell potential using the Nernst equation.
 
     E = E0 - (R*T)/(n*F) * ln(Q).
 
@@ -72,7 +74,8 @@ def nernst_cell_potential(E0, n, Q, T=298.15):
 
 @returns_unit("V")
 def nernst_half_cell_potential(E0, n, oxidized_concentration: ConcentrationMolar, reduced_concentration: ConcentrationMolar, T=298.15):
-    """Compute the half-cell reduction potential using the Nernst equation.
+    """
+    Compute the half-cell reduction potential using the Nernst equation.
 
     E = E0 - (R*T)/(n*F) * ln([Red]/[Ox]).
 
@@ -104,7 +107,8 @@ def nernst_half_cell_potential(E0, n, oxidized_concentration: ConcentrationMolar
 
 @returns_unit("V")
 def nernst_potential_at_25C(E0, n, Q):
-    """Simplified Nernst equation at 25 °C (298.15 K).
+    """
+    Simplified Nernst equation at 25 °C (298.15 K).
 
     E = E0 - (0.02569 V / n) * ln(Q).
       = E0 - (0.05916 V / n) * log10(Q)
@@ -129,7 +133,8 @@ def nernst_potential_at_25C(E0, n, Q):
 
 @returns_unit("")
 def nernst_reaction_quotient_from_potential(E, E0, n, T=298.15):
-    """Compute the reaction quotient Q from measured cell potential
+    """
+    Compute the reaction quotient Q from measured cell potential.
     
     using the inverse Nernst equation.
 

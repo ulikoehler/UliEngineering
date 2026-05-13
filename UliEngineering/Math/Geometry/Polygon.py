@@ -6,7 +6,8 @@ import numpy as np
 __all__ = ["polygon_lines", "polygon_area"]
 
 def polygon_lines(coords, closed=True):
-    """Create line segments from polygon coordinates.
+    """
+    Create line segments from polygon coordinates.
 
     Given a (n,2) set of XY coordinates as numpy array, creates an (n,2,2) array of.
     coordinate pairs. If the given coordinate array represents the points of a polygon,
@@ -39,7 +40,8 @@ def polygon_lines(coords, closed=True):
     return ret if closed else ret[1:]
 
 def polygon_area(coords):
-    """Compute the area of a polygon using the Shoelace formula.
+    """
+    Compute the area of a polygon using the Shoelace formula.
 
     Numpy hints from http://stackoverflow.com/a/30408825/2597135.
 
